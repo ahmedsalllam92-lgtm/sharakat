@@ -32,7 +32,7 @@ async def main():
         await go(f'#/partners/{prid}')
         ok('partner page header shows logo + change control', await E("!!document.querySelector('.ph .plate img') && !!document.querySelector('.ph [data-logoup]')"))
         await go('#/dashboard?v=obs', 2200)
-        ok('dashboard partner map shows logo', await E(f"[...document.querySelectorAll('.ob-tile')].some(t=>t.getAttribute('href')==='#/partnerships/{pid}' && t.querySelector('img.lg'))"))
+        ok('dashboard partner map shows logo', await E(f"[...document.querySelectorAll('.ob-tile2')].some(t=>t.getAttribute('href')==='#/partnerships/{pid}' && t.querySelector('img.lg'))"))
         await E("applyDesign('board')"); await pg.wait_for_timeout(700)
         await go('#/', 1800)
         ok('board home «شركاؤنا» wall shows logo', await E("document.querySelectorAll('#main .plate img').length>=1"))

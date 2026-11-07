@@ -229,6 +229,7 @@ function route() {
   }
   const params = {};
   (def.keys || []).forEach((k, i) => { params[k] = m[i + 1] ? decodeURIComponent(m[i + 1]) : undefined; });
+  if (document.documentElement.classList.contains('ob-show')) { document.documentElement.classList.remove('ob-show'); const n = document.getElementById('obShowNav'); if (n) n.remove(); }
   App.route = { name: def.name, params, query, path };
   App.dirty = false;
   page.className = 'page' + (def.full ? ' full' : '');

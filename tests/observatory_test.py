@@ -24,7 +24,7 @@ async def main():
             ok(f'{d}: metro has 13 stations', await E("document.querySelectorAll('.ob-st').length===13"))
             ok(f'{d}: station counters add up to pipeline items', await E("[...document.querySelectorAll('.ob-cnt b')].reduce((t,b)=>t+ +b.textContent,0)===wfPipeline(applyFilters(visiblePartnerships(),App.dashF)).items.length && !document.querySelector('.ob-tk')"))
             ok(f'{d}: compass plots evaluated partnerships', await E("document.querySelectorAll('.ob-pt').length===valueData(visiblePartnerships().filter(p=>!p.isDraft)).ev.length"))
-            ok(f'{d}: mosaic tile per partnership', await E("document.querySelectorAll('.ob-tile').length===visiblePartnerships().filter(p=>!p.isDraft).length"))
+            ok(f'{d}: mosaic tile per partnership', await E("document.querySelectorAll('.ob-tile2').length===visiblePartnerships().filter(p=>!p.isDraft).length"))
             ok(f'{d}: switch to the other view', await E("document.querySelector('.ob-views a:not(.on)').getAttribute('href')") == '#/dashboard?v=' + ('brief' if d=='board' else 'classic'))
         # cross-filter from sector label + rays dim
         await E("applyDesign('classic')"); await pg.wait_for_timeout(500); await go('#/dashboard?v=obs', 2000)
@@ -79,6 +79,23 @@ async def main():
         await E("window.dispatchEvent(new Event('afterprint'))")
         # dark + mobile
         await pg.click('#topbar [data-themetoggle]'); await pg.wait_for_timeout(700)
+        # العرض بملء الشاشة في الاتجاهين
+        for d in ['classic','board']:
+            await E(f"applyDesign('{d}')"); await pg.wait_for_timeout(500); await go('#/dashboard?v=obs', 1800)
+            await pg.click('[data-present]'); await pg.wait_for_timeout(900)
+            vis = await E("(()=>{const c=document.querySelector('#obBody > .ob-cur'); const r=c&&c.getBoundingClientRect(); const e=document.elementFromPoint(innerWidth/2, innerHeight/2); return !!c && r.height>200 && c.contains(e) && getComputedStyle(document.querySelector('#topbar')).display==='none'})()")
+            ok(f'{d}: full-screen presentation shows the first section', vis)
+            await pg.keyboard.press('ArrowLeft'); await pg.wait_for_timeout(500)
+            ok(f'{d}: arrow key moves to the next section', await E("App.obIdx===1 && document.querySelector('#obBody > .ob-cur').id==='obMetro'"))
+            await pg.click('#obShowNav [data-obgo="3"]'); await pg.wait_for_timeout(500)
+            ok(f'{d}: navigator jumps to a section', await E("document.querySelector('#obBody > .ob-cur').id==='obFoot'"))
+            await pg.keyboard.press('Escape'); await pg.wait_for_timeout(400)
+            ok(f'{d}: Esc ends the presentation', await E("!document.documentElement.classList.contains('ob-show') && !document.querySelector('#obShowNav')"))
+            await E("window.dispatchEvent(new Event('beforeprint'))")
+            ok(f'{d}: dashboard prints A4 landscape', 'landscape' in await E("(document.querySelector('#landPage')||{}).textContent||''"))
+            await E("window.dispatchEvent(new Event('afterprint'))")
+        await E("applyDesign('classic')"); await pg.wait_for_timeout(500); await go('#/dashboard?v=obs', 1500)
+        ok('compass lists full partnership names', await E("[...document.querySelectorAll('.ob-cl b')].every(b=>D.partnerships.some(p=>partnerName(p)===b.textContent))") and await E("document.querySelectorAll('.ob-cl li').length===document.querySelectorAll('.ob-pt').length"))
         ok('dark theme renders', await E("document.documentElement.dataset.theme==='dark' && !!document.querySelector('.ob-hero')"))
         await pg.click('#topbar [data-themetoggle]'); await pg.wait_for_timeout(500)
         m = await b.new_context(viewport={'width':390,'height':844}, is_mobile=True, has_touch=True); mp = await m.new_page()

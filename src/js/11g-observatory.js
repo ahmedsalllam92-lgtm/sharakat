@@ -67,12 +67,15 @@ function renderObservatory(el) {
     const dd = e.target.closest('[data-drawer]'); if (dd) return openDashDrawer(dd.dataset.drawer, applyFilters(base(), App.dashF));
     const h = e.target.closest('[data-href]'); if (h) return go(h.dataset.href);
     if (e.target.closest('[data-print]')) return window.print();
-    if (e.target.closest('[data-present]')) return togglePresent();
+    if (e.target.closest('[data-present]')) return obPresent(el, true);
+    if (e.target.closest('[data-obexit]')) return obPresent(el, false);
+    const og = e.target.closest('[data-obgo]'); if (og) return obGo(el, +og.dataset.obgo);
     if (e.target.closest('[data-xls]')) return exportPartnershipsXlsx(applyFilters(base(), App.dashF), 'مؤشرات-الشراكات');
   };
   el.oninput = (e) => { if (e.target.matches('.ob-time input')) obTimeTo(el, +e.target.value); };
   el.addEventListener('click', (e) => { if (e.target.closest('[data-obnow]')) { const i = $('.ob-time input', el); i.value = today().getTime(); obTimeTo(el, +i.value); } });
   obBindPop(el);
+  el.addEventListener('mouseover', (e) => { const t = e.target.closest('[data-pti]'); $$('.ob-compass .hl', el).forEach((x) => x.classList.remove('hl')); if (t) $$(`.ob-compass [data-pti="${t.dataset.pti}"]`, el).forEach((x) => x.classList.add('hl')); });
   el.onkeydown = (e) => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-href][tabindex]')) { e.preventDefault(); go(e.target.dataset.href); } };
   bindTips(el);
 }
@@ -229,94 +232,71 @@ function obMetro(P) {
   </section>`;
 }
 
-/* — بوصلة القيمة: التقييم × القيمة — */
+/* — بوصلة القيمة: التقييم × القيمة، بنقاط مرقّمة وقائمة بالأسماء الكاملة — */
 function obCompass(V) {
-  const pts = V.ev.map(({ p, e }) => ({ p, s: e.score, v: pProfile(p).total || 0 }));
-  const W = 560, H = 360, L_ = 54, R_ = 18, T_ = 22, B_ = 42;
+  const pts = V.ev.map(({ p, e }) => ({ p, s: e.score, v: pProfile(p).total || 0 })).sort((a, b) => b.s - a.s || b.v - a.v);
+  const W = 420, H = 300, L_ = 50, R_ = 12, T_ = 14, B_ = 34;
   const x = (s) => L_ + (Math.max(40, Math.min(100, s)) - 40) / 60 * (W - L_ - R_);
   const vmax = Math.max(1, ...pts.map((d) => d.v));
   const y = (v) => H - B_ - Math.sqrt(v / vmax) * (H - T_ - B_);
   const vs = pts.map((d) => d.v).sort((a, b) => a - b), med = vs.length ? vs[Math.floor(vs.length / 2)] : 0;
   const col = (p) => ((p.ptype || '').includes('استراتيجي') ? 'var(--petrol)' : p.ptype ? 'var(--gold)' : 'var(--line-2)');
+  const quad = (d) => (d.s >= 75 ? (d.v >= med ? 'ركيزة' : 'واعدة') : (d.v >= med ? 'تحتاج أداءً أفضل' : 'تحت المراجعة'));
   const qx = x(75), qy = y(med);
-  const grid = [40, 55, 70, 85, 100].map((s) => `<line x1="${x(s)}" x2="${x(s)}" y1="${T_}" y2="${H - B_}" class="g"/><text x="${x(s)}" y="${H - B_ + 18}" text-anchor="middle" class="ax">${s}</text>`).join('');
-  const yt = [0, 0.25, 1].map((f) => { const v = vmax * f; return `<text x="${L_ - 8}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end" class="ax">${v ? sarShort(v) : '0'}</text>`; }).join('');
-  const dots = pts.sort((a, b) => b.v - a.v).map((d, i) => `<g class="ob-pt" data-href="#/partnerships/${d.p.id}" tabindex="0" role="link" aria-label="${esc(partnerName(d.p))}: تقييم ${d.s}" ${tipAttr(`<b>${esc(partnerName(d.p))}</b><br>التقييم ${d.s} (${evalGrade(d.s)})<br>القيمة ${sar(d.v)}${d.p.ptype ? '<br>' + esc(d.p.ptype) : ''}`)} style="--i:${i}"><circle cx="${x(d.s).toFixed(1)}" cy="${y(d.v).toFixed(1)}" r="11" fill="${col(d.p)}"/><text x="${x(d.s).toFixed(1)}" y="${(y(d.v) - 17).toFixed(1)}" text-anchor="middle">${esc(partnerName(d.p).split(' ').slice(0, 2).join(' '))}</text></g>`).join('');
+  const grid = [40, 55, 70, 85, 100].map((s) => `<line x1="${x(s)}" x2="${x(s)}" y1="${T_}" y2="${H - B_}" class="g"/><text x="${x(s)}" y="${H - B_ + 16}" text-anchor="middle" class="ax">${s}</text>`).join('');
+  const yt = [0, 1].map((f) => { const v = vmax * f; return `<text x="${L_ - 6}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end" class="ax">${v ? sarShort(v) : '0'}</text>`; }).join('');
+  const dots = pts.map((d, i) => `<g class="ob-pt" data-href="#/partnerships/${d.p.id}" data-pti="${i}" tabindex="0" role="link" aria-label="${esc(partnerName(d.p))}: تقييم ${d.s}" ${tipAttr(`<b>${esc(partnerName(d.p))}</b><br>التقييم ${d.s} (${evalGrade(d.s)})<br>القيمة ${sar(d.v)}`)}><circle cx="${x(d.s).toFixed(1)}" cy="${y(d.v).toFixed(1)}" r="11" fill="${col(d.p)}"/><text x="${x(d.s).toFixed(1)}" y="${(y(d.v) + 4).toFixed(1)}" text-anchor="middle" class="n">${i + 1}</text></g>`).join('');
   const types = V.types.filter((t) => t.k !== 'غير محدد');
   return `<section class="ob-card ob-compass" id="obCompass">
-    <header class="ob-sh"><div><h2>${icon('star')} بوصلة القيمة</h2><p>أين تقف كل شراكة مُقيّمة بين جودة الأداء (أفقيًا) وحجم القيمة (رأسيًا).</p></div>
+    <header class="ob-sh"><div><h2>${icon('star')} بوصلة القيمة</h2><p>كل شراكة مُقيّمة بين جودة الأداء (أفقيًا) وحجم القيمة (رأسيًا).</p></div>
       <div class="ob-types">${types.map((t) => `<button type="button" data-cf="ptype|${esc(t.k)}" class="${(App.dashF.ptype || []).includes(t.k) ? 'on' : ''}"><i style="background:${t.k.includes('استراتيجي') ? 'var(--petrol)' : 'var(--gold)'}"></i>${esc(t.k)}<b>${t.n}</b></button>`).join('')}</div></header>
-    ${pts.length ? `<svg viewBox="0 0 ${W} ${H}" class="ob-csvg" role="img" aria-label="بوصلة القيمة لـ ${pts.length} شراكة مُقيّمة">
-      <rect x="${qx}" y="${T_}" width="${W - R_ - qx}" height="${qy - T_}" class="q q1"/>
-      <rect x="${L_}" y="${qy}" width="${qx - L_}" height="${H - B_ - qy}" class="q q4"/>
-      ${grid}${yt}
-      <line x1="${qx}" x2="${qx}" y1="${T_}" y2="${H - B_}" class="qd"/><line x1="${L_}" x2="${W - R_}" y1="${qy}" y2="${qy}" class="qd"/>
-      <text x="${W - R_ - 6}" y="${T_ + 16}" text-anchor="end" class="ql">ركائز المحفظة</text>
-      <text x="${L_ + 6}" y="${T_ + 16}" class="ql">قيمة تحتاج أداءً أفضل</text>
-      <text x="${W - R_ - 6}" y="${H - B_ - 8}" text-anchor="end" class="ql">أداء واعد يستحق التوسيع</text>
-      <text x="${L_ + 6}" y="${H - B_ - 8}" class="ql">تحت المراجعة</text>
-      <text x="${(L_ + W - R_) / 2}" y="${H - 6}" text-anchor="middle" class="axt">درجة التقييم من 100</text>
-      ${dots}
-    </svg>` : '<div class="empty-chart">لم تُقيَّم أي شراكة بعد. يُعبَّأ نموذج تقييم الشراكة من صفحة كل شراكة، فتظهر هنا.</div>'}
-    ${V.notEval.length ? `<div class="ob-noeval"><span>${icon('alert')} سارية بلا تقييم:</span>${V.notEval.slice(0, 6).map((p) => `<a href="#/partnerships/${p.id}#profile">${esc(partnerName(p))}</a>`).join('')}${V.notEval.length > 6 ? `<em>+${V.notEval.length - 6}</em>` : ''}</div>` : ''}
+    ${pts.length ? `<div class="ob-cmp">
+      <svg viewBox="0 0 ${W} ${H}" class="ob-csvg" role="img" aria-label="بوصلة القيمة لـ ${pts.length} شراكة مُقيّمة">
+        <rect x="${qx}" y="${T_}" width="${W - R_ - qx}" height="${qy - T_}" class="q q1"/><rect x="${L_}" y="${qy}" width="${qx - L_}" height="${H - B_ - qy}" class="q q4"/>
+        ${grid}${yt}
+        <line x1="${qx}" x2="${qx}" y1="${T_}" y2="${H - B_}" class="qd"/><line x1="${L_}" x2="${W - R_}" y1="${qy}" y2="${qy}" class="qd"/>
+        <text x="${W - R_ - 5}" y="${T_ + 13}" text-anchor="end" class="ql">ركائز</text><text x="${L_ + 5}" y="${T_ + 13}" class="ql">تحتاج أداءً أفضل</text>
+        <text x="${W - R_ - 5}" y="${H - B_ - 6}" text-anchor="end" class="ql">واعدة</text><text x="${L_ + 5}" y="${H - B_ - 6}" class="ql">تحت المراجعة</text>
+        <text x="${(L_ + W - R_) / 2}" y="${H - 3}" text-anchor="middle" class="axt">درجة التقييم من 100</text>
+        ${dots}
+      </svg>
+      <ol class="ob-cl">${pts.map((d, i) => `<li><a href="#/partnerships/${d.p.id}" data-pti="${i}"><em style="background:${col(d.p)}">${i + 1}</em><span><b>${esc(partnerName(d.p))}</b><small>${quad(d)} · ${d.v ? sarShort(d.v) + ' ر.س' : 'بلا قيمة مسجّلة'}</small></span><strong class="${evalTone(d.s)}">${d.s}</strong></a></li>`).join('')}</ol>
+    </div>` : '<div class="empty-chart">لم تُقيَّم أي شراكة بعد. يُعبَّأ نموذج تقييم الشراكة من صفحة كل شراكة، فتظهر هنا.</div>'}
+    ${V.notEval.length ? `<div class="ob-noeval"><span>${icon('alert')} سارية بلا تقييم:</span>${V.notEval.slice(0, 4).map((p) => `<a href="#/partnerships/${p.id}#profile">${esc(partnerName(p))}</a>`).join('')}${V.notEval.length > 4 ? `<em>+${V.notEval.length - 4}</em>` : ''}</div>` : ''}
   </section>`;
 }
 
-/* — خريطة الشركاء: كل شراكة بلاطة، مجمّعة حسب القطاع — */
+/* — خريطة الشركاء: عمود لكل قطاع، وكل شراكة سطر مدمج بالاسم الكامل ولون حالتها — */
 function obMosaic(nd) {
   const secs = [...L('sectors'), 'غير محدد'];
   const g = {}; nd.forEach((p) => { const s = pSector(p) || 'غير محدد'; (g[s] = g[s] || []).push(p); });
   const order = [...secs.filter((s) => g[s]), ...Object.keys(g).filter((s) => !secs.includes(s))];
   const rank = (p) => STATUS_ORDER.indexOf(pStatus(p));
+  const stl = ['active', 'soon', 'upcoming', 'sign', 'prep', 'ended'].filter((k) => nd.some((p) => pStatus(p) === k));
   return `<section class="ob-card ob-mosaic" data-tour="dash-status">
-    <header class="ob-sh"><div><h2>${icon('grid')} خريطة الشركاء</h2><p>كل بلاطة شراكة بلون حالتها، مجمّعة حسب القطاع. اضغط القطاع لتصفية اللوحة، أو البلاطة لفتح الشراكة.</p></div></header>
-    <div class="ob-mz">${order.map((s) => `<div class="ob-mzc">
-      <button type="button" class="ob-mzh ${(App.dashF.sector || []).includes(s) ? 'on' : ''}" data-cf="sector|${esc(s)}"><b>${esc(s)}</b><em>${g[s].length}</em></button>
-      <div class="ob-mzt">${g[s].sort((a, b) => rank(a) - rank(b)).map((p) => { const pr = partnerById(p.partnerId) || {}; const st = pStatus(p); return `<a class="ob-tile" href="#/partnerships/${p.id}" style="--c:${ST_VAR(st)}" ${tipAttr(`<b>${esc(partnerName(p))}</b><br>${esc(statusLabel(st))}${pr.domain ? ' · ' + esc(pr.domain) : ''}${p.ptype ? '<br>' + esc(p.ptype) : ''}`)}><span class="mg ${pr.logoFileId ? 'has-lg' : ''}">${logoOrMono(pr, partnerName(p))}</span><small>${esc(partnerName(p))}</small>${p.ptype && p.ptype.includes('استراتيجي') ? `<i class="star" title="شريك استراتيجي">${icon('star')}</i>` : ''}</a>`; }).join('')}</div></div>`).join('')}</div>
+    <header class="ob-sh"><div><h2>${icon('grid')} خريطة الشركاء</h2><p>الشراكات حسب القطاع بلون حالتها. اضغط القطاع لتصفية اللوحة.</p></div>
+      <div class="ob-mzl">${stl.map((k) => `<span><i style="background:${ST_VAR(k)}"></i>${esc(statusLabel(k))}</span>`).join('')}</div></header>
+    <div class="ob-mz2" style="--n:${order.length}">${order.map((s) => `<div class="ob-mzc2">
+      <button type="button" class="ob-mzh2 ${(App.dashF.sector || []).includes(s) ? 'on' : ''}" data-cf="sector|${esc(s)}"><b>${esc(s)}</b><em>${g[s].length}</em></button>
+      <ul>${g[s].sort((a, b) => rank(a) - rank(b)).map((p) => { const pr = partnerById(p.partnerId) || {}; const st = pStatus(p); return `<li><a class="ob-tile2" href="#/partnerships/${p.id}" style="--c:${ST_VAR(st)}" ${tipAttr(`<b>${esc(partnerName(p))}</b><br>${esc(statusLabel(st))}${pr.domain ? ' · ' + esc(pr.domain) : ''}${p.ptype ? '<br>' + esc(p.ptype) : ''}`)}><span class="mg ${pr.logoFileId ? 'has-lg' : ''}">${logoOrMono(pr, partnerName(p))}</span><span class="nm">${esc(partnerName(p))}</span>${p.ptype && p.ptype.includes('استراتيجي') ? `<i class="star" title="شريك استراتيجي">${icon('star')}</i>` : ''}</a></li>`; }).join('')}</ul></div>`).join('')}</div>
   </section>`;
 }
 
-/* — التذييل: القرارات، واكتمال البيانات، وفريق المتابعة — */
+/* — التذييل المدمج: القرارات واكتمال البيانات وفريق المتابعة في شريط واحد — */
 function obFoot(m) {
-  const fields = CORE_FIELDS.map((k) => ({ k, l: FIELDS[k].label, n: m.nd.filter((p) => missingFields(p).includes(k)).length })).filter((f) => f.n).sort((a, b) => b.n - a.n).slice(0, 5);
+  const fields = CORE_FIELDS.map((k) => ({ k, l: FIELDS[k].label, n: m.nd.filter((p) => missingFields(p).includes(k)).length })).filter((f) => f.n).sort((a, b) => b.n - a.n).slice(0, 3);
   const ow = countBy(m.nd, 'owner').filter((r) => r.n && r.k !== 'غير محدد').map((r) => { const ps = m.nd.filter((p) => FILTER_DIMS.owner.get(p).includes(r.k)); return { ...r, a: ps.filter((p) => pStatus(p) === 'active').length, s: ps.filter((p) => pStatus(p) === 'soon').length }; });
   const omax = Math.max(1, ...ow.map((r) => r.n));
-  const R = 34, C = 2 * Math.PI * R;
-  return `<div class="ob-foot" id="obFoot">
-    <section class="ob-card ob-dec"><header class="ob-sh"><div><h2>${icon('flag')} قرارات مطلوبة</h2><p>${m.acts.length ? 'بنود عملية من بيانات المحفظة والمقترحات' : 'لا توجد بنود معلّقة'}</p></div></header>
-      ${m.acts.length ? `<ul>${m.acts.map((x) => `<li><a href="${x.href || '#/partnerships'}" class="t-${x.tone || ''}"><b>${x.n}</b><span><strong>${esc(x.t)}</strong><small>${esc(x.d || '')}</small></span></a></li>`).join('')}</ul>` : '<p class="ob-calm">كل شيء في مكانه.</p>'}</section>
-    <section class="ob-card ob-q"><header class="ob-sh"><div><h2>${icon('check')} اكتمال البيانات</h2><p>من حقول ملف الحصر الأساسية</p></div></header>
-      <div class="ob-qtop"><svg viewBox="0 0 84 84" class="ob-qr" aria-hidden="true"><circle cx="42" cy="42" r="${R}" class="bg"/><circle cx="42" cy="42" r="${R}" class="v" stroke-dasharray="${(m.score / 100 * C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 42 42)"/><text x="42" y="48" text-anchor="middle">${m.score}%</text></svg>
-        <p>${fields.length ? `أكثر الحقول نقصًا: <b>${esc(fields[0].l)}</b>` : 'كل الحقول الأساسية مكتملة.'}</p></div>
-      ${fields.length ? `<ul class="ob-ql">${fields.map((f) => `<li><a href="#/partnerships?missing=1"><span>${esc(f.l)}</span><i><em style="width:${Math.round(f.n / m.nd.length * 100)}%"></em></i><b>${f.n}</b></a></li>`).join('')}</ul>` : ''}</section>
-    <section class="ob-card ob-team"><header class="ob-sh"><div><h2>${icon('users')} فريق المتابعة</h2><p>الشراكات لكل مسؤول، والذهبي ما يقترب من الانتهاء</p></div></header>
-      ${ow.length ? `<ul>${ow.map((r) => `<li><button type="button" data-cf="owner|${esc(r.k)}" class="${(App.dashF.owner || []).includes(r.k) ? 'on' : ''}">${avatar(r.k)}<span>${esc(r.k)}</span><i><em class="a" style="width:${r.a / omax * 100}%"></em><em class="s" style="width:${r.s / omax * 100}%"></em><em class="o" style="width:${(r.n - r.a - r.s) / omax * 100}%"></em></i><b>${r.n}</b></button></li>`).join('')}</ul>` : '<p class="ob-calm">لم يُحدَّد مسؤولون.</p>'}</section>
-  </div>`;
-}
-
-/* — آلة الزمن: تحريك الحلقة الذهبية إلى أي تاريخ — */
-function obTimeTo(el, ms) {
-  const svg = $('.ob-svg', el); if (!svg) return;
-  const T0 = +svg.dataset.t0, T1 = +svg.dataset.t1, R0 = +svg.dataset.r0, R1 = +svg.dataset.r1, C = +svg.dataset.c;
-  const r = R0 + Math.max(0, Math.min(1, (ms - T0) / (T1 - T0))) * (R1 - R0);
-  const isNow = Math.abs(ms - today().getTime()) < 86400000;
-  $('.ob-today', svg).setAttribute('r', r.toFixed(1));
-  const lab = $('.ob-tdl', svg); $('rect', lab).setAttribute('y', (C - r - 11).toFixed(1)); $('text', lab).setAttribute('y', (C - r + 4).toFixed(1));
-  const d = new Date(ms);
-  $('text', lab).textContent = isNow ? 'اليوم' : String(d.getFullYear());
-  let n = 0;
-  $$('.ob-ray', svg).forEach((g) => {
-    const live = +g.dataset.s <= ms && ms <= +g.dataset.e;
-    g.classList.toggle('off', !live && !isNow);
-    const dot = $('.now', g), a = +g.dataset.a;
-    if (dot) { dot.setAttribute('cx', (C + r * Math.cos(a)).toFixed(1)); dot.setAttribute('cy', (C + r * Math.sin(a)).toFixed(1)); dot.classList.toggle('off', !live); }
-    if (live && g.dataset.in === '1') n++;
-  });
-  $('.ob-cn', svg).textContent = n;
-  $('.ob-cl', svg).textContent = isNow ? 'سارية الآن' : `سارية في ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
-  $('#obTimeOut', el).textContent = isNow ? 'اليوم' : `${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
-  $('[data-obnow]', el).hidden = isNow;
-  svg.classList.toggle('ob-travel', !isNow);
+  const R = 26, C = 2 * Math.PI * R;
+  return `<section class="ob-card ob-foot2" id="obFoot">
+    <div class="ob-f-dec"><h3>${icon('flag')} قرارات مطلوبة <em>${m.acts.length}</em></h3>
+      ${m.acts.length ? `<ul>${m.acts.map((x) => `<li><a href="${x.href || '#/partnerships'}" class="t-${x.tone || ''}" title="${esc(x.d || '')}"><b>${x.n}</b><span>${esc(x.t)}</span></a></li>`).join('')}</ul>` : '<p class="ob-calm">لا توجد بنود معلّقة.</p>'}</div>
+    <div class="ob-f-q"><h3>${icon('check')} اكتمال البيانات</h3>
+      <div class="ob-qtop"><svg viewBox="0 0 64 64" class="ob-qr" aria-hidden="true"><circle cx="32" cy="32" r="${R}" class="bg"/><circle cx="32" cy="32" r="${R}" class="v" stroke-dasharray="${(m.score / 100 * C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 32 32)"/><text x="32" y="37" text-anchor="middle">${m.score}%</text></svg>
+        ${fields.length ? `<ul class="ob-ql">${fields.map((f) => `<li><a href="#/partnerships?missing=1"><span>${esc(f.l)}</span><b>${f.n}</b></a></li>`).join('')}</ul>` : '<p class="ob-calm">كل الحقول الأساسية مكتملة.</p>'}</div></div>
+    <div class="ob-f-team"><h3>${icon('users')} فريق المتابعة</h3>
+      ${ow.length ? `<ul>${ow.map((r) => `<li><button type="button" data-cf="owner|${esc(r.k)}" class="${(App.dashF.owner || []).includes(r.k) ? 'on' : ''}"><span>${esc(r.k)}</span><i><em class="a" style="width:${r.a / omax * 100}%"></em><em class="s" style="width:${r.s / omax * 100}%"></em><em class="o" style="width:${(r.n - r.a - r.s) / omax * 100}%"></em></i><b>${r.n}</b></button></li>`).join('')}</ul>` : '<p class="ob-calm">لم يُحدَّد مسؤولون.</p>'}</div>
+  </section>`;
 }
 
 /* — بطاقة المحطة/المرحلة: تظهر عند الوقوف عليها وتختفي عند الابتعاد — */
@@ -371,4 +351,62 @@ function obBindPop(el) {
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide(true); });
   window.addEventListener('scroll', () => hide(true), { passive: true, once: false });
   window.addEventListener('hashchange', () => hide(true));
+}
+
+/* — العرض بملء الشاشة: كل قسم من اللوحة شريحة، والتنقل بالأسهم — */
+function obPresent(el, on) {
+  const html = document.documentElement, app = $('.app');
+  if (on) {
+    html.classList.add('ob-show'); app && app.classList.add('present');
+    if (html.requestFullscreen && !document.fullscreenElement) html.requestFullscreen().catch(() => {});
+    let nav = $('#obShowNav'); if (!nav) { nav = document.createElement('div'); nav.id = 'obShowNav'; nav.className = 'ob-shownav'; document.body.appendChild(nav); }
+    const secs = $$('#obBody > section, #obBody > .ob-row', el);
+    const names = ['حلقات النمو', 'خط المسار', 'القيمة والشركاء', 'القرارات والفريق'];
+    nav.innerHTML = `<button type="button" data-obprev aria-label="السابق">${icon('chevR')}</button>${secs.map((_, i) => `<button type="button" class="d" data-obgo="${i}" title="${names[i] || ''}">${i + 1}</button>`).join('')}<button type="button" data-obnext aria-label="التالي">${icon('chevL')}</button><button type="button" class="x" data-obexit>${icon('x')} إنهاء العرض</button>`;
+    nav.onclick = (e) => { const g = e.target.closest('[data-obgo]'); if (g) return obGo(el, +g.dataset.obgo); if (e.target.closest('[data-obprev]')) return obGo(el, (App.obIdx || 0) - 1); if (e.target.closest('[data-obnext]')) return obGo(el, (App.obIdx || 0) + 1); if (e.target.closest('[data-obexit]')) return obPresent(el, false); };
+    App.obKey = (e) => { if (!html.classList.contains('ob-show')) return; if (e.key === 'ArrowLeft' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); obGo(el, (App.obIdx || 0) + 1); } else if (e.key === 'ArrowRight' || e.key === 'PageUp') { e.preventDefault(); obGo(el, (App.obIdx || 0) - 1); } else if (e.key === 'Escape') obPresent(el, false); };
+    document.addEventListener('keydown', App.obKey);
+    App.obFs = () => { if (!document.fullscreenElement && html.classList.contains('ob-show')) obPresent(el, false); };
+    document.addEventListener('fullscreenchange', App.obFs);
+    setTimeout(() => obGo(el, 0), 80);
+  } else {
+    html.classList.remove('ob-show'); app && app.classList.remove('present');
+    const nav = $('#obShowNav'); if (nav) nav.remove();
+    if (App.obKey) document.removeEventListener('keydown', App.obKey);
+    if (App.obFs) document.removeEventListener('fullscreenchange', App.obFs);
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    $$('#obBody > *', el).forEach((s) => s.classList.remove('ob-cur'));
+  }
+  setTimeout(() => window.dispatchEvent(new Event('resize')), 80);
+}
+function obGo(el, i) {
+  const secs = $$('#obBody > section, #obBody > .ob-row', el); if (!secs.length) return;
+  i = Math.max(0, Math.min(secs.length - 1, i)); App.obIdx = i;
+  secs.forEach((s, k) => s.classList.toggle('ob-cur', k === i));
+  $$('#obShowNav .d').forEach((d, k) => d.classList.toggle('on', k === i));
+}
+
+/* — آلة الزمن: تحريك الحلقة الذهبية إلى أي تاريخ — */
+function obTimeTo(el, ms) {
+  const svg = $('.ob-svg', el); if (!svg) return;
+  const T0 = +svg.dataset.t0, T1 = +svg.dataset.t1, R0 = +svg.dataset.r0, R1 = +svg.dataset.r1, C = +svg.dataset.c;
+  const r = R0 + Math.max(0, Math.min(1, (ms - T0) / (T1 - T0))) * (R1 - R0);
+  const isNow = Math.abs(ms - today().getTime()) < 86400000;
+  $('.ob-today', svg).setAttribute('r', r.toFixed(1));
+  const lab = $('.ob-tdl', svg); $('rect', lab).setAttribute('y', (C - r - 11).toFixed(1)); $('text', lab).setAttribute('y', (C - r + 4).toFixed(1));
+  const d = new Date(ms);
+  $('text', lab).textContent = isNow ? 'اليوم' : String(d.getFullYear());
+  let n = 0;
+  $$('.ob-ray', svg).forEach((g) => {
+    const live = +g.dataset.s <= ms && ms <= +g.dataset.e;
+    g.classList.toggle('off', !live && !isNow);
+    const dot = $('.now', g), a = +g.dataset.a;
+    if (dot) { dot.setAttribute('cx', (C + r * Math.cos(a)).toFixed(1)); dot.setAttribute('cy', (C + r * Math.sin(a)).toFixed(1)); dot.classList.toggle('off', !live); }
+    if (live && g.dataset.in === '1') n++;
+  });
+  $('.ob-cn', svg).textContent = n;
+  $('.ob-cl', svg).textContent = isNow ? 'سارية الآن' : `سارية في ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+  $('#obTimeOut', el).textContent = isNow ? 'اليوم' : `${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+  $('[data-obnow]', el).hidden = isNow;
+  svg.classList.toggle('ob-travel', !isNow);
 }
