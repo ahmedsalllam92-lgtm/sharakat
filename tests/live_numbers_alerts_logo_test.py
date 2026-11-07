@@ -1,0 +1,82 @@
+import asyncio, json, re
+def N(x): return int(re.match(r'\d+', x).group())
+from playwright.async_api import async_playwright
+URL='file:///home/claude/shots/app.html'
+R=[]
+def ok(n,c,x=''): R.append(c); print('PASS' if c else 'FAIL', n, x, flush=True)
+async def main():
+    async with async_playwright() as p:
+        b = await p.chromium.launch()
+        ctx = await b.new_context(viewport={'width':1440,'height':900}); pg = await ctx.new_page(); errs=[]
+        pg.on('pageerror', lambda e: errs.append(str(e)+' '+str(getattr(e,'stack',''))[:300]))
+        await pg.goto(URL); await pg.wait_for_selector('#main .page'); await pg.wait_for_timeout(800)
+        E=pg.evaluate
+        async def go(h, w=700): await E(f"location.hash={json.dumps(h)}"); await pg.wait_for_timeout(w)
+        async def beacons():
+            await go('#/stories', 300); await go('#/', 600); await pg.wait_for_timeout(300)
+            return await E("[...document.querySelectorAll('.hfx-b span')].map(s=>s.textContent.trim())")
+        ok('platform renamed', await E("D.settings.org.platform") == 'منظومة الشراكات' and 'منظومة الشراكات' in await pg.inner_text('.side .brand'))
+        bc = await beacons()
+        calc = await E("""(()=>{const L=visiblePartnerships({includeDrafts:false}); return {a:L.filter(p=>['active','soon'].includes(pStatus(p))).length, s:L.filter(p=>pStatus(p)==='soon').length, e:L.filter(p=>pStatus(p)==='ended').length}})()""")
+        ok('hero shows 4 live numbers', len(bc) == 4, bc)
+        ok('active beacon = records', N(bc[0])==calc['a'], (bc[0], calc))
+        ok('soon beacon = records', N(bc[2])==calc['s'], (bc[2], calc))
+        ok('ended beacon = records', N(bc[3])==calc['e'], (bc[3], calc))
+        p0 = N(bc[1])
+        # add a partner from partners page (no partnership)
+        await E("""(async()=>{ await Repo.save('partners', {id: uid('pr'), name:'جهة اختبار جديدة', aliases:[], sector:'خاص', createdAt: nowISO()}); })()"""); await pg.wait_for_timeout(200)
+        bc2 = await beacons()
+        ok('adding an entity increases partners beacon', N(bc2[1]) == p0 + 1, (bc[1], bc2[1]))
+        # add an active partnership
+        a0 = N(bc2[0])
+        await E("""(async()=>{ const pr = D.partners.find(x=>x.name==='جهة اختبار جديدة'); const t=today(); await Repo.save('partnerships', {id:uid('pt'), code:'PT-T-1', title:pr.name, partnerId:pr.id, stage:'signed', startDate: isoDate(addDays(t,-30)), endDate: isoDate(addDays(t,12)), attachments:[], owners:[], departments:[], categories:[], public:true, demo:false, createdAt:nowISO(), updatedAt:nowISO()}); })()""")
+        bc3 = await beacons()
+        ok('adding a partnership increases active beacon', N(bc3[0]) == a0 + 1, (bc2[0], bc3[0]))
+        ok('it ends in 12 days → soon beacon +1', N(bc3[2]) == calc['s'] + 1, bc3[2])
+        ok('partners beacon unchanged (same entity now linked)', N(bc3[1]) == p0 + 1)
+        # end it
+        await E("""(async()=>{ const p=D.partnerships.find(x=>x.code==='PT-T-1'); p.endDate=isoDate(addDays(today(),-3)); await Repo.save('partnerships', p); })()""")
+        bc4 = await beacons()
+        ok('a partnership ending moves it to ended', N(bc4[3]) == calc['e'] + 1 and N(bc4[0]) == a0, (bc4[0], bc4[3]))
+        ok('arabic noun agreement', all(any(w in x for w in ['شراكة','شراكات','شراكتان','جهة','جهات','جهتان']) for x in bc4), bc4)
+        # alerts inside partnership
+        await E("""(async()=>{ const p=D.partnerships.find(x=>x.code==='PT-T-1'); p.endDate=isoDate(addDays(today(),12)); await Repo.save('partnerships', p); })()""")
+        pid = await E("D.partnerships.find(x=>x.code==='PT-T-1').id")
+        await go(f'#/partnerships/{pid}')
+        t = await pg.inner_text('.p-alert')
+        ok('urgent alert inside partnership (≤30 days)', await E("document.querySelector('.p-alert').classList.contains('urgent')") and '12' in t and 'خلال' in t, t[:80])
+        await E(f"""(async()=>{{ const p=D.partnerships.find(x=>x.id==='{pid}'); p.endDate=isoDate(addDays(today(),60)); await Repo.save('partnerships', p); }})()"""); await go('#/'); await go(f'#/partnerships/{pid}')
+        ok('softer alert between 30 and 90 days', await E("document.querySelector('.p-alert').classList.contains('soon')"))
+        await E(f"""(async()=>{{ const p=D.partnerships.find(x=>x.id==='{pid}'); p.endDate=isoDate(addDays(today(),200)); await Repo.save('partnerships', p); }})()"""); await go('#/'); await go(f'#/partnerships/{pid}')
+        ok('no alert when far from end', await E("!document.querySelector('.p-alert')"))
+        await E(f"""(async()=>{{ const p=D.partnerships.find(x=>x.id==='{pid}'); p.endDate=isoDate(addDays(today(),-5)); await Repo.save('partnerships', p); }})()"""); await go('#/'); await go(f'#/partnerships/{pid}')
+        ok('ended notice after end date', await E("document.querySelector('.p-alert').classList.contains('ended')") and 'انتهت' in await pg.inner_text('.p-alert'))
+        # alert days setting
+        await E(f"""(async()=>{{ const p=D.partnerships.find(x=>x.id==='{pid}'); p.endDate=isoDate(addDays(today(),40)); await Repo.save('partnerships', p); }})()""")
+        await go('#/settings/general'); await pg.fill('#galert', '45'); await pg.click('#gsave'); await pg.wait_for_timeout(500)
+        ok('alert days setting saved', await E("D.settings.alertDays") == 45)
+        await go(f'#/partnerships/{pid}')
+        ok('setting changes the alert threshold', await E("document.querySelector('.p-alert').classList.contains('urgent')"))
+        await go('#/partnerships')
+        ok('register shows urgent chip', 'خلال 40 يومًا' in await pg.inner_text('#regBody'))
+        await go('#/dashboard', 1200)
+        ok('dashboard urgent action item', 'عاجل: تنتهي خلال 45 يومًا' in await pg.inner_text('.dz-acts'))
+        for d in ['board']:
+            await E(f"applyDesign('{d}')"); await pg.wait_for_timeout(700); await go(f'#/partnerships/{pid}')
+            ok(f'{d}: alert visible', await E("!!document.querySelector('.p-alert') && document.querySelector('.p-alert').offsetParent!==null"))
+        # logos
+        await E("applyDesign('board')"); await pg.wait_for_timeout(700)
+        ok('board uses Murooj logo in its bar', await E("!!document.querySelector('#topbar img')") and 'منظومة الشراكات' in await pg.inner_text('#topbar'))
+        await E("applyDesign('classic')"); await pg.wait_for_timeout(700)
+        await go('#/settings/general'); await pg.set_input_files('#glogo', '/tmp/logo-white.png'); await pg.wait_for_timeout(900)
+        await go('#/', 900)
+        ok('classic: logo stacked above title', await E("(()=>{const i=document.querySelector('.side .brand img').getBoundingClientRect(), t=document.querySelector('.side .brand-t').getBoundingClientRect(); return t.top >= i.bottom - 1})()"))
+        await pg.screenshot(path='/home/claude/shots/lg-classic.png', clip={'x':1200,'y':0,'width':240,'height':130})
+        await pg.click('[data-collapse]'); await pg.mouse.move(600,500); await pg.wait_for_timeout(500)
+        ok('collapsed: only logo mark, fits rail', await E("document.querySelector('.side .brand-mark').getBoundingClientRect().width <= 46"))
+        await pg.screenshot(path='/home/claude/shots/lg-collapsed.png', clip={'x':1340,'y':0,'width':100,'height':120})
+        await pg.click('[data-collapse]'); await pg.wait_for_timeout(300)
+        ok('no page errors', not errs, errs[:3])
+        await b.close()
+    print('SUMMARY', sum(R), '/', len(R))
+asyncio.run(main())

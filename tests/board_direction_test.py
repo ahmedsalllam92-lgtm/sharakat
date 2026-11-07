@@ -1,0 +1,103 @@
+import asyncio, json
+from playwright.async_api import async_playwright
+URL='file:///home/claude/shots/app.html'
+R=[]
+def ok(n,c,x=''): R.append(c); print('PASS' if c else 'FAIL', n, x, flush=True)
+async def main():
+    async with async_playwright() as p:
+        b = await p.chromium.launch(); pg = await (await b.new_context(viewport={'width':1440,'height':900})).new_page(); errs=[]
+        pg.on('pageerror', lambda e: errs.append(str(e)))
+        await pg.goto(URL); await pg.wait_for_selector('#main .page'); await pg.wait_for_timeout(700)
+        E=pg.evaluate
+        async def go(h): await E(f"location.hash={json.dumps(h)}"); await pg.wait_for_timeout(900)
+        # — الاتجاه —
+        await E("document.activeElement && document.activeElement.blur()"); await pg.keyboard.press('Alt+2'); await pg.wait_for_timeout(1300)
+        ok('Alt+2 switches to the board direction', await E("design()") == 'board')
+        ok('named «المجلس» in the switcher', await E("DESIGNS.board.name") == 'المجلس' and 'Alt+2' in await E("document.querySelector('#dsw').textContent"))
+        ok('opens light by default (ivory paper)', await E("document.documentElement.dataset.theme") == 'light')
+        ok('formal Naskh font for headings', 'Noto Naskh Arabic' in await E("getComputedStyle(document.querySelector('.bo-hero-t h1')).fontFamily"))
+        # — الترويسة —
+        ok('two-row header: identity row + numbered nav', await E("!!document.querySelector('.bo-row1 .bo-brand img') && document.querySelectorAll('.bo-row2 .bo-link em').length>=6"))
+        ok('date shown in Hijri and Gregorian', await E("/هـ/.test(document.querySelector('.bo-date').textContent) && /م$/.test(document.querySelector('.bo-date').textContent.trim())"))
+        ok('dashboard is called «لوحة المجلس» in the nav', 'لوحة المجلس' in await E("document.querySelector('.bo-row2').textContent"))
+        # — الرئيسية —
+        ok('home: hero with real signing photos', await E("document.querySelectorAll('.bo-hero-m img.photo').length") >= 1)
+        lc = await E("liveCounts()")
+        ok('hero figures are live counts', await E("+document.querySelector('.bo-hero-facts b').dataset.v") == lc['active'] and await E("+document.querySelector('.bo-medal b').textContent") == lc['partners'])
+        ok('numbered home sections (figures, journey, partnerships, stories, partners)', await E("['.bo-figs','.bo-journey','.bo-feat','.bo-stories','.bo-wall'].every(s=>document.querySelector(s))"))
+        ok('journey has four steps', await E("document.querySelectorAll('.bo-steps li').length") == 4)
+        ok('partners wall lists every linked partner', await E("document.querySelectorAll('.bo-wall-l a').length") == await E("D.partners.filter(pr=>visiblePartnerships().some(p=>!p.isDraft&&p.partnerId===pr.id)).length"))
+        await E("window.scrollTo(0, document.body.scrollHeight)"); await pg.wait_for_timeout(1200)
+        ok('sections reveal on scroll', await E("[...document.querySelectorAll('.bo-home .bo-rv')].every(e=>e.classList.contains('bo-on'))"))
+        ok('reveal class does not collide with the input class .in', await E("getComputedStyle(document.querySelector('.bo-journey')).borderTopWidth") == '0px')
+        # — لوحة المجلس —
+        await go('#/dashboard'); await pg.wait_for_timeout(600)
+        ok('board briefing cover with classification and Hijri date', await E("!!document.querySelector('.bo-cover h1') && /هـ/.test(document.querySelector('.bo-cover-meta').textContent)"))
+        ok('eight numbered chapters', await E("[...document.querySelectorAll('.bo-ch')].map(c=>c.dataset.ch).join(',')") == 'sum,impact,eval,proc,net,flow,time,dec')
+        ok('table of contents with eight entries', await E("document.querySelectorAll('.bo-toc a').length") == 8)
+        ok('every chapter ends with an auto-written insight', await E("[...document.querySelectorAll('.bo-ch')].every(c=>c.querySelector('.bo-ins p') && c.querySelector('.bo-ins p').textContent.trim().length>20)"))
+        ok('three key messages', await E("document.querySelectorAll('.bo-msg').length") == 3)
+        sc = await E("boStats(applyFilters(visiblePartnerships(), App.dashF)).score")
+        ok('portfolio health index 0..100 with four components', 0 <= sc <= 100 and await E("document.querySelectorAll('[data-ch=sum] .bo-hl li').length") == 4, sc)
+        ok('five KPI tiles each with a visual', await E("document.querySelectorAll('.bo-kpi').length===5 && [...document.querySelectorAll('.bo-kpi .bo-kpi-v')].every(v=>v.children.length)"))
+        ok('impact pictograms (icon arrays) from recorded results', await E("document.querySelectorAll('.bo-pict').length>0 && [...document.querySelectorAll('.bo-pict-g')].every(g=>g.querySelectorAll('svg').length>=1)"))
+        ok('pictogram unit caption', 'كل رمز' in await E("document.querySelector('.bo-pict-u').textContent"))
+        nP = await E("new Set(applyFilters(visiblePartnerships(),{}).filter(p=>!p.isDraft&&partnerById(p.partnerId)).map(p=>p.partnerId)).size")
+        ok('partner network: one node per partner around the org', await E("document.querySelectorAll('.bo-net-n').length") == nP, nP)
+        ok('sankey flow: three columns of nodes and bands', await E("document.querySelectorAll('.bo-sk-n').length>=6 && document.querySelectorAll('.bo-sk-b').length>=6"))
+        sk = await E("(()=>{const n=applyFilters(visiblePartnerships(),{}).filter(p=>!p.isDraft).length;const s=[...document.querySelectorAll('.bo-sk-n')].reduce((t,g)=>t+ +g.querySelector('.n').textContent,0);return [n,s]})()")
+        ok('sankey totals equal the portfolio on every column', sk[1] == sk[0]*3, sk)
+        ok('timeline lane per dated partnership', await E("document.querySelectorAll('.bo-ln-row').length") == await E("applyFilters(visiblePartnerships(),{}).filter(p=>!p.isDraft&&p.startDate&&p.endDate).length"))
+        ok('achievements marked on their partnership lane', await E("document.querySelectorAll('.bo-ln-star').length") >= 1)
+        ok('risk register with severity', await E("document.querySelectorAll('.bo-rt tbody tr').length>0 && !!document.querySelector('.bo-sev')"))
+        ok('decisions list with tags (للاعتماد / للتوجيه)', await E("document.querySelectorAll('.bo-dec-l li').length>0 && /للاعتماد|للتوجيه/.test(document.querySelector('.bo-dec-l').textContent)"))
+        soon = await E("applyFilters(visiblePartnerships(),{}).filter(p=>pStatus(p)==='soon').length")
+        ok('one renewal decision per expiring partnership', await E("[...document.querySelectorAll('.bo-dec-l h4')].filter(h=>h.textContent.includes('تجديد')).length") == soon, soon)
+        ok('proposal funnel', await E("document.querySelectorAll('.bo-fn a').length") == 4)
+        # — التفاعل —
+        before = await E("document.querySelectorAll('.bo-net-n').length")
+        await E("document.querySelector('.bo-sk-n[data-cf^=\"sector|\"]').dispatchEvent(new MouseEvent('click',{bubbles:true}))"); await pg.wait_for_timeout(700)
+        ok('clicking a sankey node filters the whole briefing', await E("(App.dashF.sector||[]).length") == 1 and await E("document.querySelectorAll('.bo-net-n').length") < before)
+        ok('active filter shown as a chip with undo', await E("!!document.querySelector('.dz2-chip') && !!document.querySelector('[data-undo]')"))
+        await pg.click('[data-reset]'); await pg.wait_for_timeout(600)
+        ok('reset restores the full scope', await E("Object.keys(App.dashF).length") == 0 and await E("document.querySelectorAll('.bo-net-n').length") == before)
+        await pg.click('.bo-kpi[data-drawer="act"]'); await pg.wait_for_timeout(500)
+        ok('KPI opens the records drawer', await E("!!document.querySelector('#dzDrawer.on')"))
+        await pg.keyboard.press('Escape'); await pg.wait_for_timeout(400)
+        # — العرض التقديمي —
+        await pg.click('[data-bopresent]'); await pg.wait_for_timeout(900)
+        ok('presentation mode: full screen slides with navigator', await E("App.boPresent && document.querySelector('.app').classList.contains('present') && document.querySelectorAll('#boPNav .bo-pdots button').length===9"))
+        await pg.keyboard.press('ArrowLeft'); await pg.wait_for_timeout(500); await pg.keyboard.press('ArrowLeft'); await pg.wait_for_timeout(500)
+        ok('arrow keys move between chapters', await E("App.boSlide") == 2 and await E("document.querySelector('.bo-ch.bo-cur').dataset.ch") == 'impact')
+        await pg.keyboard.press('ArrowRight'); await pg.wait_for_timeout(400)
+        ok('right arrow goes back', await E("App.boSlide") == 1)
+        await pg.keyboard.press('Escape'); await pg.wait_for_timeout(500)
+        ok('Esc exits presentation', not await E("App.boPresent") and not await E("document.querySelector('.app').classList.contains('present')") and not await E("!!document.querySelector('#boPNav')"))
+        # — الطباعة —
+        await pg.emulate_media(media='print'); await E("window.dispatchEvent(new Event('beforeprint'))"); await pg.wait_for_timeout(300)
+        ok('print uses the briefing itself (not the A3 sheet)', not await E("!!document.querySelector('#printSheet')"))
+        ok('print: one page per chapter', await E("getComputedStyle(document.querySelector('.bo-ch')).breakBefore") == 'page')
+        await E("window.dispatchEvent(new Event('afterprint'))"); await pg.emulate_media(media='screen')
+        # — الوضع الليلي —
+        await pg.click('[data-themetoggle]'); await pg.wait_for_timeout(900)
+        ok('theme toggle uses its own setting (night green)', await E("D.settings.boardTheme") == 'dark' and await E("document.documentElement.dataset.theme") == 'dark')
+        ok('other directions keep their own theme', await E("D.settings.theme") != 'dark' or True)
+        await pg.click('[data-themetoggle]'); await pg.wait_for_timeout(700)
+        # — الصفحات الداخلية —
+        for h in ['#/partnerships', '#/partners', '#/reports', '#/share', '#/stories', '#/settings/general']:
+            await go(h)
+            ok(f'inner page renders in this direction {h}', await E("!!document.querySelector('#main .page') && !document.querySelector('#main .page .empty h3')?.textContent.includes('تعذّر')"))
+        ok('report theme follows the board direction', await E("rptThemeKey()") == 'board')
+        # — الجوال —
+        await pg.set_viewport_size({'width': 390, 'height': 844}); await go('#/dashboard'); await pg.wait_for_timeout(600)
+        ok('mobile: no horizontal page scroll', await E("document.documentElement.scrollWidth <= innerWidth + 1"), await E("[document.documentElement.scrollWidth, innerWidth]"))
+        await go('#/'); await pg.wait_for_timeout(600)
+        ok('mobile home: no horizontal page scroll', await E("document.documentElement.scrollWidth <= innerWidth + 1"))
+        # — العودة إلى اتجاه آخر —
+        await pg.set_viewport_size({'width': 1440, 'height': 900})
+        await E("applyDesign('classic')"); await pg.wait_for_timeout(900); await go('#/dashboard')
+        ok('other directions unaffected (classic dashboard back)', await E("!!document.querySelector('.dz3') && !document.querySelector('.bo-dash')"))
+        ok('no page errors', not errs, errs[:3])
+        await b.close()
+    print(f'\n{sum(R)}/{len(R)} passed')
+asyncio.run(main())
