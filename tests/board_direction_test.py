@@ -19,7 +19,7 @@ async def main():
         # — الترويسة —
         ok('two-row header: identity row + numbered nav', await E("!!document.querySelector('.bo-row1 .bo-brand img') && document.querySelectorAll('.bo-row2 .bo-link em').length>=6"))
         ok('date shown in Hijri and Gregorian', await E("/هـ/.test(document.querySelector('.bo-date').textContent) && /م$/.test(document.querySelector('.bo-date').textContent.trim())"))
-        ok('dashboard is called «لوحة المجلس» in the nav', 'لوحة المجلس' in await E("document.querySelector('.bo-row2').textContent"))
+        ok('dashboard is called «لوحة الأداء» in the nav', 'لوحة الأداء' in await E("document.querySelector('.bo-row2').textContent"))
         # — الرئيسية —
         ok('home: hero with real signing photos', await E("document.querySelectorAll('.bo-hero-m img.photo').length") >= 1)
         lc = await E("liveCounts()")

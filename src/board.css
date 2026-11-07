@@ -831,3 +831,29 @@
 .bo-evt td small{display:block;color:var(--faint);font-size:11.5px}
 @media (max-width:1200px){.bo-ev{grid-template-columns:1fr 1fr}.bo-ev-score{grid-column:1/-1}.bo-fin{grid-template-columns:1fr 1fr}.bo-fin>div{border-right:0!important;border-bottom:1px solid var(--line)}}
 @media (max-width:760px){.bo-ev{grid-template-columns:1fr}.bo-fin{grid-template-columns:1fr}}
+
+/* =====================================================================
+   مراجعة الترويسة والخلفية
+   ===================================================================== */
+.bo-brand-t b{font-size:17px!important;color:var(--ink)!important;font-weight:700;letter-spacing:-.1px}
+.bo-brand-t small{font-size:11px!important}
+.bo-tools{gap:8px}
+.bo-tools .btn{height:34px!important;min-height:34px;padding:0 12px!important;font-size:13px;gap:6px}
+.bo-tools .btn .ic{width:14px;height:14px}
+.bo-tools .icon-btn{width:34px;height:34px}
+.bo-tools .icon-btn .ic{width:16px;height:16px}
+.bo-tools .demo-pill,.bo-tools .bo-demo{font-size:12px;padding:4px 10px}
+.bo-tools .demo-pill .ic,.bo-tools .bo-demo .ic{width:13px;height:13px}
+.bo-tools .rolebox{height:34px;padding:0 4px 0 10px;font-size:13px}
+.bo-tools .rolebox .av{width:26px;height:26px;font-size:11px}
+.bo-new-b{height:34px!important;padding:0 12px!important}
+/* النقشة الهندسية: خفيفة، تبهت نحو الصورة */
+.bo-geo{opacity:1}
+.bo-geo svg{position:absolute;inset:0;stroke:var(--gold);opacity:.13;-webkit-mask-image:radial-gradient(120% 90% at 100% 30%,#000 0%,rgba(0,0,0,.55) 40%,transparent 75%);mask-image:radial-gradient(120% 90% at 100% 30%,#000 0%,rgba(0,0,0,.55) 40%,transparent 75%)}
+.bo-geo pattern g{stroke:var(--gold)}
+:root[data-theme="dark"] .bo-geo svg{opacity:.09}
+.bo-geo-glow{position:absolute;inset:0;background:radial-gradient(700px 420px at 85% 25%,color-mix(in srgb,var(--gold) 10%,transparent),transparent 70%),radial-gradient(600px 500px at 20% 80%,color-mix(in srgb,var(--petrol-3) 8%,transparent),transparent 70%)}
+.bo-tools .tour-top,.bo-tools .demo-ribbon{height:34px;padding:0 12px;font-size:12.5px;gap:6px}
+.bo-tools .tour-top .ic,.bo-tools .demo-ribbon .ic{width:13px;height:13px}
+.bo-tools .rolebox .tag-sim{font-size:10.5px;padding:1px 7px}
+.bo-tools .rolebox .rl{font-size:12.5px}

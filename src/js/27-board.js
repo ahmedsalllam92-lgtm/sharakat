@@ -23,7 +23,7 @@ function boardTopbarHTML(tourBtn, demo, roleBox) {
   const flat = groups.flatMap((g) => g.items);
   const pick = (h) => flat.find((it) => it.h === h);
   const main = ['#/', '#/tasks', '#/dashboard', '#/partnerships', '#/partners', '#/reports', '#/share'].map(pick).filter(Boolean);
-  const label = (it) => ({ '#/dashboard': 'لوحة المجلس' }[it.h] || it.l);
+  const label = (it) => ({ '#/dashboard': 'لوحة الأداء' }[it.h] || it.l);
   const rest = flat.filter((it) => !main.includes(it));
   const dt = boDates();
   const link = (it, i) => `<a class="nav-a bo-link" href="${it.h}" data-m="${it.m.join(',')}" ${it.only ? `data-only="${it.only}"` : ''} ${it.not ? `data-not="${it.not}"` : ''}><em>${boIdx(i + 1)}</em>${esc(label(it))}${it.cnt ? `<span class="cnt">${it.cnt}</span>` : ''}</a>`;
@@ -103,13 +103,13 @@ function renderHomeBoard(el) {
   el.classList.add('full');
   el.innerHTML = `<div class="bo-home">
     <section class="bo-hero" data-tour="home-hero">
-      <div class="bo-hero-bg" aria-hidden="true">${topoSVG('bo-hero', { W: 1600, H: 900, levels: 16, cols: 80, focus: 'left', draw: !cuReduce(), cls: 'topo bo-topo' })}</div>
+      <div class="bo-hero-bg bo-geo" aria-hidden="true"><svg width="100%" height="100%"><defs><pattern id="boStar" width="96" height="96" patternUnits="userSpaceOnUse"><g fill="none" stroke-width="1"><rect x="20" y="20" width="56" height="56"/><rect x="20" y="20" width="56" height="56" transform="rotate(45 48 48)"/><circle cx="48" cy="48" r="9"/><path d="M0 48H8M88 48h8M48 0v8M48 88v8"/></g></pattern></defs><rect width="100%" height="100%" fill="url(#boStar)"/></svg><span class="bo-geo-glow"></span></div>
       <div class="bo-hero-in">
         <div class="bo-hero-t">
           <div class="bo-eyebrow"><i></i>${esc(o.name)} · ${esc(o.dept)}</div>
           <h1>${esc(h.heroTitle || 'نربط المؤسسة بشركاء يوسّعون أثرها البيئي')}</h1>
           <p class="bo-lead">${esc(h.heroText || '')}</p>
-          <div class="bo-cta">${can('view.dashboard') ? `<a class="btn primary lg" href="#/dashboard">${icon('chart')} لوحة المجلس</a>` : ''}<a class="btn lg" href="#/partnerships">${icon('layers')} سجل الشراكات</a></div>
+          <div class="bo-cta">${can('view.dashboard') ? `<a class="btn primary lg" href="#/dashboard">${icon('chart')} لوحة الأداء</a>` : ''}<a class="btn lg" href="#/partnerships">${icon('layers')} سجل الشراكات</a></div>
           <dl class="bo-hero-facts">
             <div><dt>شراكات سارية</dt><dd><b class="cu" data-v="${c.active}">${c.active}</b></dd></div>
             <div><dt>جهات شريكة</dt><dd><b class="cu" data-v="${c.partners}">${c.partners}</b></dd></div>
@@ -176,7 +176,7 @@ function boQuickHTML() {
   const T = [
     Session.role() !== 'viewer' && (() => { const n = wfTasks().filter((t) => !t.follow).length; return { h: '#/tasks', ic: 'flag', t: 'مهامي', d: 'خطوات المسار المسندة لحسابك', b: n ? `${n} بانتظارك` : '' }; })(),
     { h: '#/partnerships', ic: 'layers', t: 'سجل الشراكات', d: 'ابحث وصفِّ وافتح أي شراكة', b: soon ? `${soon} ${nounFor(soon, ['تنتهي قريبًا', 'تنتهيان قريبًا', 'تنتهي قريبًا', 'تنتهي قريبًا'])}` : '' },
-    can('view.dashboard') && { h: '#/dashboard', ic: 'chart', t: 'لوحة المجلس', d: 'إحاطة جاهزة للعرض', b: '' },
+    can('view.dashboard') && { h: '#/dashboard', ic: 'chart', t: 'لوحة الأداء', d: 'حلقات النمو وإحاطة المجلس', b: '' },
     can('proposal.review') && { h: '#/proposals?status=submitted', ic: 'inbox', t: 'المقترحات الواردة', d: 'مراجعة مقترحات الإدارات', b: pend ? `${pend} ${nounFor(pend, ['جديد', 'جديدان', 'جديدة', 'جديدًا'])}` : '' },
     can('proposal.create') && { h: '#/share/new', ic: 'send', t: 'شارك بمقترح', d: mineInfo ? 'لديك مقترح بانتظار الاستكمال' : 'أربع خطوات لاقتراح جهة', b: mineInfo ? `${mineInfo} بانتظار الاستكمال` : '' },
     { h: '#/media', ic: 'image', t: 'مركز الصور', d: 'صور الشراكات والإنجازات', b: '' },

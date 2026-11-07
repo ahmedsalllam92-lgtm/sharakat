@@ -81,6 +81,7 @@ function renderRegister(el, r) {
     if (e.target.closest('[data-reset]')) { st.q = ''; $('#regQ', el).value = ''; for (const k of Object.keys(st.f)) delete st.f[k]; st.missing = st.importnote = st.partner = ''; fb.render(); draw(); syncHash(); return; }
     const th = e.target.closest('th[data-sort]');
     if (th) { App.ui.regSort = th.dataset.sort; $('#regSort', el).value = th.dataset.sort; draw(); return; }
+    const pd = e.target.closest('[data-pcdos]'); if (pd) { const pp = D.partnerships.find((x) => x.id === pd.dataset.pcdos); if (pp) dossierDialog(pp); return; }
     const row = e.target.closest('[data-row]');
     if (row && !e.target.closest('a,button') && !row.closest('.cm-detail')) go('#/partnerships/' + row.dataset.row);
     if (e.target.closest('[data-print]')) window.print();
@@ -105,15 +106,47 @@ function regTable(list) {
     </tbody></table></div>`;
 }
 function regCards(list) {
-  return `<div class="cards">${list.map((p) => {
-    const pr = partnerById(p.partnerId), tp = termProgress(p);
-    return `<a class="pcard" href="#/partnerships/${p.id}">
-      <div class="media">${coverHTML(p.id + (pr ? pr.name : ''), p.coverFileId, { W: 600, H: 300, levels: 10, cols: 40, tone: toneFor(pr) })}<span class="st">${statusChip(p)}</span>${plateHTML(pr, 56)}</div>
-      <div class="bd"><h3>${esc(pr ? pr.name : p.title)} ${demoTag(p)}</h3>
-        <div class="ln"><span>${esc(p.classification || 'تصنيف غير محدد')}</span><span>${esc(pSector(p) || '')}</span><span class="code">${esc(p.code || '')}</span></div>
-        ${(p.categories || []).length ? `<div class="tagline">${p.categories.map((c) => `<span class="chip plain cat">${esc(c)}</span>`).join('')}</div>` : ''}
-        <p class="goal">${esc(p.showcaseGoal || firstItem(p.cooperationAreas) || 'لم تُسجَّل مجالات التعاون.')}</p>
-        ${tp !== null ? `<div class="term" title="المدة المنقضية من فترة الشراكة"><i style="width:${(tp * 100).toFixed(0)}%"></i></div>` : ''}</div>
-      <div class="ft"><span>${esc((p.owners || []).join('، ') || 'بلا مسؤول')}</span><span>${p.endDate ? 'حتى ' + fmtDate(p.endDate, 'short') : '—'}</span></div></a>`;
-  }).join('')}</div>`;
+  return `<div class="pc-grid">${list.map(pcardHTML).join('')}</div>`;
+}
+/* بطاقة الحلقة: الشعار داخل حلقة تمتلئ بالمدة المنقضية من الشراكة، وخط مسار مصغّر، وثلاثة أرقام */
+function pcardHTML(p) {
+  const pr = partnerById(p.partnerId) || null, st = pStatus(p), tp = termProgress(p), dl = daysLeft(p);
+  const P = pProfile(p);
+  const wf = wfInvolved(p) ? wfStateOf('partnership', p) : null;
+  const done = wf ? WF_STEPS.filter((s) => wf.S[s.id] && wf.S[s.id].status === 'done').length : 0;
+  const strat = (p.ptype || '').includes('استراتيجي');
+  const name = pr ? pr.name : p.title;
+  const R_ = 38, C = 2 * Math.PI * R_, pct = tp === null ? 0 : Math.max(0, Math.min(1, tp));
+  const rem = ['active', 'soon'].includes(st) && dl !== null ? `<b>${nf(dl)}</b><small>يومًا</small>`
+    : st === 'upcoming' && p.startDate ? `<small>يبدأ بعد</small><b>${nf(Math.max(0, daysBetween(today(), parseDate(p.startDate))))}</b>`
+    : st === 'ended' ? '<small>انتهت</small>' : '<small>—</small>';
+  const goal = p.showcaseGoal || firstItem(p.cooperationAreas) || firstItem(p.expectedImpact) || '';
+  const ev = P.ev && P.ev.score !== null ? P.ev.score : null;
+  const owners = p.owners || [];
+  return `<article class="pc st-${st} ${strat ? 'strat' : ''}" style="--c:${ST_VAR(st)}">
+    <div class="pc-media">${coverHTML(p.id + (pr ? pr.name : ''), p.coverFileId, { W: 640, H: 300, levels: 10, cols: 40, tone: toneFor(pr) })}<span class="pc-shade" aria-hidden="true"></span>
+      <div class="pc-top">${statusChip(p)}${p.ptype ? `<span class="pc-type">${strat ? icon('star') : ''}${esc(p.ptype)}</span>` : ''}</div>
+      ${goal ? `<p class="pc-goal">${esc(goal)}</p>` : ''}
+    </div>
+    <div class="pc-ring" ${tp !== null ? `title="انقضى ${Math.round(pct * 100)}% من مدة الشراكة"` : ''}>
+      <svg viewBox="0 0 92 92" aria-hidden="true"><circle cx="46" cy="46" r="${R_}" class="t"/>${tp !== null ? `<circle cx="46" cy="46" r="${R_}" class="v" stroke-dasharray="${(pct * C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 46 46)"/><circle cx="${(46 + R_ * Math.cos(pct * 2 * Math.PI - Math.PI / 2)).toFixed(1)}" cy="${(46 + R_ * Math.sin(pct * 2 * Math.PI - Math.PI / 2)).toFixed(1)}" r="4" class="k"/>` : ''}</svg>
+      <span class="pc-lg ${pr && pr.logoFileId ? 'has' : ''}">${logoOrMono(pr, name)}</span>
+    </div>
+    <div class="pc-body"><div class="pc-head">
+      <span class="pc-code">${esc(p.code || '')}${pSector(p) ? ` · ${esc(pSector(p))}` : ''}${pr && pr.domain ? ` · ${esc(pr.domain)}` : ''}</span>
+      <h3><a class="pc-link" href="#/partnerships/${p.id}">${esc(name)}</a> ${demoTag(p)}</h3>
+      <p class="pc-sub">${esc(p.title && pr && p.title !== pr.name ? p.title : p.classification || 'تصنيف غير محدد')}</p></div>
+      ${wf ? `<div class="pc-wf" title="مسار المذكرة: ${done} من ${WF_STEPS.length}"><span class="pc-wfl" aria-hidden="true">${WF_STEPS.map((s) => `<i class="${wf.S[s.id] && wf.S[s.id].status === 'done' ? 'd' : wf.cur && wf.cur.id === s.id ? 'c' : ''}"></i>`).join('')}</span><small>${wf.cur ? `${wf.cur.n}. ${esc(wf.cur.t)}` : wf.closed ? 'أُغلق الطلب' : 'اكتمل المسار'}</small></div>` : ''}
+      <dl class="pc-facts">
+        <div class="${st === 'soon' ? 'w' : ''}"><dt>المتبقي</dt><dd>${rem}</dd></div>
+        <div class="${ev !== null ? 'e-' + evalTone(ev) : ''}"><dt>التقييم</dt><dd>${ev !== null ? `<b>${ev}</b><small>/100</small>` : '<small>لم تُقيَّم</small>'}</dd></div>
+        <div><dt>القيمة</dt><dd>${P.total ? `<b>${sarShort(P.total)}</b><small>ر.س</small>` : '<small>—</small>'}</dd></div>
+      </dl>
+    </div>
+    <footer class="pc-foot">
+      <span class="pc-own" title="${esc(owners.join('، ') || 'بلا مسؤول')}">${owners.slice(0, 3).map((o) => avatar(o)).join('')}${owners.length ? '' : '<small>بلا مسؤول</small>'}</span>
+      <span class="pc-end">${p.endDate ? `${icon('calendar')}حتى ${fmtDate(p.endDate, 'short')}` : ''}</span>
+      <span class="pc-acts">${can('view.reports') ? `<a href="#/reports?ids=${p.id}" title="تقرير" aria-label="تقرير">${icon('chart')}</a>` : ''}<button type="button" data-pcdos="${p.id}" title="الملف الشامل" aria-label="الملف الشامل">${icon('file')}</button></span>
+    </footer>
+  </article>`;
 }

@@ -3431,6 +3431,32 @@ a.chip.cat:hover{background:var(--mist)}
 @media (max-width:760px){.bo-ev{grid-template-columns:1fr}.bo-fin{grid-template-columns:1fr}}
 
 /* =====================================================================
+   مراجعة الترويسة والخلفية
+   ===================================================================== */
+.bo-brand-t b{font-size:17px!important;color:var(--ink)!important;font-weight:700;letter-spacing:-.1px}
+.bo-brand-t small{font-size:11px!important}
+.bo-tools{gap:8px}
+.bo-tools .btn{height:34px!important;min-height:34px;padding:0 12px!important;font-size:13px;gap:6px}
+.bo-tools .btn .ic{width:14px;height:14px}
+.bo-tools .icon-btn{width:34px;height:34px}
+.bo-tools .icon-btn .ic{width:16px;height:16px}
+.bo-tools .demo-pill,.bo-tools .bo-demo{font-size:12px;padding:4px 10px}
+.bo-tools .demo-pill .ic,.bo-tools .bo-demo .ic{width:13px;height:13px}
+.bo-tools .rolebox{height:34px;padding:0 4px 0 10px;font-size:13px}
+.bo-tools .rolebox .av{width:26px;height:26px;font-size:11px}
+.bo-new-b{height:34px!important;padding:0 12px!important}
+/* النقشة الهندسية: خفيفة، تبهت نحو الصورة */
+.bo-geo{opacity:1}
+.bo-geo svg{position:absolute;inset:0;stroke:var(--gold);opacity:.13;-webkit-mask-image:radial-gradient(120% 90% at 100% 30%,#000 0%,rgba(0,0,0,.55) 40%,transparent 75%);mask-image:radial-gradient(120% 90% at 100% 30%,#000 0%,rgba(0,0,0,.55) 40%,transparent 75%)}
+.bo-geo pattern g{stroke:var(--gold)}
+:root[data-theme="dark"] .bo-geo svg{opacity:.09}
+.bo-geo-glow{position:absolute;inset:0;background:radial-gradient(700px 420px at 85% 25%,color-mix(in srgb,var(--gold) 10%,transparent),transparent 70%),radial-gradient(600px 500px at 20% 80%,color-mix(in srgb,var(--petrol-3) 8%,transparent),transparent 70%)}
+.bo-tools .tour-top,.bo-tools .demo-ribbon{height:34px;padding:0 12px;font-size:12.5px;gap:6px}
+.bo-tools .tour-top .ic,.bo-tools .demo-ribbon .ic{width:13px;height:13px}
+.bo-tools .rolebox .tag-sim{font-size:10.5px;padding:1px 7px}
+.bo-tools .rolebox .rl{font-size:12.5px}
+
+/* =====================================================================
    مركز الصور ومسار الشراكة — تعمل في الاتجاهات الستة عبر متغيرات الألوان
    ===================================================================== */
 
@@ -4556,6 +4582,91 @@ img.lg{width:100%;height:100%;object-fit:contain;display:block}
 .ds-cv-lg{position:absolute;margin-top:-62px;margin-inline-start:20px;width:96px;height:96px;background:#fff;border:1px solid #E2DCCB;border-radius:6px;padding:10px;box-shadow:0 10px 24px -14px rgba(0,0,0,.4)}
 .ds-cv-lg img{width:100%;height:100%;object-fit:contain}
 .ds-cover{position:relative}
+
+/* =====================================================================
+   بطاقة الحلقة (سجل الشراكات — عرض البطاقات)
+   ===================================================================== */
+.pc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+.pc{position:relative;display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s,border-color .28s;isolation:isolate}
+.pc:hover,.pc:focus-within{transform:translateY(-4px);box-shadow:0 26px 50px -30px rgba(10,30,26,.45);border-color:color-mix(in srgb,var(--c) 45%,var(--line))}
+.pc::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--c);z-index:3}
+.pc-media{position:relative;height:150px;overflow:hidden;background:var(--paper-3)}
+.pc-media img,.pc-media svg{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.pc:hover .pc-media img,.pc:hover .pc-media svg{transform:scale(1.06)}
+.pc-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,20,17,.15) 0%,rgba(6,20,17,0) 35%,rgba(6,20,17,.55) 100%);transition:background .3s}
+.pc:hover .pc-shade{background:linear-gradient(180deg,rgba(6,20,17,.35),rgba(6,20,17,.88))}
+.pc-top{position:absolute;top:12px;right:12px;left:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;z-index:2}
+.pc-top .chip{box-shadow:0 4px 10px -4px rgba(0,0,0,.3)}
+.pc-type{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.92);color:#1A2B26;box-shadow:0 4px 10px -4px rgba(0,0,0,.3)}
+.pc-type .ic{width:12px;height:12px;color:#A47C32;fill:currentColor}
+.pc.strat .pc-type{background:#0F4433;color:#F3E4BE}
+.pc.strat .pc-type .ic{color:#D9C08A}
+.pc-goal{position:absolute;inset:auto 16px 14px 104px;margin:0;color:#fff;font-size:12.5px;line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;opacity:0;transform:translateY(10px);transition:opacity .3s,transform .3s;z-index:2;text-shadow:0 1px 6px rgba(0,0,0,.4)}
+.pc:hover .pc-goal,.pc:focus-within .pc-goal{opacity:1;transform:none}
+.pc-ring{position:absolute;top:104px;right:14px;width:92px;height:92px;z-index:4;border-radius:50%;background:var(--paper);box-shadow:0 10px 22px -12px rgba(0,0,0,.45)}
+.pc-ring svg{position:absolute;inset:0;width:100%;height:100%}
+.pc-ring circle{fill:none;stroke-width:5}
+.pc-ring .t{stroke:var(--paper-3)}
+.pc-ring .v{stroke:var(--c);stroke-linecap:round;transition:stroke-dasharray .6s}
+.pc-ring .k{fill:var(--c);stroke:var(--paper);stroke-width:2.5}
+.pc-lg{position:absolute;inset:14px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 14%,var(--paper));color:var(--ink);font-weight:700;font-size:22px;font-family:var(--display,var(--font));overflow:hidden}
+.pc-lg.has{background:#fff;padding:9px;border:1px solid var(--line)}
+.pc-body{padding:14px 18px 12px;padding-right:118px;min-height:76px;display:flex;flex-direction:column;gap:3px}
+.pc-code{font-size:11px;color:var(--faint);font-family:var(--mono,inherit);letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc h3{font-size:16px;line-height:1.45;margin:0;color:var(--ink);font-family:var(--display,var(--font))}
+.pc-link{color:inherit!important;text-decoration:none!important;outline:none}
+.pc-link::after{content:"";position:absolute;inset:0;z-index:1}
+.pc-link:focus-visible::after{box-shadow:inset 0 0 0 3px var(--gold);border-radius:18px}
+.pc-sub{font-size:12px;color:var(--muted);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-wf{display:flex;flex-direction:column;gap:5px;margin:4px 0 0;padding:10px 18px 0;margin-right:-100px}
+.pc-wfl{display:grid;grid-template-columns:repeat(13,1fr);gap:3px}
+.pc-wfl i{height:5px;border-radius:3px;background:var(--paper-3)}
+.pc-wfl i.d{background:var(--petrol-3)}
+.pc-wfl i.c{background:var(--gold);box-shadow:0 0 0 2px color-mix(in srgb,var(--gold) 30%,transparent);animation:pcPulse 1.8s ease-in-out infinite}
+@keyframes pcPulse{50%{box-shadow:0 0 0 4px color-mix(in srgb,var(--gold) 10%,transparent)}}
+.pc-wf small{font-size:11.5px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-facts{display:grid;grid-template-columns:repeat(3,1fr);margin:12px -100px 0 0;border-top:1px dashed var(--line);padding-top:10px}
+.pc-facts>div{display:flex;flex-direction:column;gap:1px;padding:0 6px;border-inline-start:1px solid var(--line);min-width:0}
+.pc-facts>div:first-child{border-inline-start:0;padding-right:0}
+.pc-facts dt{font-size:10.5px;color:var(--faint)}
+.pc-facts dd{margin:0;display:flex;align-items:baseline;gap:3px;white-space:nowrap}
+.pc-facts dd b{font-size:18px;color:var(--ink);font-family:var(--display,var(--font));font-variant-numeric:tabular-nums}
+.pc-facts dd small{font-size:11px;color:var(--muted)}
+.pc-facts .w dd b{color:var(--gold-ink)}
+.pc-facts .e-ok dd b{color:var(--petrol-3)}.pc-facts .e-gold dd b{color:var(--gold-ink)}.pc-facts .e-danger dd b{color:var(--danger)}
+.pc-foot{margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px 18px;border-top:1px solid var(--line);background:var(--paper-2);position:relative;z-index:2}
+.pc-own{display:flex}
+.pc-own .av{width:26px;height:26px;font-size:10.5px;border:2px solid var(--paper-2);margin-inline-start:-7px}
+.pc-own .av:first-child{margin-inline-start:0}
+.pc-own small{font-size:11.5px;color:var(--faint)}
+.pc-end{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted);flex:1}
+.pc-end .ic{width:13px;height:13px}
+.pc-acts{display:flex;gap:4px;opacity:.55;transition:opacity .2s}
+.pc:hover .pc-acts,.pc:focus-within .pc-acts{opacity:1}
+.pc-acts a,.pc-acts button{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;border:1px solid var(--line);background:var(--paper);color:var(--ink-2);cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.pc-acts a:hover,.pc-acts button:hover{background:var(--petrol);color:#fff;border-color:var(--petrol)}
+.pc-acts .ic{width:14px;height:14px}
+.pc.st-ended .pc-media{filter:grayscale(.65)}
+/* المجلس */
+[data-design="board"] .pc{border-radius:4px}
+[data-design="board"] .pc::before{height:2px}
+[data-design="board"] .pc-type,[data-design="board"] .pc-acts a,[data-design="board"] .pc-acts button{border-radius:2px}
+[data-design="board"] .pc-link:focus-visible::after{border-radius:4px}
+[data-design="board"] .pc-ring{box-shadow:0 0 0 1px var(--line-2),0 10px 22px -14px rgba(0,0,0,.45)}
+:root[data-theme="dark"] .pc:hover{box-shadow:0 26px 50px -24px rgba(0,0,0,.7)}
+@media (max-width:560px){.pc-grid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.pc,.pc-media img,.pc-goal{transition:none}.pc-wfl i.c{animation:none}}
+@media print{.pc-grid{grid-template-columns:repeat(3,1fr)!important;gap:10px}.pc{break-inside:avoid;box-shadow:none!important;transform:none!important}.pc-acts{display:none}.pc-goal{display:none}}
+
+.pc-media .cover{position:absolute;inset:0}
+.pc-media .illus{z-index:2;transition:opacity .2s}
+.pc:hover .pc-media .illus{opacity:0}
+.pc-body{padding:12px 18px 14px!important;min-height:0!important;gap:0!important}
+.pc-head{padding-right:100px;min-height:70px;display:flex;flex-direction:column;gap:3px}
+.pc-wf{margin:12px 0 0!important;padding:0!important}
+.pc-wfl{direction:rtl}
+.pc-facts{margin:12px 0 0!important}
+.pc-goal{inset:auto 112px 14px 16px!important}
 </style>
 </head>
 <body>
@@ -8004,6 +8115,7 @@ function renderRegister(el, r) {
     if (e.target.closest('[data-reset]')) { st.q = ''; $('#regQ', el).value = ''; for (const k of Object.keys(st.f)) delete st.f[k]; st.missing = st.importnote = st.partner = ''; fb.render(); draw(); syncHash(); return; }
     const th = e.target.closest('th[data-sort]');
     if (th) { App.ui.regSort = th.dataset.sort; $('#regSort', el).value = th.dataset.sort; draw(); return; }
+    const pd = e.target.closest('[data-pcdos]'); if (pd) { const pp = D.partnerships.find((x) => x.id === pd.dataset.pcdos); if (pp) dossierDialog(pp); return; }
     const row = e.target.closest('[data-row]');
     if (row && !e.target.closest('a,button') && !row.closest('.cm-detail')) go('#/partnerships/' + row.dataset.row);
     if (e.target.closest('[data-print]')) window.print();
@@ -8028,17 +8140,49 @@ function regTable(list) {
     </tbody></table></div>`;
 }
 function regCards(list) {
-  return `<div class="cards">${list.map((p) => {
-    const pr = partnerById(p.partnerId), tp = termProgress(p);
-    return `<a class="pcard" href="#/partnerships/${p.id}">
-      <div class="media">${coverHTML(p.id + (pr ? pr.name : ''), p.coverFileId, { W: 600, H: 300, levels: 10, cols: 40, tone: toneFor(pr) })}<span class="st">${statusChip(p)}</span>${plateHTML(pr, 56)}</div>
-      <div class="bd"><h3>${esc(pr ? pr.name : p.title)} ${demoTag(p)}</h3>
-        <div class="ln"><span>${esc(p.classification || 'تصنيف غير محدد')}</span><span>${esc(pSector(p) || '')}</span><span class="code">${esc(p.code || '')}</span></div>
-        ${(p.categories || []).length ? `<div class="tagline">${p.categories.map((c) => `<span class="chip plain cat">${esc(c)}</span>`).join('')}</div>` : ''}
-        <p class="goal">${esc(p.showcaseGoal || firstItem(p.cooperationAreas) || 'لم تُسجَّل مجالات التعاون.')}</p>
-        ${tp !== null ? `<div class="term" title="المدة المنقضية من فترة الشراكة"><i style="width:${(tp * 100).toFixed(0)}%"></i></div>` : ''}</div>
-      <div class="ft"><span>${esc((p.owners || []).join('، ') || 'بلا مسؤول')}</span><span>${p.endDate ? 'حتى ' + fmtDate(p.endDate, 'short') : '—'}</span></div></a>`;
-  }).join('')}</div>`;
+  return `<div class="pc-grid">${list.map(pcardHTML).join('')}</div>`;
+}
+/* بطاقة الحلقة: الشعار داخل حلقة تمتلئ بالمدة المنقضية من الشراكة، وخط مسار مصغّر، وثلاثة أرقام */
+function pcardHTML(p) {
+  const pr = partnerById(p.partnerId) || null, st = pStatus(p), tp = termProgress(p), dl = daysLeft(p);
+  const P = pProfile(p);
+  const wf = wfInvolved(p) ? wfStateOf('partnership', p) : null;
+  const done = wf ? WF_STEPS.filter((s) => wf.S[s.id] && wf.S[s.id].status === 'done').length : 0;
+  const strat = (p.ptype || '').includes('استراتيجي');
+  const name = pr ? pr.name : p.title;
+  const R_ = 38, C = 2 * Math.PI * R_, pct = tp === null ? 0 : Math.max(0, Math.min(1, tp));
+  const rem = ['active', 'soon'].includes(st) && dl !== null ? `<b>${nf(dl)}</b><small>يومًا</small>`
+    : st === 'upcoming' && p.startDate ? `<small>يبدأ بعد</small><b>${nf(Math.max(0, daysBetween(today(), parseDate(p.startDate))))}</b>`
+    : st === 'ended' ? '<small>انتهت</small>' : '<small>—</small>';
+  const goal = p.showcaseGoal || firstItem(p.cooperationAreas) || firstItem(p.expectedImpact) || '';
+  const ev = P.ev && P.ev.score !== null ? P.ev.score : null;
+  const owners = p.owners || [];
+  return `<article class="pc st-${st} ${strat ? 'strat' : ''}" style="--c:${ST_VAR(st)}">
+    <div class="pc-media">${coverHTML(p.id + (pr ? pr.name : ''), p.coverFileId, { W: 640, H: 300, levels: 10, cols: 40, tone: toneFor(pr) })}<span class="pc-shade" aria-hidden="true"></span>
+      <div class="pc-top">${statusChip(p)}${p.ptype ? `<span class="pc-type">${strat ? icon('star') : ''}${esc(p.ptype)}</span>` : ''}</div>
+      ${goal ? `<p class="pc-goal">${esc(goal)}</p>` : ''}
+    </div>
+    <div class="pc-ring" ${tp !== null ? `title="انقضى ${Math.round(pct * 100)}% من مدة الشراكة"` : ''}>
+      <svg viewBox="0 0 92 92" aria-hidden="true"><circle cx="46" cy="46" r="${R_}" class="t"/>${tp !== null ? `<circle cx="46" cy="46" r="${R_}" class="v" stroke-dasharray="${(pct * C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 46 46)"/><circle cx="${(46 + R_ * Math.cos(pct * 2 * Math.PI - Math.PI / 2)).toFixed(1)}" cy="${(46 + R_ * Math.sin(pct * 2 * Math.PI - Math.PI / 2)).toFixed(1)}" r="4" class="k"/>` : ''}</svg>
+      <span class="pc-lg ${pr && pr.logoFileId ? 'has' : ''}">${logoOrMono(pr, name)}</span>
+    </div>
+    <div class="pc-body"><div class="pc-head">
+      <span class="pc-code">${esc(p.code || '')}${pSector(p) ? ` · ${esc(pSector(p))}` : ''}${pr && pr.domain ? ` · ${esc(pr.domain)}` : ''}</span>
+      <h3><a class="pc-link" href="#/partnerships/${p.id}">${esc(name)}</a> ${demoTag(p)}</h3>
+      <p class="pc-sub">${esc(p.title && pr && p.title !== pr.name ? p.title : p.classification || 'تصنيف غير محدد')}</p></div>
+      ${wf ? `<div class="pc-wf" title="مسار المذكرة: ${done} من ${WF_STEPS.length}"><span class="pc-wfl" aria-hidden="true">${WF_STEPS.map((s) => `<i class="${wf.S[s.id] && wf.S[s.id].status === 'done' ? 'd' : wf.cur && wf.cur.id === s.id ? 'c' : ''}"></i>`).join('')}</span><small>${wf.cur ? `${wf.cur.n}. ${esc(wf.cur.t)}` : wf.closed ? 'أُغلق الطلب' : 'اكتمل المسار'}</small></div>` : ''}
+      <dl class="pc-facts">
+        <div class="${st === 'soon' ? 'w' : ''}"><dt>المتبقي</dt><dd>${rem}</dd></div>
+        <div class="${ev !== null ? 'e-' + evalTone(ev) : ''}"><dt>التقييم</dt><dd>${ev !== null ? `<b>${ev}</b><small>/100</small>` : '<small>لم تُقيَّم</small>'}</dd></div>
+        <div><dt>القيمة</dt><dd>${P.total ? `<b>${sarShort(P.total)}</b><small>ر.س</small>` : '<small>—</small>'}</dd></div>
+      </dl>
+    </div>
+    <footer class="pc-foot">
+      <span class="pc-own" title="${esc(owners.join('، ') || 'بلا مسؤول')}">${owners.slice(0, 3).map((o) => avatar(o)).join('')}${owners.length ? '' : '<small>بلا مسؤول</small>'}</span>
+      <span class="pc-end">${p.endDate ? `${icon('calendar')}حتى ${fmtDate(p.endDate, 'short')}` : ''}</span>
+      <span class="pc-acts">${can('view.reports') ? `<a href="#/reports?ids=${p.id}" title="تقرير" aria-label="تقرير">${icon('chart')}</a>` : ''}<button type="button" data-pcdos="${p.id}" title="الملف الشامل" aria-label="الملف الشامل">${icon('file')}</button></span>
+    </footer>
+  </article>`;
 }
 
 /* —— 13-partnership.js —— */
@@ -9973,7 +10117,7 @@ function tourSteps() {
     { sel: ['.reg-tools .searchbox', '[data-tour="reg-tools"]'], h: 'البحث الذكي', what: 'بحث فوري باسم الجهة أو الرمز أو أي نص في الشراكة، يتجاهل فروق الهمزات والتاء المربوطة.', why: 'يصل المستخدم إلى أي شراكة في ثوانٍ.', how: 'شاهد: نكتب «حرس» فتظهر النتائج المطابقة فورًا.', act: async () => { await TA.type('.reg-tools .searchbox input', 'حرس'); await TA.clear('.reg-tools .searchbox input'); } },
     { sel: ['#regF'], h: 'الفلاتر المتعددة', what: 'فلاتر بالحالة والتصنيف والقطاع والإدارة والمسؤول وسنة البدء، وكل فلتر يقبل أكثر من اختيار.', why: 'تكوين أي قائمة مطلوبة: «السارية في القطاع الحكومي» أو «المنتهية هذا العام».', how: 'شاهد: نختار «سارية» من فلتر الحالة.', act: async () => { const fb = $('#regF'); if (fb) { window.scrollTo({ top: Math.max(0, fb.getBoundingClientRect().top + scrollY - 150) }); await TA.wait(250); } await TA.click('#regF .fbtn[data-dim="status"]'); const o = TA.find('#regF .fpop .fo', 'سارية'); if (o) await TA.click(o.querySelector('input') || o); const d = TA.q('#regF [data-done]'); if (d) await TA.click(d); await TA.wait(1200); TA.hide(); await tourGo('#/partnerships'); } },
     { sel: ['.reg-meta .seg', '.seg'], h: 'طرق العرض', what: 'جدول عملي للمراجعة، أو بطاقات بصرية بالصور.', why: 'الجدول للعمل اليومي والتصدير، والبطاقات للعرض على القيادات.', how: 'شاهد: نبدّل طريقة العرض ثم نعود.', act: async () => { const b = $$('.reg-meta .seg [data-view], .seg [data-view]'); const on = b.find((x) => x.classList.contains('on')), off = b.find((x) => !x.classList.contains('on')); if (off) { await TA.click(off); await TA.wait(900); } if (on) await TA.click(on); } },
-    { sel: ['#regBody tbody tr:first-child', '.st-reg .st-card:first-child', '.cm-detail', '#regBody .pcard:first-child'], h: design() === 'command' ? 'القائمة والتفاصيل والمقارنة' : 'كل شراكة في سطر واضح', what: design() === 'command' ? 'اختيار أي سجل يعرض تفاصيله جانبًا، ويمكن تحديد حتى 3 شراكات ومقارنتها.' : 'الحالة محسوبة من التواريخ، مع الفترة والمتبقي والمسؤول وتنبيه الانتهاء.', why: 'قراءة سريعة لوضع كل شراكة دون فتحها.', how: 'اضغط السجل لفتح صفحته الكاملة، أو نزّل القائمة Excel أو أصدر لها تقريرًا.' },
+    { sel: ['#regBody tbody tr:first-child', '#regBody .pc:first-child', '.st-reg .st-card:first-child', '.cm-detail', '#regBody .pcard:first-child'], h: design() === 'command' ? 'القائمة والتفاصيل والمقارنة' : 'كل شراكة في سطر واضح', what: design() === 'command' ? 'اختيار أي سجل يعرض تفاصيله جانبًا، ويمكن تحديد حتى 3 شراكات ومقارنتها.' : 'الحالة محسوبة من التواريخ، مع الفترة والمتبقي والمسؤول وتنبيه الانتهاء.', why: 'قراءة سريعة لوضع كل شراكة دون فتحها.', how: 'اضغط السجل لفتح صفحته الكاملة، أو نزّل القائمة Excel أو أصدر لها تقريرًا.' },
   ] });
   if (real) S.push({ key: 'detail', title: 'تفاصيل الشراكة', route: '#/partnerships/' + real.id, parts: [
     { sel: ['.dhead-in', '[data-tour="detail-head"]'], h: 'صفحة الشراكة', what: 'الجهة والتصنيف والحالة المحسوبة، مع صور الشراكة في الغلاف.', why: 'كل ما يخص الشراكة في مكان واحد منظم.', how: 'تنقّل بين الأقسام من الشريط أسفل الغلاف.' },
@@ -10981,7 +11125,7 @@ const RV_SETS = [
   // العناوين: انزلاق من جهة القراءة
   ['head', '.hsec-h, .st-ch-h, .cm-mh, .ph h1'],
   // البطاقات والعناصر: صعود متتابع مع وضوح تدريجي
-  ['rise', '.pcard, .story-item, .news-item, .spot-body, .share-band .share-in, .st-card, .st-news-item, .cm-row, .ach-card, .st-quote'],
+  ['rise', '.pc, .pcard, .story-item, .news-item, .spot-body, .share-band .share-in, .st-card, .st-news-item, .cm-row, .ach-card, .st-quote'],
   // الشعارات والأرقام: ظهور بتكبير
   ['pop', '.logo-cell, .kband .kpi, .st-stat, .cm-tile'],
 ];
@@ -11084,7 +11228,7 @@ function boardTopbarHTML(tourBtn, demo, roleBox) {
   const flat = groups.flatMap((g) => g.items);
   const pick = (h) => flat.find((it) => it.h === h);
   const main = ['#/', '#/tasks', '#/dashboard', '#/partnerships', '#/partners', '#/reports', '#/share'].map(pick).filter(Boolean);
-  const label = (it) => ({ '#/dashboard': 'لوحة المجلس' }[it.h] || it.l);
+  const label = (it) => ({ '#/dashboard': 'لوحة الأداء' }[it.h] || it.l);
   const rest = flat.filter((it) => !main.includes(it));
   const dt = boDates();
   const link = (it, i) => `<a class="nav-a bo-link" href="${it.h}" data-m="${it.m.join(',')}" ${it.only ? `data-only="${it.only}"` : ''} ${it.not ? `data-not="${it.not}"` : ''}><em>${boIdx(i + 1)}</em>${esc(label(it))}${it.cnt ? `<span class="cnt">${it.cnt}</span>` : ''}</a>`;
@@ -11164,13 +11308,13 @@ function renderHomeBoard(el) {
   el.classList.add('full');
   el.innerHTML = `<div class="bo-home">
     <section class="bo-hero" data-tour="home-hero">
-      <div class="bo-hero-bg" aria-hidden="true">${topoSVG('bo-hero', { W: 1600, H: 900, levels: 16, cols: 80, focus: 'left', draw: !cuReduce(), cls: 'topo bo-topo' })}</div>
+      <div class="bo-hero-bg bo-geo" aria-hidden="true"><svg width="100%" height="100%"><defs><pattern id="boStar" width="96" height="96" patternUnits="userSpaceOnUse"><g fill="none" stroke-width="1"><rect x="20" y="20" width="56" height="56"/><rect x="20" y="20" width="56" height="56" transform="rotate(45 48 48)"/><circle cx="48" cy="48" r="9"/><path d="M0 48H8M88 48h8M48 0v8M48 88v8"/></g></pattern></defs><rect width="100%" height="100%" fill="url(#boStar)"/></svg><span class="bo-geo-glow"></span></div>
       <div class="bo-hero-in">
         <div class="bo-hero-t">
           <div class="bo-eyebrow"><i></i>${esc(o.name)} · ${esc(o.dept)}</div>
           <h1>${esc(h.heroTitle || 'نربط المؤسسة بشركاء يوسّعون أثرها البيئي')}</h1>
           <p class="bo-lead">${esc(h.heroText || '')}</p>
-          <div class="bo-cta">${can('view.dashboard') ? `<a class="btn primary lg" href="#/dashboard">${icon('chart')} لوحة المجلس</a>` : ''}<a class="btn lg" href="#/partnerships">${icon('layers')} سجل الشراكات</a></div>
+          <div class="bo-cta">${can('view.dashboard') ? `<a class="btn primary lg" href="#/dashboard">${icon('chart')} لوحة الأداء</a>` : ''}<a class="btn lg" href="#/partnerships">${icon('layers')} سجل الشراكات</a></div>
           <dl class="bo-hero-facts">
             <div><dt>شراكات سارية</dt><dd><b class="cu" data-v="${c.active}">${c.active}</b></dd></div>
             <div><dt>جهات شريكة</dt><dd><b class="cu" data-v="${c.partners}">${c.partners}</b></dd></div>
@@ -11237,7 +11381,7 @@ function boQuickHTML() {
   const T = [
     Session.role() !== 'viewer' && (() => { const n = wfTasks().filter((t) => !t.follow).length; return { h: '#/tasks', ic: 'flag', t: 'مهامي', d: 'خطوات المسار المسندة لحسابك', b: n ? `${n} بانتظارك` : '' }; })(),
     { h: '#/partnerships', ic: 'layers', t: 'سجل الشراكات', d: 'ابحث وصفِّ وافتح أي شراكة', b: soon ? `${soon} ${nounFor(soon, ['تنتهي قريبًا', 'تنتهيان قريبًا', 'تنتهي قريبًا', 'تنتهي قريبًا'])}` : '' },
-    can('view.dashboard') && { h: '#/dashboard', ic: 'chart', t: 'لوحة المجلس', d: 'إحاطة جاهزة للعرض', b: '' },
+    can('view.dashboard') && { h: '#/dashboard', ic: 'chart', t: 'لوحة الأداء', d: 'حلقات النمو وإحاطة المجلس', b: '' },
     can('proposal.review') && { h: '#/proposals?status=submitted', ic: 'inbox', t: 'المقترحات الواردة', d: 'مراجعة مقترحات الإدارات', b: pend ? `${pend} ${nounFor(pend, ['جديد', 'جديدان', 'جديدة', 'جديدًا'])}` : '' },
     can('proposal.create') && { h: '#/share/new', ic: 'send', t: 'شارك بمقترح', d: mineInfo ? 'لديك مقترح بانتظار الاستكمال' : 'أربع خطوات لاقتراح جهة', b: mineInfo ? `${mineInfo} بانتظار الاستكمال` : '' },
     { h: '#/media', ic: 'image', t: 'مركز الصور', d: 'صور الشراكات والإنجازات', b: '' },
@@ -12898,7 +13042,7 @@ function renderProcess(el) {
       <section class="panel"><div class="panel-h"><h3>الحسابات ومهامها في المسار</h3><span class="sub">حساب لكل إدارة</span></div>
         <div class="panel-b pr-accts">${accts.filter((a) => a.role !== 'team').map((a) => { const mine = a.role === 'dept' ? WF_STEPS.filter((s) => (a.duties || []).includes(s.actor)) : a.role === 'admin' ? WF_STEPS.filter((s) => s.actor === 'partnerships') : []; return `<div class="pr-acct ${a.duties && a.duties.length ? 'prop' : ''}">
           <div class="pr-acct-h"><b>${esc(a.t)}</b><span class="chip">${esc(ROLES[a.role].label)}</span></div>
-          <p>${a.role === 'viewer' ? 'اطلاع على لوحة المجلس والتقارير.' : mine.length ? `${a.role === 'admin' ? 'خطوات إدارة الشراكات، والتنفيذ نيابة عن أي جهة' : 'يعتمد أو ينفّذ'}: ${mine.map((s) => `${s.n}. ${esc(s.t)}`).join('، ')}.` : ''}${a.role === 'dept' ? ' وعند طلب شراكة أو التقاطع معها: الاجتماع التعريفي، والملاحظات على المذكرة، وتقارير التفعيل.' : ''}</p></div>`; }).join('')}
+          <p>${a.role === 'viewer' ? 'اطلاع على لوحة الأداء والتقارير.' : mine.length ? `${a.role === 'admin' ? 'خطوات إدارة الشراكات، والتنفيذ نيابة عن أي جهة' : 'يعتمد أو ينفّذ'}: ${mine.map((s) => `${s.n}. ${esc(s.t)}`).join('، ')}.` : ''}${a.role === 'dept' ? ' وعند طلب شراكة أو التقاطع معها: الاجتماع التعريفي، والملاحظات على المذكرة، وتقارير التفعيل.' : ''}</p></div>`; }).join('')}
           <div class="pr-acct"><div class="pr-acct-h"><b>فريق إدارة الشراكات</b><span class="chip">${esc(ROLES.team.label)}</span></div><p>حساب لكل عضو (${L('team').map(esc).join('، ')}): ينفّذ خطوات إدارة الشراكات ويتابع الإدارات.</p></div></div></section>
       <section class="panel"><div class="panel-h"><h3>المسار الآن</h3><span class="sub">عدد السجلات في كل مرحلة</span></div>
         <div class="panel-b"><ul class="pr-gaps pr-now">${PR_PHASES.map((ph, i) => { const ids = WF_STEPS.filter((s) => s.n - 1 >= ph.from && s.n - 1 <= ph.to); const n = ids.reduce((t, s) => t + prAt(s.id).length, 0); return `<li>${icon('layers')}<span><b>${pad(i + 1)} ${esc(ph.t)}:</b> ${n ? plural(n, 'سجل واحد', 'سجلان', 'سجلات', 'سجلًا') : 'لا سجلات'}</span></li>`; }).join('')}</ul></div></section>
@@ -13007,7 +13151,7 @@ function palActions() {
     can('edit.partnership') && { t: 'شراكة جديدة', s: 'إضافة سجل شراكة', ic: 'plus', kw: 'اضافة جديد سجل', run: () => go('#/partnerships/new') },
     can('proposal.create') && { t: 'مقترح شراكة جديد', s: 'من خدمة «شارك»', ic: 'send', kw: 'اقتراح شارك جديد', run: () => go('#/share/new') },
     can('edit.partnership') && { t: 'رفع صور', s: 'إلى شراكة في مركز الصور', ic: 'upload', kw: 'صور رفع مرفقات', run: async () => { go('#/media'); await sleep(250); if (await mediaUploadDlg('')) route(); } },
-    can('view.dashboard') && { t: 'عرض لوحة المجلس تقديميًا', s: 'كل فصل شريحة بملء الشاشة', ic: 'play', kw: 'عرض تقديمي مجلس شرائح', run: async () => { if (design() !== 'board') { go('#/dashboard'); await sleep(300); return togglePresent(); } go('#/dashboard'); await sleep(450); boPresent(true); } },
+    can('view.dashboard') && { t: 'عرض إحاطة المجلس تقديميًا', s: 'كل فصل شريحة بملء الشاشة', ic: 'play', kw: 'عرض تقديمي مجلس شرائح', run: async () => { if (design() !== 'board') { go('#/dashboard'); await sleep(300); return togglePresent(); } go('#/dashboard'); await sleep(450); boPresent(true); } },
     can('view.reports') && { t: 'إنشاء تقرير', s: 'PowerPoint أو PDF', ic: 'file', kw: 'تقرير عرض باوربوينت', run: () => go('#/reports') },
     can('export') && { t: 'تصدير سجل الشراكات إلى Excel', s: 'كل السجلات المتاحة لدورك', ic: 'download', kw: 'اكسل تصدير', run: () => exportPartnershipsXlsx(visiblePartnerships(), 'سجل-الشراكات') },
     Session.role() !== 'viewer' && { t: 'مهامي', s: (() => { const n = wfTasks().filter((t) => !t.follow).length; return n ? `${n} بانتظارك` : 'لا مهام الآن'; })(), ic: 'flag', kw: 'مهام مهمة انتظار مسار', run: () => go('#/tasks') },

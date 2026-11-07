@@ -5,7 +5,7 @@ const RV_SETS = [
   // العناوين: انزلاق من جهة القراءة
   ['head', '.hsec-h, .st-ch-h, .cm-mh, .ph h1'],
   // البطاقات والعناصر: صعود متتابع مع وضوح تدريجي
-  ['rise', '.pcard, .story-item, .news-item, .spot-body, .share-band .share-in, .st-card, .st-news-item, .cm-row, .ach-card, .st-quote'],
+  ['rise', '.pc, .pcard, .story-item, .news-item, .spot-body, .share-band .share-in, .st-card, .st-news-item, .cm-row, .ach-card, .st-quote'],
   // الشعارات والأرقام: ظهور بتكبير
   ['pop', '.logo-cell, .kband .kpi, .st-stat, .cm-tile'],
 ];
