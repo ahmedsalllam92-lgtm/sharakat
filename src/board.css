@@ -12,7 +12,7 @@
   --chart-1:#0F4433;--chart-2:#2F7A5E;--chart-3:#A8C5B5;--chart-4:#A47C32;--chart-5:#DCC79A;--chart-6:#5C6861;--chart-7:#D7CFBC;--chart-8:#7A5A20;
   --ok:#25674F;--ok-bg:#E3EEE7;--warn:#8E6214;--warn-bg:#F6EBCF;--danger:#A23B2A;--danger-bg:#F6E3DC;--info:#2F5B67;--info-bg:#E3ECEE;
   --xb-sec-1:#0F4433;--xb-sec-2:#A47C32;--xb-sec-3:#4F9A78;--xb-sec-4:#B9B2A0;
-  --display:'Noto Naskh Arabic','Markazi Text','IBM Plex Sans Arabic',serif;
+  --display:'Expo Arabic','Noto Naskh Arabic','IBM Plex Sans Arabic',serif;
   --bo-ink-3:#7E8A83;--bo-gold-l:#D9C08A;--bo-rule:linear-gradient(90deg,transparent,var(--gold) 18%,var(--bo-gold-l) 50%,var(--gold) 82%,transparent);
   --top:112px;--r-l:6px;--r-m:6px;
   --shadow:0 1px 0 rgba(20,32,27,.04),0 10px 30px -18px rgba(20,32,27,.28);

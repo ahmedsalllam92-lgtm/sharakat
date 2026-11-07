@@ -10,6 +10,24 @@ for w in (300, 400, 500, 600, 700):
     for sub, rng in (('arabic', AR), ('latin', LAT)):
         b = open(f'{FONT_DIR}/ibm-plex-sans-arabic-{sub}-{w}-normal.woff2', 'rb').read()
         faces.append(f"@font-face{{font-family:'IBM Plex Sans Arabic';font-style:normal;font-display:swap;font-weight:{w};src:url(data:font/woff2;base64,{base64.b64encode(b).decode()}) format('woff2');unicode-range:{rng}}}")
+# خط Expo Arabic (مرخّص): يُضمَّن تلقائيًا إذا وُضعت ملفاته في assets/fonts/expo
+EXPO_DIR = os.path.join(ROOT, 'assets/fonts/expo')
+EXPO_W = [('hairline', 100), ('thin', 100), ('extralight', 200), ('ultralight', 200), ('light', 300), ('book', 400), ('regular', 400), ('normal', 400), ('roman', 400), ('medium', 500), ('demibold', 600), ('semibold', 600), ('demi', 600), ('extrabold', 800), ('heavy', 900), ('black', 900), ('bold', 700)]
+EXPO_MIME = {'.woff2': ('font/woff2', 'woff2'), '.woff': ('font/woff', 'woff'), '.ttf': ('font/ttf', 'truetype'), '.otf': ('font/otf', 'opentype')}
+expo_files = sorted(f for f in glob.glob(os.path.join(EXPO_DIR, '*')) if os.path.splitext(f)[1].lower() in EXPO_MIME)
+expo_seen = {}
+for fp in expo_files:
+    nm = os.path.basename(fp).lower().replace('-', '').replace('_', '').replace(' ', '')
+    if 'italic' in nm or 'oblique' in nm: continue
+    w = next((v for k, v in EXPO_W if k in nm), 400)
+    ext = os.path.splitext(fp)[1].lower()
+    pri = ['.woff2', '.woff', '.otf', '.ttf'].index(ext)
+    if w in expo_seen and expo_seen[w][0] <= pri: continue
+    expo_seen[w] = (pri, fp)
+for w, (pri, fp) in sorted(expo_seen.items()):
+    mime, fmt = EXPO_MIME[os.path.splitext(fp)[1].lower()]
+    faces.append(f"@font-face{{font-family:'Expo Arabic';font-style:normal;font-display:swap;font-weight:{w};src:url(data:{mime};base64,{base64.b64encode(open(fp,'rb').read()).decode()}) format('{fmt}')}}")
+if expo_seen: print('Expo Arabic weights:', sorted(expo_seen))
 EXTRA_FONTS = [
     ('IBM Plex Mono', 'ibm-plex-mono', [500, 600], ['latin']),
     ('Noto Naskh Arabic', 'noto-naskh-arabic', [600, 700], ['arabic']),

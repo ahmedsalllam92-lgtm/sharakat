@@ -128,7 +128,7 @@ async def main():
         # 5) الانعكاس في السجلات والمؤشرات
         await go('#/partnerships')
         ok('register count +1', f"{base_pt+1} شراكة" in await pg.inner_text('#regCount'), await pg.inner_text('#regCount'))
-        await go('#/dashboard')
+        await go('#/dashboard?v=alt')
         dtxt = await pg.inner_text('#dashBody')
         await pg.wait_for_timeout(1200)
         conv = await E("[...document.querySelectorAll('.dz-fr')].find(f=>f.getAttribute('href').endsWith('status=converted')).querySelector('b').textContent")
@@ -186,10 +186,10 @@ async def main():
         ok('dept: no edit button', await E("!document.querySelector('a[href$=\"/edit\"]')"))
         await go(f'#/partnerships/{did}')
         ok('dept: drafts hidden', 'لم يُعثر على الشراكة' in await pg.inner_text('#main'))
-        await go('#/dashboard')
+        await go('#/dashboard?v=alt')
         ok('dept: dashboard not accessible', 'غير متاحة لدورك' in await pg.inner_text('#main'))
         await role('viewer')
-        await go('#/dashboard'); ok('viewer: dashboard accessible', await E("!!document.querySelector('.dz-kpis')"))
+        await go('#/dashboard?v=alt'); ok('viewer: dashboard accessible', await E("!!document.querySelector('.dz-kpis')"))
         await go('#/partnerships'); ok('viewer: no add button', await E("!document.querySelector('a[href=\"#/partnerships/new\"]')"))
         await role('admin')
 
@@ -228,7 +228,7 @@ async def main():
         # 11) طباعة
         await go(f'#/partnerships/{newid}')
         await pg.emulate_media(media='print'); await pg.pdf(path=f'{OUT}/detail-print.pdf', format='A4', print_background=True)
-        await go('#/dashboard'); await pg.wait_for_timeout(400); await pg.pdf(path=f'{OUT}/dashboard-print.pdf', format='A4', print_background=True)
+        await go('#/dashboard?v=alt'); await pg.wait_for_timeout(400); await pg.pdf(path=f'{OUT}/dashboard-print.pdf', format='A4', print_background=True)
         await pg.emulate_media(media='screen')
         ok('errors in console', len(errs)==0, errs[:5])
         await b.close()

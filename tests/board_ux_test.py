@@ -75,7 +75,7 @@ async def main():
         ok('status strip only in the board direction', not await E("!!document.querySelector('#regStrip')"))
         await E("applyDesign('board')"); await pg.wait_for_timeout(900)
         await pg.set_viewport_size({'width':390,'height':844})
-        for h in ['#/', '#/partnerships', '#/dashboard', '#/media', '#/process']:
+        for h in ['#/', '#/partnerships', '#/dashboard?v=alt', '#/media', '#/process']:
             await go(h)
             ok(f'mobile {h}: header fits, no horizontal scroll', await E("document.documentElement.scrollWidth<=innerWidth+1 && [...document.querySelectorAll('.bo-row1 > *, .bo-tools > *')].filter(e=>getComputedStyle(e).display!=='none').every(e=>{const r=e.getBoundingClientRect();return r.left>=-1&&r.right<=innerWidth+1})"))
         ok('no page errors', not errs, errs[:3])

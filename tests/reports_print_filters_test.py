@@ -144,7 +144,7 @@ async def main():
         ok('register report uses displayed list', await E("App.ui.rpt.ids.length") == await E("visiblePartnerships().filter(p=>pStatus(p)==='ended').length"))
         # dashboard one page in all designs
         for dz in ['classic','board']:
-            await E(f"applyDesign('{dz}')"); await pg.wait_for_timeout(700); await go('#/dashboard', 1300)
+            await E(f"applyDesign('{dz}')"); await pg.wait_for_timeout(700); await go('#/dashboard?v=alt', 1300)
             await pg.click('[data-print]'); await pg.wait_for_timeout(900)
             await pg.emulate_media(media='print'); await pg.pdf(path=f'/tmp/sheet-{dz}.pdf', prefer_css_page_size=True, print_background=True); await pg.emulate_media(media='screen')
             await E("window.dispatchEvent(new Event('afterprint'))"); await pg.wait_for_timeout(300)

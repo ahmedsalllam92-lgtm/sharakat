@@ -21,7 +21,7 @@ async def main():
         ok('theme persists after reload', await E("document.documentElement.dataset.theme") == 'dark')
         await pg.click('#topbar [data-themetoggle]'); await pg.wait_for_timeout(300)
         # dashboard structure
-        await go('#/dashboard'); await pg.wait_for_timeout(1500)
+        await go('#/dashboard?v=alt'); await pg.wait_for_timeout(1500)
         ok('KPI row with 5 tiles', await E("document.querySelectorAll('.dz-kpis .dz-kpi').length") == 5)
         nd_all = await E("visiblePartnerships().filter(p=>!p.isDraft).length")
         ok('status legend sums to all records', await E("[...document.querySelectorAll('.dz-st b')].reduce((t,b)=>t+ +b.textContent,0)") == nd_all)
@@ -52,7 +52,7 @@ async def main():
         ok('filters re-compute narrative', 'ضمن الفلاتر المختارة' in narr2)
         nd = await E("applyFilters(visiblePartnerships(), App.dashF).filter(p=>!p.isDraft).length")
         ok('filtered roadmap rows ≤ filtered records', await E("document.querySelectorAll('.rm-row:not(.rm-head)').length") <= nd)
-        await E("App.dashF={}"); await go('#/'); await go('#/dashboard'); await pg.wait_for_timeout(1300)
+        await E("App.dashF={}"); await go('#/'); await go('#/dashboard?v=alt'); await pg.wait_for_timeout(1300)
         # bar drill
         bar = pg.locator('.dz-bars').first.locator('.dzb-r').first
         v = int((await bar.locator('b').inner_text()).strip())
@@ -108,7 +108,7 @@ async def main():
         ok('migration adds gallery section', await E("D.settings.home.sections.some(s=>s.id==='gallery') && D.settings.schema===5"))
         ok('migration assigns covers + galleries', await E("D.partnerships.filter(p=>p.coverFileId).length >= 10 && D.partnerships.some(p=>p.attachments.some(a=>a.fileId.startsWith('lib:')))"))
         # print
-        await go('#/dashboard'); await pg.wait_for_timeout(1300)
+        await go('#/dashboard?v=alt'); await pg.wait_for_timeout(1300)
         await E("window.print=()=>{}; 0"); await pg.click('.dz3 [data-print]'); await pg.wait_for_timeout(900)
         await pg.emulate_media(media='print')
         ok('print: dedicated sheet with title, date, scope and filters; app chrome hidden', await E("!!document.querySelector('#printSheet .ps-head h1') && document.querySelector('#printSheet .ps-meta').innerText.includes('النطاق') && document.querySelector('#printSheet .ps-meta').innerText.includes('آخر تحديث') && getComputedStyle(document.querySelector('#app')).display==='none'"))
@@ -123,7 +123,7 @@ async def main():
         await pg.emulate_media(media='screen')
         # mobile overflow
         m = await b.new_context(viewport={'width':390,'height':844}, is_mobile=True, has_touch=True); mp = await m.new_page()
-        await mp.goto(URL+'#/dashboard'); await mp.wait_for_selector('#main .page'); await mp.wait_for_timeout(1500)
+        await mp.goto(URL+'#/dashboard?v=alt'); await mp.wait_for_selector('#main .page'); await mp.wait_for_timeout(1500)
         ok('mobile dashboard no horizontal overflow', await mp.evaluate("document.documentElement.scrollWidth <= innerWidth + 1"), await mp.evaluate("[document.documentElement.scrollWidth, innerWidth]"))
         await mp.screenshot(path='/home/claude/shots/m-dash.png', full_page=True)
         ok('no page errors', not errs, errs[:3])

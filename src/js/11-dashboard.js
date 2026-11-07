@@ -266,7 +266,8 @@ function narrative(list, filtered) {
 }
 
 /* ===== الصفحة ===== */
-function renderDashboard(el) {
+function renderDashboard(el, r) {
+  if (dashView(r) === 'obs') return renderObservatory(el);
   if (design() === 'board') return renderDashBoard(el);
   return renderDashClassic(el);
 }

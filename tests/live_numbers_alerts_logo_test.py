@@ -59,7 +59,7 @@ async def main():
         ok('setting changes the alert threshold', await E("document.querySelector('.p-alert').classList.contains('urgent')"))
         await go('#/partnerships')
         ok('register shows urgent chip', 'خلال 40 يومًا' in await pg.inner_text('#regBody'))
-        await go('#/dashboard', 1200)
+        await go('#/dashboard?v=alt', 1200)
         ok('dashboard urgent action item', 'عاجل: تنتهي خلال 45 يومًا' in await pg.inner_text('.dz-acts'))
         for d in ['board']:
             await E(f"applyDesign('{d}')"); await pg.wait_for_timeout(700); await go(f'#/partnerships/{pid}')

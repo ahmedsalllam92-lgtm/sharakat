@@ -13,7 +13,7 @@
   --shadow-lg:0 24px 60px -24px rgba(11,63,56,.35);
   --r-s:6px; --r-m:10px; --r-l:16px;
   --side:264px; --top:60px;
-  --font:'IBM Plex Sans Arabic',Tahoma,'Segoe UI',system-ui,sans-serif;
+  --font:'Expo Arabic','IBM Plex Sans Arabic',Tahoma,'Segoe UI',system-ui,sans-serif;
   color-scheme:light;
 }
 :root[data-theme="dark"]{

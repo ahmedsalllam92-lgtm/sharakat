@@ -235,7 +235,7 @@ function renderDashBoard(el) {
         <p class="bo-cover-s">${esc(D.settings.org.name)} — ${esc(D.settings.org.dept)}</p>
         <dl class="bo-cover-meta"><div><dt>تاريخ الإحاطة</dt><dd>${esc(dt.hijri)} · ${esc(dt.greg)}</dd></div><div><dt>آخر تحديث للبيانات</dt><dd>${lu ? fmtDT(lu) : '—'}</dd></div><div><dt>النطاق</dt><dd id="boScope">—</dd></div>${showDemo() ? '<div class="bo-demo">تشمل بيانات تجريبية</div>' : ''}</dl>
       </div>
-      <div class="bo-cover-tools no-print"><button class="btn primary" data-bopresent type="button">${icon('play')} عرض تقديمي</button>${can('export') ? `<button class="btn" data-print type="button">${icon('print')} طباعة أو PDF</button><button class="btn" data-xls type="button">${icon('download')} Excel</button>` : ''}</div>
+      <div class="bo-cover-tools no-print">${obViewSwitch('alt')}<button class="btn primary" data-bopresent type="button">${icon('play')} عرض تقديمي</button>${can('export') ? `<button class="btn" data-print type="button">${icon('print')} طباعة أو PDF</button><button class="btn" data-xls type="button">${icon('download')} Excel</button>` : ''}</div>
       <nav class="bo-toc no-print" aria-label="محاور الإحاطة">${BO_CH.map((c, i) => `<a href="#" data-boch="${i}"><em>${boIdx(i + 1)}</em><span>${c.t}</span></a>`).join('')}</nav>
     </header>
     <div class="bo-filters no-print"><div class="fbar dz-fbar" id="dashF"></div><div class="dz2-active" id="dzActive"></div></div>

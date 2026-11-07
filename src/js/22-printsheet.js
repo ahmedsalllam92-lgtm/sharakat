@@ -104,5 +104,5 @@ async function printDashboardSheet() {
 }
 // Ctrl+P من صفحة المؤشرات يطبع الورقة الواحدة أيضًا
 window.addEventListener('beforeprint', () => {
-  if (App.route && App.route.name === 'dashboard' && design() !== 'board' && !document.documentElement.classList.contains('printing-sheet') && !document.documentElement.classList.contains('printing-report')) preparePrintSheet();
+  if (App.route && App.route.name === 'dashboard' && design() !== 'board' && App.dashView === 'alt' && !document.documentElement.classList.contains('printing-sheet') && !document.documentElement.classList.contains('printing-report')) preparePrintSheet();
 });

@@ -10,7 +10,7 @@ async def main():
         await pg.goto(URL); await pg.wait_for_selector('#main .page'); await pg.wait_for_timeout(700)
         E=pg.evaluate
         # dashboard lower surface
-        await E("App.dashF={}; App.dashHist=[]; App.dashDim='sector'; location.hash='#/dashboard'"); await pg.wait_for_timeout(1500)
+        await E("App.dashF={}; App.dashHist=[]; App.dashDim='sector'; location.hash='#/dashboard?v=alt'"); await pg.wait_for_timeout(1500)
         ok('lower part is one joined surface with 5 sections', await E("document.querySelectorAll('.dz3-deep:not(.dv) > .dz3-dc').length") == 5)
         nsec = await E("countBy(visiblePartnerships().filter(p=>!p.isDraft),'sector').filter(r=>r.n).length")
         ok('treemap shows one block per sector', await E("document.querySelectorAll('.tm .tm-b').length") == nsec)

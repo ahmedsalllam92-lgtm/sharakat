@@ -37,7 +37,7 @@
 .hero-art.hfx .hfx-media .photo{position:absolute;inset:0 auto 0 0;width:62%;height:100%;object-fit:cover}
 
 /* ---------- زر اتجاه التصميم العائم ---------- */
-.dsw{position:fixed;left:18px;bottom:18px;z-index:180;font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif}
+.dsw{position:fixed;left:18px;bottom:18px;z-index:180;font-family:'Expo Arabic','IBM Plex Sans Arabic',Tahoma,sans-serif}
 .dsw.hide{display:none}
 .dsw-fab{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 12px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:#16222A;color:#fff;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);cursor:pointer;font:inherit;font-size:13px;opacity:.9;transition:opacity .2s,transform .2s}
 .dsw-fab:hover{opacity:1;transform:translateY(-1px)}
@@ -79,7 +79,7 @@
 @media (max-width:980px){.dcards,.tour-intro{grid-template-columns:1fr}}
 
 /* ---------- الاستعراض ---------- */
-.tour{position:fixed;inset:0;z-index:600;pointer-events:none;--t-bg:#0B3F38;--t-ink:#F2F7F5;--t-mut:#A9CBBE;--t-acc:#D9B467;--t-acc-ink:#2A2110;--t-ring:#7FD8A6;--t-dim:rgba(5,18,16,.64);--t-font:'IBM Plex Sans Arabic',Tahoma,sans-serif;--t-head:var(--t-font);--t-radius:16px;--t-btn:rgba(255,255,255,.09);--t-line:rgba(255,255,255,.12)}
+.tour{position:fixed;inset:0;z-index:600;pointer-events:none;--t-bg:#0B3F38;--t-ink:#F2F7F5;--t-mut:#A9CBBE;--t-acc:#D9B467;--t-acc-ink:#2A2110;--t-ring:#7FD8A6;--t-dim:rgba(5,18,16,.64);--t-font:'Expo Arabic','IBM Plex Sans Arabic',Tahoma,sans-serif;--t-head:var(--t-font);--t-radius:16px;--t-btn:rgba(255,255,255,.09);--t-line:rgba(255,255,255,.12)}
 .tour-block{position:fixed;inset:0;pointer-events:auto;background:transparent}
 .tour.final .tour-block{background:var(--t-dim);transition:background .3s}
 .tour-spot{position:fixed;border-radius:14px;box-shadow:0 0 0 9999px var(--t-dim);outline:2px solid var(--t-ring);outline-offset:2px;transition:top .5s cubic-bezier(.3,.7,.2,1),left .5s cubic-bezier(.3,.7,.2,1),width .5s,height .5s;pointer-events:none}
@@ -578,7 +578,7 @@
 .rs-frame>.rs{position:absolute;top:0;right:0;transform:scale(var(--k));transform-origin:top right}
 @media (max-width:1100px){.rp{grid-template-columns:1fr}.rp-side{position:static;max-height:none}}
 /* الشريحة: 1280×720 بألوان ثابتة لأنها مستند */
-.rs{width:1280px;height:720px;background:#fff;color:#16222A;position:relative;overflow:hidden;padding:56px 64px 70px;font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif;direction:rtl;text-align:right;display:flex;flex-direction:column}
+.rs{width:1280px;height:720px;background:#fff;color:#16222A;position:relative;overflow:hidden;padding:56px 64px 70px;font-family:'Expo Arabic','IBM Plex Sans Arabic',Tahoma,sans-serif;direction:rtl;text-align:right;display:flex;flex-direction:column}
 .rs [contenteditable]{outline:none;border-radius:6px;transition:box-shadow .15s,background .15s;cursor:text}
 .rs [contenteditable]:hover{box-shadow:0 0 0 2px rgba(176,138,62,.35)}
 .rs [contenteditable]:focus{box-shadow:0 0 0 2px #B08A3E;background:rgba(176,138,62,.06)}
@@ -665,7 +665,7 @@
 /* =====================================================================
    ورقة الطباعة الواحدة للوحة المؤشرات (A3 أفقي)
    ===================================================================== */
-.ps-sheet{width:1587px;padding:34px 40px 26px;background:#fff;color:#16222A;font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif;direction:rtl;font-size:14px}
+.ps-sheet{width:1587px;padding:34px 40px 26px;background:#fff;color:#16222A;font-family:'Expo Arabic','IBM Plex Sans Arabic',Tahoma,sans-serif;direction:rtl;font-size:14px}
 .ps-head{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #0B3F38;padding-bottom:14px}
 .ps-ht{display:flex;align-items:center;gap:18px}
 .ps-logo{height:62px;width:auto}
@@ -740,7 +740,7 @@
 #rptPrint .rs-hl.empty{display:none}
 
 /* ===== شرائح التقارير v2: عناصر بإحداثيات ثابتة (نفسها في المعاينة وPDF وPowerPoint) ===== */
-.rs2{position:relative;width:1280px;height:720px;overflow:hidden;background:#fff;direction:rtl;font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif;color:#16222A;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.rs2{position:relative;width:1280px;height:720px;overflow:hidden;background:#fff;direction:rtl;font-family:'Expo Arabic','IBM Plex Sans Arabic',Tahoma,sans-serif;color:#16222A;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .rs2>*{position:absolute;margin:0;box-sizing:border-box}
 .rs2-i{display:block}
 .rs2-t{display:flex;flex-direction:column;overflow:hidden;white-space:normal;overflow-wrap:anywhere;letter-spacing:0;font-variant-numeric:tabular-nums}
@@ -1059,7 +1059,7 @@
 .ps-hz .hz-more{font-size:9px;color:#6B7F78}
 
 /* ===== ورقة طباعة لوحة المؤشرات: نفس مكونات الشاشة مرتبة على A3 أفقي ===== */
-#printSheet .ps2{--bg:#F3F6F5;--paper:#FFFFFF;--paper-2:#F3F7F6;--paper-3:#EAF1EE;--ink:#16222A;--ink-2:#34454D;--muted:#5A736B;--faint:#8AA097;--line:#E1E9E6;--line-2:#CFDCD7;--petrol:#0B3F38;--petrol-2:#1F5A50;--petrol-3:#3E8576;--sage:#9CC6B6;--mist:#E3EEEA;--mist-2:#EEF5F2;--gold:#B08A3E;--gold-2:#8C6A28;--sand:#F5EDDB;--gold-ink:#6B4E12;--danger:#A8432F;--danger-bg:#F8E9E4;--warn:#9A6B12;--warn-bg:#FBF1DC;--ok:#2F6B5E;--ok-bg:#E3EEEA;--info:#35606F;--info-bg:#E6EEF2;--brand:#0B3F38;--brand-ink:#FFFFFF;--brand-hover:#14544A;--accent:#1F5A50;--hero:#0B3F38;--hero-2:#0E4A41;--hero-ink:#F2F7F5;--hero-mut:#A9C9BE;--chart-1:#0B3F38;--chart-2:#3E8576;--chart-3:#9CC6B6;--chart-4:#B08A3E;--chart-5:#D9C7A0;--chart-6:#5A736B;--chart-7:#C9DCD5;--chart-8:#7C5E22;--sec-1:#0B3F38;--sec-2:#B08A3E;--sec-3:#6FAE9A;--sec-4:#C3D2CC;--st-active:#2F7A68;--st-soon:#C79A3E;--st-up:#8FC1B0;--st-prep:#7E95A0;--st-sign:#B9A27A;--st-ended:#C9D4D0;--st-muted:#B4C2BD;color-scheme:light;width:1587px;box-sizing:border-box;padding:26px 34px 18px;background:#fff;color:var(--ink);font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif;direction:rtl}
+#printSheet .ps2{--bg:#F3F6F5;--paper:#FFFFFF;--paper-2:#F3F7F6;--paper-3:#EAF1EE;--ink:#16222A;--ink-2:#34454D;--muted:#5A736B;--faint:#8AA097;--line:#E1E9E6;--line-2:#CFDCD7;--petrol:#0B3F38;--petrol-2:#1F5A50;--petrol-3:#3E8576;--sage:#9CC6B6;--mist:#E3EEEA;--mist-2:#EEF5F2;--gold:#B08A3E;--gold-2:#8C6A28;--sand:#F5EDDB;--gold-ink:#6B4E12;--danger:#A8432F;--danger-bg:#F8E9E4;--warn:#9A6B12;--warn-bg:#FBF1DC;--ok:#2F6B5E;--ok-bg:#E3EEEA;--info:#35606F;--info-bg:#E6EEF2;--brand:#0B3F38;--brand-ink:#FFFFFF;--brand-hover:#14544A;--accent:#1F5A50;--hero:#0B3F38;--hero-2:#0E4A41;--hero-ink:#F2F7F5;--hero-mut:#A9C9BE;--chart-1:#0B3F38;--chart-2:#3E8576;--chart-3:#9CC6B6;--chart-4:#B08A3E;--chart-5:#D9C7A0;--chart-6:#5A736B;--chart-7:#C9DCD5;--chart-8:#7C5E22;--sec-1:#0B3F38;--sec-2:#B08A3E;--sec-3:#6FAE9A;--sec-4:#C3D2CC;--st-active:#2F7A68;--st-soon:#C79A3E;--st-up:#8FC1B0;--st-prep:#7E95A0;--st-sign:#B9A27A;--st-ended:#C9D4D0;--st-muted:#B4C2BD;color-scheme:light;width:1587px;box-sizing:border-box;padding:26px 34px 18px;background:#fff;color:var(--ink);font-family:'Expo Arabic','IBM Plex Sans Arabic',Tahoma,sans-serif;direction:rtl}
 #printSheet .ps2 *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 #printSheet .ps2-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;padding-bottom:14px;margin-bottom:16px;border-bottom:2px solid #0B3F38}
 #printSheet .ps2-brand{display:flex;align-items:center;gap:16px}

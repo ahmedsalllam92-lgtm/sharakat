@@ -116,7 +116,7 @@ async def main():
         ok('financial status saved', fin['model']=='تمويل مشترك' and fin['partnerSar']==400000 and fin['spentSar']==125000, fin)
         ok('spend ratio shown', await E("document.querySelector('#profile .pf-spend i').style.width") == '25%')
         # — لوحة المجلس —
-        await E("applyDesign('board')"); await pg.wait_for_timeout(900); await go('#/dashboard')
+        await E("applyDesign('board')"); await pg.wait_for_timeout(900); await go('#/dashboard?v=alt')
         ok('dashboard chapter: evaluation, classification and finance', await E("!!document.querySelector('[data-ch=eval] .bo-ev-score') && !!document.querySelector('[data-ch=eval] .bo-fin')"))
         avg = await E("(()=>{const e=D.partnerships.filter(p=>!p.isDraft&&p.stage==='signed'&&(showDemo()||!p.demo)).map(lastEval).filter(x=>x&&x.score!==null);return Math.round(e.reduce((t,x)=>t+x.score,0)/e.length)})()")
         ok('average evaluation matches records', await E("+document.querySelector('[data-ch=eval] .bo-gauge-t b').dataset.v") == avg, avg)

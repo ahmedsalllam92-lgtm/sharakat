@@ -88,7 +88,7 @@ async def main():
         # register filter + dashboard
         await go('#/partnerships?category=' + 'تأمين المناطق الحدودية')
         ok('register filters by category', await E("App.lastRegList.length") == 1)
-        await go('#/dashboard'); await pg.wait_for_timeout(1300)
+        await go('#/dashboard?v=alt'); await pg.wait_for_timeout(1300)
         await pg.click('[data-tmdim="category"]'); await pg.wait_for_timeout(700)
         ok('dashboard category panel', 'تأمين المناطق الحدودية' in await pg.inner_text('.dz3-deep:not(.dv)'))
         # team can add inline but no lists page

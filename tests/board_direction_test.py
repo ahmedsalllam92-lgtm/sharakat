@@ -31,7 +31,7 @@ async def main():
         ok('sections reveal on scroll', await E("[...document.querySelectorAll('.bo-home .bo-rv')].every(e=>e.classList.contains('bo-on'))"))
         ok('reveal class does not collide with the input class .in', await E("getComputedStyle(document.querySelector('.bo-journey')).borderTopWidth") == '0px')
         # — لوحة المجلس —
-        await go('#/dashboard'); await pg.wait_for_timeout(600)
+        await go('#/dashboard?v=alt'); await pg.wait_for_timeout(600)
         ok('board briefing cover with classification and Hijri date', await E("!!document.querySelector('.bo-cover h1') && /هـ/.test(document.querySelector('.bo-cover-meta').textContent)"))
         ok('eight numbered chapters', await E("[...document.querySelectorAll('.bo-ch')].map(c=>c.dataset.ch).join(',')") == 'sum,impact,eval,proc,net,flow,time,dec')
         ok('table of contents with eight entries', await E("document.querySelectorAll('.bo-toc a').length") == 8)
@@ -89,13 +89,13 @@ async def main():
             ok(f'inner page renders in this direction {h}', await E("!!document.querySelector('#main .page') && !document.querySelector('#main .page .empty h3')?.textContent.includes('تعذّر')"))
         ok('report theme follows the board direction', await E("rptThemeKey()") == 'board')
         # — الجوال —
-        await pg.set_viewport_size({'width': 390, 'height': 844}); await go('#/dashboard'); await pg.wait_for_timeout(600)
+        await pg.set_viewport_size({'width': 390, 'height': 844}); await go('#/dashboard?v=alt'); await pg.wait_for_timeout(600)
         ok('mobile: no horizontal page scroll', await E("document.documentElement.scrollWidth <= innerWidth + 1"), await E("[document.documentElement.scrollWidth, innerWidth]"))
         await go('#/'); await pg.wait_for_timeout(600)
         ok('mobile home: no horizontal page scroll', await E("document.documentElement.scrollWidth <= innerWidth + 1"))
         # — العودة إلى اتجاه آخر —
         await pg.set_viewport_size({'width': 1440, 'height': 900})
-        await E("applyDesign('classic')"); await pg.wait_for_timeout(900); await go('#/dashboard')
+        await E("applyDesign('classic')"); await pg.wait_for_timeout(900); await go('#/dashboard?v=alt')
         ok('other directions unaffected (classic dashboard back)', await E("!!document.querySelector('.dz3') && !document.querySelector('.bo-dash')"))
         ok('no page errors', not errs, errs[:3])
         await b.close()

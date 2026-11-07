@@ -177,7 +177,7 @@ function prExportXlsx() {
 /* اتجاه الصفحة عند الطباعة: أفقي للوحة المجلس ومسار الشراكة وصفحات الجداول (السجل، المقترحات، الجهات، المهام) */
 window.addEventListener('beforeprint', () => {
   const r = App.route && App.route.name;
-  if (!(['process', 'partnerships', 'proposals', 'partners', 'tasks'].includes(r) || (r === 'dashboard' && design() === 'board'))) return;
+  if (!(['process', 'partnerships', 'proposals', 'partners', 'tasks'].includes(r) || (r === 'dashboard' && (design() === 'board' || App.dashView !== 'alt')))) return;
   if (document.documentElement.classList.contains('printing-sheet') || document.documentElement.classList.contains('printing-report')) return;
   let st = $('#landPage'); if (!st) { st = document.createElement('style'); st.id = 'landPage'; document.head.appendChild(st); }
   st.textContent = '@page{size:A4 landscape;margin:12mm}';

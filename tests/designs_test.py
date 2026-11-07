@@ -36,7 +36,7 @@ async def main():
         # every page renders in every design
         prid = await E("D.proposals.find(x=>x.status==='review').id")
         prtid = await E("D.partners[0].id")
-        pages = ['#/','#/dashboard','#/partnerships','#/partnerships/new',f'#/partnerships/{pid}',f'#/partnerships/{pid}/edit','#/partners',f'#/partners/{prtid}','#/stories','#/content','#/share','#/share/new','#/proposals',f'#/proposals/{prid}','#/settings/general','#/settings/design','#/settings/tour','#/settings/home','#/settings/lists','#/settings/roles','#/settings/data','#/settings/audit']
+        pages = ['#/','#/dashboard?v=alt','#/partnerships','#/partnerships/new',f'#/partnerships/{pid}',f'#/partnerships/{pid}/edit','#/partners',f'#/partners/{prtid}','#/stories','#/content','#/share','#/share/new','#/proposals',f'#/proposals/{prid}','#/settings/general','#/settings/design','#/settings/tour','#/settings/home','#/settings/lists','#/settings/roles','#/settings/data','#/settings/audit']
         for d in ['classic','board']:
             await E(f"applyDesign('{d}')"); await pg.wait_for_timeout(600)
             bad=[]
@@ -59,7 +59,7 @@ async def main():
             light_bg = await E("document.documentElement.dataset.theme + '|' + getComputedStyle(document.body).backgroundColor")
             ok(f'{d}: theme toggles', dark_bg != light_bg, (dark_bg, light_bg))
             # print
-            await go('#/dashboard', 1200); await pg.emulate_media(media='print')
+            await go('#/dashboard?v=alt', 1200); await pg.emulate_media(media='print')
             ok(f'{d}: print hides switcher', await E("getComputedStyle(document.querySelector('#dsw')).display==='none'"))
             await pg.pdf(path=f'/home/claude/shots/j/dash-{d}.pdf', format='A4', print_background=True)
             await pg.emulate_media(media='screen')
@@ -67,7 +67,7 @@ async def main():
         fonts = {}
         for d in ['classic','board']:
             await E(f"applyDesign('{d}')"); await pg.wait_for_timeout(500); await go('#/partnerships', 500)
-            fonts[d] = await E("[getComputedStyle(document.querySelector('.ph h1')).fontFamily.split(',')[0], getComputedStyle(document.body).fontFamily.split(',')[0]]")
+            fonts[d] = await E("[getComputedStyle(document.querySelector('.ph h1')).fontFamily, getComputedStyle(document.body).fontFamily]")
         ok('designs differ in typography', len({tuple(v) for v in fonts.values()}) == 2, fonts)
         # classic collapsed sidebar hover reveals labels
         await E("applyDesign('classic')"); await pg.wait_for_timeout(700)
