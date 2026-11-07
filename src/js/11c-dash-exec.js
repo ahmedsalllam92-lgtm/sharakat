@@ -62,7 +62,7 @@ function renderDashClassic(el) {
   const fb = new FilterBar($('#dashF', el), { dims: ['status', 'ptype', 'domain', 'category', 'sector', 'classification', 'department', 'owner', 'year'], getList: base, state: App.dashF, onChange: () => draw(false) });
   const drawActive = (list) => {
     const parts = Object.entries(App.dashF).filter(([, v]) => v && v.length);
-    $('#dzActive', el).innerHTML = `<span class="dz2-scope">النطاق: <b>${list.length}</b> من ${base().length} شراكة</span>
+    $('#dzActive', el).innerHTML = `<span class="dz2-scope">النطاق: <b>${list.filter((p) => !p.isDraft).length}</b> من ${base().filter((p) => !p.isDraft).length} شراكة${base().some((p) => p.isDraft) ? ` <small>(المسودات لا تُحتسب)</small>` : ''}</span>
       ${parts.flatMap(([d, vals]) => vals.map((v) => `<span class="dz2-chip"><em>${esc(FILTER_DIMS[d].label)}:</em> ${esc(FILTER_DIMS[d].fmt ? FILTER_DIMS[d].fmt(v) : v)}<button type="button" data-chipx="${esc(d)}|${esc(v)}" aria-label="إزالة الفلتر">${icon('x')}</button></span>`)).join('')}
       <span class="sp"></span>
       ${App.dashHist.length ? `<button type="button" class="linkbtn" data-undo>${icon('history')} رجوع</button>` : ''}

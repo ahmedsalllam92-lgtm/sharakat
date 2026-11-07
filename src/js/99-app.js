@@ -66,7 +66,23 @@ function moveNavPill(animate = true) {
   if (!animate) { pill.offsetHeight; pill.style.transition = ''; }
 }
 window.addEventListener('resize', () => moveNavPill(false));
+/* أعداد القائمة (مهامي، المقترحات…) تُحسب من جديد مع كل انتقال حتى لا تبقى قديمة بعد أي تعديل */
+function refreshNavCounts() {
+  let groups; try { groups = navGroups(); } catch (_) { return; }
+  const cnt = {}; groups.forEach((g) => (g.items || []).filter(Boolean).forEach((it) => { cnt[it.h] = it.cnt || 0; }));
+  $$('a.nav-a[href], a.bo-link[href]').forEach((a) => {
+    const h = a.getAttribute('href'); if (!(h in cnt)) return;
+    let c = a.querySelector(':scope > .cnt');
+    if (cnt[h]) { if (!c) { c = document.createElement('span'); c.className = 'cnt'; a.appendChild(c); } c.textContent = cnt[h]; } else if (c) c.remove();
+  });
+  $$('.bo-more').forEach((m) => {
+    const sum = $$('.bo-mega a.nav-a[href]', m).reduce((t, a) => t + (cnt[a.getAttribute('href')] || 0), 0);
+    const btn = $(':scope > .bo-link', m); if (!btn) return; let c = $(':scope > .cnt', btn);
+    if (sum) { if (!c) { c = document.createElement('span'); c.className = 'cnt'; btn.insertBefore(c, btn.querySelector('.ic')); } c.textContent = sum; } else if (c) c.remove();
+  });
+}
 function updateNav() {
+  refreshNavCounts();
   const r = App.route; if (!r) return;
   $$('.nav-a').forEach((a) => {
     let on = a.dataset.m.split(',').includes(r.name);

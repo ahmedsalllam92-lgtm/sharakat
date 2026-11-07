@@ -1,6 +1,6 @@
 /* =====================================================================
    مسار الشراكة الجديدة (المعتمد من إدارة الشراكات)
-   من طلب الشراكة إلى تقارير تفعيل المذكرة: ١٣ خطوة، لكل خطوة جهة مسؤولة
+   من طلب الشراكة إلى تقارير تفعيل المذكرة: ثلاث عشرة خطوة (WF_STEPS)، لكل خطوة جهة مسؤولة
    ومستندات مطلوبة. الصلاحيات تُبنى على هذا المسار: كل حساب إدارة يرى ما يخصه
    وينفّذ الخطوات المسندة إليه فقط.
    ===================================================================== */
@@ -340,7 +340,7 @@ function renderTasks(el) {
   const r0 = Session.role();
   const mineSteps = r0 === 'admin' || r0 === 'team' ? WF_STEPS.filter((s) => s.actor === 'partnerships' || s.kind === 'multi') : r0 === 'dept' ? WF_STEPS.filter((s) => (acc && acc.duties || []).includes(s.actor)) : [];
   const whenSteps = r0 === 'dept' ? WF_STEPS.filter((s) => ['requester', 'concerned'].includes(s.actor) || s.id === 'meeting') : [];
-  el.innerHTML = `<div class="ph"><div><h1>مهامي</h1><p>الخطوات التي تنتظر ${esc(acc ? acc.t : 'حسابك')} في مسار الشراكات الجديدة. كل مهمة تفتح الخطوة مباشرة بمستنداتها.</p></div></div>
+  el.innerHTML = `<div class="ph"><div><h1>مهامي</h1><p>الخطوات التي تنتظر ${esc(acc ? acc.t : 'حسابك')} في مسار الشراكات الجديدة. كل مهمة تفتح الخطوة مباشرة بمستنداتها.</p>${T.length ? `<p class="tk-sum"><b>${T.filter((t) => !t.follow).length}</b> بانتظارك${T.some((t) => t.follow) ? ` · <b>${T.filter((t) => t.follow).length}</b> للمتابعة فقط` : ''}</p>` : ''}</div></div>
     ${T.length ? `<div class="tk-list">${T.map((t) => `<a class="tk ${t.returned ? 'ret' : ''} ${t.follow ? 'fol' : ''}" href="${t.href}" data-tkopen="${t.step.id}" data-tkid="${t.rec.id}" data-tkkind="${t.kind}">
         <span class="tk-n">${t.step.n}</span><span class="tk-b"><b>${esc(t.step.t)}</b><span>${esc(t.name || '')}</span><small>${esc(t.sub || '')}</small></span>
         <span class="tk-m">${t.returned ? '<em class="ret">أُعيدت بملاحظات</em>' : t.follow ? '<em>متابعة</em>' : ''}<small>${t.since ? relDays(t.since) : ''}</small></span>${icon('chevL')}</a>`).join('')}</div>`

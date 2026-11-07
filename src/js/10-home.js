@@ -12,11 +12,11 @@ function overlapsPeriod(p, per) {
 }
 const HOME_KPIS = {
   active: { label: 'شراكة سارية', sub: 'حتى اليوم', calc: (L_, per) => L_.filter((p) => ['active', 'soon'].includes(pStatus(p))).length, href: () => '#/partnerships?status=active|soon' },
-  partners: { label: 'جهة شريكة', sub: 'في الشراكات الموقّعة خلال الفترة', calc: (L_, per) => new Set(L_.filter((p) => p.stage === 'signed' && overlapsPeriod(p, per)).map((p) => p.partnerId)).size, href: () => '#/partners' },
+  partners: { label: 'جهة شريكة', sub: 'لها شراكات مسجّلة', calc: (L_) => new Set(L_.filter((p) => !p.isDraft).map((p) => p.partnerId)).size, href: () => '#/partners' },
   signedInPeriod: { label: 'شراكة بدأ سريانها', sub: 'خلال الفترة', calc: (L_, per) => L_.filter((p) => p.stage === 'signed' && parseDate(p.startDate) && parseDate(p.startDate) >= per.from && parseDate(p.startDate) <= per.to).length, href: () => '#/partnerships' },
-  outputs: { label: 'مخرجًا مستهدفًا', sub: 'في الشراكات الموقّعة خلال الفترة', calc: (L_, per) => L_.filter((p) => p.stage === 'signed' && overlapsPeriod(p, per)).reduce((a, p) => a + richItems(p.outputs).length, 0), href: () => '#/partnerships' },
-  departments: { label: 'إدارة تتقاطع مع الشراكات', sub: 'خلال الفترة', calc: (L_, per) => new Set(L_.filter((p) => p.stage === 'signed' && overlapsPeriod(p, per)).flatMap((p) => p.departments || [])).size, href: () => '#/dashboard' },
-  sectors: { label: 'قطاعات ممثلة', sub: 'حكومي وخاص وغير ربحي', calc: (L_, per) => new Set(L_.filter((p) => p.stage === 'signed').map(pSector).filter(Boolean)).size, href: () => '#/dashboard' },
+  outputs: { label: 'مخرجًا مستهدفًا', sub: 'في الشراكات الموقّعة', calc: (L_) => L_.filter((p) => !p.isDraft && p.stage === 'signed').reduce((a, p) => a + richItems(p.outputs).length, 0), href: () => '#/partnerships' },
+  departments: { label: 'إدارة تتقاطع مع الشراكات', sub: 'في الشراكات الموقّعة', calc: (L_) => new Set(L_.filter((p) => !p.isDraft && p.stage === 'signed').flatMap((p) => p.departments || [])).size, href: () => '#/dashboard' },
+  sectors: { label: 'قطاعات ممثلة', sub: '', subFn: (L_) => [...new Set(L_.filter((p) => p.stage === 'signed').map(pSector).filter(Boolean))].join('، '), calc: (L_, per) => new Set(L_.filter((p) => p.stage === 'signed').map(pSector).filter(Boolean)).size, href: () => '#/dashboard' },
   proposals: { label: 'مقترحًا من الإدارات', sub: 'قُدّم خلال الفترة', calc: (L_, per) => visibleProposals().filter((x) => x.submittedAt && new Date(x.submittedAt) >= per.from && new Date(x.submittedAt) <= addDays(per.to, 1)).length, href: () => '#/proposals' },
 };
 
@@ -91,7 +91,7 @@ function homeKpis(overlap) {
   return `<section class="kband ${overlap ? '' : 'flat'}" aria-label="أرقام رئيسية" data-tour="home-impact">
     <div class="kband-in" style="--n:${keys.length}">
       <div class="kband-cap"><b>أرقام رئيسية</b><span>الفترة: ${per.text}<br>محسوبة تلقائيًا من سجلات المنصة${showDemo() ? '، وتشمل بيانات تجريبية' : ''}</span></div>
-      ${keys.map((k) => { const K = HOME_KPIS[k]; return `<a class="kpi" href="${K.href()}"><div class="v">${nf(K.calc(list, per))}</div><div class="l">${esc(K.label)}</div><div class="s">${esc(K.sub)}</div></a>`; }).join('')}
+      ${keys.map((k) => { const K = HOME_KPIS[k]; return `<a class="kpi" href="${K.href()}"><div class="v">${nf(K.calc(list, per))}</div><div class="l">${esc(K.label)}</div><div class="s">${esc(K.subFn ? K.subFn(list) : K.sub)}</div></a>`; }).join('')}
     </div></section>`;
 }
 

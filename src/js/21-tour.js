@@ -53,7 +53,7 @@ function tourSteps() {
       { sel: ['[data-tour="dash-status"]', '.dz-line', '[data-tour="dash-evolution"]', '.sd-stats'], h: 'الرسوم التفاعلية', what: 'تركيب المحفظة، وتطورها، والتوزيع حسب القطاع والتصنيف والإدارة والمسؤول.', why: 'الضغط على أي جزء يصفّي اللوحة كاملة، ويمكن التراجع أو إعادة التعيين بضغطة.', how: 'مرّر المؤشر فوق أي جزء لرؤية الرقم والنسبة، واضغطه للتصفية.', act: async () => { await TA.hover('.dz3-seg, .dz-stbar a, .ev-hit, .sb-seg, .hm-c'); } },
     ] });
     S.push({ key: 'actions', title: 'مركز الإجراءات', route: '#/dashboard', parts: [
-      { sel: ['.dz-acts', '.sd-list li:first-child', '.cd-al', '[data-tour="dash-actions"]'], h: 'ما يحتاج متابعة', what: 'بنود عملية: مقترحات بانتظار الدراسة، وشراكات تقترب من الانتهاء، وبيانات ناقصة.', why: 'يحوّل المؤشرات إلى مهام واضحة حتى لا يفوت الفريق قرار تجديد أو مقترحًا متأخرًا.', how: 'كل بند يفتح السجلات المعنية فورًا. ويظهر تنبيه عاجل قبل الانتهاء بـ 30 يومًا.', act: async () => { await TA.point('.dz-act, .sd-list li a, .cd-a'); } },
+      { sel: ['.dz-acts', '.sd-list li:first-child', '.cd-al', '[data-tour="dash-actions"]'], h: 'ما يحتاج متابعة', what: 'بنود عملية: مقترحات بانتظار الدراسة، وشراكات تقترب من الانتهاء، وبيانات ناقصة.', why: 'يحوّل المؤشرات إلى مهام واضحة حتى لا يفوت الفريق قرار تجديد أو مقترحًا متأخرًا.', how: `كل بند يفتح السجلات المعنية فورًا. ويظهر تنبيه عاجل قبل الانتهاء بـ ${D.settings.alertDays || 30} يومًا.`, act: async () => { await TA.point('.dz-act, .sd-list li a, .cd-a'); } },
     ] });
   }
   S.push({ key: 'register', title: 'سجل الشراكات', route: '#/partnerships', parts: [
@@ -72,7 +72,7 @@ function tourSteps() {
     { sel: ['#pbody tbody tr:first-child', '#pbody .pcard:first-child', '#pbody .tbl-wrap', '#pbody'], h: 'سجل موحد للجهات', what: 'كل جهة مرتبطة بشراكاتها ومقترحاتها، مع أسمائها البديلة وشعارها.', why: 'يمنع تكرار الجهة بأسماء مختلفة، وينبّه إلى الأسماء المتقاربة لدمجها.', how: 'افتح الجهة لعرض شراكاتها، واستخدم «مراجعة ودمج» عند ظهور تنبيه التكرار.' },
   ] });
   if (can('proposal.create')) S.push({ key: 'share', title: 'تقديم مقترح جديد', route: '#/share/new', demo: true, parts: [
-    { sel: ['#wsteps'], h: 'مسار «شارك» بأربع خطوات', what: 'نموذج تملؤه الإدارات لاقتراح جهة للشراكة: بيانات المقدم، ثم الجهة، ثم الفكرة، ثم المرفقات.', why: 'وصول منظم لمقترحات الإدارات، مع حفظ المسودة ورقم مرجعي للمتابعة.', how: 'البيانات المعروضة توضيحية مؤقتة ولن تُحفظ.' },
+    { sel: ['#wsteps'], h: `مسار «شارك» بـ${plural(S_STEPS.length, 'خطوة واحدة', 'خطوتين', 'خطوات', 'خطوة')}`, what: 'نموذج تملؤه الإدارات لاقتراح جهة للشراكة: بيانات المقدم، ثم الجهة، ثم الفكرة، ثم المرفقات.', why: 'وصول منظم لمقترحات الإدارات، مع حفظ المسودة ورقم مرجعي للمتابعة.', how: 'البيانات المعروضة توضيحية مؤقتة ولن تُحفظ.' },
     { sel: ['#wpanel .fpanel-b', '#wpanel'], h: 'تعبئة سهلة', what: 'حقول واضحة مع تنبيهات، وقوائم جاهزة من إعدادات المنصة.', why: 'يقلّل ذهاب وإياب الاستيضاح بين الإدارات وإدارة الشراكات.', how: 'شاهد: ننتقل إلى الخطوة التالية.', act: async () => { const n = TA.q('[data-wn]'); if (n) { await TA.click(n); App.dirty = false; } } },
   ] });
   else S.push({ key: 'share', title: 'خدمة «شارك»', route: '#/share', parts: [
@@ -84,7 +84,7 @@ function tourSteps() {
   ] });
   if (can('view.reports')) S.push({ key: 'reports', title: 'التقارير', route: '#/reports', prep: () => { if (!App.ui.rpt.ids.length && real) App.ui.rpt.ids = [real.id]; }, parts: [
     { sel: ['#rpPD'], h: 'اختيار الشراكات', what: 'قائمة منسدلة بالبحث و«تحديد الكل»، مع فلاتر متعددة لاختيار مجموعة كاملة مثل الساري أو المنتهي.', why: 'تقرير عن شراكة واحدة أو عن المحفظة كلها، بغلاف لكل شراكة.', how: 'شاهد: نفتح القائمة.', act: async () => { await TA.click('[data-rpd]'); await TA.wait(1200); await TA.click('[data-rpd]'); } },
-    { sel: ['#rpDD'], h: 'مكونات التقرير', what: '17 مكوّنًا: فهرس، ولمحة بالرسوم، وملخص تنفيذي، وبيانات، وتعاون، وأثر، وفريق، وملفات، وصور…', why: 'كل تقرير على مقاس الحاجة، والتغيير يظهر في المعاينة فورًا.', how: 'شاهد: نزيل «صور الشراكة» ثم نعيدها.', act: async () => { await TA.click('[data-rdd]'); if (TA.q('[data-rsec="photos"]')) { await TA.click('[data-rsec="photos"]'); await TA.wait(700); await TA.click('[data-rsec="photos"]'); } await TA.click('[data-rdd]'); } },
+    { sel: ['#rpDD'], h: 'مكونات التقرير', what: `${RPT_SECTIONS.length} مكوّنًا: فهرس، ولمحة بالرسوم، وملخص تنفيذي، وبيانات، وتعاون، وأثر، وفريق، وملفات، وصور…`, why: 'كل تقرير على مقاس الحاجة، والتغيير يظهر في المعاينة فورًا.', how: 'شاهد: نزيل «صور الشراكة» ثم نعيدها.', act: async () => { await TA.click('[data-rdd]'); if (TA.q('[data-rsec="photos"]')) { await TA.click('[data-rsec="photos"]'); await TA.wait(700); await TA.click('[data-rsec="photos"]'); } await TA.click('[data-rdd]'); } },
     { sel: ['.rs-frame'], h: 'معاينة قابلة للتعديل', what: 'شرائح التقرير كما ستُنزَّل، بثيم اتجاه التصميم الحالي ومن اليمين إلى اليسار.', why: 'تعدّل أي نص مباشرة قبل التنزيل دون تغيير سجلات الشراكة.', how: 'اضغط أي نص واكتب، ثم نزّل PowerPoint أو PDF، أو اعرضه بملء الشاشة.' },
   ] });
   S.push({ key: 'settings', title: 'تخصيص المنصة', route: '#/settings/design', parts: [

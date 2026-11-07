@@ -6923,11 +6923,11 @@ function overlapsPeriod(p, per) {
 }
 const HOME_KPIS = {
   active: { label: 'شراكة سارية', sub: 'حتى اليوم', calc: (L_, per) => L_.filter((p) => ['active', 'soon'].includes(pStatus(p))).length, href: () => '#/partnerships?status=active|soon' },
-  partners: { label: 'جهة شريكة', sub: 'في الشراكات الموقّعة خلال الفترة', calc: (L_, per) => new Set(L_.filter((p) => p.stage === 'signed' && overlapsPeriod(p, per)).map((p) => p.partnerId)).size, href: () => '#/partners' },
+  partners: { label: 'جهة شريكة', sub: 'لها شراكات مسجّلة', calc: (L_) => new Set(L_.filter((p) => !p.isDraft).map((p) => p.partnerId)).size, href: () => '#/partners' },
   signedInPeriod: { label: 'شراكة بدأ سريانها', sub: 'خلال الفترة', calc: (L_, per) => L_.filter((p) => p.stage === 'signed' && parseDate(p.startDate) && parseDate(p.startDate) >= per.from && parseDate(p.startDate) <= per.to).length, href: () => '#/partnerships' },
-  outputs: { label: 'مخرجًا مستهدفًا', sub: 'في الشراكات الموقّعة خلال الفترة', calc: (L_, per) => L_.filter((p) => p.stage === 'signed' && overlapsPeriod(p, per)).reduce((a, p) => a + richItems(p.outputs).length, 0), href: () => '#/partnerships' },
-  departments: { label: 'إدارة تتقاطع مع الشراكات', sub: 'خلال الفترة', calc: (L_, per) => new Set(L_.filter((p) => p.stage === 'signed' && overlapsPeriod(p, per)).flatMap((p) => p.departments || [])).size, href: () => '#/dashboard' },
-  sectors: { label: 'قطاعات ممثلة', sub: 'حكومي وخاص وغير ربحي', calc: (L_, per) => new Set(L_.filter((p) => p.stage === 'signed').map(pSector).filter(Boolean)).size, href: () => '#/dashboard' },
+  outputs: { label: 'مخرجًا مستهدفًا', sub: 'في الشراكات الموقّعة', calc: (L_) => L_.filter((p) => !p.isDraft && p.stage === 'signed').reduce((a, p) => a + richItems(p.outputs).length, 0), href: () => '#/partnerships' },
+  departments: { label: 'إدارة تتقاطع مع الشراكات', sub: 'في الشراكات الموقّعة', calc: (L_) => new Set(L_.filter((p) => !p.isDraft && p.stage === 'signed').flatMap((p) => p.departments || [])).size, href: () => '#/dashboard' },
+  sectors: { label: 'قطاعات ممثلة', sub: '', subFn: (L_) => [...new Set(L_.filter((p) => p.stage === 'signed').map(pSector).filter(Boolean))].join('، '), calc: (L_, per) => new Set(L_.filter((p) => p.stage === 'signed').map(pSector).filter(Boolean)).size, href: () => '#/dashboard' },
   proposals: { label: 'مقترحًا من الإدارات', sub: 'قُدّم خلال الفترة', calc: (L_, per) => visibleProposals().filter((x) => x.submittedAt && new Date(x.submittedAt) >= per.from && new Date(x.submittedAt) <= addDays(per.to, 1)).length, href: () => '#/proposals' },
 };
 
@@ -7002,7 +7002,7 @@ function homeKpis(overlap) {
   return `<section class="kband ${overlap ? '' : 'flat'}" aria-label="أرقام رئيسية" data-tour="home-impact">
     <div class="kband-in" style="--n:${keys.length}">
       <div class="kband-cap"><b>أرقام رئيسية</b><span>الفترة: ${per.text}<br>محسوبة تلقائيًا من سجلات المنصة${showDemo() ? '، وتشمل بيانات تجريبية' : ''}</span></div>
-      ${keys.map((k) => { const K = HOME_KPIS[k]; return `<a class="kpi" href="${K.href()}"><div class="v">${nf(K.calc(list, per))}</div><div class="l">${esc(K.label)}</div><div class="s">${esc(K.sub)}</div></a>`; }).join('')}
+      ${keys.map((k) => { const K = HOME_KPIS[k]; return `<a class="kpi" href="${K.href()}"><div class="v">${nf(K.calc(list, per))}</div><div class="l">${esc(K.label)}</div><div class="s">${esc(K.subFn ? K.subFn(list) : K.sub)}</div></a>`; }).join('')}
     </div></section>`;
 }
 
@@ -7723,7 +7723,7 @@ function renderDashClassic(el) {
   const fb = new FilterBar($('#dashF', el), { dims: ['status', 'ptype', 'domain', 'category', 'sector', 'classification', 'department', 'owner', 'year'], getList: base, state: App.dashF, onChange: () => draw(false) });
   const drawActive = (list) => {
     const parts = Object.entries(App.dashF).filter(([, v]) => v && v.length);
-    $('#dzActive', el).innerHTML = `<span class="dz2-scope">النطاق: <b>${list.length}</b> من ${base().length} شراكة</span>
+    $('#dzActive', el).innerHTML = `<span class="dz2-scope">النطاق: <b>${list.filter((p) => !p.isDraft).length}</b> من ${base().filter((p) => !p.isDraft).length} شراكة${base().some((p) => p.isDraft) ? ` <small>(المسودات لا تُحتسب)</small>` : ''}</span>
       ${parts.flatMap(([d, vals]) => vals.map((v) => `<span class="dz2-chip"><em>${esc(FILTER_DIMS[d].label)}:</em> ${esc(FILTER_DIMS[d].fmt ? FILTER_DIMS[d].fmt(v) : v)}<button type="button" data-chipx="${esc(d)}|${esc(v)}" aria-label="إزالة الفلتر">${icon('x')}</button></span>`)).join('')}
       <span class="sp"></span>
       ${App.dashHist.length ? `<button type="button" class="linkbtn" data-undo>${icon('history')} رجوع</button>` : ''}
@@ -8104,7 +8104,7 @@ function renderObservatory(el) {
   const fb = new FilterBar($('#dashF', el), { dims: ['status', 'ptype', 'domain', 'sector', 'category', 'classification', 'department', 'owner', 'year'], getList: base, state: App.dashF, onChange: () => draw(false) });
   const drawActive = (list) => {
     const parts = Object.entries(App.dashF).filter(([, v]) => v && v.length);
-    $('#dzActive', el).innerHTML = `<span class="dz2-scope">النطاق: <b>${list.length}</b> من ${base().length} شراكة</span>
+    $('#dzActive', el).innerHTML = `<span class="dz2-scope">النطاق: <b>${list.filter((p) => !p.isDraft).length}</b> من ${base().filter((p) => !p.isDraft).length} شراكة${base().some((p) => p.isDraft) ? ` <small>(المسودات لا تُحتسب)</small>` : ''}</span>
       ${parts.flatMap(([d, vals]) => vals.map((v) => `<span class="dz2-chip"><em>${esc(FILTER_DIMS[d].label)}:</em> ${esc(FILTER_DIMS[d].fmt ? FILTER_DIMS[d].fmt(v) : v)}<button type="button" data-chipx="${esc(d)}|${esc(v)}" aria-label="إزالة الفلتر">${icon('x')}</button></span>`)).join('')}
       <span class="sp"></span>
       ${App.dashHist.length ? `<button type="button" class="linkbtn" data-undo>${icon('history')} رجوع</button>` : ''}
@@ -10614,7 +10614,7 @@ function tourSteps() {
       { sel: ['[data-tour="dash-status"]', '.dz-line', '[data-tour="dash-evolution"]', '.sd-stats'], h: 'الرسوم التفاعلية', what: 'تركيب المحفظة، وتطورها، والتوزيع حسب القطاع والتصنيف والإدارة والمسؤول.', why: 'الضغط على أي جزء يصفّي اللوحة كاملة، ويمكن التراجع أو إعادة التعيين بضغطة.', how: 'مرّر المؤشر فوق أي جزء لرؤية الرقم والنسبة، واضغطه للتصفية.', act: async () => { await TA.hover('.dz3-seg, .dz-stbar a, .ev-hit, .sb-seg, .hm-c'); } },
     ] });
     S.push({ key: 'actions', title: 'مركز الإجراءات', route: '#/dashboard', parts: [
-      { sel: ['.dz-acts', '.sd-list li:first-child', '.cd-al', '[data-tour="dash-actions"]'], h: 'ما يحتاج متابعة', what: 'بنود عملية: مقترحات بانتظار الدراسة، وشراكات تقترب من الانتهاء، وبيانات ناقصة.', why: 'يحوّل المؤشرات إلى مهام واضحة حتى لا يفوت الفريق قرار تجديد أو مقترحًا متأخرًا.', how: 'كل بند يفتح السجلات المعنية فورًا. ويظهر تنبيه عاجل قبل الانتهاء بـ 30 يومًا.', act: async () => { await TA.point('.dz-act, .sd-list li a, .cd-a'); } },
+      { sel: ['.dz-acts', '.sd-list li:first-child', '.cd-al', '[data-tour="dash-actions"]'], h: 'ما يحتاج متابعة', what: 'بنود عملية: مقترحات بانتظار الدراسة، وشراكات تقترب من الانتهاء، وبيانات ناقصة.', why: 'يحوّل المؤشرات إلى مهام واضحة حتى لا يفوت الفريق قرار تجديد أو مقترحًا متأخرًا.', how: `كل بند يفتح السجلات المعنية فورًا. ويظهر تنبيه عاجل قبل الانتهاء بـ ${D.settings.alertDays || 30} يومًا.`, act: async () => { await TA.point('.dz-act, .sd-list li a, .cd-a'); } },
     ] });
   }
   S.push({ key: 'register', title: 'سجل الشراكات', route: '#/partnerships', parts: [
@@ -10633,7 +10633,7 @@ function tourSteps() {
     { sel: ['#pbody tbody tr:first-child', '#pbody .pcard:first-child', '#pbody .tbl-wrap', '#pbody'], h: 'سجل موحد للجهات', what: 'كل جهة مرتبطة بشراكاتها ومقترحاتها، مع أسمائها البديلة وشعارها.', why: 'يمنع تكرار الجهة بأسماء مختلفة، وينبّه إلى الأسماء المتقاربة لدمجها.', how: 'افتح الجهة لعرض شراكاتها، واستخدم «مراجعة ودمج» عند ظهور تنبيه التكرار.' },
   ] });
   if (can('proposal.create')) S.push({ key: 'share', title: 'تقديم مقترح جديد', route: '#/share/new', demo: true, parts: [
-    { sel: ['#wsteps'], h: 'مسار «شارك» بأربع خطوات', what: 'نموذج تملؤه الإدارات لاقتراح جهة للشراكة: بيانات المقدم، ثم الجهة، ثم الفكرة، ثم المرفقات.', why: 'وصول منظم لمقترحات الإدارات، مع حفظ المسودة ورقم مرجعي للمتابعة.', how: 'البيانات المعروضة توضيحية مؤقتة ولن تُحفظ.' },
+    { sel: ['#wsteps'], h: `مسار «شارك» بـ${plural(S_STEPS.length, 'خطوة واحدة', 'خطوتين', 'خطوات', 'خطوة')}`, what: 'نموذج تملؤه الإدارات لاقتراح جهة للشراكة: بيانات المقدم، ثم الجهة، ثم الفكرة، ثم المرفقات.', why: 'وصول منظم لمقترحات الإدارات، مع حفظ المسودة ورقم مرجعي للمتابعة.', how: 'البيانات المعروضة توضيحية مؤقتة ولن تُحفظ.' },
     { sel: ['#wpanel .fpanel-b', '#wpanel'], h: 'تعبئة سهلة', what: 'حقول واضحة مع تنبيهات، وقوائم جاهزة من إعدادات المنصة.', why: 'يقلّل ذهاب وإياب الاستيضاح بين الإدارات وإدارة الشراكات.', how: 'شاهد: ننتقل إلى الخطوة التالية.', act: async () => { const n = TA.q('[data-wn]'); if (n) { await TA.click(n); App.dirty = false; } } },
   ] });
   else S.push({ key: 'share', title: 'خدمة «شارك»', route: '#/share', parts: [
@@ -10645,7 +10645,7 @@ function tourSteps() {
   ] });
   if (can('view.reports')) S.push({ key: 'reports', title: 'التقارير', route: '#/reports', prep: () => { if (!App.ui.rpt.ids.length && real) App.ui.rpt.ids = [real.id]; }, parts: [
     { sel: ['#rpPD'], h: 'اختيار الشراكات', what: 'قائمة منسدلة بالبحث و«تحديد الكل»، مع فلاتر متعددة لاختيار مجموعة كاملة مثل الساري أو المنتهي.', why: 'تقرير عن شراكة واحدة أو عن المحفظة كلها، بغلاف لكل شراكة.', how: 'شاهد: نفتح القائمة.', act: async () => { await TA.click('[data-rpd]'); await TA.wait(1200); await TA.click('[data-rpd]'); } },
-    { sel: ['#rpDD'], h: 'مكونات التقرير', what: '17 مكوّنًا: فهرس، ولمحة بالرسوم، وملخص تنفيذي، وبيانات، وتعاون، وأثر، وفريق، وملفات، وصور…', why: 'كل تقرير على مقاس الحاجة، والتغيير يظهر في المعاينة فورًا.', how: 'شاهد: نزيل «صور الشراكة» ثم نعيدها.', act: async () => { await TA.click('[data-rdd]'); if (TA.q('[data-rsec="photos"]')) { await TA.click('[data-rsec="photos"]'); await TA.wait(700); await TA.click('[data-rsec="photos"]'); } await TA.click('[data-rdd]'); } },
+    { sel: ['#rpDD'], h: 'مكونات التقرير', what: `${RPT_SECTIONS.length} مكوّنًا: فهرس، ولمحة بالرسوم، وملخص تنفيذي، وبيانات، وتعاون، وأثر، وفريق، وملفات، وصور…`, why: 'كل تقرير على مقاس الحاجة، والتغيير يظهر في المعاينة فورًا.', how: 'شاهد: نزيل «صور الشراكة» ثم نعيدها.', act: async () => { await TA.click('[data-rdd]'); if (TA.q('[data-rsec="photos"]')) { await TA.click('[data-rsec="photos"]'); await TA.wait(700); await TA.click('[data-rsec="photos"]'); } await TA.click('[data-rdd]'); } },
     { sel: ['.rs-frame'], h: 'معاينة قابلة للتعديل', what: 'شرائح التقرير كما ستُنزَّل، بثيم اتجاه التصميم الحالي ومن اليمين إلى اليسار.', why: 'تعدّل أي نص مباشرة قبل التنزيل دون تغيير سجلات الشراكة.', how: 'اضغط أي نص واكتب، ثم نزّل PowerPoint أو PDF، أو اعرضه بملء الشاشة.' },
   ] });
   S.push({ key: 'settings', title: 'تخصيص المنصة', route: '#/settings/design', parts: [
@@ -11969,7 +11969,7 @@ function boQuickHTML() {
     { h: '#/partnerships', ic: 'layers', t: 'سجل الشراكات', d: 'ابحث وصفِّ وافتح أي شراكة', b: soon ? `${soon} ${nounFor(soon, ['تنتهي قريبًا', 'تنتهيان قريبًا', 'تنتهي قريبًا', 'تنتهي قريبًا'])}` : '' },
     can('view.dashboard') && { h: '#/dashboard', ic: 'chart', t: 'لوحة الأداء', d: 'حلقات النمو وإحاطة المجلس', b: '' },
     can('proposal.review') && { h: '#/proposals?status=submitted', ic: 'inbox', t: 'المقترحات الواردة', d: 'مراجعة مقترحات الإدارات', b: pend ? `${pend} ${nounFor(pend, ['جديد', 'جديدان', 'جديدة', 'جديدًا'])}` : '' },
-    can('proposal.create') && { h: '#/share/new', ic: 'send', t: 'شارك بمقترح', d: mineInfo ? 'لديك مقترح بانتظار الاستكمال' : 'أربع خطوات لاقتراح جهة', b: mineInfo ? `${mineInfo} بانتظار الاستكمال` : '' },
+    can('proposal.create') && { h: '#/share/new', ic: 'send', t: 'شارك بمقترح', d: mineInfo ? 'لديك مقترح بانتظار الاستكمال' : `${plural(S_STEPS.length, 'خطوة واحدة', 'خطوتان', 'خطوات', 'خطوة')} لاقتراح جهة`, b: mineInfo ? `${mineInfo} بانتظار الاستكمال` : '' },
     { h: '#/media', ic: 'image', t: 'مركز الصور', d: 'صور الشراكات والإنجازات', b: '' },
     can('view.reports') && { h: '#/reports', ic: 'file', t: 'التقارير', d: 'PowerPoint وPDF بضغطة', b: '' },
   ].filter(Boolean).slice(0, 5);
@@ -12035,7 +12035,7 @@ function renderDashBoard(el) {
   const fb = new FilterBar($('#dashF', el), { dims: ['status', 'ptype', 'domain', 'category', 'sector', 'classification', 'department', 'owner', 'year'], getList: base, state: App.dashF, onChange: () => draw(false) });
   const drawActive = (list) => {
     const parts = Object.entries(App.dashF).filter(([, v]) => v && v.length);
-    $('#boScope', el).textContent = `${list.length} من ${base().length} شراكة` + (Object.values(App.dashF).some((v) => v && v.length) ? ' — ' + filtersText(App.dashF).replace('الفلاتر المطبقة — ', '') : '');
+    $('#boScope', el).textContent = `${list.filter((p) => !p.isDraft).length} من ${base().filter((p) => !p.isDraft).length} شراكة` + (Object.values(App.dashF).some((v) => v && v.length) ? ' — ' + filtersText(App.dashF).replace('الفلاتر المطبقة — ', '') : '');
     $('#boPrintF', el).textContent = filtersText(App.dashF);
     $('#dzActive', el).innerHTML = `<span class="dz2-scope">النطاق: <b>${list.length}</b> من ${base().length} شراكة</span>
       ${parts.flatMap(([d, vals]) => vals.map((v) => `<span class="dz2-chip"><em>${esc(FILTER_DIMS[d].label)}:</em> ${esc(FILTER_DIMS[d].fmt ? FILTER_DIMS[d].fmt(v) : v)}<button type="button" data-chipx="${esc(d)}|${esc(v)}" aria-label="إزالة الفلتر">${icon('x')}</button></span>`)).join('')}
@@ -12139,7 +12139,7 @@ function boChSummary(X) {
         <div class="bo-gauge"><svg viewBox="0 0 180 180" aria-hidden="true"><circle cx="90" cy="90" r="${R}" class="bg"/>${Array.from({ length: 40 }, (_, i) => { const a = i / 40 * Math.PI * 2; return `<line x1="${(90 + 80 * Math.sin(a)).toFixed(1)}" y1="${(90 - 80 * Math.cos(a)).toFixed(1)}" x2="${(90 + 84 * Math.sin(a)).toFixed(1)}" y2="${(90 - 84 * Math.cos(a)).toFixed(1)}" class="tk ${i / 40 * 100 < X.score ? 'on' : ''}"/>`; }).join('')}<circle cx="90" cy="90" r="${R}" class="v ${lvl[1]}" stroke-dasharray="${(X.score / 100 * C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 90 90)" style="--c:${C.toFixed(1)}"/></svg>
           <div class="bo-gauge-t"><b class="cu" data-v="${X.score}" data-fmt="pct">${X.score}%</b><span>من 100</span></div></div>
         <ul class="bo-hl">${X.health.map((h) => `<li ${tipAttr(`<b>${h.l}</b><br>${h.d}: ${h.v}%`)}><span>${h.l}</span><i><em style="width:${h.v}%" class="${h.v >= 70 ? 'g' : h.v >= 50 ? 'w' : 'r'}"></em></i><b>${h.v}%</b></li>`).join('')}</ul>
-        <p class="bo-note">مؤشر مركّب من أربعة عناصر بأوزان متساوية، يُحسب من السجلات المعروضة.</p>
+        <p class="bo-note">مؤشر مركّب من ${plural(X.health.length, 'عنصر واحد', 'عنصرين', 'عناصر', 'عنصرًا')} بأوزان متساوية، يُحسب من السجلات المعروضة.</p>
       </div>
     </div>
     <div class="bo-kpis">${kp.map((k) => `<button type="button" class="bo-kpi ${k.warn ? 'warn' : ''}" data-drawer="${k.k}"><span class="bo-kpi-l">${k.l}</span><b class="cu" data-v="${k.v}" ${k.pct ? 'data-fmt="pct"' : ''}>${k.v}${k.pct ? '%' : ''}</b><span class="bo-kpi-v">${k.viz}</span><small>${k.s}</small></button>`).join('')}</div>
@@ -12713,7 +12713,7 @@ function mediaUploadDlg(pid = '') {
 /* —— 28b-workflow.js —— */
 /* =====================================================================
    مسار الشراكة الجديدة (المعتمد من إدارة الشراكات)
-   من طلب الشراكة إلى تقارير تفعيل المذكرة: ١٣ خطوة، لكل خطوة جهة مسؤولة
+   من طلب الشراكة إلى تقارير تفعيل المذكرة: ثلاث عشرة خطوة (WF_STEPS)، لكل خطوة جهة مسؤولة
    ومستندات مطلوبة. الصلاحيات تُبنى على هذا المسار: كل حساب إدارة يرى ما يخصه
    وينفّذ الخطوات المسندة إليه فقط.
    ===================================================================== */
@@ -13053,7 +13053,7 @@ function renderTasks(el) {
   const r0 = Session.role();
   const mineSteps = r0 === 'admin' || r0 === 'team' ? WF_STEPS.filter((s) => s.actor === 'partnerships' || s.kind === 'multi') : r0 === 'dept' ? WF_STEPS.filter((s) => (acc && acc.duties || []).includes(s.actor)) : [];
   const whenSteps = r0 === 'dept' ? WF_STEPS.filter((s) => ['requester', 'concerned'].includes(s.actor) || s.id === 'meeting') : [];
-  el.innerHTML = `<div class="ph"><div><h1>مهامي</h1><p>الخطوات التي تنتظر ${esc(acc ? acc.t : 'حسابك')} في مسار الشراكات الجديدة. كل مهمة تفتح الخطوة مباشرة بمستنداتها.</p></div></div>
+  el.innerHTML = `<div class="ph"><div><h1>مهامي</h1><p>الخطوات التي تنتظر ${esc(acc ? acc.t : 'حسابك')} في مسار الشراكات الجديدة. كل مهمة تفتح الخطوة مباشرة بمستنداتها.</p>${T.length ? `<p class="tk-sum"><b>${T.filter((t) => !t.follow).length}</b> بانتظارك${T.some((t) => t.follow) ? ` · <b>${T.filter((t) => t.follow).length}</b> للمتابعة فقط` : ''}</p>` : ''}</div></div>
     ${T.length ? `<div class="tk-list">${T.map((t) => `<a class="tk ${t.returned ? 'ret' : ''} ${t.follow ? 'fol' : ''}" href="${t.href}" data-tkopen="${t.step.id}" data-tkid="${t.rec.id}" data-tkkind="${t.kind}">
         <span class="tk-n">${t.step.n}</span><span class="tk-b"><b>${esc(t.step.t)}</b><span>${esc(t.name || '')}</span><small>${esc(t.sub || '')}</small></span>
         <span class="tk-m">${t.returned ? '<em class="ret">أُعيدت بملاحظات</em>' : t.follow ? '<em>متابعة</em>' : ''}<small>${t.since ? relDays(t.since) : ''}</small></span>${icon('chevL')}</a>`).join('')}</div>`
@@ -13489,7 +13489,7 @@ function profileSectionHTML(p) {
       <div class="pf-card"><h4>${icon('star')} تقييم الشراكة</h4>${ev && ev.score !== null ? `<div class="pf-ev">${ring(ev.score)}<div><b>${evalGrade(ev.score)}</b><span>${esc(ev.data.period || '')} — ${esc(ev.data.rec || '')}</span><small>${esc(ev.no)} · ${esc(ev.by)}</small></div></div>
           ${evs.length > 1 ? `<div class="pf-hist">${evs.map((e, i) => { const s = evalScore(e.data); return `<button type="button" data-evview="${(p.evals || []).indexOf(e)}" title="${esc(e.data.period)}"><i style="height:${s}%" class="${evalTone(s)}"></i><span>${s}</span></button>`; }).join('')}</div>` : ''}
           <div class="pf-acts"><button class="btn sm ghost" type="button" data-evview="${(p.evals || []).indexOf(evs.find((e) => e.id === ev.id))}">${icon('file')} عرض النموذج</button>${edit ? `<button class="btn sm" type="button" data-evnew>${icon('plus')} تقييم جديد</button>` : ''}</div>`
-        : `<p class="muted small">لم تُقيَّم الشراكة بعد. يُقيَّم أداء الشراكة دوريًا بستة معايير موزونة.</p>${edit ? `<button class="btn sm primary" type="button" data-evnew>${icon('star')} تعبئة نموذج تقييم الشراكة</button>` : ''}`}</div>
+        : `<p class="muted small">لم تُقيَّم الشراكة بعد. يُقيَّم أداء الشراكة دوريًا بـ${plural(EVAL_CRIT.length, 'معيار واحد', 'معيارين', 'معايير', 'معيارًا')} موزونة.</p>${edit ? `<button class="btn sm primary" type="button" data-evnew>${icon('star')} تعبئة نموذج تقييم الشراكة</button>` : ''}`}</div>
       <div class="pf-card"><h4>${icon('award')} القيمة والأثر</h4><dl class="kv pf-kv">${kv('نوع القيمة', (P.valueTypes || []).map((v) => `<span class="chip plain">${esc(v)}</span>`).join(' '))}${kv('القيمة الإجمالية التقديرية', P.total ? `<b class="num">${sar(P.total)}</b>` : '')}${kv('مستوى الأثر', P.impactLevel ? `<span class="chip ${P.impactLevel === 'مرتفع' ? 'ok' : P.impactLevel === 'متوسط' ? 'gold' : ''}">${esc(P.impactLevel)}</span>` : (ev ? esc(ev.data.impactLevel) : ''))}${kv('الأثر', esc((ev && ev.data.impact) || firstItem(p.expectedImpact)), 'full')}</dl></div>
       ${fin ? `<div class="pf-card"><h4>${icon('chart')} الوضع المالي</h4><dl class="kv pf-kv">${kv('النموذج المالي', esc(f.model))}${kv('الوضع', f.status ? `<span class="chip ${f.status === 'متأخر' ? 'danger' : f.status === 'مكتمل' ? 'ok' : ''}">${esc(f.status)}</span>` : '')}${kv('مساهمة الشريك', money(f.partnerSar))}${kv('مساهمة المؤسسة', money(f.murojSar))}${kv('القيمة العينية والمعرفية', money(f.inkindSar))}${kv('المصروف حتى الآن', money(f.spentSar))}</dl>
         ${(+f.partnerSar || 0) + (+f.murojSar || 0) ? `<div class="pf-spend"><i style="width:${Math.min(100, Math.round((+f.spentSar || 0) / ((+f.partnerSar || 0) + (+f.murojSar || 0)) * 100))}%"></i></div><small class="faint">نسبة الصرف من الالتزامات المالية</small>` : ''}</div>` : ''}
@@ -13615,7 +13615,7 @@ function renderProcess(el) {
   const arcs = back.map(([from, to, label]) => { const a_ = WF_STEPS.findIndex((x) => x.id === from), b_ = WF_STEPS.findIndex((x) => x.id === to); return `<span class="js-arc" style="--a:${a_};--b:${b_}"><i></i><small>${esc(label)}</small></span>`; }).join('');
   el.innerHTML = `<section class="js-hero">
       <div class="js-hero-t"><span class="js-eye"><i></i>مسار الشراكة</span><h1>من فكرة إلى أثر</h1>
-        <p>الإجراء المعتمد لشراكة جديدة كما هو مطبّق في المنظومة: ثلاث عشرة خطوة في خمس مراحل، تنفّذها سبع جهات، وكل خطوة لها مستندها وصاحب قرارها.</p>
+        <p>الإجراء المعتمد لشراكة جديدة كما هو مطبّق في المنظومة: ${plural(WF_STEPS.length, 'خطوة واحدة', 'خطوتان', 'خطوات', 'خطوة')} في ${plural(WF_PHASES.length, 'مرحلة واحدة', 'مرحلتين', 'مراحل', 'مرحلة')}، تنفّذها ${plural(PR_LANES.length, 'جهة واحدة', 'جهتان', 'جهات', 'جهة')}، وكل خطوة لها مستندها وصاحب قرارها.</p>
         <div class="js-acts no-print"><button class="btn gold" data-prprint type="button">${icon('print')} طباعة أو PDF</button>${can('export') ? `<button class="btn" data-prxls type="button">${icon('download')} المصفوفة Excel</button>` : ''}${Session.role() !== 'viewer' ? `<a class="btn" href="#/tasks">${icon('flag')} مهامي</a>` : ''}</div></div>
       <dl class="js-stats"><div><dt>خطوة</dt><dd>${WF_STEPS.length}</dd></div><div><dt>مراحل</dt><dd>${WF_PHASES.length}</dd></div><div><dt>جهات منفّذة</dt><dd>${PR_LANES.length}</dd></div><div class="g"><dt>في المسار الآن</dt><dd>${live}</dd></div><div><dt>مذكرات مفعّلة</dt><dd>${activated}</dd></div></dl>
     </section>
@@ -13926,7 +13926,23 @@ function moveNavPill(animate = true) {
   if (!animate) { pill.offsetHeight; pill.style.transition = ''; }
 }
 window.addEventListener('resize', () => moveNavPill(false));
+/* أعداد القائمة (مهامي، المقترحات…) تُحسب من جديد مع كل انتقال حتى لا تبقى قديمة بعد أي تعديل */
+function refreshNavCounts() {
+  let groups; try { groups = navGroups(); } catch (_) { return; }
+  const cnt = {}; groups.forEach((g) => (g.items || []).filter(Boolean).forEach((it) => { cnt[it.h] = it.cnt || 0; }));
+  $$('a.nav-a[href], a.bo-link[href]').forEach((a) => {
+    const h = a.getAttribute('href'); if (!(h in cnt)) return;
+    let c = a.querySelector(':scope > .cnt');
+    if (cnt[h]) { if (!c) { c = document.createElement('span'); c.className = 'cnt'; a.appendChild(c); } c.textContent = cnt[h]; } else if (c) c.remove();
+  });
+  $$('.bo-more').forEach((m) => {
+    const sum = $$('.bo-mega a.nav-a[href]', m).reduce((t, a) => t + (cnt[a.getAttribute('href')] || 0), 0);
+    const btn = $(':scope > .bo-link', m); if (!btn) return; let c = $(':scope > .cnt', btn);
+    if (sum) { if (!c) { c = document.createElement('span'); c.className = 'cnt'; btn.insertBefore(c, btn.querySelector('.ic')); } c.textContent = sum; } else if (c) c.remove();
+  });
+}
 function updateNav() {
+  refreshNavCounts();
   const r = App.route; if (!r) return;
   $$('.nav-a').forEach((a) => {
     let on = a.dataset.m.split(',').includes(r.name);

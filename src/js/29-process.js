@@ -79,7 +79,7 @@ function renderProcess(el) {
   const arcs = back.map(([from, to, label]) => { const a_ = WF_STEPS.findIndex((x) => x.id === from), b_ = WF_STEPS.findIndex((x) => x.id === to); return `<span class="js-arc" style="--a:${a_};--b:${b_}"><i></i><small>${esc(label)}</small></span>`; }).join('');
   el.innerHTML = `<section class="js-hero">
       <div class="js-hero-t"><span class="js-eye"><i></i>مسار الشراكة</span><h1>من فكرة إلى أثر</h1>
-        <p>الإجراء المعتمد لشراكة جديدة كما هو مطبّق في المنظومة: ثلاث عشرة خطوة في خمس مراحل، تنفّذها سبع جهات، وكل خطوة لها مستندها وصاحب قرارها.</p>
+        <p>الإجراء المعتمد لشراكة جديدة كما هو مطبّق في المنظومة: ${plural(WF_STEPS.length, 'خطوة واحدة', 'خطوتان', 'خطوات', 'خطوة')} في ${plural(WF_PHASES.length, 'مرحلة واحدة', 'مرحلتين', 'مراحل', 'مرحلة')}، تنفّذها ${plural(PR_LANES.length, 'جهة واحدة', 'جهتان', 'جهات', 'جهة')}، وكل خطوة لها مستندها وصاحب قرارها.</p>
         <div class="js-acts no-print"><button class="btn gold" data-prprint type="button">${icon('print')} طباعة أو PDF</button>${can('export') ? `<button class="btn" data-prxls type="button">${icon('download')} المصفوفة Excel</button>` : ''}${Session.role() !== 'viewer' ? `<a class="btn" href="#/tasks">${icon('flag')} مهامي</a>` : ''}</div></div>
       <dl class="js-stats"><div><dt>خطوة</dt><dd>${WF_STEPS.length}</dd></div><div><dt>مراحل</dt><dd>${WF_PHASES.length}</dd></div><div><dt>جهات منفّذة</dt><dd>${PR_LANES.length}</dd></div><div class="g"><dt>في المسار الآن</dt><dd>${live}</dd></div><div><dt>مذكرات مفعّلة</dt><dd>${activated}</dd></div></dl>
     </section>

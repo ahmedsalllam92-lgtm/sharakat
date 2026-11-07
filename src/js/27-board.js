@@ -178,7 +178,7 @@ function boQuickHTML() {
     { h: '#/partnerships', ic: 'layers', t: 'سجل الشراكات', d: 'ابحث وصفِّ وافتح أي شراكة', b: soon ? `${soon} ${nounFor(soon, ['تنتهي قريبًا', 'تنتهيان قريبًا', 'تنتهي قريبًا', 'تنتهي قريبًا'])}` : '' },
     can('view.dashboard') && { h: '#/dashboard', ic: 'chart', t: 'لوحة الأداء', d: 'حلقات النمو وإحاطة المجلس', b: '' },
     can('proposal.review') && { h: '#/proposals?status=submitted', ic: 'inbox', t: 'المقترحات الواردة', d: 'مراجعة مقترحات الإدارات', b: pend ? `${pend} ${nounFor(pend, ['جديد', 'جديدان', 'جديدة', 'جديدًا'])}` : '' },
-    can('proposal.create') && { h: '#/share/new', ic: 'send', t: 'شارك بمقترح', d: mineInfo ? 'لديك مقترح بانتظار الاستكمال' : 'أربع خطوات لاقتراح جهة', b: mineInfo ? `${mineInfo} بانتظار الاستكمال` : '' },
+    can('proposal.create') && { h: '#/share/new', ic: 'send', t: 'شارك بمقترح', d: mineInfo ? 'لديك مقترح بانتظار الاستكمال' : `${plural(S_STEPS.length, 'خطوة واحدة', 'خطوتان', 'خطوات', 'خطوة')} لاقتراح جهة`, b: mineInfo ? `${mineInfo} بانتظار الاستكمال` : '' },
     { h: '#/media', ic: 'image', t: 'مركز الصور', d: 'صور الشراكات والإنجازات', b: '' },
     can('view.reports') && { h: '#/reports', ic: 'file', t: 'التقارير', d: 'PowerPoint وPDF بضغطة', b: '' },
   ].filter(Boolean).slice(0, 5);
@@ -244,7 +244,7 @@ function renderDashBoard(el) {
   const fb = new FilterBar($('#dashF', el), { dims: ['status', 'ptype', 'domain', 'category', 'sector', 'classification', 'department', 'owner', 'year'], getList: base, state: App.dashF, onChange: () => draw(false) });
   const drawActive = (list) => {
     const parts = Object.entries(App.dashF).filter(([, v]) => v && v.length);
-    $('#boScope', el).textContent = `${list.length} من ${base().length} شراكة` + (Object.values(App.dashF).some((v) => v && v.length) ? ' — ' + filtersText(App.dashF).replace('الفلاتر المطبقة — ', '') : '');
+    $('#boScope', el).textContent = `${list.filter((p) => !p.isDraft).length} من ${base().filter((p) => !p.isDraft).length} شراكة` + (Object.values(App.dashF).some((v) => v && v.length) ? ' — ' + filtersText(App.dashF).replace('الفلاتر المطبقة — ', '') : '');
     $('#boPrintF', el).textContent = filtersText(App.dashF);
     $('#dzActive', el).innerHTML = `<span class="dz2-scope">النطاق: <b>${list.length}</b> من ${base().length} شراكة</span>
       ${parts.flatMap(([d, vals]) => vals.map((v) => `<span class="dz2-chip"><em>${esc(FILTER_DIMS[d].label)}:</em> ${esc(FILTER_DIMS[d].fmt ? FILTER_DIMS[d].fmt(v) : v)}<button type="button" data-chipx="${esc(d)}|${esc(v)}" aria-label="إزالة الفلتر">${icon('x')}</button></span>`)).join('')}
@@ -348,7 +348,7 @@ function boChSummary(X) {
         <div class="bo-gauge"><svg viewBox="0 0 180 180" aria-hidden="true"><circle cx="90" cy="90" r="${R}" class="bg"/>${Array.from({ length: 40 }, (_, i) => { const a = i / 40 * Math.PI * 2; return `<line x1="${(90 + 80 * Math.sin(a)).toFixed(1)}" y1="${(90 - 80 * Math.cos(a)).toFixed(1)}" x2="${(90 + 84 * Math.sin(a)).toFixed(1)}" y2="${(90 - 84 * Math.cos(a)).toFixed(1)}" class="tk ${i / 40 * 100 < X.score ? 'on' : ''}"/>`; }).join('')}<circle cx="90" cy="90" r="${R}" class="v ${lvl[1]}" stroke-dasharray="${(X.score / 100 * C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 90 90)" style="--c:${C.toFixed(1)}"/></svg>
           <div class="bo-gauge-t"><b class="cu" data-v="${X.score}" data-fmt="pct">${X.score}%</b><span>من 100</span></div></div>
         <ul class="bo-hl">${X.health.map((h) => `<li ${tipAttr(`<b>${h.l}</b><br>${h.d}: ${h.v}%`)}><span>${h.l}</span><i><em style="width:${h.v}%" class="${h.v >= 70 ? 'g' : h.v >= 50 ? 'w' : 'r'}"></em></i><b>${h.v}%</b></li>`).join('')}</ul>
-        <p class="bo-note">مؤشر مركّب من أربعة عناصر بأوزان متساوية، يُحسب من السجلات المعروضة.</p>
+        <p class="bo-note">مؤشر مركّب من ${plural(X.health.length, 'عنصر واحد', 'عنصرين', 'عناصر', 'عنصرًا')} بأوزان متساوية، يُحسب من السجلات المعروضة.</p>
       </div>
     </div>
     <div class="bo-kpis">${kp.map((k) => `<button type="button" class="bo-kpi ${k.warn ? 'warn' : ''}" data-drawer="${k.k}"><span class="bo-kpi-l">${k.l}</span><b class="cu" data-v="${k.v}" ${k.pct ? 'data-fmt="pct"' : ''}>${k.v}${k.pct ? '%' : ''}</b><span class="bo-kpi-v">${k.viz}</span><small>${k.s}</small></button>`).join('')}</div>
