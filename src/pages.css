@@ -1611,3 +1611,48 @@ h1,h2,h3,h4,h5,h6{font-weight:700}
 .ob-pt text.n{stroke:none;paint-order:normal;opacity:1}
 @media print{.js-climb{break-before:avoid!important}.js-nav{display:none!important}.js-stage{zoom:.72!important}}
 @media print{.js-hero{zoom:.78}.js-stage{zoom:.64!important}.js-climb{padding-top:4px!important}.js-sh p{font-size:11px}}
+
+/* =====================================================================
+   الشاشة الافتتاحية
+   ===================================================================== */
+#shkSplash{position:fixed;inset:0;z-index:100000;display:grid;place-items:center;overflow:hidden;color:#fff;cursor:pointer;transition:opacity .7s ease,transform .7s ease,filter .7s ease;font-family:var(--font)}
+#shkSplash.out{opacity:0;transform:scale(1.03);filter:blur(4px);pointer-events:none}
+#shkSplash .sp-bg{position:absolute;inset:-5%;background-size:cover;background-position:center;animation:spKen calc(var(--dur) + 1s) ease-out forwards}
+#shkSplash .sp-veil{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,rgba(11,63,56,.55),rgba(6,32,28,.9) 75%),linear-gradient(180deg,rgba(6,32,28,.2),rgba(6,32,28,.6))}
+#shkSplash.dk .sp-veil{background:radial-gradient(ellipse at 50% 45%,rgba(15,29,36,.65),rgba(8,15,19,.94) 75%)}
+#shkSplash .sp-geo{position:absolute;width:min(92vmin,820px);height:min(92vmin,820px);overflow:visible;pointer-events:none}
+#shkSplash .ring{fill:none;stroke:#D9B467;stroke-width:1;opacity:0;transform-origin:center;animation:spRing 2.6s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i) * 160ms + .1s)}
+#shkSplash .star rect,#shkSplash .star circle{fill:none;stroke:#E6C786;stroke-width:1.6;stroke-dasharray:1;stroke-dashoffset:1;animation:spDraw 1.4s .2s cubic-bezier(.65,0,.35,1) forwards;opacity:.55}
+#shkSplash .star rect+rect{animation-delay:.45s}
+#shkSplash .star circle{animation-delay:.8s}
+#shkSplash .star{transform-origin:center;animation:spSpin 18s linear infinite}
+#shkSplash .dot{fill:#E6C786;opacity:0;animation:spDot .5s ease-out forwards;animation-delay:calc(var(--i) * 60ms + 1s)}
+#shkSplash .sp-in{position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;padding:0 24px;max-width:960px}
+#shkSplash .sp-logo{height:clamp(64px,10vh,96px);max-width:72vw;object-fit:contain;opacity:0;animation:spUp .7s .05s ease-out forwards;filter:drop-shadow(0 6px 18px rgba(0,0,0,.35))}
+#shkSplash .sp-rule{width:0;height:2px;background:linear-gradient(90deg,transparent,#E6C786,transparent);animation:spRule .9s .35s ease-out forwards}
+#shkSplash h1{margin:0;font-family:var(--display,var(--font));font-size:clamp(28px,4.6vw,58px);font-weight:700;line-height:1.35;letter-spacing:0;text-shadow:0 4px 30px rgba(0,0,0,.35)}
+#shkSplash h1 span{display:inline-block;opacity:0;transform:translateY(18px);filter:blur(8px);animation:spWord .6s ease-out forwards}
+#shkSplash p{margin:0;font-size:clamp(14px,1.4vw,17px);color:#D7E6DD;opacity:0;animation:spUp .6s 1s ease-out forwards}
+#shkSplash .sp-stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+#shkSplash .sp-stats span{display:inline-flex;align-items:baseline;gap:8px;padding:8px 16px;border-radius:30px;background:rgba(255,255,255,.08);border:1px solid rgba(230,199,134,.35);backdrop-filter:blur(6px);font-size:13px;color:#E3EFEA;opacity:0;animation:spUp .5s ease-out forwards}
+#shkSplash .sp-stats b{font-family:var(--display,var(--font));font-size:22px;color:#F0D9A0;font-weight:700;font-variant-numeric:tabular-nums}
+#shkSplash .sp-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.08)}
+#shkSplash .sp-bar i{display:block;height:100%;width:0;margin-inline-start:auto;background:linear-gradient(270deg,#E6C786,#B08A3E);animation:spBar var(--dur) linear forwards}
+#shkSplash .sp-skip{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);font-size:11.5px;color:rgba(255,255,255,.55);opacity:0;animation:spUp .5s 1.4s forwards}
+#shkSplash.rm *,#shkSplash.rm .sp-bg{animation-duration:.01s!important;animation-delay:0s!important}
+#shkSplash.rm .sp-bar i{animation:spBar var(--dur) linear forwards!important}
+[data-design="board"] #shkSplash .sp-stats span{border-radius:3px}
+@keyframes spKen{from{transform:scale(1.14)}to{transform:scale(1)}}
+@keyframes spRing{0%{opacity:0;transform:scale(.4)}40%{opacity:.5}100%{opacity:.16;transform:scale(1)}}
+@keyframes spDraw{to{stroke-dashoffset:0}}
+@keyframes spSpin{to{transform:rotate(360deg)}}
+@keyframes spDot{from{opacity:0;transform:scale(.2)}to{opacity:.8;transform:none}}
+@keyframes spUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes spWord{to{opacity:1;transform:none;filter:none}}
+@keyframes spRule{to{width:120px}}
+@keyframes spBar{to{width:100%}}
+@media print{#shkSplash{display:none!important}}
+#shkSplash h1,#shkSplash h1 span{color:#fff!important}
+#shkSplash .star{transform-box:fill-box;transform-origin:50% 50%}
+#shkSplash .star rect,#shkSplash .star circle{opacity:.32;stroke-width:1.2}
+#shkSplash .ring{transform-box:fill-box;transform-origin:50% 50%}

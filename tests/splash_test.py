@@ -1,0 +1,50 @@
+import asyncio, json
+from playwright.async_api import async_playwright
+URL='file:///home/claude/shots/app.html'
+R=[]
+def ok(n,c,x=''): R.append(c); print('PASS' if c else 'FAIL', n, x, flush=True)
+async def main():
+    async with async_playwright() as p:
+        b = await p.chromium.launch()
+        ctx = await b.new_context(viewport={'width':1440,'height':900})
+        await ctx.add_init_script("localStorage.setItem('shk_splash_force','1')")
+        pg = await ctx.new_page(); errs=[]
+        pg.on('pageerror', lambda e: errs.append(str(e)))
+        await pg.goto(URL); await pg.wait_for_timeout(400)
+        ok('splash shows on first open', await pg.evaluate("!!document.getElementById('shkSplash')"))
+        ok('default sentence, logo, image and graphics', await pg.evaluate("(()=>{const s=document.getElementById('shkSplash'); return s.querySelector('h1').textContent.includes('نبني شراكات') && !!s.querySelector('.sp-logo') && getComputedStyle(s.querySelector('.sp-bg')).backgroundImage.startsWith('url(') && s.querySelectorAll('.ring').length===4 && s.querySelectorAll('.star rect').length===2})()"))
+        await pg.wait_for_selector('#main .page'); await pg.wait_for_timeout(900)
+        T = await pg.evaluate("(()=>{const nd=visiblePartnerships().filter(p=>!p.isDraft); return [nd.filter(p=>['active','soon'].includes(pStatus(p))).length, new Set(nd.map(p=>p.partnerId)).size]})()")
+        shown = await pg.evaluate("[...document.querySelectorAll('#shkSplash .sp-stats b')].map(b=>+b.dataset.to)")
+        ok('live numbers come from the data', shown[:2] == T, (shown, T))
+        await pg.wait_for_timeout(2600)
+        ok('splash leaves by itself', await pg.evaluate("!document.getElementById('shkSplash')"))
+        # إعادة التحميل تُظهرها مجددًا، والضغط يتخطاها
+        await pg.reload(); await pg.wait_for_timeout(500)
+        ok('splash shows again on reload', await pg.evaluate("!!document.getElementById('shkSplash')"))
+        await pg.mouse.click(700, 450); await pg.wait_for_timeout(900)
+        ok('click skips it', await pg.evaluate("!document.getElementById('shkSplash')"))
+        # الإعدادات: تعديل الجملة والخلفية وإخفاء الأرقام
+        await pg.wait_for_selector('#main .page')
+        await pg.evaluate("location.hash='#/settings/general'"); await pg.wait_for_timeout(800)
+        ok('splash settings panel', await pg.evaluate("!!document.querySelector('#gspl_t') && document.querySelectorAll('#gspl_bg option').length>=2"))
+        await pg.fill('#gspl_t', 'شراكات اليوم… أثر الغد'); await pg.fill('#gspl_s', 'سطر فرعي للاختبار')
+        await pg.select_option('#gspl_bg', 'splash-forest'); await pg.evaluate("document.querySelector('#gspl_n').checked=false")
+        await pg.click('#gsplprev'); await pg.wait_for_timeout(500)
+        ok('preview shows the edited sentence', await pg.evaluate("document.querySelector('#shkSplash h1').textContent.includes('أثر الغد') && document.querySelector('#shkSplash p').textContent==='سطر فرعي للاختبار'"))
+        await pg.mouse.click(700, 450); await pg.wait_for_timeout(900)
+        await pg.click('#gsave'); await pg.wait_for_timeout(700)
+        ok('saved in settings', await pg.evaluate("D.settings.splash.text==='شراكات اليوم… أثر الغد' && D.settings.splash.bg==='splash-forest' && D.settings.splash.stats===false"))
+        await pg.reload(); await pg.wait_for_timeout(500)
+        ok('next open uses the new sentence immediately', await pg.evaluate("document.querySelector('#shkSplash h1').textContent.includes('أثر الغد')"))
+        ok('numbers hidden when switched off', await pg.evaluate("document.querySelectorAll('#shkSplash .sp-stats span').length===0"))
+        await pg.mouse.click(700, 450); await pg.wait_for_timeout(900)
+        await pg.wait_for_selector('#main .page')
+        await pg.evaluate("location.hash='#/settings/general'"); await pg.wait_for_timeout(800)
+        await pg.evaluate("document.querySelector('#gspl_on').checked=false"); await pg.click('#gsave'); await pg.wait_for_timeout(600)
+        await pg.reload(); await pg.wait_for_timeout(500)
+        ok('can be turned off', await pg.evaluate("!document.getElementById('shkSplash')"))
+        ok('no page errors', not errs, errs[:3])
+        await b.close()
+    print('SUMMARY', sum(R), '/', len(R))
+asyncio.run(main())

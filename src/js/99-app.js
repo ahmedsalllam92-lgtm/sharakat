@@ -351,6 +351,7 @@ function migrate() {
     applyRealPhotos();
     s.schema = 4; changed = true;
   }
+  if (!s.splash) { s.splash = { on: true, text: SPLASH_DEF.text, sub: SPLASH_DEF.sub, bg: SPLASH_DEF.bg, stats: true, dur: SPLASH_DEF.dur }; changed = true; }
   if (s.design && !['classic', 'board'].includes(s.design)) { s.design = ['show', 'brand'].includes(s.design) ? 'board' : 'classic'; changed = true; }
   if (!s.deptsV2) { applyOfficialDepartments(); s.deptsV2 = true; changed = true; }
   if (!s.lists.departments.includes(WF_DEPT_DEFAULTS.legal)) { s.lists.departments.push(WF_DEPT_DEFAULTS.legal); changed = true; }
@@ -378,6 +379,7 @@ async function boot() {
     renderShell();
     App.lastHash = location.hash;
     route();
+    splashSync();
     bootEl.classList.add('out');
     setTimeout(() => bootEl.remove(), 400);
   } catch (e) {
