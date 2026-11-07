@@ -3,17 +3,20 @@
    يُعرض للمعاينة ثم يُطبع أو يُحفظ PDF من المتصفح
    ===================================================================== */
 const DOS_SECS = [
-  ['summary', 'البيانات الأساسية', true],
-  ['profile', 'التصنيف والقيمة والوضع المالي', true],
+  ['summary', 'بطاقة الشراكة: الحقائق والفترة', true],
+  ['partner', 'الجهة الشريكة', true],
+  ['profile', 'التصنيف والقيمة والوضع المالي والتقييم', true],
   ['wf', 'مسار المذكرة', true],
   ['content', 'مجالات التعاون والأثر والمتابعة', true],
+  ['contact', 'الفريق والتواصل', true],
   ['proposal', 'المقترح الأصلي', true],
   ['forms', 'النماذج المعتمدة', true],
   ['evals', 'تقييمات الشراكة', true],
-  ['stories', 'الإنجازات المرتبطة', true],
+  ['stories', 'الإنجازات والمستجدات', true],
   ['photos', 'معرض الصور', true],
   ['docs', 'المستندات والمرفقات', true],
-  ['log', 'سجل التغييرات', false],
+  ['admin', 'البيانات الإدارية والمصدر', true],
+  ['log', 'سجل التغييرات', true],
 ];
 
 /* pdf.js مضمّن نصًا ويُحمَّل عند الحاجة فقط */
@@ -113,59 +116,104 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
   const chap = (id, title, body, { page = true, sub = '' } = {}) => { n++; toc.push([pad(n), title]); chapters.push(`<section class="ds-ch ${page ? 'pg' : ''}" id="ds-${id}"><header class="ds-chh"><em>${pad(n)}</em><div><h2>${esc(title)}</h2>${sub ? `<p>${sub}</p>` : ''}</div></header>${body}</section>`); };
 
   onProgress('البيانات الأساسية');
-  if (has('summary')) chap('summary', 'البيانات الأساسية', kvT([
-    ['الجهة الشريكة', esc(pr.name || name)], ['اسم الشراكة', esc(p.title || '')], ['رقم الشراكة', `<span class="ds-code">${esc(p.code || '—')}</span>`],
-    ['القطاع', esc(pSector(p) || '')], ['مجال عمل الجهة', esc(pr.domain || '')], ['تصنيف المذكرة', esc(p.classification || '')],
-    ['تصنيف الشراكة', esc(p.ptype || '')], ['فئات الشراكة', esc((p.categories || []).join('، '))],
-    ['الحالة', esc(statusLabel(pStatus(p)))], ['مرحلة الشراكة', esc(stageLabel(p.stage))],
-    ['تاريخ البدء', p.startDate ? fmtDate(p.startDate) : ''], ['تاريخ الانتهاء', p.endDate ? fmtDate(p.endDate) : ''],
-    ['المسؤولون من إدارة الشراكات', esc((p.owners || []).join('، '))], ['تفعيل الشراكة', esc(p.activation || '')],
-    ['التقاطع مع الإدارات', esc((p.departments || []).join('، '))],
-    can('view.contacts') && ['ضابط الاتصال لدى الشريك', [p.contactName, p.contactEmail, p.contactPhone].filter(Boolean).map(esc).join(' — ')],
-    ['آخر تحديث', `${fmtDT(p.updatedAt || p.createdAt)} — ${esc(p.updatedBy || p.createdBy || '')}`],
-  ]), { page: false });
+  const stt = pStatus(p), dl = daysLeft(p), tp = termProgress(p);
+  const chipsH = (arr, cls = '') => (arr && arr.length ? `<div class="ds-chips">${arr.map((x) => `<span class="ds-chip ${cls}">${esc(x)}</span>`).join('')}</div>` : '<span class="ds-faint">—</span>');
+  const fact = (ic, l, v, sub = '', tone = '') => `<div class="ds-fact ${tone}"><span class="ds-fi">${icon(ic)}</span><div><small>${esc(l)}</small><b>${v || '—'}</b>${sub ? `<em>${sub}</em>` : ''}</div></div>`;
+  const kv2 = (rows) => `<dl class="ds-dl">${rows.filter(Boolean).map(([l, v, full]) => `<div class="${full ? 'full' : ''}"><dt>${esc(l)}</dt><dd>${v || '<span class="ds-faint">—</span>'}</dd></div>`).join('')}</dl>`;
+  const bar = (pct, cls = '') => `<span class="ds-bar ${cls}"><i style="width:${Math.max(0, Math.min(100, pct))}%"></i></span>`;
+  const lst = (txt, empty) => richHTML(txt, { empty });
+
+  if (has('summary')) {
+    const remTxt = ['active', 'soon'].includes(stt) && dl !== null ? `${nf(dl)} يومًا` : stt === 'upcoming' && p.startDate ? `يبدأ بعد ${nf(daysBetween(today(), parseDate(p.startDate)))} يومًا` : stt === 'ended' ? 'انتهت' : '—';
+    const term = p.startDate && p.endDate ? `<div class="ds-term"><div class="ds-term-l"><span><small>البدء</small><b>${fmtDate(p.startDate)}</b></span><span class="c"><small>انقضى</small><b>${tp !== null ? Math.round(tp * 100) + '%' : '—'}</b></span><span><small>الانتهاء</small><b>${fmtDate(p.endDate)}</b></span></div>
+      <div class="ds-term-b"><i style="width:${tp !== null ? Math.round(Math.max(0, Math.min(1, tp)) * 100) : 0}%"></i>${tp !== null && tp > 0 && tp < 1 ? `<em style="right:${Math.round(tp * 100)}%">اليوم</em>` : ''}</div></div>` : '';
+    chap('summary', 'بطاقة الشراكة', `
+      ${p.showcaseGoal ? `<blockquote class="ds-quote">${esc(p.showcaseGoal)}</blockquote>` : ''}
+      <div class="ds-facts">
+        ${fact('flag', 'الحالة', esc(statusLabel(stt)), esc(stageLabel(p.stage)), stt === 'soon' ? 'w' : stt === 'active' ? 'ok' : '')}
+        ${fact('clock', 'المتبقي', remTxt, p.endDate ? 'حتى ' + fmtDate(p.endDate, 'short') : '')}
+        ${fact('building', 'القطاع', esc(pSector(p) || ''), esc(pr.domain || ''))}
+        ${fact('layers', 'تصنيف المذكرة', esc(p.classification || ''), esc(p.ptype || ''))}
+        ${fact('users', 'المسؤولون', esc((p.owners || []).join('، ')), plural((p.departments || []).length, 'إدارة متقاطعة', 'إدارتان', 'إدارات', 'إدارة'))}
+        ${fact('check', 'التفعيل', esc(p.activation || ''), P.ev && P.ev.score !== null ? `آخر تقييم ${P.ev.score}/100` : 'لم تُقيَّم بعد')}
+      </div>
+      ${term}
+      ${p.highlight && p.highlight.value ? `<div class="ds-hl"><b>${esc(p.highlight.value)}</b><div><strong>${esc(p.highlight.label || '')}</strong><span>${esc(p.highlight.text || '')}</span></div></div>` : ''}
+      <h3 class="ds-h3">البيانات التفصيلية</h3>
+      ${kv2([['اسم الشراكة', esc(p.title || name)], ['رقم الشراكة', `<span class="ds-code">${esc(p.code || '—')}</span>`], ['تصنيف الشراكة', chipsH(p.categories)], ['التقاطع مع الإدارات', chipsH(p.departments, 'g'), true]])}`);
+  }
+
+  if (has('partner') && pr.id) {
+    const others = D.partnerships.filter((x) => x.partnerId === pr.id && (showDemo() || !x.demo));
+    const pprops = D.proposals.filter((x) => x.partnerId === pr.id || (x.partnerName && normAr(x.partnerName) === normAr(pr.name)));
+    const lg = pr.logoFileId ? await url(pr.logoFileId) : '';
+    chap('partner', 'الجهة الشريكة', `<div class="ds-pcard"><span class="ds-plogo">${lg ? `<img src="${lg}" alt="">` : `<span class="emb" data-sec="${esc(pr.sector || '')}">${icon(embIcon(pr))}</span>`}</span>
+        <div><h3>${esc(pr.name)}</h3><p>${[pr.sector, pr.domain].filter(Boolean).map(esc).join(' · ') || '—'}</p>${pr.website ? `<a dir="ltr">${esc(pr.website)}</a>` : ''}</div></div>
+      ${kv2([['الأسماء البديلة', chipsH(pr.aliases)], ['ملاحظات عن الجهة', esc(pr.notes || ''), true]])}
+      <h3 class="ds-h3">كل الشراكات مع الجهة (${others.length})</h3>
+      <table class="ds-tbl"><thead><tr><th>الشراكة</th><th>الرقم</th><th>الحالة</th><th>الفترة</th></tr></thead><tbody>${others.map((x) => `<tr class="${x.id === p.id ? 'cur' : ''}"><td><b>${esc(x.title || partnerName(x))}</b>${x.id === p.id ? '<small>هذا الملف</small>' : ''}</td><td class="ds-code">${esc(x.code || '')}</td><td><span class="ds-st ${['active', 'soon'].includes(pStatus(x)) ? 'ok' : ''}">${esc(statusLabel(pStatus(x)))}</span></td><td class="ds-sm">${x.startDate ? fmtDate(x.startDate, 'short') : '—'} – ${x.endDate ? fmtDate(x.endDate, 'short') : '—'}</td></tr>`).join('')}</tbody></table>
+      ${pprops.length ? `<h3 class="ds-h3">المقترحات المرتبطة بالجهة (${pprops.length})</h3><table class="ds-tbl"><thead><tr><th>المرجع</th><th>الإدارة الطالبة</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody>${pprops.map((x) => `<tr><td class="ds-code">${esc(x.ref || '')}</td><td>${esc(x.department || '')}</td><td>${esc(propStatusLabel(x.status))}</td><td class="ds-sm">${x.submittedAt ? fmtDate(x.submittedAt.slice(0, 10), 'short') : '—'}</td></tr>`).join('')}</tbody></table>` : ''}`);
+  }
 
   if (has('profile')) {
     const fin = can('view.internal') || wfInvolved(p);
-    chap('profile', 'التصنيف والقيمة والوضع المالي', `<div class="ds-2">${kvT([
-      ['تصنيف الشراكة', esc(P.ptype)], ['بداية العلاقة', esc(P.origin)], ['من فتح الباب', esc(P.originBy)],
-      ['نوع القيمة', esc((P.valueTypes || []).join('، '))], ['القيمة الإجمالية التقديرية', P.total ? sar(P.total) : ''], ['مستوى الأثر', esc(P.impactLevel)],
-      ['آخر تقييم', P.ev && P.ev.score !== null ? `<b>${P.ev.score}</b> من 100 — ${evalGrade(P.ev.score)} (${esc(P.ev.data.period || '')})` : 'لم تُقيَّم بعد'],
-    ])}${fin ? kvT([
-      ['النموذج المالي', esc(f.model || '')], ['الوضع المالي', esc(f.status || '')], ['مساهمة الشريك', f.partnerSar ? sar(f.partnerSar) : ''],
-      ['مساهمة المؤسسة', f.murojSar ? sar(f.murojSar) : ''], ['القيمة العينية والمعرفية', f.inkindSar ? sar(f.inkindSar) : ''], ['المصروف حتى الآن', f.spentSar ? sar(f.spentSar) : ''],
-      ['ملاحظات مالية', esc(f.notes || '').replace(/\n/g, '<br>')],
-    ]) : ''}</div>`);
+    const tot = (+f.partnerSar || 0) + (+f.murojSar || 0) + (+f.inkindSar || 0), cash = (+f.partnerSar || 0) + (+f.murojSar || 0);
+    const parts = [['مساهمة الشريك', +f.partnerSar || 0, 'a'], ['مساهمة المؤسسة', +f.murojSar || 0, 'b'], ['قيمة عينية ومعرفية', +f.inkindSar || 0, 'c']];
+    const ev = P.ev && P.ev.score !== null ? P.ev : null;
+    const sc = ev ? (ev.data.scores || {}) : {};
+    chap('profile', 'التصنيف والقيمة والوضع المالي والتقييم', `
+      <div class="ds-facts c4">
+        ${fact('layers', 'تصنيف الشراكة', esc(P.ptype))}${fact('link', 'بداية العلاقة', esc(P.origin), esc(P.originBy))}
+        ${fact('award', 'مستوى الأثر', esc(P.impactLevel))}${fact('star', 'نوع القيمة', esc((P.valueTypes || []).join('، ')))}
+      </div>
+      ${fin ? `<div class="ds-fin"><div class="ds-fin-h"><div><small>القيمة الإجمالية التقديرية</small><b>${tot ? sar(tot) : '—'}</b></div><div><small>الوضع المالي</small><span class="ds-st ${f.status === 'متأخر' ? 'bad' : f.status === 'مكتمل' ? 'ok' : 'cur'}">${esc(f.status || 'غير محدد')}</span></div><div><small>النموذج المالي</small><b class="sm">${esc(f.model || '—')}</b></div></div>
+        ${tot ? `<div class="ds-stack">${parts.filter((x) => x[1]).map(([l, v, k]) => `<i class="${k}" style="flex:${v}"></i>`).join('')}</div><div class="ds-stack-l">${parts.map(([l, v, k]) => `<span><i class="${k}"></i>${l}<b>${v ? sar(v) : '—'}</b></span>`).join('')}</div>` : ''}
+        ${cash ? `<div class="ds-spend"><span>المصروف حتى الآن <b>${sar(+f.spentSar || 0)}</b> من ${sar(cash)}</span>${bar(Math.round((+f.spentSar || 0) / cash * 100))}<em>${Math.round((+f.spentSar || 0) / cash * 100)}%</em></div>` : ''}
+        ${f.notes ? `<p class="ds-note2">${esc(f.notes).replace(/\n/g, '<br>')}</p>` : ''}</div>` : ''}
+      <h3 class="ds-h3">آخر تقييم للشراكة</h3>
+      ${ev ? `<div class="ds-eval"><div class="ds-ring ${evalTone(ev.score)}" style="--v:${ev.score}"><b>${ev.score}</b><small>${evalGrade(ev.score)}</small></div>
+        <ul>${EVAL_CRIT.map((c) => { const v = +((sc[c.k] || {}).v || 0); return `<li><span>${esc(c.l)} <em>(${c.w}%)</em></span>${bar(v / 5 * 100)}<b>${v || '—'}/5</b></li>`; }).join('')}</ul></div>
+        <p class="ds-lead">${esc(ev.data.period || '')}${ev.data.rec ? ' · التوصية: ' + esc(ev.data.rec) : ''} · ${esc(ev.by || '')} · ${ev.no ? esc(ev.no) : ''}</p>` : '<p class="ds-lead">لم تُقيَّم الشراكة بعد.</p>'}`);
   }
 
   if (has('wf') && wfInvolved(p)) {
-    const doneN = WF_STEPS.filter((s) => st.S[s.id] && st.S[s.id].status === 'done').length;
+    const doneN = WF_STEPS.filter((s_) => st.S[s_.id] && st.S[s_.id].status === 'done').length;
     const cur = st.closed ? 'أُغلق الطلب' : st.cur ? `الخطوة ${st.cur.n}: ${st.cur.t} — لدى ${wfActorName(st.cur.actor)}` : 'اكتمل المسار';
-    chap('wf', 'مسار المذكرة', `<div class="ds-wfbar"><i style="width:${Math.round(doneN / WF_STEPS.length * 100)}%"></i></div><p class="ds-lead"><b>${doneN} من ${WF_STEPS.length}</b> — ${esc(cur)}</p>
-      <table class="ds-tbl"><thead><tr><th class="c">م</th><th>الخطوة</th><th>الجهة المنفّذة</th><th>الحالة</th><th>التاريخ والمنفّذ</th><th>المستندات والنماذج</th></tr></thead><tbody>
-      ${WF_PHASES.map((ph) => `<tr class="ds-ph"><td colspan="6">${esc(ph.t)}</td></tr>` + WF_STEPS.filter((s) => s.ph === ph.id).map((s) => {
-        const r = st.S[s.id] || {}, done = r.status === 'done', isCur = st.cur && st.cur.id === s.id;
-        const stt = done ? (r.decision === 'no' ? (s.no || 'غير مناسبة') : r.decision === 'yes' && s.yes ? s.yes : 'مكتملة') : isCur ? 'جارية' : r.status === 'returned' ? 'مُعادة' : 'لم تبدأ';
-        const docs = wfDocsOf('partnership', p, s.id).map((a) => esc((s.docs.find((d) => d.k === a.doc) || {}).l || a.name));
-        const fs = s.docs.filter((d) => d.form && wfForm('partnership', p, d.form)).map((d) => esc(FORMS[d.form].title) + (wfForm('partnership', p, d.form).status === 'done' ? ' ✓' : ' (مسودة)'));
-        return `<tr class="${done ? 'done' : isCur ? 'cur' : ''}"><td class="c">${s.n}</td><td><b>${esc(s.t)}</b>${s.ref ? `<small>البند ${s.ref}</small>` : ''}${r.note ? `<small class="ds-note">${esc(r.note)}</small>` : ''}</td><td>${esc(wfActorName(s.actor))}</td><td><span class="ds-st ${done ? 'ok' : isCur ? 'cur' : ''}">${stt}</span></td><td class="ds-sm">${r.legacy ? 'قبل اعتماد المسار' : [r.at ? fmtDT(r.at) : '', esc(r.by || '')].filter(Boolean).join('<br>')}</td><td class="ds-sm">${[...fs, ...docs].join('<br>') || '—'}</td></tr>`;
-      }).join('')).join('')}</tbody></table>`);
+    chap('wf', 'مسار المذكرة', `<div class="ds-wfh"><b>${doneN} من ${WF_STEPS.length}</b><span>${esc(cur)}</span>${bar(Math.round(doneN / WF_STEPS.length * 100))}</div>
+      <div class="ds-steps">${WF_PHASES.map((ph, pi) => `<div class="ds-phase"><h4><em>${pad(pi + 1)}</em>${esc(ph.t)}</h4><ol class="ds-tbl">${WF_STEPS.filter((s_) => s_.ph === ph.id).map((s_) => {
+        const r = st.S[s_.id] || {}, done = r.status === 'done', isCur = st.cur && st.cur.id === s_.id;
+        const stx = done ? (r.decision === 'no' ? (s_.no || 'غير مناسبة') : r.decision === 'yes' && s_.yes ? s_.yes : 'مكتملة') : isCur ? 'جارية' : r.status === 'returned' ? 'مُعادة' : 'لم تبدأ';
+        const docs = wfDocsOf('partnership', p, s_.id).map((a) => esc((s_.docs.find((d) => d.k === a.doc) || {}).l || a.name));
+        const fs = s_.docs.filter((d) => d.form && wfForm('partnership', p, d.form)).map((d) => esc(FORMS[d.form].title) + (wfForm('partnership', p, d.form).status === 'done' ? ' ✓' : ' (مسودة)'));
+        return `<li class="${done ? 'done' : isCur ? 'cur' : ''}"><span class="ds-sd">${done ? '✓' : s_.n}</span><div><b>${esc(s_.t)}</b>${s_.ref ? `<small class="ref">البند ${s_.ref}</small>` : ''}
+          <small>${esc(wfActorName(s_.actor))} · <span class="ds-st ${done ? 'ok' : isCur ? 'cur' : ''}">${stx}</span>${r.legacy ? ' · قبل اعتماد المسار' : [r.at ? fmtDT(r.at) : '', esc(r.by || '')].filter(Boolean).map((x) => ' · ' + x).join('')}</small>
+          ${r.note ? `<small class="ds-note">${esc(r.note)}</small>` : ''}${[...fs, ...docs].length ? `<div class="ds-chips">${[...fs, ...docs].map((x) => `<span class="ds-chip">${x}</span>`).join('')}</div>` : ''}</div></li>`;
+      }).join('')}</ol></div>`).join('')}</div>`);
   }
 
   if (has('content')) {
     const intl = can('view.internal');
     chap('content', 'مجالات التعاون والأثر والمتابعة', `
-      ${p.showcaseGoal ? `<blockquote class="ds-quote">${esc(p.showcaseGoal)}</blockquote>` : ''}
-      <h3 class="ds-h3">مجالات التعاون</h3>${richHTML(p.cooperationAreas)}
-      <h3 class="ds-h3">الأثر المتوقع وكيف يخدم المؤسسة</h3>${richHTML(p.expectedImpact)}
-      <h3 class="ds-h3">المخرجات</h3>${richHTML(p.outputs)}
-      ${intl ? `<h3 class="ds-h3">الملاحظات</h3>${richHTML(p.notes, { empty: 'لا توجد ملاحظات.' })}<h3 class="ds-h3">التوصيات</h3>${richHTML(p.recommendations, { empty: 'لم تُسجَّل توصيات.' })}<h3 class="ds-h3">التحديات</h3>${richHTML(p.challenges, { empty: 'لم تُسجَّل تحديات.' })}` : ''}`);
+      <h3 class="ds-h3">مجالات التعاون</h3>${lst(p.cooperationAreas, 'لم تُسجَّل مجالات تعاون.')}
+      <div class="ds-2c"><div><h3 class="ds-h3">الأثر المتوقع وكيف يخدم المؤسسة</h3>${lst(p.expectedImpact, 'لم يُسجَّل.')}</div><div><h3 class="ds-h3">المخرجات</h3>${lst(p.outputs, 'لم تُسجَّل.')}</div></div>
+      ${intl ? `<div class="ds-3c"><div class="ds-box n"><h4>الملاحظات</h4>${lst(p.notes, 'لا توجد ملاحظات.')}</div><div class="ds-box c"><h4>التحديات</h4>${lst(p.challenges, 'لم تُسجَّل تحديات.')}</div><div class="ds-box r"><h4>التوصيات</h4>${lst(p.recommendations, 'لم تُسجَّل توصيات.')}</div></div>` : ''}`);
   }
 
-  if (has('proposal') && prop) chap('proposal', 'المقترح الأصلي', kvT([
+  if (has('contact')) {
+    chap('contact', 'الفريق والتواصل', `<div class="ds-2c">
+      <div class="ds-box"><h4>${icon('users')} المسؤولون من إدارة الشراكات</h4>${(p.owners || []).length ? `<ul class="ds-people">${p.owners.map((o_) => `<li><span class="av">${esc(initials(o_))}</span>${esc(o_)}</li>`).join('')}</ul>` : '<p class="ds-faint">لم يُحدَّد مسؤول.</p>'}
+        <h4 style="margin-top:12px">${icon('building')} الإدارات المتقاطعة</h4>${chipsH(p.departments, 'g')}</div>
+      <div class="ds-box"><h4>${icon('phone')} ضابط الاتصال لدى الشريك</h4>${can('view.contacts') ? kv2([['الاسم', esc(p.contactName || '')], ['البريد الإلكتروني', p.contactEmail ? `<span dir="ltr">${esc(p.contactEmail)}</span>` : ''], ['رقم الجوال', p.contactPhone ? `<span dir="ltr">${esc(p.contactPhone)}</span>` : '']]) : '<p class="ds-faint">بيانات التواصل متاحة لفريق إدارة الشراكات فقط.</p>'}</div></div>`);
+  }
+
+  if (has('proposal') && prop) chap('proposal', 'المقترح الأصلي', `${kv2([
     ['الرقم المرجعي', `<span class="ds-code">${esc(prop.ref || '')}</span>`], ['الحالة', esc(propStatusLabel(prop.status))], ['الإدارة الطالبة', esc(prop.department || '')],
-    ['مقدم الطلب', esc(prop.requesterName || '')], ['تاريخ التقديم', prop.submittedAt ? fmtDT(prop.submittedAt) : ''], ['الهدف الاستراتيجي', esc(prop.strategicGoal || '')],
-  ]) + `<h3 class="ds-h3">أسباب طلب الشراكة</h3>${richHTML(prop.reasons)}${prop.targets ? `<h3 class="ds-h3">المستهدفات</h3>${richHTML(prop.targets)}` : ''}${prop.addedValue ? `<h3 class="ds-h3">القيمة المضافة</h3>${richHTML(prop.addedValue)}` : ''}`);
+    ['مقدم الطلب', esc(prop.requesterName || '') + (prop.requesterEmail ? ` <span dir="ltr" class="ds-sm">${esc(prop.requesterEmail)}</span>` : '')], ['تاريخ التقديم', prop.submittedAt ? fmtDT(prop.submittedAt) : ''], ['قطاع الجهة', esc(prop.partnerSector || '')],
+    ['الهدف الاستراتيجي', esc(prop.strategicGoal || ''), true],
+    can('view.contacts') && ['ضابط الاتصال المقترح', [prop.contactName, prop.contactEmail, prop.contactPhone].filter(Boolean).map(esc).join(' — '), true]])}
+    <div class="ds-2c"><div><h3 class="ds-h3">أسباب طلب الشراكة</h3>${lst(prop.reasons, '—')}</div><div><h3 class="ds-h3">المستهدفات</h3>${lst(prop.targets, '—')}</div></div>
+    ${prop.addedValue ? `<h3 class="ds-h3">القيمة المضافة</h3>${lst(prop.addedValue, '—')}` : ''}
+    ${(prop.events || []).length ? `<h3 class="ds-h3">مراحل المقترح</h3><table class="ds-tbl"><tbody>${prop.events.filter((e) => can('proposal.review') || e.vis !== 'internal').map((e) => `<tr><td class="ds-sm">${e.at ? fmtDT(e.at) : ''}</td><td>${esc(e.label || propStatusLabel(e.to || '') || e.type || '')}${e.message ? `<small>${esc(e.message)}</small>` : ''}</td><td class="ds-sm">${esc(e.by || '')}</td></tr>`).join('')}</tbody></table>` : ''}`);
 
   if (has('forms')) {
     const list = forms.filter((x) => x.key !== 'partnershipEval' || !has('evals'));
@@ -179,9 +227,11 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
       + evs.map(([, i]) => `<div class="ds-form">${formDocHTML('partnership', p, 'partnershipEval', i)}</div>`).join(''));
   }
 
-  if (has('stories') && stories.length) {
-    const rows = await Promise.all(stories.map(async (a) => ({ a, u: a.coverFileId ? await url(a.coverFileId) : '' })));
-    chap('stories', 'الإنجازات المرتبطة', rows.map(({ a, u }) => `<article class="ds-story">${u ? `<img src="${u}" alt="">` : ''}<div><h3>${esc(a.title)}</h3>${a.metric || a.value ? `<b class="ds-metric">${esc([a.value, a.metric].filter(Boolean).join(' '))}</b>` : ''}<p>${esc(a.summary || a.text || '')}</p><small>${a.date ? fmtDate(a.date) : ''}</small></div></article>`).join(''));
+  const news = D.news.filter((x) => x.partnershipId === p.id && (showDemo() || !x.demo)).sort((x, y) => (x.date < y.date ? 1 : -1));
+  if (has('stories') && (stories.length || news.length)) {
+    const rows = await Promise.all(stories.map(async (a_) => ({ a: a_, u: a_.coverFileId ? await url(a_.coverFileId) : '' })));
+    chap('stories', 'الإنجازات والمستجدات', `${rows.map(({ a: a_, u }) => `<article class="ds-story">${u ? `<img src="${u}" alt="">` : ''}<div><h3>${esc(a_.title)}</h3>${a_.metricValue ? `<b class="ds-metric">${esc(a_.metricValue)} <span>${esc(a_.metricLabel || '')}</span></b>` : ''}<p>${esc(a_.summary || '')}</p>${a_.body ? `<p class="ds-sm">${esc(a_.body).replace(/\n/g, '<br>')}</p>` : ''}<small>${a_.date ? fmtDate(a_.date) : ''}${a_.public ? ' · منشور في الواجهة' : ''}</small></div></article>`).join('')}
+      ${news.length ? `<h3 class="ds-h3">المستجدات (${news.length})</h3><ul class="ds-news">${news.map((x) => `<li><span class="d">${x.date ? fmtDate(x.date, 'short') : ''}</span><div><b>${esc(x.title)}</b>${x.body ? `<p>${esc(x.body)}</p>` : ''}</div></li>`).join('')}</ul>` : ''}`);
   }
 
   if (has('photos') && photos.length) {
@@ -213,15 +263,21 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
     chap('docs', 'المستندات والمرفقات', body);
   }
 
+  if (has('admin') && can('view.internal')) {
+    const featured = (D.settings.home.featured || []).includes(p.id);
+    chap('admin', 'البيانات الإدارية والمصدر', `${kv2([['مرحلة الشراكة', esc(stageLabel(p.stage)) + (p.isDraft ? ' — مسودة' : '')], ['الحالة المحسوبة', esc(statusLabel(stt))],
+      ['الظهور في الواجهة التعريفية', p.public ? 'منشورة' : 'غير منشورة'], ['العرض المميز في الرئيسية', featured ? 'ضمن الشراكات المختارة' : 'لا'],
+      ['أُنشئ', `${fmtDT(p.createdAt)} — ${esc(p.createdBy || '')}`], ['آخر تحديث', `${fmtDT(p.updatedAt)} — ${esc(p.updatedBy || '')}`], p.source && ['المصدر', esc(p.source), true]])}
+      ${(p.importNotes || []).length ? `<h3 class="ds-h3">ملاحظات الاستيراد</h3><ul class="ds-news">${p.importNotes.map((x) => `<li><span class="d">${x.confirmed ? '✓ مؤكدة' : 'بانتظار التأكيد'}</span><div><b>${esc(x.field || '')}</b><p>${esc(x.msg || '')}</p></div></li>`).join('')}</ul>` : ''}
+      ${p.importRaw ? `<h3 class="ds-h3">البيانات كما وردت في ملف الحصر (الصف ${esc(String(p.seq || ''))})</h3><table class="ds-kv">${p.importRaw.map((c) => `<tr><th>${esc(c.h)}</th><td>${esc(c.v) || '<span class="ds-faint">فارغ</span>'}</td></tr>`).join('')}</table>` : ''}`);
+  }
   if (has('log') && logs.length) chap('log', 'سجل التغييرات', `<table class="ds-tbl"><thead><tr><th>الإجراء</th><th>التفاصيل</th><th>التاريخ</th><th>المستخدم</th></tr></thead><tbody>${logs.map((l) => `<tr><td>${esc(AUDIT_LABELS[l.action] || l.action)}</td><td class="ds-sm">${esc(l.details || '')}</td><td class="ds-sm">${fmtDT(l.at)}</td><td class="ds-sm">${esc(l.user || '')}</td></tr>`).join('')}</tbody></table>`);
 
   const cover = p.coverFileId ? await url(p.coverFileId) : '';
-  const tp = termProgress(p);
   const coverHTMLs = `<section class="ds-cover">
     <div class="ds-cv-top">${logo ? `<img src="${logo}" alt="">` : ''}<div><b>${esc(o.name)}</b><span>${esc(o.dept)}</span></div><span class="ds-cv-kind">ملف الشراكة الشامل</span></div>
     ${cover ? `<div class="ds-cv-img"><img src="${cover}" alt=""></div>` : '<div class="ds-cv-rule"></div>'}
-    ${pr.logoFileId ? `<div class="ds-cv-lg"><img src="${await url(pr.logoFileId)}" alt=""></div>` : ''}
-    <div class="ds-cv-t"><span class="ds-code">${esc(p.code || '')}</span><h1>${esc(name)}</h1>${p.title && p.title !== name ? `<p>${esc(p.title)}</p>` : ''}</div>
+    <div class="ds-cv-t"><div class="ds-cv-lg">${pr.logoFileId ? `<img src="${await url(pr.logoFileId)}" alt="">` : `<span class="emb" data-sec="${esc(pr.sector || '')}">${icon(embIcon(pr))}</span>`}</div><span class="ds-code">${esc(p.code || '')}</span><h1>${esc(name)}</h1>${p.title && p.title !== name ? `<p>${esc(p.title)}</p>` : ''}</div>
     <div class="ds-cv-facts">
       <div><span>الحالة</span><b>${esc(statusLabel(pStatus(p)))}</b></div>
       <div><span>القطاع</span><b>${esc(pSector(p) || '—')}</b></div>

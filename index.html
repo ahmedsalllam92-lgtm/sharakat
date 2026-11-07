@@ -4042,6 +4042,99 @@ html.dossier-open,html.dossier-open body{overflow:hidden}
   .ds-att.land .ds-att-pg{max-height:170mm}
   .ds-end{break-before:avoid}
 }
+
+/* — الملف الشامل v2: عرض بصري للبيانات — */
+.ds-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0 14px}
+.ds-facts.c4{grid-template-columns:repeat(4,1fr)}
+.ds-fact{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid #E2DCCB;border-radius:8px;background:#FAF8F2;break-inside:avoid}
+.ds-fi{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:#E8EFEA;color:#0F4433;flex:none}
+.ds-fi .ic{width:16px;height:16px}
+.ds-fact.ok .ds-fi{background:#E3EEE7;color:#1A5C46}.ds-fact.w .ds-fi{background:#F6EBCF;color:#8A6626}
+.ds-fact small{display:block;font-size:10px;color:#8C958E}
+.ds-fact b{display:block;font-size:13px;color:#14201B;line-height:1.4}
+.ds-fact em{display:block;font-style:normal;font-size:10.5px;color:#5C6861}
+.ds-term{margin:4px 0 14px;padding:12px 14px;border:1px solid #E2DCCB;border-radius:8px;break-inside:avoid}
+.ds-term-l{display:flex;justify-content:space-between;margin-bottom:8px}
+.ds-term-l span{display:flex;flex-direction:column}.ds-term-l .c{align-items:center}
+.ds-term-l small{font-size:10px;color:#8C958E}.ds-term-l b{font-size:12.5px;color:#14201B}
+.ds-term-b{position:relative;height:10px;border-radius:5px;background:#EEE9DD}
+.ds-term-b i{position:absolute;right:0;top:0;bottom:0;border-radius:5px;background:linear-gradient(270deg,#2F7A5E,#0F4433)}
+.ds-term-b em{position:absolute;top:14px;transform:translateX(50%);font-style:normal;font-size:9.5px;color:#8A6626;font-weight:700}
+.ds-hl{display:flex;align-items:center;gap:16px;padding:14px 18px;border-radius:8px;background:#0F4433;color:#fff;margin-bottom:14px;break-inside:avoid}
+.ds-hl>b{font-family:'Noto Naskh Arabic',serif;font-size:36px;line-height:1;color:#F3E4BE}
+.ds-hl strong{display:block;font-size:14px;color:#D9C08A}.ds-hl span{display:block;font-size:11.5px;color:#D7E5DE}
+.ds-dl{display:grid;grid-template-columns:1fr 1fr;border:1px solid #E2DCCB;border-radius:8px;overflow:hidden}
+.ds-dl>div{padding:8px 12px;border-bottom:1px solid #EEE9DD;break-inside:avoid}
+.ds-dl>div:nth-child(odd):not(.full){border-left:1px solid #EEE9DD}
+.ds-dl>div.full{grid-column:1/-1}
+.ds-dl dt{font-size:10px;color:#8C958E}.ds-dl dd{margin:0;font-size:12px;color:#14201B}
+.ds-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
+.ds-chip{font-size:10.5px;padding:1px 8px;border-radius:10px;background:#F1EDE2;color:#2E3B35}
+.ds-chip.g{background:#E8EFEA;color:#1A5C46}
+.ds-bar{display:block;height:7px;border-radius:4px;background:#EEE9DD;overflow:hidden}
+.ds-bar i{display:block;height:100%;background:linear-gradient(270deg,#2F7A5E,#0F4433)}
+.ds-pcard{display:flex;gap:16px;align-items:center;padding:14px;border:1px solid #E2DCCB;border-radius:8px;margin-bottom:12px;break-inside:avoid}
+.ds-plogo{width:76px;height:76px;border-radius:50%;flex:none;overflow:hidden;border:1px solid #E2DCCB;background:#fff;display:grid;place-items:center;--petrol:#0F4433;--petrol-3:#2F7A5E;--gold:#A47C32;--gold-ink:#8A6626;--paper:#fff}
+.ds-plogo img{width:80%;height:80%;object-fit:contain}
+.ds-pcard h3{font-family:'Noto Naskh Arabic',serif;font-size:20px;color:#0F4433}
+.ds-pcard p{font-size:12px;color:#5C6861}.ds-pcard a{font-size:11.5px;color:#1A5C46}
+.ds-fin{border:1px solid #E2DCCB;border-radius:8px;padding:12px 14px;margin-bottom:12px;break-inside:avoid}
+.ds-fin-h{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:10px;margin-bottom:10px}
+.ds-fin-h small{display:block;font-size:10px;color:#8C958E}.ds-fin-h b{font-family:'Noto Naskh Arabic',serif;font-size:20px;color:#0F4433}.ds-fin-h b.sm{font-family:inherit;font-size:12.5px}
+.ds-stack{display:flex;height:12px;border-radius:6px;overflow:hidden;gap:2px}
+.ds-stack i,.ds-stack-l i{display:block}.ds-stack i.a,.ds-stack-l i.a{background:#0F4433}.ds-stack i.b,.ds-stack-l i.b{background:#A47C32}.ds-stack i.c,.ds-stack-l i.c{background:#7FB89C}
+.ds-stack-l{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:6px;font-size:11px;color:#2E3B35}
+.ds-stack-l span{display:inline-flex;align-items:center;gap:5px}.ds-stack-l i{width:9px;height:9px;border-radius:2px}.ds-stack-l b{margin-inline-start:4px}
+.ds-spend{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;margin-top:10px;font-size:11.5px;color:#2E3B35}
+.ds-spend em{font-style:normal;font-weight:700;color:#0F4433}
+.ds-note2{margin-top:8px;font-size:11.5px;color:#5C6861;background:#FAF8F2;padding:8px 10px;border-radius:6px}
+.ds-st.bad{background:#F6DCD5;color:#9A3B26}
+.ds-eval{display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:center;break-inside:avoid}
+.ds-ring{width:110px;height:110px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(closest-side,#fff 79%,transparent 80% 100%),conic-gradient(#2F7A5E calc(var(--v) * 1%),#EEE9DD 0)}
+.ds-ring.gold{background:radial-gradient(closest-side,#fff 79%,transparent 80% 100%),conic-gradient(#A47C32 calc(var(--v) * 1%),#EEE9DD 0)}
+.ds-ring.danger{background:radial-gradient(closest-side,#fff 79%,transparent 80% 100%),conic-gradient(#B5533C calc(var(--v) * 1%),#EEE9DD 0)}
+.ds-ring b{font-family:'Noto Naskh Arabic',serif;font-size:32px;color:#0F4433;line-height:1}.ds-ring small{font-size:10.5px;color:#5C6861}
+.ds-eval ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.ds-eval li{display:grid;grid-template-columns:minmax(150px,46%) 1fr 34px;gap:10px;align-items:center;font-size:11.5px;color:#2E3B35}
+.ds-eval li em{font-style:normal;color:#8C958E;font-size:10px}.ds-eval li b{text-align:left}
+.ds-wfh{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:center;margin-bottom:12px}
+.ds-wfh b{font-family:'Noto Naskh Arabic',serif;font-size:22px;color:#0F4433;grid-row:span 2}
+.ds-wfh span{font-size:12px;color:#2E3B35}
+.ds-steps{display:flex;flex-direction:column;gap:10px}
+.ds-phase{break-inside:avoid}
+.ds-phase h4{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#fff;background:#0F4433;padding:5px 12px;border-radius:6px 6px 0 0}
+.ds-phase h4 em{font-style:normal;color:#D9C08A;font-family:'IBM Plex Mono',monospace;font-size:11px}
+.ds-steps ol{list-style:none;margin:0;padding:6px 12px;border:1px solid #E2DCCB;border-top:0;border-radius:0 0 6px 6px;display:flex;flex-direction:column}
+.ds-steps li{display:grid;grid-template-columns:26px 1fr;gap:10px;padding:7px 0;border-bottom:1px dashed #EEE9DD;position:relative}
+.ds-steps li:last-child{border-bottom:0}
+.ds-sd{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:#EEE9DD;color:#5C6861}
+.ds-steps li.done .ds-sd{background:#2F7A5E;color:#fff}.ds-steps li.cur .ds-sd{background:#A47C32;color:#fff}
+.ds-steps li.cur{background:#FBF3DF;margin:0 -12px;padding:7px 12px}
+.ds-steps b{font-size:12.5px;color:#14201B}
+.ds-steps small{display:block;font-size:10.5px;color:#5C6861}
+.ds-steps small.ref{display:inline;margin-inline-start:6px;color:#8A6626}
+.ds-2c{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.ds-3c{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.ds-box{border:1px solid #E2DCCB;border-radius:8px;padding:10px 12px;break-inside:avoid}
+.ds-box h4{display:flex;align-items:center;gap:6px;font-size:12.5px;color:#0F4433;margin-bottom:6px}
+.ds-box h4 .ic{width:14px;height:14px;color:#A47C32}
+.ds-box.n{border-top:3px solid #2F7A5E}.ds-box.c{border-top:3px solid #B5533C}.ds-box.r{border-top:3px solid #A47C32}
+.ds-box .rich{font-size:11.5px}
+.ds-people{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.ds-people li{display:inline-flex;align-items:center;gap:6px;font-size:12px}
+.ds-people .av{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#E8EFEA;color:#0F4433;font-size:10px;font-weight:700}
+.ds-news{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.ds-news li{display:grid;grid-template-columns:90px 1fr;gap:12px;padding:8px 0;border-bottom:1px dashed #EEE9DD;break-inside:avoid}
+.ds-news .d{font-size:10.5px;color:#8A6626;font-weight:600}
+.ds-news b{font-size:12.5px;color:#14201B}.ds-news p{font-size:11.5px;color:#5C6861;margin:2px 0 0}
+.ds-metric span{font-size:11px;color:#5C6861;font-weight:500}
+.ds-tbl tr.cur td{background:#FBF3DF}
+@media (max-width:720px){.ds-facts,.ds-facts.c4,.ds-2c,.ds-3c,.ds-dl{grid-template-columns:1fr}.ds-eval{grid-template-columns:1fr}}
+@media print{.ds-ch.pg{break-before:auto!important}.ds-ch{margin-top:26px!important}.ds-ch:first-of-type{margin-top:0!important}.ds-chh{break-after:avoid}.ds-facts,.ds-dl,.ds-term,.ds-fin,.ds-eval,.ds-pcard,.ds-box,.ds-phase{break-inside:avoid}}
+.ds-cv-lg{--petrol:#0F4433;--petrol-3:#2F7A5E;--gold:#A47C32;--gold-ink:#8A6626;--paper:#fff}
+.ds-cv-lg .emb{border-radius:4px}
+.ds-cover .ds-cv-lg{position:relative!important;margin:-70px 0 12px!important;inset:auto!important}
+.ds-cover:not(:has(.ds-cv-img)) .ds-cv-lg{margin-top:0!important}
 /*DOSSIER-CSS-END*/
 
 /* =====================================================================
@@ -4836,6 +4929,20 @@ html.ob-show #obBody>.ob-metro{zoom:1.12}
 html.ob-show #obBody>.ob-row{zoom:1.08}
 html.ob-show #obBody>.ob-foot2{zoom:1.22}
 .rp-dd .rp-pdm{width:auto;left:0;right:0}
+
+/* — شعار الجهة البديل: أيقونة المجال داخل دائرة بدل الحرف — */
+.emb{display:grid;place-items:center;width:100%;height:100%;border-radius:inherit;color:var(--petrol);background:radial-gradient(circle at 30% 25%,color-mix(in srgb,var(--petrol-3) 22%,var(--paper)),color-mix(in srgb,var(--petrol-3) 8%,var(--paper)))}
+.emb[data-sec="خاص"]{color:var(--gold-ink);background:radial-gradient(circle at 30% 25%,color-mix(in srgb,var(--gold) 26%,var(--paper)),color-mix(in srgb,var(--gold) 8%,var(--paper)))}
+.emb[data-sec="غير ربحي"]{color:#2F6F8F;background:radial-gradient(circle at 30% 25%,color-mix(in srgb,#5B9BB8 24%,var(--paper)),color-mix(in srgb,#5B9BB8 8%,var(--paper)))}
+:root[data-theme="dark"] .emb[data-sec="غير ربحي"]{color:#9CC9DE}
+.emb .ic{width:52%;height:52%;stroke-width:1.7}
+.plate.emb-p{padding:0;overflow:hidden;border-radius:50%}
+[data-design="board"] .plate.emb-p{border-radius:50%}
+.plate.emb-p .emb{border-radius:50%}
+.mg>.emb,.pc-lg>.emb,.ob-pim>.emb,.ob-tile2 .mg>.emb{border-radius:50%}
+.pc-lg:has(.emb){padding:0;background:transparent}
+.ob-tile2 .mg:has(.emb),.ob-tile .mg:has(.emb),.ob-pim:has(.emb){background:transparent;padding:0}
+.bo-net-emb{stroke:#fff}
 </style>
 </head>
 <body>
@@ -6429,7 +6536,15 @@ function monogram(name) {
   return (ws[0] || '').charAt(0);
 }
 function toneFor(partner) { const s = partner && partner.sector; return s === 'خاص' ? 'mist' : s === 'غير ربحي' ? 'sand' : 'dark'; }
-const logoOrMono = (pr, name) => (pr && pr.logoFileId ? `<img class="lg" data-file="${esc(pr.logoFileId)}" alt="${esc(pr.name || name || '')}">` : esc(monogram(name || (pr && pr.name) || '')));
+/* شعار الجهة، وإن لم يوجد فأيقونة تعبّر عن مجالها أو قطاعها بدل الحرف */
+function embIcon(pr) {
+  const d = (pr && pr.domain) || '', s = (pr && pr.sector) || '';
+  const by = [[/بيئ|زراع|تشجير|مياه|غطاء/, 'leaf'], [/طاق/, 'sun'], [/تعليم|بحث|علم|تدريب/, 'award'], [/مال|استثمار|اقتصاد/, 'chart'], [/مجتمع|تطوع|خير|اجتماع/, 'users'], [/سياح|ثقاف|إعلام/, 'star'], [/صح/, 'flag'], [/نقل|لوجست/, 'send']];
+  for (const [re, ic] of by) if (re.test(d)) return ic;
+  return s === 'خاص' ? 'chart' : s === 'غير ربحي' ? 'users' : s ? 'building' : 'link';
+}
+const embHTML = (pr) => `<span class="emb" data-sec="${esc((pr && pr.sector) || '')}">${icon(embIcon(pr))}</span>`;
+const logoOrMono = (pr, name) => (pr && pr.logoFileId ? `<img class="lg" data-file="${esc(pr.logoFileId)}" alt="${esc(pr.name || name || '')}">` : embHTML(pr));
 function plateEditHTML(pr, size, canEdit) {
   if (!pr || !canEdit) return plateHTML(pr, size);
   return `<div class="plate-ed">${plateHTML(pr, size)}<label class="plate-up no-print" title="${pr.logoFileId ? 'تغيير شعار الجهة' : 'رفع شعار الجهة'}">${icon('upload')}<span>${pr.logoFileId ? 'تغيير الشعار' : 'رفع الشعار'}</span><input type="file" accept="image/*" hidden data-logoup="${esc(pr.id)}"></label>${pr.logoFileId ? `<button type="button" class="plate-x no-print" data-logox="${esc(pr.id)}" title="إزالة الشعار" aria-label="إزالة الشعار">${icon('x')}</button>` : ''}</div>`;
@@ -6455,7 +6570,7 @@ function bindLogoUpload(root, after) {
 function plateHTML(partner, size = 56) {
   if (!partner) return `<div class="plate typo s${size}"><span class="pt">—</span></div>`;
   if (partner.logoFileId) return `<div class="plate s${size}"><img data-file="${esc(partner.logoFileId)}" alt="${esc(partner.name)}"></div>`;
-  if (size <= 56) return `<div class="plate mono s${size}" title="${esc(partner.name)}"><span class="mg">${esc(monogram(partner.name))}</span></div>`;
+  if (size <= 56) return `<div class="plate mono emb-p s${size}" title="${esc(partner.name)}">${embHTML(partner)}</div>`;
   return `<div class="plate typo s${size}" title="${esc(partner.name)}"><span class="pt">${esc(partner.name)}</span></div>`;
 }
 const demoTag = (x) => (x && x.demo ? '<span class="demo-tag" title="بيانات تجريبية لإظهار التصميم">تجريبي</span>' : '');
@@ -8136,7 +8251,7 @@ function obPopHTML(title, sub, items, byStep = false) {
     const facts = isP
       ? [pSector(r), r.ptype, pr.domain, r.endDate ? 'حتى ' + fmtDate(r.endDate, 'short') : ''].filter(Boolean)
       : [r.department, r.partnerSector, r.requesterName].filter(Boolean);
-    return `<a class="ob-pi ${tone}" href="${x.href}"><span class="ob-pim ${isP && pr.logoFileId ? 'has-lg' : ''}">${isP ? logoOrMono(pr, x.name) : esc(monogram(x.name))}</span>
+    return `<a class="ob-pi ${tone}" href="${x.href}"><span class="ob-pim ${isP && pr.logoFileId ? 'has-lg' : ''}">${isP ? logoOrMono(pr, x.name) : `<span class="emb">${icon('send')}</span>`}</span>
       <span class="ob-pib"><b>${esc(x.name)} ${x.demo ? '<span class="demo-tag">تجريبي</span>' : ''}</b>
         <small>${esc(x.sub || '')}${isP ? ` · ${esc(statusLabel(pStatus(r)))}` : ` · ${esc(propStatusLabel(r.status))}`}${byStep ? ` · خطوة ${x.step.n}: ${esc(x.step.t)}` : ''}</small>
         ${facts.length ? `<small class="f">${facts.map(esc).join(' · ')}</small>` : ''}
@@ -8856,17 +8971,20 @@ function noAccessHTML() {
    يُعرض للمعاينة ثم يُطبع أو يُحفظ PDF من المتصفح
    ===================================================================== */
 const DOS_SECS = [
-  ['summary', 'البيانات الأساسية', true],
-  ['profile', 'التصنيف والقيمة والوضع المالي', true],
+  ['summary', 'بطاقة الشراكة: الحقائق والفترة', true],
+  ['partner', 'الجهة الشريكة', true],
+  ['profile', 'التصنيف والقيمة والوضع المالي والتقييم', true],
   ['wf', 'مسار المذكرة', true],
   ['content', 'مجالات التعاون والأثر والمتابعة', true],
+  ['contact', 'الفريق والتواصل', true],
   ['proposal', 'المقترح الأصلي', true],
   ['forms', 'النماذج المعتمدة', true],
   ['evals', 'تقييمات الشراكة', true],
-  ['stories', 'الإنجازات المرتبطة', true],
+  ['stories', 'الإنجازات والمستجدات', true],
   ['photos', 'معرض الصور', true],
   ['docs', 'المستندات والمرفقات', true],
-  ['log', 'سجل التغييرات', false],
+  ['admin', 'البيانات الإدارية والمصدر', true],
+  ['log', 'سجل التغييرات', true],
 ];
 
 /* pdf.js مضمّن نصًا ويُحمَّل عند الحاجة فقط */
@@ -8966,59 +9084,104 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
   const chap = (id, title, body, { page = true, sub = '' } = {}) => { n++; toc.push([pad(n), title]); chapters.push(`<section class="ds-ch ${page ? 'pg' : ''}" id="ds-${id}"><header class="ds-chh"><em>${pad(n)}</em><div><h2>${esc(title)}</h2>${sub ? `<p>${sub}</p>` : ''}</div></header>${body}</section>`); };
 
   onProgress('البيانات الأساسية');
-  if (has('summary')) chap('summary', 'البيانات الأساسية', kvT([
-    ['الجهة الشريكة', esc(pr.name || name)], ['اسم الشراكة', esc(p.title || '')], ['رقم الشراكة', `<span class="ds-code">${esc(p.code || '—')}</span>`],
-    ['القطاع', esc(pSector(p) || '')], ['مجال عمل الجهة', esc(pr.domain || '')], ['تصنيف المذكرة', esc(p.classification || '')],
-    ['تصنيف الشراكة', esc(p.ptype || '')], ['فئات الشراكة', esc((p.categories || []).join('، '))],
-    ['الحالة', esc(statusLabel(pStatus(p)))], ['مرحلة الشراكة', esc(stageLabel(p.stage))],
-    ['تاريخ البدء', p.startDate ? fmtDate(p.startDate) : ''], ['تاريخ الانتهاء', p.endDate ? fmtDate(p.endDate) : ''],
-    ['المسؤولون من إدارة الشراكات', esc((p.owners || []).join('، '))], ['تفعيل الشراكة', esc(p.activation || '')],
-    ['التقاطع مع الإدارات', esc((p.departments || []).join('، '))],
-    can('view.contacts') && ['ضابط الاتصال لدى الشريك', [p.contactName, p.contactEmail, p.contactPhone].filter(Boolean).map(esc).join(' — ')],
-    ['آخر تحديث', `${fmtDT(p.updatedAt || p.createdAt)} — ${esc(p.updatedBy || p.createdBy || '')}`],
-  ]), { page: false });
+  const stt = pStatus(p), dl = daysLeft(p), tp = termProgress(p);
+  const chipsH = (arr, cls = '') => (arr && arr.length ? `<div class="ds-chips">${arr.map((x) => `<span class="ds-chip ${cls}">${esc(x)}</span>`).join('')}</div>` : '<span class="ds-faint">—</span>');
+  const fact = (ic, l, v, sub = '', tone = '') => `<div class="ds-fact ${tone}"><span class="ds-fi">${icon(ic)}</span><div><small>${esc(l)}</small><b>${v || '—'}</b>${sub ? `<em>${sub}</em>` : ''}</div></div>`;
+  const kv2 = (rows) => `<dl class="ds-dl">${rows.filter(Boolean).map(([l, v, full]) => `<div class="${full ? 'full' : ''}"><dt>${esc(l)}</dt><dd>${v || '<span class="ds-faint">—</span>'}</dd></div>`).join('')}</dl>`;
+  const bar = (pct, cls = '') => `<span class="ds-bar ${cls}"><i style="width:${Math.max(0, Math.min(100, pct))}%"></i></span>`;
+  const lst = (txt, empty) => richHTML(txt, { empty });
+
+  if (has('summary')) {
+    const remTxt = ['active', 'soon'].includes(stt) && dl !== null ? `${nf(dl)} يومًا` : stt === 'upcoming' && p.startDate ? `يبدأ بعد ${nf(daysBetween(today(), parseDate(p.startDate)))} يومًا` : stt === 'ended' ? 'انتهت' : '—';
+    const term = p.startDate && p.endDate ? `<div class="ds-term"><div class="ds-term-l"><span><small>البدء</small><b>${fmtDate(p.startDate)}</b></span><span class="c"><small>انقضى</small><b>${tp !== null ? Math.round(tp * 100) + '%' : '—'}</b></span><span><small>الانتهاء</small><b>${fmtDate(p.endDate)}</b></span></div>
+      <div class="ds-term-b"><i style="width:${tp !== null ? Math.round(Math.max(0, Math.min(1, tp)) * 100) : 0}%"></i>${tp !== null && tp > 0 && tp < 1 ? `<em style="right:${Math.round(tp * 100)}%">اليوم</em>` : ''}</div></div>` : '';
+    chap('summary', 'بطاقة الشراكة', `
+      ${p.showcaseGoal ? `<blockquote class="ds-quote">${esc(p.showcaseGoal)}</blockquote>` : ''}
+      <div class="ds-facts">
+        ${fact('flag', 'الحالة', esc(statusLabel(stt)), esc(stageLabel(p.stage)), stt === 'soon' ? 'w' : stt === 'active' ? 'ok' : '')}
+        ${fact('clock', 'المتبقي', remTxt, p.endDate ? 'حتى ' + fmtDate(p.endDate, 'short') : '')}
+        ${fact('building', 'القطاع', esc(pSector(p) || ''), esc(pr.domain || ''))}
+        ${fact('layers', 'تصنيف المذكرة', esc(p.classification || ''), esc(p.ptype || ''))}
+        ${fact('users', 'المسؤولون', esc((p.owners || []).join('، ')), plural((p.departments || []).length, 'إدارة متقاطعة', 'إدارتان', 'إدارات', 'إدارة'))}
+        ${fact('check', 'التفعيل', esc(p.activation || ''), P.ev && P.ev.score !== null ? `آخر تقييم ${P.ev.score}/100` : 'لم تُقيَّم بعد')}
+      </div>
+      ${term}
+      ${p.highlight && p.highlight.value ? `<div class="ds-hl"><b>${esc(p.highlight.value)}</b><div><strong>${esc(p.highlight.label || '')}</strong><span>${esc(p.highlight.text || '')}</span></div></div>` : ''}
+      <h3 class="ds-h3">البيانات التفصيلية</h3>
+      ${kv2([['اسم الشراكة', esc(p.title || name)], ['رقم الشراكة', `<span class="ds-code">${esc(p.code || '—')}</span>`], ['تصنيف الشراكة', chipsH(p.categories)], ['التقاطع مع الإدارات', chipsH(p.departments, 'g'), true]])}`);
+  }
+
+  if (has('partner') && pr.id) {
+    const others = D.partnerships.filter((x) => x.partnerId === pr.id && (showDemo() || !x.demo));
+    const pprops = D.proposals.filter((x) => x.partnerId === pr.id || (x.partnerName && normAr(x.partnerName) === normAr(pr.name)));
+    const lg = pr.logoFileId ? await url(pr.logoFileId) : '';
+    chap('partner', 'الجهة الشريكة', `<div class="ds-pcard"><span class="ds-plogo">${lg ? `<img src="${lg}" alt="">` : `<span class="emb" data-sec="${esc(pr.sector || '')}">${icon(embIcon(pr))}</span>`}</span>
+        <div><h3>${esc(pr.name)}</h3><p>${[pr.sector, pr.domain].filter(Boolean).map(esc).join(' · ') || '—'}</p>${pr.website ? `<a dir="ltr">${esc(pr.website)}</a>` : ''}</div></div>
+      ${kv2([['الأسماء البديلة', chipsH(pr.aliases)], ['ملاحظات عن الجهة', esc(pr.notes || ''), true]])}
+      <h3 class="ds-h3">كل الشراكات مع الجهة (${others.length})</h3>
+      <table class="ds-tbl"><thead><tr><th>الشراكة</th><th>الرقم</th><th>الحالة</th><th>الفترة</th></tr></thead><tbody>${others.map((x) => `<tr class="${x.id === p.id ? 'cur' : ''}"><td><b>${esc(x.title || partnerName(x))}</b>${x.id === p.id ? '<small>هذا الملف</small>' : ''}</td><td class="ds-code">${esc(x.code || '')}</td><td><span class="ds-st ${['active', 'soon'].includes(pStatus(x)) ? 'ok' : ''}">${esc(statusLabel(pStatus(x)))}</span></td><td class="ds-sm">${x.startDate ? fmtDate(x.startDate, 'short') : '—'} – ${x.endDate ? fmtDate(x.endDate, 'short') : '—'}</td></tr>`).join('')}</tbody></table>
+      ${pprops.length ? `<h3 class="ds-h3">المقترحات المرتبطة بالجهة (${pprops.length})</h3><table class="ds-tbl"><thead><tr><th>المرجع</th><th>الإدارة الطالبة</th><th>الحالة</th><th>التاريخ</th></tr></thead><tbody>${pprops.map((x) => `<tr><td class="ds-code">${esc(x.ref || '')}</td><td>${esc(x.department || '')}</td><td>${esc(propStatusLabel(x.status))}</td><td class="ds-sm">${x.submittedAt ? fmtDate(x.submittedAt.slice(0, 10), 'short') : '—'}</td></tr>`).join('')}</tbody></table>` : ''}`);
+  }
 
   if (has('profile')) {
     const fin = can('view.internal') || wfInvolved(p);
-    chap('profile', 'التصنيف والقيمة والوضع المالي', `<div class="ds-2">${kvT([
-      ['تصنيف الشراكة', esc(P.ptype)], ['بداية العلاقة', esc(P.origin)], ['من فتح الباب', esc(P.originBy)],
-      ['نوع القيمة', esc((P.valueTypes || []).join('، '))], ['القيمة الإجمالية التقديرية', P.total ? sar(P.total) : ''], ['مستوى الأثر', esc(P.impactLevel)],
-      ['آخر تقييم', P.ev && P.ev.score !== null ? `<b>${P.ev.score}</b> من 100 — ${evalGrade(P.ev.score)} (${esc(P.ev.data.period || '')})` : 'لم تُقيَّم بعد'],
-    ])}${fin ? kvT([
-      ['النموذج المالي', esc(f.model || '')], ['الوضع المالي', esc(f.status || '')], ['مساهمة الشريك', f.partnerSar ? sar(f.partnerSar) : ''],
-      ['مساهمة المؤسسة', f.murojSar ? sar(f.murojSar) : ''], ['القيمة العينية والمعرفية', f.inkindSar ? sar(f.inkindSar) : ''], ['المصروف حتى الآن', f.spentSar ? sar(f.spentSar) : ''],
-      ['ملاحظات مالية', esc(f.notes || '').replace(/\n/g, '<br>')],
-    ]) : ''}</div>`);
+    const tot = (+f.partnerSar || 0) + (+f.murojSar || 0) + (+f.inkindSar || 0), cash = (+f.partnerSar || 0) + (+f.murojSar || 0);
+    const parts = [['مساهمة الشريك', +f.partnerSar || 0, 'a'], ['مساهمة المؤسسة', +f.murojSar || 0, 'b'], ['قيمة عينية ومعرفية', +f.inkindSar || 0, 'c']];
+    const ev = P.ev && P.ev.score !== null ? P.ev : null;
+    const sc = ev ? (ev.data.scores || {}) : {};
+    chap('profile', 'التصنيف والقيمة والوضع المالي والتقييم', `
+      <div class="ds-facts c4">
+        ${fact('layers', 'تصنيف الشراكة', esc(P.ptype))}${fact('link', 'بداية العلاقة', esc(P.origin), esc(P.originBy))}
+        ${fact('award', 'مستوى الأثر', esc(P.impactLevel))}${fact('star', 'نوع القيمة', esc((P.valueTypes || []).join('، ')))}
+      </div>
+      ${fin ? `<div class="ds-fin"><div class="ds-fin-h"><div><small>القيمة الإجمالية التقديرية</small><b>${tot ? sar(tot) : '—'}</b></div><div><small>الوضع المالي</small><span class="ds-st ${f.status === 'متأخر' ? 'bad' : f.status === 'مكتمل' ? 'ok' : 'cur'}">${esc(f.status || 'غير محدد')}</span></div><div><small>النموذج المالي</small><b class="sm">${esc(f.model || '—')}</b></div></div>
+        ${tot ? `<div class="ds-stack">${parts.filter((x) => x[1]).map(([l, v, k]) => `<i class="${k}" style="flex:${v}"></i>`).join('')}</div><div class="ds-stack-l">${parts.map(([l, v, k]) => `<span><i class="${k}"></i>${l}<b>${v ? sar(v) : '—'}</b></span>`).join('')}</div>` : ''}
+        ${cash ? `<div class="ds-spend"><span>المصروف حتى الآن <b>${sar(+f.spentSar || 0)}</b> من ${sar(cash)}</span>${bar(Math.round((+f.spentSar || 0) / cash * 100))}<em>${Math.round((+f.spentSar || 0) / cash * 100)}%</em></div>` : ''}
+        ${f.notes ? `<p class="ds-note2">${esc(f.notes).replace(/\n/g, '<br>')}</p>` : ''}</div>` : ''}
+      <h3 class="ds-h3">آخر تقييم للشراكة</h3>
+      ${ev ? `<div class="ds-eval"><div class="ds-ring ${evalTone(ev.score)}" style="--v:${ev.score}"><b>${ev.score}</b><small>${evalGrade(ev.score)}</small></div>
+        <ul>${EVAL_CRIT.map((c) => { const v = +((sc[c.k] || {}).v || 0); return `<li><span>${esc(c.l)} <em>(${c.w}%)</em></span>${bar(v / 5 * 100)}<b>${v || '—'}/5</b></li>`; }).join('')}</ul></div>
+        <p class="ds-lead">${esc(ev.data.period || '')}${ev.data.rec ? ' · التوصية: ' + esc(ev.data.rec) : ''} · ${esc(ev.by || '')} · ${ev.no ? esc(ev.no) : ''}</p>` : '<p class="ds-lead">لم تُقيَّم الشراكة بعد.</p>'}`);
   }
 
   if (has('wf') && wfInvolved(p)) {
-    const doneN = WF_STEPS.filter((s) => st.S[s.id] && st.S[s.id].status === 'done').length;
+    const doneN = WF_STEPS.filter((s_) => st.S[s_.id] && st.S[s_.id].status === 'done').length;
     const cur = st.closed ? 'أُغلق الطلب' : st.cur ? `الخطوة ${st.cur.n}: ${st.cur.t} — لدى ${wfActorName(st.cur.actor)}` : 'اكتمل المسار';
-    chap('wf', 'مسار المذكرة', `<div class="ds-wfbar"><i style="width:${Math.round(doneN / WF_STEPS.length * 100)}%"></i></div><p class="ds-lead"><b>${doneN} من ${WF_STEPS.length}</b> — ${esc(cur)}</p>
-      <table class="ds-tbl"><thead><tr><th class="c">م</th><th>الخطوة</th><th>الجهة المنفّذة</th><th>الحالة</th><th>التاريخ والمنفّذ</th><th>المستندات والنماذج</th></tr></thead><tbody>
-      ${WF_PHASES.map((ph) => `<tr class="ds-ph"><td colspan="6">${esc(ph.t)}</td></tr>` + WF_STEPS.filter((s) => s.ph === ph.id).map((s) => {
-        const r = st.S[s.id] || {}, done = r.status === 'done', isCur = st.cur && st.cur.id === s.id;
-        const stt = done ? (r.decision === 'no' ? (s.no || 'غير مناسبة') : r.decision === 'yes' && s.yes ? s.yes : 'مكتملة') : isCur ? 'جارية' : r.status === 'returned' ? 'مُعادة' : 'لم تبدأ';
-        const docs = wfDocsOf('partnership', p, s.id).map((a) => esc((s.docs.find((d) => d.k === a.doc) || {}).l || a.name));
-        const fs = s.docs.filter((d) => d.form && wfForm('partnership', p, d.form)).map((d) => esc(FORMS[d.form].title) + (wfForm('partnership', p, d.form).status === 'done' ? ' ✓' : ' (مسودة)'));
-        return `<tr class="${done ? 'done' : isCur ? 'cur' : ''}"><td class="c">${s.n}</td><td><b>${esc(s.t)}</b>${s.ref ? `<small>البند ${s.ref}</small>` : ''}${r.note ? `<small class="ds-note">${esc(r.note)}</small>` : ''}</td><td>${esc(wfActorName(s.actor))}</td><td><span class="ds-st ${done ? 'ok' : isCur ? 'cur' : ''}">${stt}</span></td><td class="ds-sm">${r.legacy ? 'قبل اعتماد المسار' : [r.at ? fmtDT(r.at) : '', esc(r.by || '')].filter(Boolean).join('<br>')}</td><td class="ds-sm">${[...fs, ...docs].join('<br>') || '—'}</td></tr>`;
-      }).join('')).join('')}</tbody></table>`);
+    chap('wf', 'مسار المذكرة', `<div class="ds-wfh"><b>${doneN} من ${WF_STEPS.length}</b><span>${esc(cur)}</span>${bar(Math.round(doneN / WF_STEPS.length * 100))}</div>
+      <div class="ds-steps">${WF_PHASES.map((ph, pi) => `<div class="ds-phase"><h4><em>${pad(pi + 1)}</em>${esc(ph.t)}</h4><ol class="ds-tbl">${WF_STEPS.filter((s_) => s_.ph === ph.id).map((s_) => {
+        const r = st.S[s_.id] || {}, done = r.status === 'done', isCur = st.cur && st.cur.id === s_.id;
+        const stx = done ? (r.decision === 'no' ? (s_.no || 'غير مناسبة') : r.decision === 'yes' && s_.yes ? s_.yes : 'مكتملة') : isCur ? 'جارية' : r.status === 'returned' ? 'مُعادة' : 'لم تبدأ';
+        const docs = wfDocsOf('partnership', p, s_.id).map((a) => esc((s_.docs.find((d) => d.k === a.doc) || {}).l || a.name));
+        const fs = s_.docs.filter((d) => d.form && wfForm('partnership', p, d.form)).map((d) => esc(FORMS[d.form].title) + (wfForm('partnership', p, d.form).status === 'done' ? ' ✓' : ' (مسودة)'));
+        return `<li class="${done ? 'done' : isCur ? 'cur' : ''}"><span class="ds-sd">${done ? '✓' : s_.n}</span><div><b>${esc(s_.t)}</b>${s_.ref ? `<small class="ref">البند ${s_.ref}</small>` : ''}
+          <small>${esc(wfActorName(s_.actor))} · <span class="ds-st ${done ? 'ok' : isCur ? 'cur' : ''}">${stx}</span>${r.legacy ? ' · قبل اعتماد المسار' : [r.at ? fmtDT(r.at) : '', esc(r.by || '')].filter(Boolean).map((x) => ' · ' + x).join('')}</small>
+          ${r.note ? `<small class="ds-note">${esc(r.note)}</small>` : ''}${[...fs, ...docs].length ? `<div class="ds-chips">${[...fs, ...docs].map((x) => `<span class="ds-chip">${x}</span>`).join('')}</div>` : ''}</div></li>`;
+      }).join('')}</ol></div>`).join('')}</div>`);
   }
 
   if (has('content')) {
     const intl = can('view.internal');
     chap('content', 'مجالات التعاون والأثر والمتابعة', `
-      ${p.showcaseGoal ? `<blockquote class="ds-quote">${esc(p.showcaseGoal)}</blockquote>` : ''}
-      <h3 class="ds-h3">مجالات التعاون</h3>${richHTML(p.cooperationAreas)}
-      <h3 class="ds-h3">الأثر المتوقع وكيف يخدم المؤسسة</h3>${richHTML(p.expectedImpact)}
-      <h3 class="ds-h3">المخرجات</h3>${richHTML(p.outputs)}
-      ${intl ? `<h3 class="ds-h3">الملاحظات</h3>${richHTML(p.notes, { empty: 'لا توجد ملاحظات.' })}<h3 class="ds-h3">التوصيات</h3>${richHTML(p.recommendations, { empty: 'لم تُسجَّل توصيات.' })}<h3 class="ds-h3">التحديات</h3>${richHTML(p.challenges, { empty: 'لم تُسجَّل تحديات.' })}` : ''}`);
+      <h3 class="ds-h3">مجالات التعاون</h3>${lst(p.cooperationAreas, 'لم تُسجَّل مجالات تعاون.')}
+      <div class="ds-2c"><div><h3 class="ds-h3">الأثر المتوقع وكيف يخدم المؤسسة</h3>${lst(p.expectedImpact, 'لم يُسجَّل.')}</div><div><h3 class="ds-h3">المخرجات</h3>${lst(p.outputs, 'لم تُسجَّل.')}</div></div>
+      ${intl ? `<div class="ds-3c"><div class="ds-box n"><h4>الملاحظات</h4>${lst(p.notes, 'لا توجد ملاحظات.')}</div><div class="ds-box c"><h4>التحديات</h4>${lst(p.challenges, 'لم تُسجَّل تحديات.')}</div><div class="ds-box r"><h4>التوصيات</h4>${lst(p.recommendations, 'لم تُسجَّل توصيات.')}</div></div>` : ''}`);
   }
 
-  if (has('proposal') && prop) chap('proposal', 'المقترح الأصلي', kvT([
+  if (has('contact')) {
+    chap('contact', 'الفريق والتواصل', `<div class="ds-2c">
+      <div class="ds-box"><h4>${icon('users')} المسؤولون من إدارة الشراكات</h4>${(p.owners || []).length ? `<ul class="ds-people">${p.owners.map((o_) => `<li><span class="av">${esc(initials(o_))}</span>${esc(o_)}</li>`).join('')}</ul>` : '<p class="ds-faint">لم يُحدَّد مسؤول.</p>'}
+        <h4 style="margin-top:12px">${icon('building')} الإدارات المتقاطعة</h4>${chipsH(p.departments, 'g')}</div>
+      <div class="ds-box"><h4>${icon('phone')} ضابط الاتصال لدى الشريك</h4>${can('view.contacts') ? kv2([['الاسم', esc(p.contactName || '')], ['البريد الإلكتروني', p.contactEmail ? `<span dir="ltr">${esc(p.contactEmail)}</span>` : ''], ['رقم الجوال', p.contactPhone ? `<span dir="ltr">${esc(p.contactPhone)}</span>` : '']]) : '<p class="ds-faint">بيانات التواصل متاحة لفريق إدارة الشراكات فقط.</p>'}</div></div>`);
+  }
+
+  if (has('proposal') && prop) chap('proposal', 'المقترح الأصلي', `${kv2([
     ['الرقم المرجعي', `<span class="ds-code">${esc(prop.ref || '')}</span>`], ['الحالة', esc(propStatusLabel(prop.status))], ['الإدارة الطالبة', esc(prop.department || '')],
-    ['مقدم الطلب', esc(prop.requesterName || '')], ['تاريخ التقديم', prop.submittedAt ? fmtDT(prop.submittedAt) : ''], ['الهدف الاستراتيجي', esc(prop.strategicGoal || '')],
-  ]) + `<h3 class="ds-h3">أسباب طلب الشراكة</h3>${richHTML(prop.reasons)}${prop.targets ? `<h3 class="ds-h3">المستهدفات</h3>${richHTML(prop.targets)}` : ''}${prop.addedValue ? `<h3 class="ds-h3">القيمة المضافة</h3>${richHTML(prop.addedValue)}` : ''}`);
+    ['مقدم الطلب', esc(prop.requesterName || '') + (prop.requesterEmail ? ` <span dir="ltr" class="ds-sm">${esc(prop.requesterEmail)}</span>` : '')], ['تاريخ التقديم', prop.submittedAt ? fmtDT(prop.submittedAt) : ''], ['قطاع الجهة', esc(prop.partnerSector || '')],
+    ['الهدف الاستراتيجي', esc(prop.strategicGoal || ''), true],
+    can('view.contacts') && ['ضابط الاتصال المقترح', [prop.contactName, prop.contactEmail, prop.contactPhone].filter(Boolean).map(esc).join(' — '), true]])}
+    <div class="ds-2c"><div><h3 class="ds-h3">أسباب طلب الشراكة</h3>${lst(prop.reasons, '—')}</div><div><h3 class="ds-h3">المستهدفات</h3>${lst(prop.targets, '—')}</div></div>
+    ${prop.addedValue ? `<h3 class="ds-h3">القيمة المضافة</h3>${lst(prop.addedValue, '—')}` : ''}
+    ${(prop.events || []).length ? `<h3 class="ds-h3">مراحل المقترح</h3><table class="ds-tbl"><tbody>${prop.events.filter((e) => can('proposal.review') || e.vis !== 'internal').map((e) => `<tr><td class="ds-sm">${e.at ? fmtDT(e.at) : ''}</td><td>${esc(e.label || propStatusLabel(e.to || '') || e.type || '')}${e.message ? `<small>${esc(e.message)}</small>` : ''}</td><td class="ds-sm">${esc(e.by || '')}</td></tr>`).join('')}</tbody></table>` : ''}`);
 
   if (has('forms')) {
     const list = forms.filter((x) => x.key !== 'partnershipEval' || !has('evals'));
@@ -9032,9 +9195,11 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
       + evs.map(([, i]) => `<div class="ds-form">${formDocHTML('partnership', p, 'partnershipEval', i)}</div>`).join(''));
   }
 
-  if (has('stories') && stories.length) {
-    const rows = await Promise.all(stories.map(async (a) => ({ a, u: a.coverFileId ? await url(a.coverFileId) : '' })));
-    chap('stories', 'الإنجازات المرتبطة', rows.map(({ a, u }) => `<article class="ds-story">${u ? `<img src="${u}" alt="">` : ''}<div><h3>${esc(a.title)}</h3>${a.metric || a.value ? `<b class="ds-metric">${esc([a.value, a.metric].filter(Boolean).join(' '))}</b>` : ''}<p>${esc(a.summary || a.text || '')}</p><small>${a.date ? fmtDate(a.date) : ''}</small></div></article>`).join(''));
+  const news = D.news.filter((x) => x.partnershipId === p.id && (showDemo() || !x.demo)).sort((x, y) => (x.date < y.date ? 1 : -1));
+  if (has('stories') && (stories.length || news.length)) {
+    const rows = await Promise.all(stories.map(async (a_) => ({ a: a_, u: a_.coverFileId ? await url(a_.coverFileId) : '' })));
+    chap('stories', 'الإنجازات والمستجدات', `${rows.map(({ a: a_, u }) => `<article class="ds-story">${u ? `<img src="${u}" alt="">` : ''}<div><h3>${esc(a_.title)}</h3>${a_.metricValue ? `<b class="ds-metric">${esc(a_.metricValue)} <span>${esc(a_.metricLabel || '')}</span></b>` : ''}<p>${esc(a_.summary || '')}</p>${a_.body ? `<p class="ds-sm">${esc(a_.body).replace(/\n/g, '<br>')}</p>` : ''}<small>${a_.date ? fmtDate(a_.date) : ''}${a_.public ? ' · منشور في الواجهة' : ''}</small></div></article>`).join('')}
+      ${news.length ? `<h3 class="ds-h3">المستجدات (${news.length})</h3><ul class="ds-news">${news.map((x) => `<li><span class="d">${x.date ? fmtDate(x.date, 'short') : ''}</span><div><b>${esc(x.title)}</b>${x.body ? `<p>${esc(x.body)}</p>` : ''}</div></li>`).join('')}</ul>` : ''}`);
   }
 
   if (has('photos') && photos.length) {
@@ -9066,15 +9231,21 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
     chap('docs', 'المستندات والمرفقات', body);
   }
 
+  if (has('admin') && can('view.internal')) {
+    const featured = (D.settings.home.featured || []).includes(p.id);
+    chap('admin', 'البيانات الإدارية والمصدر', `${kv2([['مرحلة الشراكة', esc(stageLabel(p.stage)) + (p.isDraft ? ' — مسودة' : '')], ['الحالة المحسوبة', esc(statusLabel(stt))],
+      ['الظهور في الواجهة التعريفية', p.public ? 'منشورة' : 'غير منشورة'], ['العرض المميز في الرئيسية', featured ? 'ضمن الشراكات المختارة' : 'لا'],
+      ['أُنشئ', `${fmtDT(p.createdAt)} — ${esc(p.createdBy || '')}`], ['آخر تحديث', `${fmtDT(p.updatedAt)} — ${esc(p.updatedBy || '')}`], p.source && ['المصدر', esc(p.source), true]])}
+      ${(p.importNotes || []).length ? `<h3 class="ds-h3">ملاحظات الاستيراد</h3><ul class="ds-news">${p.importNotes.map((x) => `<li><span class="d">${x.confirmed ? '✓ مؤكدة' : 'بانتظار التأكيد'}</span><div><b>${esc(x.field || '')}</b><p>${esc(x.msg || '')}</p></div></li>`).join('')}</ul>` : ''}
+      ${p.importRaw ? `<h3 class="ds-h3">البيانات كما وردت في ملف الحصر (الصف ${esc(String(p.seq || ''))})</h3><table class="ds-kv">${p.importRaw.map((c) => `<tr><th>${esc(c.h)}</th><td>${esc(c.v) || '<span class="ds-faint">فارغ</span>'}</td></tr>`).join('')}</table>` : ''}`);
+  }
   if (has('log') && logs.length) chap('log', 'سجل التغييرات', `<table class="ds-tbl"><thead><tr><th>الإجراء</th><th>التفاصيل</th><th>التاريخ</th><th>المستخدم</th></tr></thead><tbody>${logs.map((l) => `<tr><td>${esc(AUDIT_LABELS[l.action] || l.action)}</td><td class="ds-sm">${esc(l.details || '')}</td><td class="ds-sm">${fmtDT(l.at)}</td><td class="ds-sm">${esc(l.user || '')}</td></tr>`).join('')}</tbody></table>`);
 
   const cover = p.coverFileId ? await url(p.coverFileId) : '';
-  const tp = termProgress(p);
   const coverHTMLs = `<section class="ds-cover">
     <div class="ds-cv-top">${logo ? `<img src="${logo}" alt="">` : ''}<div><b>${esc(o.name)}</b><span>${esc(o.dept)}</span></div><span class="ds-cv-kind">ملف الشراكة الشامل</span></div>
     ${cover ? `<div class="ds-cv-img"><img src="${cover}" alt=""></div>` : '<div class="ds-cv-rule"></div>'}
-    ${pr.logoFileId ? `<div class="ds-cv-lg"><img src="${await url(pr.logoFileId)}" alt=""></div>` : ''}
-    <div class="ds-cv-t"><span class="ds-code">${esc(p.code || '')}</span><h1>${esc(name)}</h1>${p.title && p.title !== name ? `<p>${esc(p.title)}</p>` : ''}</div>
+    <div class="ds-cv-t"><div class="ds-cv-lg">${pr.logoFileId ? `<img src="${await url(pr.logoFileId)}" alt="">` : `<span class="emb" data-sec="${esc(pr.sector || '')}">${icon(embIcon(pr))}</span>`}</div><span class="ds-code">${esc(p.code || '')}</span><h1>${esc(name)}</h1>${p.title && p.title !== name ? `<p>${esc(p.title)}</p>` : ''}</div>
     <div class="ds-cv-facts">
       <div><span>الحالة</span><b>${esc(statusLabel(pStatus(p)))}</b></div>
       <div><span>القطاع</span><b>${esc(pSector(p) || '—')}</b></div>
@@ -10827,7 +10998,7 @@ function frame(sp, s, title, idx, total) {
   const B = RC.band;
   const els = [P.rect(0, 0, SW, SH, RC.page), P.rect(0, 0, SW, 150, B.bg), P.svg(0, 0, SW, 150, topoGraphic(rptThemeKey(), SW, 150, B, 'band-' + rptThemeKey()))];
   if (pr && pr.logoFileId) els.push(P.circ(MX, 37, 76, '#FFFFFF'), P.img(MX + 12, 49, 52, 52, pr.logoFileId, { fit: 'contain' }));
-  else if (s.pid) els.push(P.circ(MX, 39, 72, B.logo), P.text(MX, 39, 72, 72, (s.pname || '؟').replace(/^(ال)/, '').trim().charAt(0), { size: 30, bold: true, color: B.logoInk, align: 'center', valign: 'middle', lh: 1 }));
+  else if (s.pid) els.push(P.circ(MX, 39, 72, B.logo), P.icon(MX + 20, 59, 32, embIcon(pr), B.logoInk));
   els.push(P.text(rx(MX, 980), 34, 980, 28, s.kicker || `${s.pname || ''}${s.code ? '  ·  ' + s.code : ''}`, { size: 16, bold: true, color: B.kick, lh: 1.4 }));
   els.push(P.head(rx(MX, 980), 64, 980, 60, title, { size: fitSize(title, 980, 56, 34, 22, 1.3), color: B.ink, lh: 1.3 }));
   els.push(P.text(rx(MX, 700), 684, 700, 22, `${D.settings.org.name} — ${D.settings.org.platform}`, { size: 12, color: RC.faint, lh: 1.4 }));
@@ -12002,7 +12173,7 @@ function boChNetwork(X) {
       const mx = cx + (x - cx) * 0.45 + (y - cy) * 0.12, my = cy + (y - cy) * 0.45 - (x - cx) * 0.06;
       links += `<path d="M${cx} ${cy}Q${mx.toFixed(1)} ${my.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}" class="bo-net-ln ${live ? 'live' : ''}" style="stroke:${SEC_VAR(s)};stroke-width:${(1.2 + e.ps.length * 1.1).toFixed(1)};--d:${k}"/>`;
       const href = e.ps.length > 1 && can('view.partners') ? '#/partners/' + e.pr.id : '#/partnerships/' + e.ps[0].id;
-      nodes += `<g class="bo-net-n" data-href="${href}" ${tipAttr(`<b>${esc(e.pr.name)}</b><br>${esc(s)} — ${plural(e.ps.length, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')}<br>${esc(statusLabel(st))}${e.pr.demo ? ' — تجريبي' : ''}`)} transform="translate(${x.toFixed(1)},${y.toFixed(1)})"><circle r="${r + 4}" class="halo" style="stroke:${stC(st)}"/><circle r="${r}" class="core" style="fill:${SEC_VAR(s)}"/>${e.pr.logoFileId ? `<circle r="${r - 1}" class="lgbg"/><image data-file="${esc(e.pr.logoFileId)}" x="${-(r - 4)}" y="${-(r - 4)}" width="${2 * (r - 4)}" height="${2 * (r - 4)}" preserveAspectRatio="xMidYMid meet"/>` : `<text y="4" text-anchor="middle" class="mono">${esc(monogram(e.pr.name))}</text>`}</g>`;
+      nodes += `<g class="bo-net-n" data-href="${href}" ${tipAttr(`<b>${esc(e.pr.name)}</b><br>${esc(s)} — ${plural(e.ps.length, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')}<br>${esc(statusLabel(st))}${e.pr.demo ? ' — تجريبي' : ''}`)} transform="translate(${x.toFixed(1)},${y.toFixed(1)})"><circle r="${r + 4}" class="halo" style="stroke:${stC(st)}"/><circle r="${r}" class="core" style="fill:${SEC_VAR(s)}"/>${e.pr.logoFileId ? `<circle r="${r - 1}" class="lgbg"/><image data-file="${esc(e.pr.logoFileId)}" x="${-(r - 4)}" y="${-(r - 4)}" width="${2 * (r - 4)}" height="${2 * (r - 4)}" preserveAspectRatio="xMidYMid meet"/>` : `<svg x="${-r * 0.5}" y="${-r * 0.5}" width="${r}" height="${r}" viewBox="0 0 24 24" class="bo-net-emb" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[embIcon(e.pr)]}</svg>`}</g>`;
       const out = Math.cos(ang) > 0.25 ? 'start' : Math.cos(ang) < -0.25 ? 'end' : 'middle';
       const nm = e.pr.name.length > 22 ? e.pr.name.slice(0, 21) + '…' : e.pr.name;
       const ox = out === 'start' ? r + 9 : out === 'end' ? -(r + 9) : 0, oy = out === 'middle' ? (Math.sin(ang) > 0 ? r + 17 : -(r + 9)) : 4;

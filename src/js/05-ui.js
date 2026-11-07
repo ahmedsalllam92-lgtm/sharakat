@@ -12,7 +12,15 @@ function monogram(name) {
   return (ws[0] || '').charAt(0);
 }
 function toneFor(partner) { const s = partner && partner.sector; return s === 'خاص' ? 'mist' : s === 'غير ربحي' ? 'sand' : 'dark'; }
-const logoOrMono = (pr, name) => (pr && pr.logoFileId ? `<img class="lg" data-file="${esc(pr.logoFileId)}" alt="${esc(pr.name || name || '')}">` : esc(monogram(name || (pr && pr.name) || '')));
+/* شعار الجهة، وإن لم يوجد فأيقونة تعبّر عن مجالها أو قطاعها بدل الحرف */
+function embIcon(pr) {
+  const d = (pr && pr.domain) || '', s = (pr && pr.sector) || '';
+  const by = [[/بيئ|زراع|تشجير|مياه|غطاء/, 'leaf'], [/طاق/, 'sun'], [/تعليم|بحث|علم|تدريب/, 'award'], [/مال|استثمار|اقتصاد/, 'chart'], [/مجتمع|تطوع|خير|اجتماع/, 'users'], [/سياح|ثقاف|إعلام/, 'star'], [/صح/, 'flag'], [/نقل|لوجست/, 'send']];
+  for (const [re, ic] of by) if (re.test(d)) return ic;
+  return s === 'خاص' ? 'chart' : s === 'غير ربحي' ? 'users' : s ? 'building' : 'link';
+}
+const embHTML = (pr) => `<span class="emb" data-sec="${esc((pr && pr.sector) || '')}">${icon(embIcon(pr))}</span>`;
+const logoOrMono = (pr, name) => (pr && pr.logoFileId ? `<img class="lg" data-file="${esc(pr.logoFileId)}" alt="${esc(pr.name || name || '')}">` : embHTML(pr));
 function plateEditHTML(pr, size, canEdit) {
   if (!pr || !canEdit) return plateHTML(pr, size);
   return `<div class="plate-ed">${plateHTML(pr, size)}<label class="plate-up no-print" title="${pr.logoFileId ? 'تغيير شعار الجهة' : 'رفع شعار الجهة'}">${icon('upload')}<span>${pr.logoFileId ? 'تغيير الشعار' : 'رفع الشعار'}</span><input type="file" accept="image/*" hidden data-logoup="${esc(pr.id)}"></label>${pr.logoFileId ? `<button type="button" class="plate-x no-print" data-logox="${esc(pr.id)}" title="إزالة الشعار" aria-label="إزالة الشعار">${icon('x')}</button>` : ''}</div>`;
@@ -38,7 +46,7 @@ function bindLogoUpload(root, after) {
 function plateHTML(partner, size = 56) {
   if (!partner) return `<div class="plate typo s${size}"><span class="pt">—</span></div>`;
   if (partner.logoFileId) return `<div class="plate s${size}"><img data-file="${esc(partner.logoFileId)}" alt="${esc(partner.name)}"></div>`;
-  if (size <= 56) return `<div class="plate mono s${size}" title="${esc(partner.name)}"><span class="mg">${esc(monogram(partner.name))}</span></div>`;
+  if (size <= 56) return `<div class="plate mono emb-p s${size}" title="${esc(partner.name)}">${embHTML(partner)}</div>`;
   return `<div class="plate typo s${size}" title="${esc(partner.name)}"><span class="pt">${esc(partner.name)}</span></div>`;
 }
 const demoTag = (x) => (x && x.demo ? '<span class="demo-tag" title="بيانات تجريبية لإظهار التصميم">تجريبي</span>' : '');

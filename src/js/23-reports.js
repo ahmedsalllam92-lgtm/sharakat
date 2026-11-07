@@ -83,7 +83,7 @@ function frame(sp, s, title, idx, total) {
   const B = RC.band;
   const els = [P.rect(0, 0, SW, SH, RC.page), P.rect(0, 0, SW, 150, B.bg), P.svg(0, 0, SW, 150, topoGraphic(rptThemeKey(), SW, 150, B, 'band-' + rptThemeKey()))];
   if (pr && pr.logoFileId) els.push(P.circ(MX, 37, 76, '#FFFFFF'), P.img(MX + 12, 49, 52, 52, pr.logoFileId, { fit: 'contain' }));
-  else if (s.pid) els.push(P.circ(MX, 39, 72, B.logo), P.text(MX, 39, 72, 72, (s.pname || '؟').replace(/^(ال)/, '').trim().charAt(0), { size: 30, bold: true, color: B.logoInk, align: 'center', valign: 'middle', lh: 1 }));
+  else if (s.pid) els.push(P.circ(MX, 39, 72, B.logo), P.icon(MX + 20, 59, 32, embIcon(pr), B.logoInk));
   els.push(P.text(rx(MX, 980), 34, 980, 28, s.kicker || `${s.pname || ''}${s.code ? '  ·  ' + s.code : ''}`, { size: 16, bold: true, color: B.kick, lh: 1.4 }));
   els.push(P.head(rx(MX, 980), 64, 980, 60, title, { size: fitSize(title, 980, 56, 34, 22, 1.3), color: B.ink, lh: 1.3 }));
   els.push(P.text(rx(MX, 700), 684, 700, 22, `${D.settings.org.name} — ${D.settings.org.platform}`, { size: 12, color: RC.faint, lh: 1.4 }));

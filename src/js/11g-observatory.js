@@ -309,7 +309,7 @@ function obPopHTML(title, sub, items, byStep = false) {
     const facts = isP
       ? [pSector(r), r.ptype, pr.domain, r.endDate ? 'حتى ' + fmtDate(r.endDate, 'short') : ''].filter(Boolean)
       : [r.department, r.partnerSector, r.requesterName].filter(Boolean);
-    return `<a class="ob-pi ${tone}" href="${x.href}"><span class="ob-pim ${isP && pr.logoFileId ? 'has-lg' : ''}">${isP ? logoOrMono(pr, x.name) : esc(monogram(x.name))}</span>
+    return `<a class="ob-pi ${tone}" href="${x.href}"><span class="ob-pim ${isP && pr.logoFileId ? 'has-lg' : ''}">${isP ? logoOrMono(pr, x.name) : `<span class="emb">${icon('send')}</span>`}</span>
       <span class="ob-pib"><b>${esc(x.name)} ${x.demo ? '<span class="demo-tag">تجريبي</span>' : ''}</b>
         <small>${esc(x.sub || '')}${isP ? ` · ${esc(statusLabel(pStatus(r)))}` : ` · ${esc(propStatusLabel(r.status))}`}${byStep ? ` · خطوة ${x.step.n}: ${esc(x.step.t)}` : ''}</small>
         ${facts.length ? `<small class="f">${facts.map(esc).join(' · ')}</small>` : ''}
