@@ -4667,6 +4667,77 @@ img.lg{width:100%;height:100%;object-fit:contain;display:block}
 .pc-wfl{direction:rtl}
 .pc-facts{margin:12px 0 0!important}
 .pc-goal{inset:auto 112px 14px 16px!important}
+
+/* =====================================================================
+   استوديو القصة (التقارير)
+   ===================================================================== */
+.rx-hero{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,1fr);gap:20px;align-items:center;padding:34px 40px;border-radius:22px;background:radial-gradient(700px 400px at 15% 30%,rgba(217,180,103,.18),transparent 60%),linear-gradient(135deg,#0B3F38,#06201C);color:#EEF6F2;margin-bottom:18px;isolation:isolate}
+.rx-hero::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.12;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cg fill='none' stroke='%23D9B467' stroke-width='1.2'%3E%3Crect x='20' y='20' width='56' height='56'/%3E%3Crect x='20' y='20' width='56' height='56' transform='rotate(45 48 48)'/%3E%3Ccircle cx='48' cy='48' r='9'/%3E%3C/g%3E%3C/svg%3E");-webkit-mask-image:linear-gradient(90deg,#000,transparent 70%);mask-image:linear-gradient(90deg,#000,transparent 70%)}
+[data-design="board"] .rx-hero{border-radius:4px;background:radial-gradient(700px 400px at 15% 30%,rgba(217,192,138,.2),transparent 60%),linear-gradient(135deg,#0F4433,#08241B)}
+:root[data-theme="dark"] .rx-hero{background:radial-gradient(700px 400px at 15% 30%,rgba(217,180,103,.14),transparent 60%),linear-gradient(135deg,#17303A,#0F1D24)}
+.rx-eye{display:inline-flex;align-items:center;gap:10px;font-size:12.5px;color:#E6C786;font-weight:600}
+.rx-eye i{width:26px;height:2px;background:#D9B467}
+.rx-hero h1{font-family:var(--display,var(--font));font-size:46px;line-height:1.1;margin:8px 0 10px;color:#fff;font-weight:700}
+.rx-hero p{font-size:15px;line-height:1.85;color:#CFE3DB;max-width:640px}
+.rx-fan{position:relative;height:200px}
+.rx-fan>span{position:absolute;top:20px;left:50%;width:250px;height:141px;border-radius:10px;box-shadow:0 30px 50px -24px rgba(0,0,0,.7);transition:transform .6s cubic-bezier(.2,.8,.2,1);overflow:hidden}
+.rx-fan .f1{background:linear-gradient(135deg,#0F4433,#1F6B5C);transform:translateX(-50%) rotate(-12deg) translate(-90px,10px)}
+.rx-fan .f2{background:#F7F4EC;transform:translateX(-50%) rotate(2deg)}
+.rx-fan .f3{background:linear-gradient(135deg,#B08A3E,#D9B467);transform:translateX(-50%) rotate(14deg) translate(90px,16px)}
+.rx-hero:hover .f1{transform:translateX(-50%) rotate(-16deg) translate(-120px,0)}
+.rx-hero:hover .f3{transform:translateX(-50%) rotate(18deg) translate(120px,6px)}
+.rx-fan i{display:block;height:6px;border-radius:3px;background:rgba(255,255,255,.35);margin:8px 18px 0 60px}
+.rx-fan .f2 i{background:#E1E9E5}
+.rx-fan b{display:block;height:16px;width:60%;margin:22px 18px 6px auto;border-radius:4px;background:rgba(255,255,255,.85)}
+.rx-fan .f2 b{background:#0B3F38}
+.rx-fan .f2 em{display:block;float:left;width:70px;height:70px;border-radius:50%;margin:8px 16px;background:conic-gradient(#1F6B5C 0 70%,#E6EDEA 0)}
+.rx-fan strong{display:block;font-size:64px;line-height:.8;color:#fff;margin:14px 18px 0 auto;text-align:right;font-family:Georgia,serif}
+@media (prefers-reduced-motion:reduce){.rx-fan>span{transition:none}}
+.rx-pick{display:grid;grid-template-columns:auto 1fr;gap:12px 18px;align-items:center;margin-bottom:18px;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px 20px}
+[data-design="board"] .rx-pick{border-radius:4px}
+.rx-step{display:flex;align-items:center;gap:12px;min-width:210px}
+.rx-step>span{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--petrol);color:#fff;font-weight:700;font-size:14px;flex:none}
+.rx-step b{display:block;font-size:14.5px;color:var(--ink)}
+.rx-step small{display:block;font-size:11.5px;color:var(--muted);line-height:1.5}
+.rx-presets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.rx-pre{position:relative;display:flex;gap:12px;align-items:center;text-align:right;font:inherit;padding:10px;border-radius:14px;border:1.5px solid var(--line);background:var(--paper-2);cursor:pointer;color:inherit;transition:border-color .2s,transform .2s,box-shadow .2s}
+.rx-pre:hover{transform:translateY(-2px);border-color:var(--petrol-3);box-shadow:0 12px 24px -16px rgba(0,0,0,.3)}
+.rx-pre.on{border-color:var(--petrol);background:var(--mist);box-shadow:0 0 0 3px color-mix(in srgb,var(--petrol) 14%,transparent)}
+.rx-pre-art{width:64px;height:48px;border-radius:8px;flex:none;position:relative;overflow:hidden;background:#0B3F38}
+.rx-pre-art i{position:absolute;display:block;border-radius:2px}
+.a-story{background:linear-gradient(90deg,#B08A3E 0 40%,#F7F4EC 40%)}.a-story i:nth-child(1){right:6px;top:8px;width:26px;height:5px;background:#0B3F38}.a-story i:nth-child(2){right:6px;top:18px;width:30px;height:3px;background:#C9D6D0}.a-story i:nth-child(3){right:6px;top:26px;width:22px;height:3px;background:#C9D6D0}
+.a-brief{background:#F2F6F4}.a-brief i:nth-child(1){left:8px;bottom:8px;width:8px;height:22px;background:#0B3F38}.a-brief i:nth-child(2){left:20px;bottom:8px;width:8px;height:30px;background:#1F6B5C}.a-brief i:nth-child(3){left:32px;bottom:8px;width:8px;height:14px;background:#D9B467}
+.a-card{background:linear-gradient(135deg,#0F4433,#1F6B5C)}.a-card i:nth-child(1){right:8px;top:9px;width:16px;height:16px;border-radius:50%;background:#D9B467}.a-card i:nth-child(2){right:8px;top:30px;width:40px;height:4px;background:#fff}.a-card i:nth-child(3){right:8px;top:38px;width:26px;height:3px;background:rgba(255,255,255,.5)}
+.a-full{background:#F7F4EC}.a-full i{width:16px;height:12px;background:#0B3F38;top:8px}.a-full i:nth-child(1){right:6px}.a-full i:nth-child(2){right:24px;background:#B08A3E}.a-full i:nth-child(3){right:42px;background:#5FB894}
+.rx-pre-b{display:flex;flex-direction:column;gap:2px;min-width:0}
+.rx-pre-b b{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--ink)}
+.rx-pre-b b .ic{width:15px;height:15px;color:var(--gold)}
+.rx-pre-b small{font-size:11.5px;color:var(--muted);line-height:1.45}
+.rx-pre-b em{font-style:normal;font-size:10.5px;color:var(--faint)}
+.rx-on{position:absolute;top:-8px;left:-8px;width:22px;height:22px;border-radius:50%;background:var(--petrol);color:#fff;display:grid;place-items:center;box-shadow:0 0 0 3px var(--paper)}
+.rx-on .ic{width:12px;height:12px}
+[data-design="board"] .rx-pre{border-radius:3px}
+.rx-quick{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.rx-q{display:inline-flex;align-items:center;gap:8px;font:inherit;padding:7px 14px 7px 10px;border-radius:30px;border:1.5px solid var(--line);background:var(--paper-2);cursor:pointer;color:var(--ink-2);font-size:13px;transition:all .2s}
+.rx-q b{min-width:26px;height:24px;border-radius:12px;display:grid;place-items:center;background:var(--paper);color:var(--petrol);font-size:12.5px}
+.rx-q:hover:not(:disabled){border-color:var(--petrol-3)}
+.rx-q.on{background:var(--petrol);border-color:var(--petrol);color:#fff}.rx-q.on b{background:rgba(255,255,255,.18);color:#fff}
+.rx-q:disabled{opacity:.45;cursor:default}
+.rx-q-note{font-size:12.5px;color:var(--muted);margin-inline-start:6px}
+.rx-q-note b{color:var(--petrol)}
+.rx-dock{position:sticky;bottom:16px;z-index:30;display:flex;justify-content:center;margin-top:18px;pointer-events:none}
+.rx-dock-in{pointer-events:auto;display:flex;align-items:center;gap:8px;padding:8px 8px 8px 16px;border-radius:40px;background:rgba(10,30,26,.92);backdrop-filter:blur(8px);box-shadow:0 20px 40px -18px rgba(0,0,0,.6);color:#EAF4F0}
+.rx-dock-n{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:0 10px 0 4px;color:#CFE3DB}
+.rx-dock-n b{color:#fff;font-size:15px}
+.rx-dock-n .ic{width:15px;height:15px;color:#D9B467}
+.rx-dock .btn{height:36px;border-radius:30px}
+.rx-dock .btn:not(.gold):not(.primary){background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.2)}
+[data-design="board"] .rx-dock-in,[data-design="board"] .rx-dock .btn{border-radius:3px}
+.rp-slides .rs-frame{box-shadow:0 24px 50px -32px rgba(0,0,0,.45);border-radius:10px;overflow:hidden;transition:transform .3s,box-shadow .3s}
+.rp-slides .rs-frame:hover{box-shadow:0 30px 60px -30px rgba(0,0,0,.5)}
+@media (max-width:1180px){.rx-presets{grid-template-columns:1fr 1fr}.rx-hero{grid-template-columns:1fr}.rx-fan{display:none}}
+@media (max-width:720px){.rx-hero{padding:24px 18px}.rx-hero h1{font-size:32px}.rx-pick{grid-template-columns:1fr}.rx-presets{grid-template-columns:1fr}.rx-dock-in{flex-wrap:wrap;justify-content:center;border-radius:18px}}
+@media print{.rx-hero,.rx-pick,.rx-dock{display:none!important}}
 </style>
 </head>
 <body>
@@ -10542,6 +10613,8 @@ const RPT_SECTIONS = [
   { k: 'portfolio', l: 'لمحة عن المحفظة المختارة (رسوم)', g: 'التقرير' },
   { k: 'summary', l: 'ملخص الشراكات المختارة', g: 'التقرير' },
   { k: 'pcover', l: 'غلاف لكل شراكة', g: 'الشراكة' },
+  { k: 'story', l: 'قصة الأثر (شريحة تسويقية)', g: 'الشراكة' },
+  { k: 'hero', l: 'الرقم البطل: أبرز نتيجة', g: 'الشراكة' },
   { k: 'exec', l: 'الملخص التنفيذي', g: 'الشراكة' },
   { k: 'overview', l: 'نظرة عامة: المؤشرات والبيانات والفترة', g: 'الشراكة' },
   { k: 'partner', l: 'بطاقة الجهة الشريكة وشراكاتها', g: 'الشراكة' },
@@ -10587,6 +10660,11 @@ const RTHEMES = {
   board: { name: 'المجلس', page: '#F7F4EC', card: '#FFFFFF', pri: '#0F4433', priT: '#0F4433', petrol2: '#2F7A5E', mint: '#4F9A78', mintBg: '#E8EFEA', gold: '#A47C32', goldBg: '#F4EAD4', clay: '#A47C32', clayBg: '#F4EAD4', ink: '#14201B', ink2: '#2E3B35', mut: '#5C6861', faint: '#8C958E', line: '#E7E1D3', white: '#FFFFFF', head: '#0F4433', headOv: '#08241B', kick: '#D9C08A', onHead: '#FFFFFF', onHeadMut: '#C7D6CD', cover: '#0F4433', cover2: '#1A5C46', coverAcc: '#D9C08A', track: '#F1EDE2', font: 'IBM Plex Sans Arabic', hfont: 'Noto Naskh Arabic', hk: 1.12, cw: 0.5, band: { bg: '#0F4433', line: '#D9C08A', lo: 0.2, hi: '#D9C08A', ho: 0.7, ink: '#FFFFFF', kick: '#D9C08A', logo: '#D9C08A', logoInk: '#0F4433' }, coverLines: { line: '#D9C08A', lo: 0.18, hi: '#D9C08A', ho: 0.55 } },
 };
 const BAND_CACHE = {};
+function geoGraphic(W, H, color, op = 0.16, tile = 120) {
+  const k = `geo|${W}|${H}|${color}|${op}|${tile}`; if (BAND_CACHE[k]) return BAND_CACHE[k];
+  const t = tile, h = t / 2, q = t * 0.3;
+  return (BAND_CACHE[k] = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><defs><pattern id="g" width="${t}" height="${t}" patternUnits="userSpaceOnUse"><g fill="none" stroke="${color}" stroke-opacity="${op}" stroke-width="1.4"><rect x="${h - q}" y="${h - q}" width="${2 * q}" height="${2 * q}"/><rect x="${h - q}" y="${h - q}" width="${2 * q}" height="${2 * q}" transform="rotate(45 ${h} ${h})"/><circle cx="${h}" cy="${h}" r="${t * 0.09}"/><path d="M0 ${h}H${t * 0.08}M${t * 0.92} ${h}H${t}M${h} 0V${t * 0.08}M${h} ${t * 0.92}V${t}"/></g></pattern></defs><rect width="${W}" height="${H}" fill="url(#g)"/></svg>`);
+}
 function topoGraphic(key, W, H, c, seed) {
   const k = `${key}|${W}|${H}|${seed}`; if (BAND_CACHE[k]) return BAND_CACHE[k];
   const ps = topoPaths(seed, W, H, { levels: H > 300 ? 16 : 11, cols: H > 300 ? 70 : 90, focus: 'left' });
@@ -10649,6 +10727,8 @@ function rptSlides() {
     const files = atts.filter((a) => !isImg(a));
     const coop = itemsOf(p.cooperationAreas), imp = itemsOf(p.expectedImpact), outs = itemsOf(p.outputs);
     if (rptOn('pcover')) add({ t: 'pcover', ...head, p, pr, name, tag: rptVal(`${id}.tag`, p.showcaseGoal || firstItem(p.cooperationAreas) || '') });
+    if (rptOn('story') && (p.showcaseGoal || imp.length)) add({ t: 'story', ...head, p, quote: rptVal(`${id}.quote`, p.showcaseGoal || itemStr(imp[0] || { t: '', x: '' })), pts: (p.showcaseGoal ? imp : imp.slice(1)).slice(0, 3).map((it, k) => ({ k, s: rptVal(`${id}.story.${k}`, it.t || it.x) })) });
+    if (rptOn('hero') && p.highlight && p.highlight.value) add({ t: 'hero', ...head, p, pr, hv: rptVal(`${id}.hlv`, p.highlight.value), hl: rptVal(`${id}.hll`, p.highlight.label || ''), hx: rptVal(`${id}.hlx`, p.highlight.text || '') });
     if (rptOn('exec')) {
       const st = pStatus(p), dl = daysLeft(p);
       const stPh = { active: 'سارية حاليًا', soon: `سارية وتقترب من الانتهاء`, ended: 'منتهية', upcoming: 'موقّعة ولم يبدأ سريانها بعد', sign: 'بانتظار التوقيع', prep: 'قيد الإعداد', hold: 'معلّقة', cancel: 'ملغاة', nodates: 'دون تواريخ مسجلة' }[st] || statusLabel(st);
@@ -10678,23 +10758,31 @@ function rptSlides() {
   S.forEach((s) => { if (s.t === 'toc') s.pages = firstIdx; });
   return S.map((s, i) => ({ ...s, nav: navLabel(s), theme: rptThemeKey(), bg: RC.page, els: specFor(s, i, S.length) }));
 }
-function navLabel(s) { return { cover: 'الغلاف', toc: 'الفهرس', portfolio: 'لمحة المحفظة', summary: 'ملخص الشراكات', end: 'الخاتمة', pcover: `غلاف: ${s.pname}`, exec: 'الملخص التنفيذي', overview: 'نظرة عامة', partner: 'الجهة الشريكة', team: 'الفريق', activity: 'الإنجازات', history: 'السجل' }[s.t] || (s.title || ''); }
+function navLabel(s) { return { story: 'قصة الأثر', hero: 'الرقم البطل', cover: 'الغلاف', toc: 'الفهرس', portfolio: 'لمحة المحفظة', summary: 'ملخص الشراكات', end: 'الخاتمة', pcover: `غلاف: ${s.pname}`, exec: 'الملخص التنفيذي', overview: 'نظرة عامة', partner: 'الجهة الشريكة', team: 'الفريق', activity: 'الإنجازات', history: 'السجل' }[s.t] || (s.title || ''); }
 
 /* — مواصفة كل شريحة: قائمة عناصر بإحداثيات ثابتة — */
 function specFor(s, i, total) {
   const E = [];
   if (s.t === 'cover') {
-    E.push(P.rect(0, 0, SW, SH, RC.cover), P.svg(0, 0, SW, SH, topoGraphic(rptThemeKey(), SW, SH, RC.coverLines, 'cover-' + rptThemeKey())));
+    const pics = RPT.ids.map((id) => D.partnerships.find((p) => p.id === id)).filter((p) => p && p.coverFileId).map((p) => p.coverFileId).slice(0, 3);
+    E.push(P.rect(0, 0, SW, SH, RC.cover));
+    if (pics.length) {
+      E.push(P.img(0, 0, 470, SH, pics[0]), P.rect(0, 0, 470, SH, RC.headOv, { alpha: 62 }));
+      if (pics[1]) E.push(P.img(214, 452, 220, 156, pics[1], { r: 6 }), P.rect(214, 452, 220, 156, '#FFFFFF', { alpha: 100, line: RC.kick }));
+      E.push(P.rect(470, 0, 6, SH, RC.kick));
+    }
+    E.push(P.svg(pics.length ? 476 : 0, 0, pics.length ? SW - 476 : SW, SH, geoGraphic(pics.length ? SW - 476 : SW, SH, RC.kick, 0.14)));
+    E.push(P.rect(rx(MX, 90), 196, 90, 4, RC.kick));
     if (ASSET_IMG['murooj-logo-dark']) E.push(P.img(rx(MX, 300), 50, 300, 96, 'asset:murooj-logo-dark', { fit: 'contain', pos: 'right' }));
     E.push(P.text(rx(MX, 1000), 214, 1000, 30, D.settings.org.platform, { size: 20, bold: true, color: RC.kick, lh: 1.4 }));
     E.push(P.head(rx(MX, 1050), 252, 1050, 180, s.title, { key: 'rep.title', size: fitSize(s.title, 1050, 180, 64, 34, 1.25), color: RC.onHead, lh: 1.2, valign: 'middle' }));
     E.push(P.text(rx(MX, 1000), 440, 1000, 40, s.sub, { key: 'rep.sub', size: 24, color: '#C9DDD6', lh: 1.4 }));
     E.push(P.text(rx(MX, 400), 494, 400, 30, s.date, { size: 18, color: '#A9C4BB', lh: 1.4 }));
-    s.stats.forEach(([n, l], k) => { const w = 250, x = rx(MX + k * (w + 16), w); E.push(P.rect(x, 566, w, 90, '#FFFFFF', { r: 14, alpha: 90 }), P.text(x + 20, 574, w - 40, 46, String(n), { size: 36, bold: true, color: RC.white, lh: 1.2 }), P.text(x + 20, 620, w - 40, 26, l, { size: 15, color: '#C9DDD6', lh: 1.3 })); });
+    s.stats.forEach(([n, l], k) => { const w = pics.length ? 230 : 250, x = rx(MX + k * (w + 16), w); E.push(P.rect(x, 566, w, 90, '#FFFFFF', { r: 14, alpha: 90 }), P.text(x + 20, 574, w - 40, 46, String(n), { size: 36, bold: true, color: RC.white, lh: 1.2 }), P.text(x + 20, 620, w - 40, 26, l, { size: 15, color: '#C9DDD6', lh: 1.3 })); });
     return E;
   }
   if (s.t === 'end') {
-    E.push(P.rect(0, 0, SW, SH, RC.cover), P.svg(0, 0, SW, SH, topoGraphic(rptThemeKey(), SW, SH, RC.coverLines, 'end-' + rptThemeKey())));
+    E.push(P.rect(0, 0, SW, SH, RC.cover), P.svg(0, 0, SW, SH, geoGraphic(SW, SH, RC.kick, 0.13)), P.rect(rx(MX, 90), 228, 90, 4, RC.kick));
     if (ASSET_IMG['murooj-logo-dark']) E.push(P.img(rx(MX, 300), 50, 300, 96, 'asset:murooj-logo-dark', { fit: 'contain', pos: 'right' }));
     E.push(P.head(rx(MX, 900), 250, 900, 90, rptVal('rep.end', 'شكرًا لكم'), { key: 'rep.end', size: 60, color: RC.onHead, lh: 1.2, valign: 'middle' }));
     E.push(P.text(rx(MX, 900), 350, 900, 40, `${D.settings.org.dept} — ${D.settings.org.name}`, { size: 24, color: '#C9DDD6', lh: 1.4 }));
@@ -10737,6 +10825,34 @@ function specFor(s, i, total) {
     const th = (BH - 2 * 16) / 3;
     tiles.forEach(([v, l, c], k) => { const y = BY + k * (th + 16); E.push(card(MX, y, lw, th), P.text(MX + 24, y + 18, lw - 60, 66, v, { size: fitSize(v, lw - 60, 66, 52, 24, 1.2), bold: true, color: c, lh: 1.2 }), P.text(MX + 24, y + th - 44, lw - 60, 26, l, { size: 15, color: RC.mut, lh: 1.3 })); });
     return frame(E, s, 'الملخص التنفيذي', i, total);
+  }
+  if (s.t === 'story') {
+    const p = s.p;
+    E.push(P.rect(0, 0, SW, SH, RC.page));
+    if (p.coverFileId) E.push(P.img(0, 0, 500, SH, p.coverFileId), P.rect(0, 0, 500, SH, RC.headOv, { alpha: 70 }));
+    else E.push(P.rect(0, 0, 500, SH, RC.cover), P.svg(0, 0, 500, SH, geoGraphic(500, SH, RC.kick, 0.16)));
+    E.push(P.rect(500, 0, 5, SH, RC.kick));
+    E.push(P.text(MX, 560, 380, 30, s.pname, { size: 20, bold: true, color: RC.white, lh: 1.3 }), P.text(MX, 594, 380, 26, `${p.code || ''}${pSector(p) ? '  ·  القطاع ' + pSector(p) : ''}`, { size: 14, color: RC.onHeadMut, lh: 1.3 }));
+    E.push(P.text(rx(MX, 640), 70, 640, 30, 'قصة الأثر', { size: 18, bold: true, color: RC.gold, lh: 1.3 }), P.rect(rx(MX, 70), 108, 70, 3, RC.gold));
+    E.push(P.text(rx(MX - 10, 120), 120, 120, 120, '”', { size: 150, bold: true, color: RC.goldBg, align: 'right', lh: 1 }));
+    E.push(P.head(rx(MX, 660), 150, 660, 250, s.quote, { key: s.pid + '.quote', size: fitSize(s.quote, 660, 250, 40, 22, 1.45), color: RC.priT, lh: 1.45, valign: 'middle' }));
+    s.pts.forEach((it, k) => { const y = 440 + k * 72; E.push(P.rect(rx(MX, 660), y, 660, 60, RC.card, { r: 10, line: RC.line }), P.text(rx(MX + 16, 40), y, 40, 60, String(k + 1).padStart(2, '0'), { size: 22, bold: true, color: RC.gold, align: 'center', valign: 'middle', lh: 1 }), P.text(rx(MX + 70, 570), y + 6, 570, 48, it.s, { key: `${s.pid}.story.${it.k}`, size: fitSize(it.s, 570, 48, 17, 11, 1.4), color: RC.ink, valign: 'middle', lh: 1.4 })); });
+    E.push(P.text(rx(MX, 600), 684, 600, 22, `${D.settings.org.name} — ${D.settings.org.platform}`, { size: 12, color: RC.faint, lh: 1.4 }), P.text(530, 684, 200, 22, `${i + 1} من ${total}`, { size: 12, color: RC.faint, align: 'left', lh: 1.4 }));
+    return E;
+  }
+  if (s.t === 'hero') {
+    const p = s.p, pr = s.pr;
+    E.push(P.rect(0, 0, SW, SH, RC.cover), P.svg(0, 0, SW, SH, geoGraphic(SW, SH, RC.kick, 0.1)));
+    if (p.coverFileId) { E.push(P.circ(MX + 10, 150, 420, RC.kick), P.img(MX + 18, 158, 404, 404, p.coverFileId, { round: true })); }
+    else E.push(P.circ(MX + 10, 150, 420, RC.cover2, { line: RC.kick }));
+    E.push(P.text(rx(MX, 640), 110, 640, 30, `${s.pname}${s.code ? '  ·  ' + s.code : ''}`, { size: 18, bold: true, color: RC.kick, lh: 1.3 }));
+    E.push(P.text(rx(MX, 640), 150, 640, 30, 'أبرز نتيجة متحققة', { size: 16, color: RC.onHeadMut, lh: 1.3 }));
+    E.push(P.head(rx(MX, 680), 190, 680, 210, s.hv, { key: s.pid + '.hlv', size: fitSize(s.hv, 680, 210, 168, 56, 1.1), color: RC.white, lh: 1.1, valign: 'middle' }));
+    E.push(P.rect(rx(MX, 120), 410, 120, 5, RC.kick));
+    if (s.hl) E.push(P.head(rx(MX, 680), 430, 680, 70, s.hl, { key: s.pid + '.hll', size: fitSize(s.hl, 680, 70, 34, 18, 1.3), color: RC.kick, lh: 1.3 }));
+    if (s.hx) E.push(P.text(rx(MX, 640), 510, 640, 110, s.hx, { key: s.pid + '.hlx', size: fitSize(s.hx, 640, 110, 20, 13, 1.55), color: RC.onHeadMut, lh: 1.55 }));
+    E.push(P.text(rx(MX, 700), 684, 700, 22, `${D.settings.org.name} — ${D.settings.org.platform}`, { size: 12, color: '#B9CCC5', lh: 1.4 }), P.text(MX, 684, 200, 22, `${i + 1} من ${total}`, { size: 12, color: '#B9CCC5', align: 'left', lh: 1.4 }));
+    return E;
   }
   if (s.t === 'pcover') {
     const p = s.p, st = pStatus(p);
@@ -10910,7 +11026,7 @@ function specHTML(slide) {
     if (e.k === 'svg') return `<img class="rs2-i" style="${box}object-fit:cover" src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(e.svg)}" alt="">`;
     if (e.k === 'icon') return `<svg class="rs2-ic" style="${box}stroke:${e.color}" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[e.name] || ''}</svg>`;
     if (e.k === 'circ') return `<div class="rs2-r" style="${box}border-radius:50%;background:${hexA(e.fill, e.alpha)};${e.line ? `box-shadow:inset 0 0 0 2.5px ${e.line};` : ''}"></div>`;
-    if (e.k === 'img') { const pre = /^(lib|asset):/.test(e.src) ? FileCache_src(e.src) : ''; return `<img class="rs2-i" style="${box}object-fit:${e.fit};object-position:${e.pos === 'right' ? 'right center' : '50% 38%'};${e.r ? `border-radius:${e.r}px;` : ''}" ${pre ? `src="${pre}"` : `data-file="${esc(e.src)}"`} alt="">`; }
+    if (e.k === 'img') { const pre = /^(lib|asset):/.test(e.src) ? FileCache_src(e.src) : ''; return `<img class="rs2-i" style="${box}object-fit:${e.fit};object-position:${e.pos === 'right' ? 'right center' : '50% 38%'};${e.round ? 'border-radius:50%;' : e.r ? `border-radius:${e.r}px;` : ''}" ${pre ? `src="${pre}"` : `data-file="${esc(e.src)}"`} alt="">`; }
     if (e.k === 'text') {
       const lines = e.text.split('\n');
       const inner = lines.map((l, k) => `<span class="${e.firstBold && k === 0 && lines.length > 1 ? 'fb' : ''}">${esc(l)}</span>`).join('<br>');
@@ -10922,6 +11038,20 @@ function specHTML(slide) {
 function FileCache_src(id) { if (id.startsWith('lib:')) return (IMG_LIB[id.slice(4)] || {}).src || ''; if (id.startsWith('asset:')) return (ASSET_IMG[id.slice(6)] || {}).src || ''; return ''; }
 
 /* — الصفحة — */
+/* — قوالب القصة الجاهزة — */
+const RPT_PRESETS = [
+  { k: 'story', t: 'قصة أثر', d: 'تسويقية: صور، واقتباس الهدف، والرقم البطل، والأثر', ic: 'star', secs: ['cover', 'pcover', 'story', 'hero', 'impact', 'activity', 'photos', 'end'] },
+  { k: 'brief', t: 'إحاطة تنفيذية', d: 'للقيادة: لمحة المحفظة وملخص كل شراكة', ic: 'chart', secs: ['cover', 'toc', 'portfolio', 'summary', 'exec', 'end'] },
+  { k: 'card', t: 'بطاقة تعريفية', d: 'لشريك أو زائر: غلاف وقصة ونظرة عامة', ic: 'award', secs: ['pcover', 'story', 'hero', 'overview', 'partner', 'end'] },
+  { k: 'full', t: 'الملف الكامل', d: 'كل المكونات المتاحة لكل شراكة', ic: 'layers', secs: null },
+];
+const RPT_QUICK = [
+  ['active', 'السارية', (p) => ['active', 'soon'].includes(pStatus(p))],
+  ['strategic', 'الاستراتيجية', (p) => (p.ptype || '').includes('استراتيجي')],
+  ['soon', 'تنتهي قريبًا', (p) => pStatus(p) === 'soon'],
+  ['all', 'كل الشراكات', () => true],
+];
+function rptPresetOn(pr) { const want = pr.secs || RPT_SECTIONS.map((s) => s.k); return want.length === RPT.sections.length && want.every((k) => RPT.sections.includes(k)); }
 function renderReports(el, r) {
   if (!can('view.reports')) { el.innerHTML = noAccessHTML(); return; }
   const q = r.query || {};
@@ -10931,7 +11061,17 @@ function renderReports(el, r) {
   if (Object.keys(fq).length) RPT.f = fq;
   const base = () => visiblePartnerships({ includeDrafts: can('view.drafts') });
   if (q.all) RPT.ids = applyFilters(base(), RPT.f).map((p) => p.id);
-  el.innerHTML = `<div class="ph"><div><h1>التقارير</h1><p>اختر شراكة أو أكثر، وحدد مكونات التقرير، وعدّل النصوص مباشرة في المعاينة، ثم نزّله PowerPoint أو PDF. البيانات تُقرأ من سجلات الشراكات لحظة العرض.</p></div></div>
+  el.innerHTML = `<section class="rx-hero">
+      <div class="rx-hero-t"><span class="rx-eye"><i></i>التقارير</span><h1>استوديو القصة</h1>
+        <p>حوّل بيانات الشراكات إلى عرض يُقنع ويُلهم: اختر القصة، وحدد الشراكات، وعدّل أي نص مباشرة على الشريحة، ثم اعرضه بملء الشاشة أو نزّله PowerPoint وPDF. الأرقام تُقرأ من السجلات لحظة العرض.</p></div>
+      <div class="rx-fan" aria-hidden="true"><span class="f1"><b></b><i></i><i></i><i></i></span><span class="f2"><b></b><em></em><i></i><i></i></span><span class="f3"><strong>”</strong><i></i><i></i><i></i></span></div>
+    </section>
+    <section class="rx-pick">
+      <div class="rx-step"><span>1</span><div><b>اختر القصة</b><small>قالب جاهز يحدد مكونات التقرير، ويمكنك تعديلها بعد ذلك</small></div></div>
+      <div class="rx-presets" id="rxPresets"></div>
+      <div class="rx-step"><span>2</span><div><b>حدد الشراكات</b><small>اختيار سريع، أو من القائمة الكاملة في اللوحة الجانبية</small></div></div>
+      <div class="rx-quick" id="rxQuick"></div>
+    </section>
     <div class="rp">
       <aside class="rp-side" data-tour="reports-panel">
         <section class="rp-box"><header><b>1. الشراكات</b><span id="rpCount"></span></header>
@@ -10952,7 +11092,8 @@ function renderReports(el, r) {
           <button class="linkbtn" data-rreset type="button">${icon('history')} استعادة النصوص الأصلية</button>
           <p class="hint">تعديلاتك على نصوص المعاينة تظهر في الملف المنزّل ولا تغيّر سجلات الشراكات. إذا عُدّلت الشراكة لاحقًا يحل نصها الجديد محل تعديلك على ذلك النص.</p></section>
       </aside>
-      <main class="rp-main"><div class="rp-bar" id="rpBar"></div><div class="rp-slides" id="rpSlides" data-tour="reports-preview"></div></main>
+      <main class="rp-main"><div class="rp-bar" id="rpBar"></div><div class="rp-slides" id="rpSlides" data-tour="reports-preview"></div>
+        <div class="rx-dock" id="rxDock"></div></main>
     </div>`;
   new FilterBar($('#rpF', el), { dims: ['status', 'category', 'sector', 'classification', 'department', 'owner', 'year'], getList: base, state: RPT.f, onChange: () => drawList() });
   const filteredList = () => applyFilters(base(), RPT.f).filter((p) => matchQ(searchText(p), RPT.q || '')).sort((a, b) => partnerName(a).localeCompare(partnerName(b), 'ar'));
@@ -10971,8 +11112,15 @@ function renderReports(el, r) {
     $('#rpDDl', el).textContent = `${avail.filter((s) => RPT.sections.includes(s.k)).length} من ${avail.length} مكونات`;
     $('#rpDDm', el).innerHTML = `<div class="rp-ddh"><button class="linkbtn" data-rsall type="button">تحديد الكل</button><button class="linkbtn" data-rsnone type="button">إلغاء الكل</button></div>` + ['التقرير', 'الشراكة'].map((g) => `<div class="rp-ddg">${g === 'التقرير' ? 'على مستوى التقرير' : 'لكل شراكة'}</div>${avail.filter((s) => s.g === g).map((s) => `<label class="rp-ddo"><input type="checkbox" data-rsec="${s.k}" ${RPT.sections.includes(s.k) ? 'checked' : ''}><span>${esc(s.l)}</span></label>`).join('')}`).join('');
   };
+  const drawPicks = () => {
+    $('#rxPresets', el).innerHTML = RPT_PRESETS.map((pr) => { const n = (pr.secs || RPT_SECTIONS.map((s) => s.k)).length; return `<button type="button" class="rx-pre ${rptPresetOn(pr) ? 'on' : ''}" data-rpreset="${pr.k}"><span class="rx-pre-art a-${pr.k}" aria-hidden="true"><i></i><i></i><i></i></span><span class="rx-pre-b"><b>${icon(pr.ic)}${esc(pr.t)}</b><small>${esc(pr.d)}</small><em>${n} مكونات</em></span>${rptPresetOn(pr) ? `<span class="rx-on">${icon('check')}</span>` : ''}</button>`; }).join('');
+    const all = base();
+    $('#rxQuick', el).innerHTML = RPT_QUICK.map(([k, l, f]) => { const ids = all.filter(f).map((p) => p.id); const on = ids.length && ids.length === RPT.ids.length && ids.every((id) => RPT.ids.includes(id)); return `<button type="button" class="rx-q ${on ? 'on' : ''}" data-rquick="${k}" ${ids.length ? '' : 'disabled'}><b>${ids.length}</b><span>${esc(l)}</span></button>`; }).join('') + `<span class="rx-q-note">${RPT.ids.length ? `محدد الآن: <b>${RPT.ids.length}</b>` : 'لم تُحدَّد شراكات بعد'}</span>`;
+  };
   const drawPreview = () => {
+    drawPicks();
     const S = rptSlides();
+    $('#rxDock', el).innerHTML = RPT.ids.length ? `<div class="rx-dock-in"><span class="rx-dock-n">${icon('layers')}<b>${S.length}</b> شريحة · ${plural(RPT.ids.length, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')}</span><button type="button" class="btn gold" data-rshow>${icon('play')} عرض</button><button type="button" class="btn primary" data-rpptx2>${icon('download')} PowerPoint</button><button type="button" class="btn" data-rpdf>${icon('print')} PDF</button></div>` : '';
     $('#rpBar', el).innerHTML = RPT.ids.length ? `<div class="rp-bar-t"><span>${icon('layers')} ${plural(S.length, 'شريحة واحدة', 'شريحتان', 'شرائح', 'شريحة')} · ${plural(RPT.ids.length, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')}</span><span class="rp-tip">${icon('edit')} اضغط على أي نص قابل للتعديل في المعاينة</span></div>
       <div class="rp-nav"><button type="button" class="rp-play" data-rshow>${icon('play')} عرض</button>${S.map((x, k) => `<button type="button" data-goto="${k}" class="${x.t === 'pcover' ? 'pc' : ''}"><b>${k + 1}</b>${esc(x.nav)}</button>`).join('')}</div>` : '';
     $('#rpSlides', el).innerHTML = RPT.ids.length ? S.map((s, i) => `<div class="rs-frame" data-si="${i}">${specHTML(s)}</div>`).join('') : `<div class="panel">${emptyHTML({ ic: 'file', title: 'اختر شراكة أو أكثر', text: 'حدد الشراكات من القائمة، أو استخدم الفلاتر ثم «تحديد المعروضة» لاختيار مجموعة كاملة (مثل الساري أو المنتهي).' })}</div>`;
@@ -10993,8 +11141,13 @@ function renderReports(el, r) {
     if (s) { RPT.sections = s.checked ? [...new Set([...RPT.sections, s.dataset.rsec])] : RPT.sections.filter((x) => x !== s.dataset.rsec); drawDD(); drawPreview(); }
   });
   el.addEventListener('input', (e) => { const t = e.target.closest('[data-ek]'); if (t) RPT.ov[t.dataset.ek] = { v: t.innerText.replace(/\u00a0/g, ' ').replace(/\n{2,}/g, '\n').trim(), base: t.dataset.base }; });
-  el.addEventListener('keydown', (e) => { const t = e.target.closest && e.target.closest('[data-ek]'); if (t && e.key === 'Enter' && /^(rep\.|.*\.(name|hlv|hll|tag)$)/.test(t.dataset.ek)) e.preventDefault(); });
+  el.addEventListener('keydown', (e) => { const t = e.target.closest && e.target.closest('[data-ek]'); if (t && e.key === 'Enter' && /^(rep\.|.*\.(name|hlv|hll|tag|quote)$)/.test(t.dataset.ek)) e.preventDefault(); });
   el.addEventListener('click', async (e) => {
+    const pre = e.target.closest('[data-rpreset]');
+    if (pre) { const P_ = RPT_PRESETS.find((x) => x.k === pre.dataset.rpreset); RPT.sections = (P_.secs || RPT_SECTIONS.map((s) => s.k)).slice(); drawDD(); drawPreview(); toast(`قالب «${P_.t}»: ${RPT.sections.length} مكونات`); return; }
+    const qk = e.target.closest('[data-rquick]');
+    if (qk) { const f = RPT_QUICK.find((x) => x[0] === qk.dataset.rquick)[2]; RPT.ids = base().filter(f).map((p) => p.id); drawList(); drawPreview(); return; }
+    if (e.target.closest('[data-rpptx2]')) { const b0 = $('[data-rpptx]', el); if (b0) b0.click(); return; }
     if (e.target.closest('[data-rdd]')) { $('#rpDD', el).classList.toggle('open'); return; }
     if (!e.target.closest('#rpDD')) $('#rpDD', el).classList.remove('open');
     if (e.target.closest('[data-rpd]')) { $('#rpPD', el).classList.toggle('open'); if ($('#rpPD', el).classList.contains('open')) setTimeout(() => $('#rpQ', el).focus(), 30); return; }
@@ -11065,7 +11218,7 @@ async function exportReportPptx() {
         const src = cache[e.src] || (cache[e.src] = await fileDataURL(e.src)); if (!src) continue;
         const [iw, ih] = await imgSize(src);
         if (e.fit === 'contain') { const r = Math.min(e.w / iw, e.h / ih), w = iw * r, h = ih * r; const x = e.pos === 'right' ? e.x + e.w - w : e.x + (e.w - w) / 2; sl.addImage({ data: src, x: IN(x), y: IN(e.y + (e.h - h) / 2), w: IN(w), h: IN(h) }); }
-        else { const r = Math.max(e.w / iw, e.h / ih), w = iw * r, h = ih * r; sl.addImage({ data: src, x: IN(e.x), y: IN(e.y), w: IN(w), h: IN(h), sizing: { type: 'crop', x: IN((w - e.w) / 2), y: IN((h - e.h) * 0.38), w: IN(e.w), h: IN(e.h) } }); }
+        else { const r = Math.max(e.w / iw, e.h / ih), w = iw * r, h = ih * r; sl.addImage({ data: src, x: IN(e.x), y: IN(e.y), w: IN(w), h: IN(h), sizing: { type: 'crop', x: IN((w - e.w) / 2), y: IN((h - e.h) * 0.38), w: IN(e.w), h: IN(e.h) }, ...(e.round ? { rounding: true } : {}) }); }
       } else if (e.k === 'text') {
         const lines = e.text.split('\n');
         const al = e.align === 'center' ? 'center' : e.align === 'left' ? 'left' : 'right';
