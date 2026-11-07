@@ -1083,3 +1083,27 @@ html.dossier-open,html.dossier-open body{overflow:hidden}
 .ob-pi.warm small.w i{background:var(--gold)}.ob-pi.late small.w i{background:#C2552F}.ob-pi.ret small.w i{background:var(--danger)}
 .ob-pope{padding:14px;font-size:12.5px;color:var(--muted)}
 @media print{.ob-pop{display:none!important}}
+
+/* — خط المسار: أرقام بدل الدوائر، وكتابة أوضح — */
+.ob-mtrack{min-width:1200px}
+.ob-tks{height:58px;width:auto;display:flex;align-items:flex-end;justify-content:center}
+.ob-line::before{top:calc(12px + 58px + 13px)}
+.ob-cnt{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:46px;height:46px;padding:0 6px;border-radius:14px;background:var(--petrol-3);color:#fff;box-shadow:0 8px 16px -10px rgba(0,0,0,.45);position:relative;line-height:1}
+.ob-cnt::after{content:"";position:absolute;bottom:-5px;left:50%;margin-left:-5px;width:10px;height:10px;background:inherit;transform:rotate(45deg);border-radius:2px}
+.ob-cnt b{font-size:18px;font-weight:700;position:relative;z-index:1}
+.ob-cnt small{font-size:10px;opacity:.9;position:relative;z-index:1;margin-top:2px}
+.ob-cnt.warm{background:var(--gold);color:#2A1F06}
+.ob-cnt.late{background:#C2552F}
+.ob-cnt.ret{background:var(--danger)}
+.ob-st.pop-on .ob-cnt,.ob-st:hover .ob-cnt{transform:translateY(-2px);transition:transform .2s}
+.ob-pb{padding:8px 12px;align-items:flex-start}
+.ob-pb b{white-space:normal;overflow:visible;text-overflow:clip;font-size:13.5px;line-height:1.45;color:var(--ink)}
+.ob-pb span{padding-top:2px}
+.ob-sl b{font-size:13px;line-height:1.5;color:var(--ink)}
+.ob-sl small{font-size:11.5px;color:var(--muted)}
+.ob-dot em{font-size:12px}
+.ob-st{padding:4px 4px 8px}
+[data-design="board"] .ob-cnt{border-radius:3px}
+:root[data-design="board"][data-theme="dark"] .ob{--ob-deep:#0F1D24;--ob-deep2:#18323D;--ob-glow:#8FD3E0}
+:root[data-design="board"][data-theme="dark"] .ob-t:hover{background:#16303A}
+:root[data-design="board"][data-theme="dark"] .ob-yl{stroke:#0F1D24}

@@ -212,14 +212,14 @@ function obMetro(P) {
     const its = (at[s.id] || []).sort((a, b) => (b.days || 0) - (a.days || 0));
     return `<li class="ob-st ${its.length ? 'has' : ''}" style="--ph:${WF_PHASES.findIndex((p) => p.id === s.ph)}" data-obpop tabindex="0" aria-label="الخطوة ${s.n}: ${esc(s.t)} — ${its.length}">
       <template class="ob-popt">${obPopHTML(`${s.n}. ${s.t}`, `لدى ${wfActorName(s.actor)}${s.ref ? ` · البند ${s.ref} في إجراء المذكرات` : ''}`, its)}</template>
-      <div class="ob-tks">${its.slice(0, MAX).map((x) => `<a class="ob-tk ${x.returned ? 'ret' : (x.days || 0) > lim ? 'late' : (x.days || 0) > warnD ? 'warm' : ''}" href="${x.href}" ${tipAttr(`<b>${esc(x.name)}</b><br>${s.n}. ${esc(s.t)}<br>لدى ${esc(x.actor)}${x.days !== null ? ` · ${x.days ? 'منذ ' + plural(x.days, 'يوم', 'يومين', 'أيام', 'يومًا') : 'اليوم'}` : ''}${x.returned ? '<br>مُعادة للاستكمال' : ''}`)} aria-label="${esc(x.name)}">${esc(monogram(x.name))}</a>`).join('')}${its.length > MAX ? `<a class="ob-tk more" href="#/tasks" dir="ltr">+${its.length - MAX}</a>` : ''}</div>
+      <div class="ob-tks">${its.length ? (() => { const w = its.some((x) => x.returned) ? 'ret' : its.some((x) => (x.days || 0) > lim) ? 'late' : its.some((x) => (x.days || 0) > warnD) ? 'warm' : ''; return `<span class="ob-cnt ${w}" aria-hidden="true"><b>${its.length}</b><small>${its.length === 1 ? 'عنصر' : 'عناصر'}</small></span>`; })() : ''}</div>
       <span class="ob-dot"><em>${s.n}</em></span>
       <div class="ob-sl"><b>${esc(s.t)}</b><small>${esc(wfActorName(s.actor))}</small></div>
     </li>`;
   }).join('');
   const phases = WF_PHASES.map((ph, i) => { const n = WF_STEPS.filter((s) => s.ph === ph.id).length, c = P.phases[i].items.length; return `<div class="ob-pb" style="--n:${n};--i:${i}" data-obpop tabindex="0"><template class="ob-popt">${obPopHTML(ph.t, `المرحلة ${pad(i + 1)} · ${plural(n, 'خطوة واحدة', 'خطوتان', 'خطوات', 'خطوة')}`, P.phases[i].items, true)}</template><span>${pad(i + 1)}</span><b>${esc(ph.t)}</b><em>${c}</em></div>`; }).join('');
   return `<section class="ob-metro" id="obMetro">
-    <header class="ob-sh"><div><h2>${icon('layers')} خط المسار</h2><p>كل طلب ومذكرة في محطته الحالية من الثلاث عشرة خطوة المعتمدة. اللون بمدة الانتظار، والضغط يفتح الخطوة مباشرة.</p></div>
+    <header class="ob-sh"><div><h2>${icon('layers')} خط المسار</h2><p>الرقم فوق كل محطة عدد الطلبات والمذكرات الواقفة فيها، ولونه بأطول مدة انتظار. قف على المحطة أو المرحلة لعرض التفاصيل وفتح أي عنصر.</p></div>
       <div class="ob-mlg"><span><i class="f"></i>حديثة</span><span><i class="w"></i>أكثر من ${warnD} أيام</span><span><i class="l"></i>أكثر من ${lim} يومًا</span><span><i class="r"></i>مُعادة</span><a class="linkbtn" href="#/process">${icon('layers')} مخطط المسار</a></div></header>
     <div class="ob-mscroll"><div class="ob-mtrack">
       <div class="ob-pbs">${phases}</div>
