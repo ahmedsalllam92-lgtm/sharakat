@@ -121,7 +121,7 @@ function renderPartner(el, r) {
   const pr = partnerById(r.params.id);
   if (!pr || (pr.demo && !showDemo())) { el.innerHTML = emptyHTML({ ic: 'search', title: 'لم يُعثر على الجهة', actions: '<a class="btn" href="#/partners">سجل الجهات</a>' }); return; }
   const s = partnerStats(pr);
-  el.innerHTML = `<div class="ph"><div class="row" style="gap:18px;align-items:center">${plateHTML(pr, 96)}<div><h1>${esc(pr.name)} ${demoTag(pr)}</h1><p>${esc(pr.sector || 'قطاع غير محدد')}${(pr.aliases || []).length ? ` — يُعرف أيضًا بـ: ${esc(pr.aliases.join('، '))}` : ''}</p>${pr.website ? `<a href="${esc(pr.website)}" target="_blank" rel="noopener" dir="ltr" class="small">${esc(pr.website)}</a>` : ''}</div></div>
+  el.innerHTML = `<div class="ph"><div class="row" style="gap:18px;align-items:center">${plateEditHTML(pr, 96, can('manage.partners'))}<div><h1>${esc(pr.name)} ${demoTag(pr)}</h1><p>${esc(pr.sector || 'قطاع غير محدد')}${(pr.aliases || []).length ? ` — يُعرف أيضًا بـ: ${esc(pr.aliases.join('، '))}` : ''}</p>${pr.website ? `<a href="${esc(pr.website)}" target="_blank" rel="noopener" dir="ltr" class="small">${esc(pr.website)}</a>` : ''}</div></div>
     <div class="ph-actions"><a class="btn ghost" href="#/partners">${icon('arrowR')} الجهات</a>${can('manage.partners') ? `<button class="btn" data-editp>${icon('edit')} تعديل</button>` : ''}${can('edit.partnership') ? `<a class="btn primary" href="#/partnerships/new">${icon('plus')} شراكة جديدة</a>` : ''}</div></div>
     <div class="dgrid"><div class="panel c8"><div class="panel-h"><h3>شراكات الجهة</h3><span class="sub">${s.ps.length}</span></div><div class="panel-b">
       ${s.ps.length ? regTable(s.ps) : '<p class="muted small">لا ترتبط بالجهة شراكات مسجلة.</p>'}</div></div>
@@ -129,6 +129,7 @@ function renderPartner(el, r) {
       ${s.props.length ? `<div class="acts">${s.props.map((x) => `<a class="act" href="#/proposals/${x.id}" style="grid-template-columns:1fr auto"><span><div class="t">${esc(x.ref)}</div><div class="d">${esc(x.department)}</div></span>${propChip(x.status)}</a>`).join('')}</div>` : '<p class="muted small">لا توجد مقترحات بهذه الجهة.</p>'}
       ${pr.notes ? `<div class="note" style="margin-top:14px">${icon('info')}<span>${esc(pr.notes)}</span></div>` : ''}</div></div></div>`;
   hydrateFiles(el);
+  bindLogoUpload(el, () => route());
   el.onclick = async (e) => {
     if (e.target.closest('[data-editp]')) { const x = await partnerDialog(pr); if (x) route(); return; }
     const row = e.target.closest('[data-row]'); if (row) go('#/partnerships/' + row.dataset.row);

@@ -12,6 +12,29 @@ function monogram(name) {
   return (ws[0] || '').charAt(0);
 }
 function toneFor(partner) { const s = partner && partner.sector; return s === 'خاص' ? 'mist' : s === 'غير ربحي' ? 'sand' : 'dark'; }
+const logoOrMono = (pr, name) => (pr && pr.logoFileId ? `<img class="lg" data-file="${esc(pr.logoFileId)}" alt="${esc(pr.name || name || '')}">` : esc(monogram(name || (pr && pr.name) || '')));
+function plateEditHTML(pr, size, canEdit) {
+  if (!pr || !canEdit) return plateHTML(pr, size);
+  return `<div class="plate-ed">${plateHTML(pr, size)}<label class="plate-up no-print" title="${pr.logoFileId ? 'تغيير شعار الجهة' : 'رفع شعار الجهة'}">${icon('upload')}<span>${pr.logoFileId ? 'تغيير الشعار' : 'رفع الشعار'}</span><input type="file" accept="image/*" hidden data-logoup="${esc(pr.id)}"></label>${pr.logoFileId ? `<button type="button" class="plate-x no-print" data-logox="${esc(pr.id)}" title="إزالة الشعار" aria-label="إزالة الشعار">${icon('x')}</button>` : ''}</div>`;
+}
+async function setPartnerLogo(prId, file) {
+  const pr = partnerById(prId); if (!pr) return false;
+  if (file) {
+    if (!/^image\//.test(file.type)) { toast('الشعار يجب أن يكون صورة (PNG أو SVG أو JPG).', 'err'); return false; }
+    try { const f = await saveUpload(file); pr.logoFileId = f.id; } catch (e) { toast(e.message, 'err'); return false; }
+  } else {
+    if (!(await confirmDlg(`إزالة شعار «${esc(pr.name)}»؟ تعود الشارة إلى الحروف الأولى.`, { title: 'إزالة الشعار', ok: 'إزالة', danger: true }))) return false;
+    pr.logoFileId = null;
+  }
+  await Repo.save('partners', pr);
+  await Repo.log('partner.update', 'partner', pr.id, pr.name, file ? 'رفع شعار الجهة' : 'إزالة شعار الجهة');
+  toast(file ? 'رُفع الشعار، ويظهر الآن في كل صفحات المنصة' : 'أُزيل الشعار');
+  return true;
+}
+function bindLogoUpload(root, after) {
+  root.addEventListener('change', async (e) => { const i = e.target.closest('[data-logoup]'); if (!i) return; e.stopPropagation(); const f = i.files[0]; i.value = ''; if (f && await setPartnerLogo(i.dataset.logoup, f)) after(); }, true);
+  root.addEventListener('click', async (e) => { const x = e.target.closest('[data-logox]'); if (!x) return; e.preventDefault(); e.stopPropagation(); if (await setPartnerLogo(x.dataset.logox, null)) after(); }, true);
+}
 function plateHTML(partner, size = 56) {
   if (!partner) return `<div class="plate typo s${size}"><span class="pt">—</span></div>`;
   if (partner.logoFileId) return `<div class="plate s${size}"><img data-file="${esc(partner.logoFileId)}" alt="${esc(partner.name)}"></div>`;

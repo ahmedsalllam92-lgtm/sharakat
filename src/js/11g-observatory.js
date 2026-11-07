@@ -272,7 +272,7 @@ function obMosaic(nd) {
     <header class="ob-sh"><div><h2>${icon('grid')} خريطة الشركاء</h2><p>كل بلاطة شراكة بلون حالتها، مجمّعة حسب القطاع. اضغط القطاع لتصفية اللوحة، أو البلاطة لفتح الشراكة.</p></div></header>
     <div class="ob-mz">${order.map((s) => `<div class="ob-mzc">
       <button type="button" class="ob-mzh ${(App.dashF.sector || []).includes(s) ? 'on' : ''}" data-cf="sector|${esc(s)}"><b>${esc(s)}</b><em>${g[s].length}</em></button>
-      <div class="ob-mzt">${g[s].sort((a, b) => rank(a) - rank(b)).map((p) => { const pr = partnerById(p.partnerId) || {}; const st = pStatus(p); return `<a class="ob-tile" href="#/partnerships/${p.id}" style="--c:${ST_VAR(st)}" ${tipAttr(`<b>${esc(partnerName(p))}</b><br>${esc(statusLabel(st))}${pr.domain ? ' · ' + esc(pr.domain) : ''}${p.ptype ? '<br>' + esc(p.ptype) : ''}`)}><span class="mg">${esc(monogram(partnerName(p)))}</span><small>${esc(partnerName(p))}</small>${p.ptype && p.ptype.includes('استراتيجي') ? `<i class="star" title="شريك استراتيجي">${icon('star')}</i>` : ''}</a>`; }).join('')}</div></div>`).join('')}</div>
+      <div class="ob-mzt">${g[s].sort((a, b) => rank(a) - rank(b)).map((p) => { const pr = partnerById(p.partnerId) || {}; const st = pStatus(p); return `<a class="ob-tile" href="#/partnerships/${p.id}" style="--c:${ST_VAR(st)}" ${tipAttr(`<b>${esc(partnerName(p))}</b><br>${esc(statusLabel(st))}${pr.domain ? ' · ' + esc(pr.domain) : ''}${p.ptype ? '<br>' + esc(p.ptype) : ''}`)}><span class="mg ${pr.logoFileId ? 'has-lg' : ''}">${logoOrMono(pr, partnerName(p))}</span><small>${esc(partnerName(p))}</small>${p.ptype && p.ptype.includes('استراتيجي') ? `<i class="star" title="شريك استراتيجي">${icon('star')}</i>` : ''}</a>`; }).join('')}</div></div>`).join('')}</div>
   </section>`;
 }
 
@@ -329,7 +329,7 @@ function obPopHTML(title, sub, items, byStep = false) {
     const facts = isP
       ? [pSector(r), r.ptype, pr.domain, r.endDate ? 'حتى ' + fmtDate(r.endDate, 'short') : ''].filter(Boolean)
       : [r.department, r.partnerSector, r.requesterName].filter(Boolean);
-    return `<a class="ob-pi ${tone}" href="${x.href}"><span class="ob-pim">${esc(monogram(x.name))}</span>
+    return `<a class="ob-pi ${tone}" href="${x.href}"><span class="ob-pim ${isP && pr.logoFileId ? 'has-lg' : ''}">${isP ? logoOrMono(pr, x.name) : esc(monogram(x.name))}</span>
       <span class="ob-pib"><b>${esc(x.name)} ${x.demo ? '<span class="demo-tag">تجريبي</span>' : ''}</b>
         <small>${esc(x.sub || '')}${isP ? ` · ${esc(statusLabel(pStatus(r)))}` : ` · ${esc(propStatusLabel(r.status))}`}${byStep ? ` · خطوة ${x.step.n}: ${esc(x.step.t)}` : ''}</small>
         ${facts.length ? `<small class="f">${facts.map(esc).join(' · ')}</small>` : ''}

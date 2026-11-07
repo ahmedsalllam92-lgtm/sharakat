@@ -4539,6 +4539,23 @@ html.dossier-open,html.dossier-open body{overflow:hidden}
 :root[data-design="board"][data-theme="dark"] .ob{--ob-deep:#0F1D24;--ob-deep2:#18323D;--ob-glow:#8FD3E0}
 :root[data-design="board"][data-theme="dark"] .ob-t:hover{background:#16303A}
 :root[data-design="board"][data-theme="dark"] .ob-yl{stroke:#0F1D24}
+
+/* — شعار الجهة: الرفع من الشارة، والظهور في كل الأماكن — */
+.plate-ed{position:relative;display:inline-flex;flex:none}
+.plate-up{position:absolute;inset:auto 6px 6px 6px;display:flex;align-items:center;justify-content:center;gap:5px;padding:5px 6px;border-radius:8px;background:rgba(10,30,26,.82);color:#fff;font-size:11.5px;font-weight:600;cursor:pointer;opacity:0;transform:translateY(4px);transition:opacity .18s,transform .18s;backdrop-filter:blur(4px)}
+.plate-up .ic{width:13px;height:13px}
+.plate-ed:hover .plate-up,.plate-ed:focus-within .plate-up{opacity:1;transform:none}
+.plate-x{position:absolute;top:-8px;left:-8px;width:26px;height:26px;border-radius:50%;border:2px solid var(--paper);background:var(--danger);color:#fff;display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .18s}
+.plate-x .ic{width:13px;height:13px}
+.plate-ed:hover .plate-x,.plate-ed:focus-within .plate-x{opacity:1}
+@media (hover:none){.plate-up,.plate-x{opacity:1;transform:none}}
+.plate img{width:100%;height:100%;object-fit:contain;padding:12%;background:#fff;border-radius:inherit}
+img.lg{width:100%;height:100%;object-fit:contain;display:block}
+.ob-tile .mg.has-lg,.ob-pim.has-lg{background:#fff;padding:4px;border:1px solid var(--line);overflow:hidden}
+.bo-net-n .lgbg{fill:#fff}
+.ds-cv-lg{position:absolute;margin-top:-62px;margin-inline-start:20px;width:96px;height:96px;background:#fff;border:1px solid #E2DCCB;border-radius:6px;padding:10px;box-shadow:0 10px 24px -14px rgba(0,0,0,.4)}
+.ds-cv-lg img{width:100%;height:100%;object-fit:contain}
+.ds-cover{position:relative}
 </style>
 </head>
 <body>
@@ -5489,7 +5506,7 @@ async function hydrateFiles(root = document) {
   const els = $$('[data-file]', root);
   await Promise.all(els.map(async (el) => {
     const u = await FileCache.url(el.dataset.file);
-    if (u) { el.src = u; el.removeAttribute('data-file'); }
+    if (u) { if (el.tagName.toLowerCase() === 'image') el.setAttribute('href', u); else el.src = u; el.removeAttribute('data-file'); }
     else if (el.tagName === 'IMG') { el.style.display = 'none'; }
   }));
 }
@@ -6132,6 +6149,29 @@ function monogram(name) {
   return (ws[0] || '').charAt(0);
 }
 function toneFor(partner) { const s = partner && partner.sector; return s === 'خاص' ? 'mist' : s === 'غير ربحي' ? 'sand' : 'dark'; }
+const logoOrMono = (pr, name) => (pr && pr.logoFileId ? `<img class="lg" data-file="${esc(pr.logoFileId)}" alt="${esc(pr.name || name || '')}">` : esc(monogram(name || (pr && pr.name) || '')));
+function plateEditHTML(pr, size, canEdit) {
+  if (!pr || !canEdit) return plateHTML(pr, size);
+  return `<div class="plate-ed">${plateHTML(pr, size)}<label class="plate-up no-print" title="${pr.logoFileId ? 'تغيير شعار الجهة' : 'رفع شعار الجهة'}">${icon('upload')}<span>${pr.logoFileId ? 'تغيير الشعار' : 'رفع الشعار'}</span><input type="file" accept="image/*" hidden data-logoup="${esc(pr.id)}"></label>${pr.logoFileId ? `<button type="button" class="plate-x no-print" data-logox="${esc(pr.id)}" title="إزالة الشعار" aria-label="إزالة الشعار">${icon('x')}</button>` : ''}</div>`;
+}
+async function setPartnerLogo(prId, file) {
+  const pr = partnerById(prId); if (!pr) return false;
+  if (file) {
+    if (!/^image\//.test(file.type)) { toast('الشعار يجب أن يكون صورة (PNG أو SVG أو JPG).', 'err'); return false; }
+    try { const f = await saveUpload(file); pr.logoFileId = f.id; } catch (e) { toast(e.message, 'err'); return false; }
+  } else {
+    if (!(await confirmDlg(`إزالة شعار «${esc(pr.name)}»؟ تعود الشارة إلى الحروف الأولى.`, { title: 'إزالة الشعار', ok: 'إزالة', danger: true }))) return false;
+    pr.logoFileId = null;
+  }
+  await Repo.save('partners', pr);
+  await Repo.log('partner.update', 'partner', pr.id, pr.name, file ? 'رفع شعار الجهة' : 'إزالة شعار الجهة');
+  toast(file ? 'رُفع الشعار، ويظهر الآن في كل صفحات المنصة' : 'أُزيل الشعار');
+  return true;
+}
+function bindLogoUpload(root, after) {
+  root.addEventListener('change', async (e) => { const i = e.target.closest('[data-logoup]'); if (!i) return; e.stopPropagation(); const f = i.files[0]; i.value = ''; if (f && await setPartnerLogo(i.dataset.logoup, f)) after(); }, true);
+  root.addEventListener('click', async (e) => { const x = e.target.closest('[data-logox]'); if (!x) return; e.preventDefault(); e.stopPropagation(); if (await setPartnerLogo(x.dataset.logox, null)) after(); }, true);
+}
 function plateHTML(partner, size = 56) {
   if (!partner) return `<div class="plate typo s${size}"><span class="pt">—</span></div>`;
   if (partner.logoFileId) return `<div class="plate s${size}"><img data-file="${esc(partner.logoFileId)}" alt="${esc(partner.name)}"></div>`;
@@ -7779,7 +7819,7 @@ function obMosaic(nd) {
     <header class="ob-sh"><div><h2>${icon('grid')} خريطة الشركاء</h2><p>كل بلاطة شراكة بلون حالتها، مجمّعة حسب القطاع. اضغط القطاع لتصفية اللوحة، أو البلاطة لفتح الشراكة.</p></div></header>
     <div class="ob-mz">${order.map((s) => `<div class="ob-mzc">
       <button type="button" class="ob-mzh ${(App.dashF.sector || []).includes(s) ? 'on' : ''}" data-cf="sector|${esc(s)}"><b>${esc(s)}</b><em>${g[s].length}</em></button>
-      <div class="ob-mzt">${g[s].sort((a, b) => rank(a) - rank(b)).map((p) => { const pr = partnerById(p.partnerId) || {}; const st = pStatus(p); return `<a class="ob-tile" href="#/partnerships/${p.id}" style="--c:${ST_VAR(st)}" ${tipAttr(`<b>${esc(partnerName(p))}</b><br>${esc(statusLabel(st))}${pr.domain ? ' · ' + esc(pr.domain) : ''}${p.ptype ? '<br>' + esc(p.ptype) : ''}`)}><span class="mg">${esc(monogram(partnerName(p)))}</span><small>${esc(partnerName(p))}</small>${p.ptype && p.ptype.includes('استراتيجي') ? `<i class="star" title="شريك استراتيجي">${icon('star')}</i>` : ''}</a>`; }).join('')}</div></div>`).join('')}</div>
+      <div class="ob-mzt">${g[s].sort((a, b) => rank(a) - rank(b)).map((p) => { const pr = partnerById(p.partnerId) || {}; const st = pStatus(p); return `<a class="ob-tile" href="#/partnerships/${p.id}" style="--c:${ST_VAR(st)}" ${tipAttr(`<b>${esc(partnerName(p))}</b><br>${esc(statusLabel(st))}${pr.domain ? ' · ' + esc(pr.domain) : ''}${p.ptype ? '<br>' + esc(p.ptype) : ''}`)}><span class="mg ${pr.logoFileId ? 'has-lg' : ''}">${logoOrMono(pr, partnerName(p))}</span><small>${esc(partnerName(p))}</small>${p.ptype && p.ptype.includes('استراتيجي') ? `<i class="star" title="شريك استراتيجي">${icon('star')}</i>` : ''}</a>`; }).join('')}</div></div>`).join('')}</div>
   </section>`;
 }
 
@@ -7836,7 +7876,7 @@ function obPopHTML(title, sub, items, byStep = false) {
     const facts = isP
       ? [pSector(r), r.ptype, pr.domain, r.endDate ? 'حتى ' + fmtDate(r.endDate, 'short') : ''].filter(Boolean)
       : [r.department, r.partnerSector, r.requesterName].filter(Boolean);
-    return `<a class="ob-pi ${tone}" href="${x.href}"><span class="ob-pim">${esc(monogram(x.name))}</span>
+    return `<a class="ob-pi ${tone}" href="${x.href}"><span class="ob-pim ${isP && pr.logoFileId ? 'has-lg' : ''}">${isP ? logoOrMono(pr, x.name) : esc(monogram(x.name))}</span>
       <span class="ob-pib"><b>${esc(x.name)} ${x.demo ? '<span class="demo-tag">تجريبي</span>' : ''}</b>
         <small>${esc(x.sub || '')}${isP ? ` · ${esc(statusLabel(pStatus(r)))}` : ` · ${esc(propStatusLabel(r.status))}`}${byStep ? ` · خطوة ${x.step.n}: ${esc(x.step.t)}` : ''}</small>
         ${facts.length ? `<small class="f">${facts.map(esc).join(' · ')}</small>` : ''}
@@ -8024,7 +8064,7 @@ function renderPartnership(el, r) {
   el.innerHTML = `
   <div class="dhead" data-tour="detail-head">${coverHTML(p.id + (pr ? pr.name : ''), p.coverFileId, { W: 1600, H: 420, levels: 18, cols: 90 })}<div class="shade"></div>
     <a class="back no-print" href="#/partnerships">${icon('arrowR')} سجل الشراكات</a>
-    <div class="dhead-in">${plateHTML(pr, 120)}
+    <div class="dhead-in">${plateEditHTML(pr, 120, canEdit && can('manage.partners'))}
       <div class="grow"><h1>${esc(pr ? pr.name : p.title)} ${demoTag(p)}</h1>
         <div class="sub"><span class="code" style="color:inherit">${esc(p.code || '')}</span>${p.title && pr && p.title !== pr.name ? `<span>${esc(p.title)}</span>` : ''}<span>${esc(p.classification || 'تصنيف غير محدد')}</span>${pSector(p) ? `<span>القطاع ${esc(pSector(p))}</span>` : ''}</div>
         <div class="tagline">${statusChip(p)}${p.ptype ? `<span class="chip plain cat">${esc(p.ptype)}</span>` : ''}${pr && pr.domain ? `<span class="chip plain cat">${esc(pr.domain)}</span>` : ''}${(p.categories || []).map((c) => `<span class="chip plain cat">${esc(c)}</span>`).join('')}${p.activation ? `<span class="chip plain">${esc(p.activation)}</span>` : ''}${p.public && !p.isDraft ? '<span class="chip plain">منشورة في الواجهة</span>' : ''}${featured ? '<span class="chip gold plain">مميزة في الرئيسية</span>' : ''}</div></div>
@@ -8098,6 +8138,7 @@ function renderPartnership(el, r) {
       <p class="xs muted" style="margin-top:10px">لا تظهر بيانات التواصل والمستندات الداخلية في الواجهة التعريفية.</p></div>` : ''}
   </aside></div>`;
   hydrateFiles(el);
+  bindLogoUpload(el, () => rerenderKeep());
   bindWf(el, 'partnership', p);
   bindProfile(el, p);
   if (r.query && r.query.wf) setTimeout(() => { const w = $('#wf', el); if (w) window.scrollTo({ top: w.getBoundingClientRect().top + scrollY - 130 }); const c = wfStateOf('partnership', p).cur; if (c && wfCan(c, 'partnership', p)) wfStepDialog('partnership', p, c.id, () => route()); }, 200);
@@ -8681,6 +8722,7 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
   const coverHTMLs = `<section class="ds-cover">
     <div class="ds-cv-top">${logo ? `<img src="${logo}" alt="">` : ''}<div><b>${esc(o.name)}</b><span>${esc(o.dept)}</span></div><span class="ds-cv-kind">ملف الشراكة الشامل</span></div>
     ${cover ? `<div class="ds-cv-img"><img src="${cover}" alt=""></div>` : '<div class="ds-cv-rule"></div>'}
+    ${pr.logoFileId ? `<div class="ds-cv-lg"><img src="${await url(pr.logoFileId)}" alt=""></div>` : ''}
     <div class="ds-cv-t"><span class="ds-code">${esc(p.code || '')}</span><h1>${esc(name)}</h1>${p.title && p.title !== name ? `<p>${esc(p.title)}</p>` : ''}</div>
     <div class="ds-cv-facts">
       <div><span>الحالة</span><b>${esc(statusLabel(pStatus(p)))}</b></div>
@@ -8886,7 +8928,7 @@ function renderPartner(el, r) {
   const pr = partnerById(r.params.id);
   if (!pr || (pr.demo && !showDemo())) { el.innerHTML = emptyHTML({ ic: 'search', title: 'لم يُعثر على الجهة', actions: '<a class="btn" href="#/partners">سجل الجهات</a>' }); return; }
   const s = partnerStats(pr);
-  el.innerHTML = `<div class="ph"><div class="row" style="gap:18px;align-items:center">${plateHTML(pr, 96)}<div><h1>${esc(pr.name)} ${demoTag(pr)}</h1><p>${esc(pr.sector || 'قطاع غير محدد')}${(pr.aliases || []).length ? ` — يُعرف أيضًا بـ: ${esc(pr.aliases.join('، '))}` : ''}</p>${pr.website ? `<a href="${esc(pr.website)}" target="_blank" rel="noopener" dir="ltr" class="small">${esc(pr.website)}</a>` : ''}</div></div>
+  el.innerHTML = `<div class="ph"><div class="row" style="gap:18px;align-items:center">${plateEditHTML(pr, 96, can('manage.partners'))}<div><h1>${esc(pr.name)} ${demoTag(pr)}</h1><p>${esc(pr.sector || 'قطاع غير محدد')}${(pr.aliases || []).length ? ` — يُعرف أيضًا بـ: ${esc(pr.aliases.join('، '))}` : ''}</p>${pr.website ? `<a href="${esc(pr.website)}" target="_blank" rel="noopener" dir="ltr" class="small">${esc(pr.website)}</a>` : ''}</div></div>
     <div class="ph-actions"><a class="btn ghost" href="#/partners">${icon('arrowR')} الجهات</a>${can('manage.partners') ? `<button class="btn" data-editp>${icon('edit')} تعديل</button>` : ''}${can('edit.partnership') ? `<a class="btn primary" href="#/partnerships/new">${icon('plus')} شراكة جديدة</a>` : ''}</div></div>
     <div class="dgrid"><div class="panel c8"><div class="panel-h"><h3>شراكات الجهة</h3><span class="sub">${s.ps.length}</span></div><div class="panel-b">
       ${s.ps.length ? regTable(s.ps) : '<p class="muted small">لا ترتبط بالجهة شراكات مسجلة.</p>'}</div></div>
@@ -8894,6 +8936,7 @@ function renderPartner(el, r) {
       ${s.props.length ? `<div class="acts">${s.props.map((x) => `<a class="act" href="#/proposals/${x.id}" style="grid-template-columns:1fr auto"><span><div class="t">${esc(x.ref)}</div><div class="d">${esc(x.department)}</div></span>${propChip(x.status)}</a>`).join('')}</div>` : '<p class="muted small">لا توجد مقترحات بهذه الجهة.</p>'}
       ${pr.notes ? `<div class="note" style="margin-top:14px">${icon('info')}<span>${esc(pr.notes)}</span></div>` : ''}</div></div></div>`;
   hydrateFiles(el);
+  bindLogoUpload(el, () => route());
   el.onclick = async (e) => {
     if (e.target.closest('[data-editp]')) { const x = await partnerDialog(pr); if (x) route(); return; }
     const row = e.target.closest('[data-row]'); if (row) go('#/partnerships/' + row.dataset.row);
@@ -11526,7 +11569,7 @@ function boChNetwork(X) {
       const mx = cx + (x - cx) * 0.45 + (y - cy) * 0.12, my = cy + (y - cy) * 0.45 - (x - cx) * 0.06;
       links += `<path d="M${cx} ${cy}Q${mx.toFixed(1)} ${my.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}" class="bo-net-ln ${live ? 'live' : ''}" style="stroke:${SEC_VAR(s)};stroke-width:${(1.2 + e.ps.length * 1.1).toFixed(1)};--d:${k}"/>`;
       const href = e.ps.length > 1 && can('view.partners') ? '#/partners/' + e.pr.id : '#/partnerships/' + e.ps[0].id;
-      nodes += `<g class="bo-net-n" data-href="${href}" ${tipAttr(`<b>${esc(e.pr.name)}</b><br>${esc(s)} — ${plural(e.ps.length, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')}<br>${esc(statusLabel(st))}${e.pr.demo ? ' — تجريبي' : ''}`)} transform="translate(${x.toFixed(1)},${y.toFixed(1)})"><circle r="${r + 4}" class="halo" style="stroke:${stC(st)}"/><circle r="${r}" class="core" style="fill:${SEC_VAR(s)}"/><text y="4" text-anchor="middle" class="mono">${esc(monogram(e.pr.name))}</text></g>`;
+      nodes += `<g class="bo-net-n" data-href="${href}" ${tipAttr(`<b>${esc(e.pr.name)}</b><br>${esc(s)} — ${plural(e.ps.length, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')}<br>${esc(statusLabel(st))}${e.pr.demo ? ' — تجريبي' : ''}`)} transform="translate(${x.toFixed(1)},${y.toFixed(1)})"><circle r="${r + 4}" class="halo" style="stroke:${stC(st)}"/><circle r="${r}" class="core" style="fill:${SEC_VAR(s)}"/>${e.pr.logoFileId ? `<circle r="${r - 1}" class="lgbg"/><image data-file="${esc(e.pr.logoFileId)}" x="${-(r - 4)}" y="${-(r - 4)}" width="${2 * (r - 4)}" height="${2 * (r - 4)}" preserveAspectRatio="xMidYMid meet"/>` : `<text y="4" text-anchor="middle" class="mono">${esc(monogram(e.pr.name))}</text>`}</g>`;
       const out = Math.cos(ang) > 0.25 ? 'start' : Math.cos(ang) < -0.25 ? 'end' : 'middle';
       const nm = e.pr.name.length > 22 ? e.pr.name.slice(0, 21) + '…' : e.pr.name;
       const ox = out === 'start' ? r + 9 : out === 'end' ? -(r + 9) : 0, oy = out === 'middle' ? (Math.sin(ang) > 0 ? r + 17 : -(r + 9)) : 4;

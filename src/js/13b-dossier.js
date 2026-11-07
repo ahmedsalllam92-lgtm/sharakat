@@ -220,6 +220,7 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
   const coverHTMLs = `<section class="ds-cover">
     <div class="ds-cv-top">${logo ? `<img src="${logo}" alt="">` : ''}<div><b>${esc(o.name)}</b><span>${esc(o.dept)}</span></div><span class="ds-cv-kind">ملف الشراكة الشامل</span></div>
     ${cover ? `<div class="ds-cv-img"><img src="${cover}" alt=""></div>` : '<div class="ds-cv-rule"></div>'}
+    ${pr.logoFileId ? `<div class="ds-cv-lg"><img src="${await url(pr.logoFileId)}" alt=""></div>` : ''}
     <div class="ds-cv-t"><span class="ds-code">${esc(p.code || '')}</span><h1>${esc(name)}</h1>${p.title && p.title !== name ? `<p>${esc(p.title)}</p>` : ''}</div>
     <div class="ds-cv-facts">
       <div><span>الحالة</span><b>${esc(statusLabel(pStatus(p)))}</b></div>

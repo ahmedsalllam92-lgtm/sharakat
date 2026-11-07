@@ -72,7 +72,7 @@ async function hydrateFiles(root = document) {
   const els = $$('[data-file]', root);
   await Promise.all(els.map(async (el) => {
     const u = await FileCache.url(el.dataset.file);
-    if (u) { el.src = u; el.removeAttribute('data-file'); }
+    if (u) { if (el.tagName.toLowerCase() === 'image') el.setAttribute('href', u); else el.src = u; el.removeAttribute('data-file'); }
     else if (el.tagName === 'IMG') { el.style.display = 'none'; }
   }));
 }

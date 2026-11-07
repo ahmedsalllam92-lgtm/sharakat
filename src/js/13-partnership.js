@@ -20,7 +20,7 @@ function renderPartnership(el, r) {
   el.innerHTML = `
   <div class="dhead" data-tour="detail-head">${coverHTML(p.id + (pr ? pr.name : ''), p.coverFileId, { W: 1600, H: 420, levels: 18, cols: 90 })}<div class="shade"></div>
     <a class="back no-print" href="#/partnerships">${icon('arrowR')} سجل الشراكات</a>
-    <div class="dhead-in">${plateHTML(pr, 120)}
+    <div class="dhead-in">${plateEditHTML(pr, 120, canEdit && can('manage.partners'))}
       <div class="grow"><h1>${esc(pr ? pr.name : p.title)} ${demoTag(p)}</h1>
         <div class="sub"><span class="code" style="color:inherit">${esc(p.code || '')}</span>${p.title && pr && p.title !== pr.name ? `<span>${esc(p.title)}</span>` : ''}<span>${esc(p.classification || 'تصنيف غير محدد')}</span>${pSector(p) ? `<span>القطاع ${esc(pSector(p))}</span>` : ''}</div>
         <div class="tagline">${statusChip(p)}${p.ptype ? `<span class="chip plain cat">${esc(p.ptype)}</span>` : ''}${pr && pr.domain ? `<span class="chip plain cat">${esc(pr.domain)}</span>` : ''}${(p.categories || []).map((c) => `<span class="chip plain cat">${esc(c)}</span>`).join('')}${p.activation ? `<span class="chip plain">${esc(p.activation)}</span>` : ''}${p.public && !p.isDraft ? '<span class="chip plain">منشورة في الواجهة</span>' : ''}${featured ? '<span class="chip gold plain">مميزة في الرئيسية</span>' : ''}</div></div>
@@ -94,6 +94,7 @@ function renderPartnership(el, r) {
       <p class="xs muted" style="margin-top:10px">لا تظهر بيانات التواصل والمستندات الداخلية في الواجهة التعريفية.</p></div>` : ''}
   </aside></div>`;
   hydrateFiles(el);
+  bindLogoUpload(el, () => rerenderKeep());
   bindWf(el, 'partnership', p);
   bindProfile(el, p);
   if (r.query && r.query.wf) setTimeout(() => { const w = $('#wf', el); if (w) window.scrollTo({ top: w.getBoundingClientRect().top + scrollY - 130 }); const c = wfStateOf('partnership', p).cur; if (c && wfCan(c, 'partnership', p)) wfStepDialog('partnership', p, c.id, () => route()); }, 200);
