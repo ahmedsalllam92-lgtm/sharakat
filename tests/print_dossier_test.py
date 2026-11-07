@@ -51,7 +51,7 @@ async def main():
         await pg.emulate_media(media='screen')
         await go('#/process', 1200)
         f = await pdf('process-board')
-        ok('process map prints on 3 landscape pages', pdf_pages(f) <= 3, pdf_pages(f))
+        ok('process prints on 4 landscape pages (journey, map, matrix, accounts)', pdf_pages(f) <= 4, pdf_pages(f))
         # ===== لوحة المؤشرات: القيمة والأداء وسير الإجراءات
         await go('#/dashboard?v=alt', 1500)
         ok('board: 8 chapters incl. «سير الإجراءات»', await E("document.querySelectorAll('.bo-ch').length===8 && !!document.querySelector('.bo-ch[data-ch=proc] .pl')"))

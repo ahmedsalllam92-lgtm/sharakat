@@ -63,8 +63,39 @@ function renderProcess(el) {
   const laneOf = (id) => PR_LANES.findIndex((l) => l.id === id);
   const NC = 13;
   const accts = wfAccounts();
-  el.innerHTML = `<div class="ph"><div><h1>مسار الشراكة</h1><p>الإجراء المعتمد لشراكة جديدة: من طلب الإدارة إلى تقارير تفعيل المذكرة. المسار مطبق في المنظومة؛ كل خطوة تُنفَّذ من حساب الجهة المسؤولة عنها، وتطلب مستنداتها قبل الانتقال.</p></div>
-      <div class="ph-actions"><button class="btn" data-prprint type="button">${icon('print')} طباعة أو PDF</button>${can('export') ? `<button class="btn" data-prxls type="button">${icon('download')} المصفوفة Excel</button>` : ''}${Session.role() !== 'viewer' ? `<a class="btn primary" href="#/tasks">${icon('flag')} مهامي</a>` : ''}</div></div>
+  const PH_C = ['#3E8576', '#1F6B5C', '#0B3F38', '#B08A3E', '#5FB894'];
+  const live = WF_STEPS.reduce((t, x) => t + prAt(x.id).length, 0);
+  const activated = visiblePartnerships().filter((p) => p.activation === 'مفعّلة' && ['active', 'soon'].includes(pStatus(p))).length;
+  const back = PR_EDGES.filter((e) => e[3] === 'back');
+  const stair = WF_STEPS.map((x, i) => {
+    const pi = WF_PHASES.findIndex((p) => p.id === x.ph), recs = prAt(x.id), lane = PR_LANES.find((l) => l.id === x.actor) || PR_LANES[1];
+    const dec = x.kind === 'decision' || x.kind === 'review';
+    return `<button type="button" class="js-st ${recs.length ? 'has' : ''} ${dec ? 'dec' : ''}" data-jstep="${x.id}" style="--h:${74 + i * 15}px;--c:${PH_C[pi]};--i:${i}" ${tipAttr(`<b>${x.n}. ${esc(x.t)}</b><br>${esc(wfActorName(x.actor))}${x.ref ? ` · البند ${x.ref}` : ''}<br>${x.docs.length ? 'المستندات: ' + x.docs.map((d) => esc(d.l)).join('، ') : 'بيانات الطلب من «شارك»'}<br>${recs.length ? `الآن: ${recs.length}` : 'لا سجلات الآن'}`)}>
+      <span class="js-now">${recs.length ? `<b>${recs.length}</b>` : ''}</span>
+      <span class="js-blk"><em>${x.n}</em><i class="js-ic">${icon(lane.ic)}</i>${dec ? `<span class="js-dec" title="${x.kind === 'decision' ? 'قرار' : 'اعتماد'}">${x.kind === 'decision' ? 'قرار' : 'اعتماد'}</span>` : ''}</span>
+      <span class="js-t">${esc(x.t)}</span><span class="js-a">${esc(wfActorName(x.actor))}</span>
+    </button>`;
+  }).join('');
+  const arcs = back.map(([from, to, label]) => { const a_ = WF_STEPS.findIndex((x) => x.id === from), b_ = WF_STEPS.findIndex((x) => x.id === to); return `<span class="js-arc" style="--a:${a_};--b:${b_}"><i></i><small>${esc(label)}</small></span>`; }).join('');
+  el.innerHTML = `<section class="js-hero">
+      <div class="js-hero-t"><span class="js-eye"><i></i>مسار الشراكة</span><h1>من فكرة إلى أثر</h1>
+        <p>الإجراء المعتمد لشراكة جديدة كما هو مطبّق في المنظومة: ثلاث عشرة خطوة في خمس مراحل، تنفّذها سبع جهات، وكل خطوة لها مستندها وصاحب قرارها.</p>
+        <div class="js-acts no-print"><button class="btn gold" data-prprint type="button">${icon('print')} طباعة أو PDF</button>${can('export') ? `<button class="btn" data-prxls type="button">${icon('download')} المصفوفة Excel</button>` : ''}${Session.role() !== 'viewer' ? `<a class="btn" href="#/tasks">${icon('flag')} مهامي</a>` : ''}</div></div>
+      <dl class="js-stats"><div><dt>خطوة</dt><dd>${WF_STEPS.length}</dd></div><div><dt>مراحل</dt><dd>${WF_PHASES.length}</dd></div><div><dt>جهات منفّذة</dt><dd>${PR_LANES.length}</dd></div><div class="g"><dt>في المسار الآن</dt><dd>${live}</dd></div><div><dt>مذكرات مفعّلة</dt><dd>${activated}</dd></div></dl>
+    </section>
+    <nav class="js-nav no-print" aria-label="أقسام الصفحة"><a href="#" data-jgo="jsClimb">${icon('chart')} صعود الشراكة</a><a href="#" data-jgo="prMapSec">${icon('layers')} مخطط الجهات</a><a href="#" data-jgo="prRaci">${icon('grid')} مصفوفة المسؤوليات</a><a href="#" data-jgo="prAcc">${icon('users')} الحسابات</a></nav>
+    <section class="js-climb" id="jsClimb">
+      <header class="js-sh"><div><h2>صعود الشراكة</h2><p>كل درجة خطوة، تعلو كلما اقتربت الشراكة من التوقيع والأثر. الرقم فوق الدرجة عدد السجلات الواقفة عندها الآن، والضغط يفتح تفاصيل الخطوة.</p></div>
+        <div class="js-lg"><span><i class="d"></i>قرار أو اعتماد</span><span><i class="n"></i>سجلات الآن</span><span><i class="b"></i>إعادة بملاحظات</span></div></header>
+      <div class="js-scroll"><div class="js-stage">
+        <div class="js-arcs">${arcs}</div>
+        <div class="js-stairs">${stair}
+          <div class="js-goal" ${tipAttr('شراكات سارية اكتمل تفعيلها وتُتابع تقاريرها')}><span class="js-flag">${icon('flag')}</span><b>${activated}</b><small>أثر متحقق<br>مذكرات مفعّلة</small></div></div>
+        <div class="js-phases">${WF_PHASES.map((ph, i) => { const n = WF_STEPS.filter((x) => x.ph === ph.id).length; const c = WF_STEPS.filter((x) => x.ph === ph.id).reduce((t, x) => t + prAt(x.id).length, 0); return `<div style="--n:${n};--c:${PH_C[i]}"><em>${pad(i + 1)}</em><b>${esc(ph.t)}</b>${c ? `<small>${c} الآن</small>` : ''}</div>`; }).join('')}<div class="js-ph-end"></div></div>
+        <div class="js-branch" style="--a:2" title="إذا كانت الجهة غير مناسبة"><i></i><span>${icon('x')} غير مناسبة: إغلاق الطلب <b>${prP().filter((x) => x.status === 'rejected').length}</b></span></div>
+      </div></div>
+    </section>
+    <section class="js-map-sec" id="prMapSec"><header class="js-sh"><div><h2>مخطط الجهات</h2><p>من يفعل ماذا: كل خطوة في مسار الجهة المسؤولة عنها، والأسهم تبيّن الانتقال والإعادة.</p></div></header>
     <div class="pr-legend"><span><i class="k start"></i>بداية</span><span><i class="k"></i>خطوة</span><span><i class="k decision"></i>قرار أو اعتماد</span><span><i class="k end"></i>نهاية</span><span><b class="pr-n-s">3</b>سجلات في هذه الخطوة الآن</span><span class="pr-hint">${icon('info')}اضغط أي خطوة لعرض مستنداتها وسجلاتها</span></div>
     <section class="pr-map-wrap" aria-label="مخطط مسار الشراكة">
       <div class="pr-map" id="prMap" style="--nc:${NC};--nl:${PR_LANES.length}">
@@ -78,17 +109,18 @@ function renderProcess(el) {
     </section>
     <div class="pr-side-notes"><div>${icon('alert')}<span><b>المستندات شرط للانتقال:</b> لا تكتمل الخطوة حتى يُرفع مستندها المطلوب، ويمكن تنزيل النموذج الفارغ من داخل الخطوة.</span></div>
       <div>${icon('history')}<span><b>كل إجراء مسجّل:</b> الإتمام والاعتماد والإعادة بملاحظات تُسجل باسم الحساب ووقته في سجل التغييرات وسجل الشراكة.</span></div></div>
+    </section>
 
-    <section class="panel pr-raci" id="prRaci">
+    <section class="panel pr-raci pr-heat" id="prRaci">
       <div class="panel-h"><h3>مصفوفة المسؤوليات</h3><span class="sub">مستخرجة من الصلاحيات المطبقة في المسار. تُعدّل جهات الاعتماد من <a href="#/settings/roles">الحسابات والصلاحيات</a>.</span></div>
       <div class="panel-b"><div class="pr-raci-lg">${Object.entries(RACI).map(([k, v]) => `<span><i class="rc ${v.c}">${k}</i>${v.t}</span>`).join('')}</div>
         <div class="tbl-wrap"><table class="tbl pr-mx"><thead><tr><th>الخطوة</th>${PR_ROLES.map((r) => `<th>${esc(r.t)}<small>${esc(['strategy', 'legal', 'excellency', 'bizdev'].includes(r.k) ? wfDept(r.k) : '')}</small></th>`).join('')}<th>المستند المطلوب</th></tr></thead><tbody>
         ${PR_PHASES.map((ph, pi) => `<tr class="pr-mx-ph"><td colspan="${PR_ROLES.length + 2}"><em>${pad(pi + 1)}</em>${ph.t}</td></tr>` + WF_STEPS.filter((s) => s.n - 1 >= ph.from && s.n - 1 <= ph.to).map((s) => `<tr><th><button class="linkbtn" type="button" data-step="${s.id}">${s.n}. ${esc(s.t)}</button>${s.ref ? `<small>البند ${s.ref} في إجراء المذكرات</small>` : ''}</th>
           ${PR_ROLES.map((r) => { const v = (M[s.id] || {})[r.k] || ''; return `<td><span class="rc ${v ? RACI[v].c : 'none'}" title="${v ? RACI[v].t : 'لا دور'}">${v || '·'}</span></td>`; }).join('')}
           <td class="pr-perm">${s.docs.length ? s.docs.map((d) => `<span class="chip ${d.req ? '' : 'plain'}">${esc(d.l)}</span>`).join('') : '<span class="faint">—</span>'}</td></tr>`).join('')).join('')}
-        </tbody></table></div></div></section>
+        </tbody><tfoot><tr><th>مجموع الأدوار</th>${PR_ROLES.map((r) => { const c = { R: 0, A: 0, C: 0, I: 0 }; WF_STEPS.forEach((x) => { const v = (M[x.id] || {})[r.k]; if (v) c[v]++; }); return `<td><div class="pr-sum">${['A', 'R', 'C', 'I'].filter((k) => c[k]).map((k) => `<span class="rc ${RACI[k].c}">${c[k]}</span>`).join('') || '<span class="faint">—</span>'}</div></td>`; }).join('')}<td></td></tr></tfoot></table></div></div></section>
 
-    <div class="pr-cols">
+    <div class="pr-cols" id="prAcc">
       <section class="panel"><div class="panel-h"><h3>الحسابات ومهامها في المسار</h3><span class="sub">حساب لكل إدارة</span></div>
         <div class="panel-b pr-accts">${accts.filter((a) => a.role !== 'team').map((a) => { const mine = a.role === 'dept' ? WF_STEPS.filter((s) => (a.duties || []).includes(s.actor)) : a.role === 'admin' ? WF_STEPS.filter((s) => s.actor === 'partnerships') : []; return `<div class="pr-acct ${a.duties && a.duties.length ? 'prop' : ''}">
           <div class="pr-acct-h"><b>${esc(a.t)}</b><span class="chip">${esc(ROLES[a.role].label)}</span></div>
@@ -97,9 +129,15 @@ function renderProcess(el) {
       <section class="panel"><div class="panel-h"><h3>المسار الآن</h3><span class="sub">عدد السجلات في كل مرحلة</span></div>
         <div class="panel-b"><ul class="pr-gaps pr-now">${PR_PHASES.map((ph, i) => { const ids = WF_STEPS.filter((s) => s.n - 1 >= ph.from && s.n - 1 <= ph.to); const n = ids.reduce((t, s) => t + prAt(s.id).length, 0); return `<li>${icon('layers')}<span><b>${pad(i + 1)} ${esc(ph.t)}:</b> ${n ? plural(n, 'سجل واحد', 'سجلان', 'سجلات', 'سجلًا') : 'لا سجلات'}</span></li>`; }).join('')}</ul></div></section>
     </div>`;
+  bindTips(el);
+  // تقاطع الصف والعمود في المصفوفة
+  const mx = $('.pr-mx', el);
+  if (mx) { mx.addEventListener('mouseover', (e) => { const td = e.target.closest('td,th'); $$('.pr-mx .hx', el).forEach((x) => x.classList.remove('hx')); if (!td || !td.closest('tbody')) return; const tr = td.parentElement, i = [...tr.children].indexOf(td); tr.classList.add('hx'); if (i > 0 && i <= PR_ROLES.length) $$(`.pr-mx tr > :nth-child(${i + 1})`, el).forEach((c) => c.classList.add('hx')); }); mx.addEventListener('mouseleave', () => $$('.pr-mx .hx', el).forEach((x) => x.classList.remove('hx'))); }
   drawPrEdges(el);
   const ro = new ResizeObserver(() => drawPrEdges(el)); ro.observe($('#prMap', el));
   el.onclick = (e) => {
+    const js = e.target.closest('[data-jstep]'); if (js) return prStepPanel(js.dataset.jstep);
+    const jg = e.target.closest('[data-jgo]'); if (jg) { e.preventDefault(); const t = $('#' + jg.dataset.jgo, el); if (t) window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' }); return; }
     const st = e.target.closest('[data-step]'); if (st) return prStepPanel(st.dataset.step);
     if (e.target.closest('[data-prprint]')) return window.print();
     if (e.target.closest('[data-prxls]')) return prExportXlsx();
