@@ -51,6 +51,17 @@ async def main():
         href = await E("document.querySelector('.ob-tk').getAttribute('href')")
         await pg.click('.ob-tk'); await pg.wait_for_timeout(900)
         ok('metro token opens the item', (await E("location.hash")) == href, href)
+        # بطاقة المحطة عند الوقوف عليها
+        await go('#/dashboard', 2000)
+        await E("document.querySelector('#obMetro').scrollIntoView(); scrollBy(0,-200)"); await pg.wait_for_timeout(300)
+        idx = await E("[...document.querySelectorAll('.ob-st')].findIndex(s=>s.classList.contains('has'))")
+        await pg.locator('.ob-st').nth(idx).locator('.ob-sl').hover(); await pg.wait_for_timeout(400)
+        n_tok = await E(f"(()=>{{const P=wfPipeline(applyFilters(visiblePartnerships(),App.dashF)); return P.items.filter(i=>i.step.id===WF_STEPS[{idx}].id).length}})()")
+        ok('hovering a station shows its items with details', await E("document.querySelector('#obPop').classList.contains('on')") and await E("document.querySelectorAll('#obPop .ob-pi').length") == n_tok and await E("!!document.querySelector('#obPop .ob-pi small.w')"), n_tok)
+        await pg.locator('.ob-pb').nth(0).hover(); await pg.wait_for_timeout(400)
+        ok('hovering a phase lists all its items', await E("document.querySelectorAll('#obPop .ob-pi').length") == await E("wfPipeline(applyFilters(visiblePartnerships(),App.dashF)).phases[0].items.length"))
+        await pg.mouse.move(5, 880); await pg.wait_for_timeout(500)
+        ok('card hides when the pointer leaves', not await E("document.querySelector('#obPop').classList.contains('on')"))
         # ray click opens partnership
         await go('#/dashboard', 2000)
         ok('dashboard remembers «حلقات النمو»', await E("!!document.querySelector('.ob-rings')"))

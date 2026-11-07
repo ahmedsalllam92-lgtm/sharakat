@@ -12,7 +12,7 @@ function wfPipeline(list) {
     const st = wfStateOf('proposal', x);
     const s = x.status === 'accepted' ? wfStep('meeting') : st.cur; if (!s) return;
     const prev = Object.values(st.S).map((r) => r && typeof r.at === 'string' && /^\d{4}-/.test(r.at) ? r.at : null).filter(Boolean).sort().pop();
-    items.push({ kind: 'proposal', name: x.partnerName || x.ref, sub: x.ref, step: s, actor: x.status === 'accepted' ? 'إدارة الشراكات (التحويل إلى شراكة)' : wfActorName(s.actor), days: ago(prev || x.submittedAt || x.createdAt), href: '#/proposals/' + x.id, info: x.status === 'info', demo: x.demo });
+    items.push({ rec: x, kind: 'proposal', name: x.partnerName || x.ref, sub: x.ref, step: s, actor: x.status === 'accepted' ? 'إدارة الشراكات (التحويل إلى شراكة)' : wfActorName(s.actor), days: ago(prev || x.submittedAt || x.createdAt), href: '#/proposals/' + x.id, info: x.status === 'info', demo: x.demo });
   });
   let activating = 0;
   list.filter((p) => ids.has(p.id) && !p.isDraft && !['cancel', 'hold'].includes(p.stage)).forEach((p) => {
@@ -20,7 +20,7 @@ function wfPipeline(list) {
     if (s.ongoing) { activating++; return; }
     const prev = Object.values(st.S).map((r) => r && typeof r.at === 'string' && /^\d{4}-/.test(r.at) ? r.at : null).filter(Boolean).sort().pop();
     const r = st.S[s.id] || {};
-    items.push({ kind: 'partnership', name: partnerName(p), sub: p.code || '', step: s, actor: wfActorName(s.actor), days: ago(prev || p.updatedAt), href: '#/partnerships/' + p.id + '?wf=1', returned: r.status === 'returned', demo: p.demo });
+    items.push({ rec: p, kind: 'partnership', name: partnerName(p), sub: p.code || '', step: s, actor: wfActorName(s.actor), days: ago(prev || p.updatedAt), href: '#/partnerships/' + p.id + '?wf=1', returned: r.status === 'returned', demo: p.demo });
   });
   const phases = WF_PHASES.map((ph) => ({ ph, items: items.filter((i) => i.step.ph === ph.id).sort((a, b) => (b.days || 0) - (a.days || 0)) }));
   const late = items.filter((i) => (i.days || 0) > (D.settings.infoAgeDays || 7) * 2);

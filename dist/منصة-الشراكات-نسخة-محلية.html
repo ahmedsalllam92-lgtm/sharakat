@@ -4482,6 +4482,39 @@ html.dossier-open,html.dossier-open body{overflow:hidden}
 @media print{.ob-hero{zoom:.6!important}.ob-head{gap:6px}.ob-meta{margin-top:4px}.ob-ttl h1{margin:2px 0}}
 .ob-time [data-obnow][hidden]{display:none}
 @media (max-width:720px){.ob-slab text{font-size:21px}.ob-slab .n{font-size:16px}.ob-yl{font-size:14px}}
+
+/* — بطاقة المحطة — */
+.ob-st,.ob-pb{cursor:default;outline:none;transition:background .2s}
+.ob-st{border-radius:12px}
+.ob-st:hover,.ob-st.pop-on,.ob-st:focus-visible{background:color-mix(in srgb,var(--petrol) 6%,transparent)}
+.ob-st.pop-on .ob-dot{border-color:var(--gold);box-shadow:0 0 0 4px color-mix(in srgb,var(--gold) 25%,transparent)}
+.ob-pb:hover,.ob-pb.pop-on,.ob-pb:focus-visible{background:color-mix(in srgb,var(--petrol) 16%,var(--paper-2))}
+.ob-pop{position:fixed;z-index:520;width:min(380px,calc(100vw - 24px));max-height:min(440px,70vh);display:flex;flex-direction:column;background:var(--paper);color:var(--ink);border:1px solid var(--line-2);border-radius:14px;box-shadow:0 30px 60px -24px rgba(0,0,0,.45);opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .16s,transform .16s,visibility 0s .16s;pointer-events:none}
+.ob-pop.on{opacity:1;visibility:visible;transform:none;transition:opacity .16s,transform .16s;pointer-events:auto}
+.ob-pop::after{content:"";position:absolute;bottom:-7px;left:calc(var(--ax,50%) - 7px);width:12px;height:12px;background:var(--paper);border-right:1px solid var(--line-2);border-bottom:1px solid var(--line-2);transform:rotate(45deg)}
+.ob-pop.below::after{bottom:auto;top:-7px;transform:rotate(225deg)}
+[data-design="board"] .ob-pop{border-radius:3px;border-top:3px solid var(--gold)}
+.ob-poph{padding:12px 14px 6px;display:flex;flex-direction:column;gap:2px}
+.ob-poph b{font-size:14.5px;color:var(--petrol);font-family:var(--display,var(--font))}
+.ob-poph span{font-size:11.5px;color:var(--muted)}
+.ob-popk{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 10px;border-bottom:1px solid var(--line)}
+.ob-popk span{font-size:11.5px;color:var(--ink-2);background:var(--paper-2);border-radius:20px;padding:2px 9px}
+.ob-popk span b{color:var(--petrol)}
+.ob-popk span.l{background:color-mix(in srgb,#C2552F 14%,transparent);color:#A2401E}
+.ob-popl{overflow:auto;padding:6px;display:flex;flex-direction:column;gap:4px}
+.ob-pi{display:grid;grid-template-columns:32px 1fr;gap:10px;padding:8px;border-radius:10px;text-decoration:none!important;color:inherit;border-inline-start:3px solid var(--petrol-3);transition:background .15s}
+.ob-pi:hover{background:var(--paper-2)}
+.ob-pi.warm{border-inline-start-color:var(--gold)}.ob-pi.late{border-inline-start-color:#C2552F}.ob-pi.ret{border-inline-start-color:var(--danger)}
+.ob-pim{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--mist);color:var(--petrol);font-weight:700;font-size:12.5px}
+.ob-pib{display:flex;flex-direction:column;gap:1px;min-width:0}
+.ob-pib b{font-size:13px;color:var(--ink);line-height:1.45}
+.ob-pib small{font-size:11px;color:var(--muted);line-height:1.5}
+.ob-pib small.f{color:var(--ink-2)}
+.ob-pib small.w{display:flex;align-items:center;gap:5px;color:var(--ink-2)}
+.ob-pib small.w i{width:7px;height:7px;border-radius:50%;background:var(--petrol-3);flex:none}
+.ob-pi.warm small.w i{background:var(--gold)}.ob-pi.late small.w i{background:#C2552F}.ob-pi.ret small.w i{background:var(--danger)}
+.ob-pope{padding:14px;font-size:12.5px;color:var(--muted)}
+@media print{.ob-pop{display:none!important}}
 </style>
 </head>
 <body>
@@ -7350,7 +7383,7 @@ function wfPipeline(list) {
     const st = wfStateOf('proposal', x);
     const s = x.status === 'accepted' ? wfStep('meeting') : st.cur; if (!s) return;
     const prev = Object.values(st.S).map((r) => r && typeof r.at === 'string' && /^\d{4}-/.test(r.at) ? r.at : null).filter(Boolean).sort().pop();
-    items.push({ kind: 'proposal', name: x.partnerName || x.ref, sub: x.ref, step: s, actor: x.status === 'accepted' ? 'إدارة الشراكات (التحويل إلى شراكة)' : wfActorName(s.actor), days: ago(prev || x.submittedAt || x.createdAt), href: '#/proposals/' + x.id, info: x.status === 'info', demo: x.demo });
+    items.push({ rec: x, kind: 'proposal', name: x.partnerName || x.ref, sub: x.ref, step: s, actor: x.status === 'accepted' ? 'إدارة الشراكات (التحويل إلى شراكة)' : wfActorName(s.actor), days: ago(prev || x.submittedAt || x.createdAt), href: '#/proposals/' + x.id, info: x.status === 'info', demo: x.demo });
   });
   let activating = 0;
   list.filter((p) => ids.has(p.id) && !p.isDraft && !['cancel', 'hold'].includes(p.stage)).forEach((p) => {
@@ -7358,7 +7391,7 @@ function wfPipeline(list) {
     if (s.ongoing) { activating++; return; }
     const prev = Object.values(st.S).map((r) => r && typeof r.at === 'string' && /^\d{4}-/.test(r.at) ? r.at : null).filter(Boolean).sort().pop();
     const r = st.S[s.id] || {};
-    items.push({ kind: 'partnership', name: partnerName(p), sub: p.code || '', step: s, actor: wfActorName(s.actor), days: ago(prev || p.updatedAt), href: '#/partnerships/' + p.id + '?wf=1', returned: r.status === 'returned', demo: p.demo });
+    items.push({ rec: p, kind: 'partnership', name: partnerName(p), sub: p.code || '', step: s, actor: wfActorName(s.actor), days: ago(prev || p.updatedAt), href: '#/partnerships/' + p.id + '?wf=1', returned: r.status === 'returned', demo: p.demo });
   });
   const phases = WF_PHASES.map((ph) => ({ ph, items: items.filter((i) => i.step.ph === ph.id).sort((a, b) => (b.days || 0) - (a.days || 0)) }));
   const late = items.filter((i) => (i.days || 0) > (D.settings.infoAgeDays || 7) * 2);
@@ -7522,6 +7555,7 @@ function renderObservatory(el) {
   };
   el.oninput = (e) => { if (e.target.matches('.ob-time input')) obTimeTo(el, +e.target.value); };
   el.addEventListener('click', (e) => { if (e.target.closest('[data-obnow]')) { const i = $('.ob-time input', el); i.value = today().getTime(); obTimeTo(el, +i.value); } });
+  obBindPop(el);
   el.onkeydown = (e) => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-href][tabindex]')) { e.preventDefault(); go(e.target.dataset.href); } };
   bindTips(el);
 }
@@ -7659,13 +7693,14 @@ function obMetro(P) {
   const MAX = 5;
   const st = WF_STEPS.map((s) => {
     const its = (at[s.id] || []).sort((a, b) => (b.days || 0) - (a.days || 0));
-    return `<li class="ob-st ${its.length ? 'has' : ''}" style="--ph:${WF_PHASES.findIndex((p) => p.id === s.ph)}">
+    return `<li class="ob-st ${its.length ? 'has' : ''}" style="--ph:${WF_PHASES.findIndex((p) => p.id === s.ph)}" data-obpop tabindex="0" aria-label="الخطوة ${s.n}: ${esc(s.t)} — ${its.length}">
+      <template class="ob-popt">${obPopHTML(`${s.n}. ${s.t}`, `لدى ${wfActorName(s.actor)}${s.ref ? ` · البند ${s.ref} في إجراء المذكرات` : ''}`, its)}</template>
       <div class="ob-tks">${its.slice(0, MAX).map((x) => `<a class="ob-tk ${x.returned ? 'ret' : (x.days || 0) > lim ? 'late' : (x.days || 0) > warnD ? 'warm' : ''}" href="${x.href}" ${tipAttr(`<b>${esc(x.name)}</b><br>${s.n}. ${esc(s.t)}<br>لدى ${esc(x.actor)}${x.days !== null ? ` · ${x.days ? 'منذ ' + plural(x.days, 'يوم', 'يومين', 'أيام', 'يومًا') : 'اليوم'}` : ''}${x.returned ? '<br>مُعادة للاستكمال' : ''}`)} aria-label="${esc(x.name)}">${esc(monogram(x.name))}</a>`).join('')}${its.length > MAX ? `<a class="ob-tk more" href="#/tasks" dir="ltr">+${its.length - MAX}</a>` : ''}</div>
       <span class="ob-dot"><em>${s.n}</em></span>
       <div class="ob-sl"><b>${esc(s.t)}</b><small>${esc(wfActorName(s.actor))}</small></div>
     </li>`;
   }).join('');
-  const phases = WF_PHASES.map((ph, i) => { const n = WF_STEPS.filter((s) => s.ph === ph.id).length, c = P.phases[i].items.length; return `<div class="ob-pb" style="--n:${n};--i:${i}"><span>${pad(i + 1)}</span><b>${esc(ph.t)}</b><em>${c}</em></div>`; }).join('');
+  const phases = WF_PHASES.map((ph, i) => { const n = WF_STEPS.filter((s) => s.ph === ph.id).length, c = P.phases[i].items.length; return `<div class="ob-pb" style="--n:${n};--i:${i}" data-obpop tabindex="0"><template class="ob-popt">${obPopHTML(ph.t, `المرحلة ${pad(i + 1)} · ${plural(n, 'خطوة واحدة', 'خطوتان', 'خطوات', 'خطوة')}`, P.phases[i].items, true)}</template><span>${pad(i + 1)}</span><b>${esc(ph.t)}</b><em>${c}</em></div>`; }).join('');
   return `<section class="ob-metro" id="obMetro">
     <header class="ob-sh"><div><h2>${icon('layers')} خط المسار</h2><p>كل طلب ومذكرة في محطته الحالية من الثلاث عشرة خطوة المعتمدة. اللون بمدة الانتظار، والضغط يفتح الخطوة مباشرة.</p></div>
       <div class="ob-mlg"><span><i class="f"></i>حديثة</span><span><i class="w"></i>أكثر من ${warnD} أيام</span><span><i class="l"></i>أكثر من ${lim} يومًا</span><span><i class="r"></i>مُعادة</span><a class="linkbtn" href="#/process">${icon('layers')} مخطط المسار</a></div></header>
@@ -7765,6 +7800,60 @@ function obTimeTo(el, ms) {
   $('#obTimeOut', el).textContent = isNow ? 'اليوم' : `${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
   $('[data-obnow]', el).hidden = isNow;
   svg.classList.toggle('ob-travel', !isNow);
+}
+
+/* — بطاقة المحطة/المرحلة: تظهر عند الوقوف عليها وتختفي عند الابتعاد — */
+function obPopHTML(title, sub, items, byStep = false) {
+  const lim = (D.settings.infoAgeDays || 7) * 2, warnD = D.settings.infoAgeDays || 7;
+  const row = (x) => {
+    const r = x.rec || {}, isP = x.kind === 'partnership';
+    const pr = isP ? partnerById(r.partnerId) || {} : {};
+    const tone = x.returned ? 'ret' : (x.days || 0) > lim ? 'late' : (x.days || 0) > warnD ? 'warm' : '';
+    const facts = isP
+      ? [pSector(r), r.ptype, pr.domain, r.endDate ? 'حتى ' + fmtDate(r.endDate, 'short') : ''].filter(Boolean)
+      : [r.department, r.partnerSector, r.requesterName].filter(Boolean);
+    return `<a class="ob-pi ${tone}" href="${x.href}"><span class="ob-pim">${esc(monogram(x.name))}</span>
+      <span class="ob-pib"><b>${esc(x.name)} ${x.demo ? '<span class="demo-tag">تجريبي</span>' : ''}</b>
+        <small>${esc(x.sub || '')}${isP ? ` · ${esc(statusLabel(pStatus(r)))}` : ` · ${esc(propStatusLabel(r.status))}`}${byStep ? ` · خطوة ${x.step.n}: ${esc(x.step.t)}` : ''}</small>
+        ${facts.length ? `<small class="f">${facts.map(esc).join(' · ')}</small>` : ''}
+        <small class="w"><i></i>${x.days !== null ? (x.days ? `ينتظر منذ ${plural(x.days, 'يوم', 'يومين', 'أيام', 'يومًا')}` : 'وصل اليوم') : ''} لدى ${esc(x.actor)}${x.returned ? ' · مُعادة للاستكمال' : x.info ? ' · بانتظار الاستكمال' : ''}</small></span></a>`;
+  };
+  const late = items.filter((x) => (x.days || 0) > lim).length;
+  return `<div class="ob-poph"><b>${esc(title)}</b><span>${esc(sub)}</span></div>
+    <div class="ob-popk"><span><b>${items.length}</b> ${items.length === 1 ? 'عنصر' : 'عناصر'}</span>${items.length ? `<span>${items.filter((x) => x.kind === 'partnership').length} مذكرة · ${items.filter((x) => x.kind === 'proposal').length} طلب</span>` : ''}${late ? `<span class="l">${late} متأخرة</span>` : ''}</div>
+    ${items.length ? `<div class="ob-popl">${items.map(row).join('')}</div>` : '<p class="ob-pope">لا توجد شراكات أو طلبات في هذه المرحلة الآن.</p>'}`;
+}
+function obBindPop(el) {
+  let pop = $('#obPop'); if (!pop) { pop = document.createElement('div'); pop.id = 'obPop'; pop.className = 'ob-pop'; pop.setAttribute('role', 'dialog'); document.body.appendChild(pop); }
+  let cur = null, hideT = null;
+  const place = (t) => {
+    const r = t.getBoundingClientRect(), pw = pop.offsetWidth, ph = pop.offsetHeight;
+    let x = r.left + r.width / 2 - pw / 2; x = Math.max(12, Math.min(innerWidth - pw - 12, x));
+    let y = r.top - ph - 10; let below = false;
+    if (y < 12) { y = r.bottom + 10; below = true; }
+    pop.style.left = x + 'px'; pop.style.top = Math.max(12, y) + 'px';
+    pop.classList.toggle('below', below);
+    pop.style.setProperty('--ax', (r.left + r.width / 2 - x) + 'px');
+  };
+  const show = (t) => {
+    clearTimeout(hideT); if (cur === t) return;
+    cur = t; pop.innerHTML = $('template.ob-popt', t).innerHTML; pop.classList.add('on');
+    $$('.ob-st.pop-on, .ob-pb.pop-on', el).forEach((x) => x.classList.remove('pop-on')); t.classList.add('pop-on');
+    $('#tip') && $('#tip').classList.remove('on');
+    place(t);
+  };
+  const hide = (now) => { clearTimeout(hideT); hideT = setTimeout(() => { pop.classList.remove('on'); if (cur) cur.classList.remove('pop-on'); cur = null; }, now ? 0 : 140); };
+  el.addEventListener('mouseover', (e) => { const t = e.target.closest('[data-obpop]'); if (t && !e.target.closest('.ob-tk')) show(t); });
+  el.addEventListener('mouseout', (e) => { const t = e.target.closest('[data-obpop]'); if (t && !t.contains(e.relatedTarget) && !pop.contains(e.relatedTarget)) hide(); });
+  el.addEventListener('focusin', (e) => { const t = e.target.closest('[data-obpop]'); if (t && e.target === t) show(t); });
+  el.addEventListener('focusout', (e) => { if (!pop.contains(e.relatedTarget)) hide(); });
+  pop.onmouseenter = () => clearTimeout(hideT);
+  pop.onmouseleave = (e) => { if (!cur || !cur.contains(e.relatedTarget)) hide(); };
+  pop.onclick = (e) => { if (e.target.closest('a')) hide(true); };
+  el.addEventListener('click', (e) => { const t = e.target.closest('[data-obpop]'); if (t && !e.target.closest('a') && matchMedia('(hover: none)').matches) { cur === t ? hide(true) : show(t); } });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide(true); });
+  window.addEventListener('scroll', () => hide(true), { passive: true, once: false });
+  window.addEventListener('hashchange', () => hide(true));
 }
 
 /* —— 12-register.js —— */
