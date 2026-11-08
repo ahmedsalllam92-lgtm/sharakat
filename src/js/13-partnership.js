@@ -29,7 +29,7 @@ function renderPartnership(el, r) {
   <div class="dbar"><div class="dbar-in">${secs.map(([id, l], i) => `<a href="#${id}" data-anchor="${id}" class="${i === 0 ? 'on' : ''}">${l}</a>`).join('')}<span class="sp"></span>
     <button class="btn sm ghost" data-print title="طباعة صفحة الشراكة كما تظهر">${icon('print')} طباعة</button>
     <button class="btn sm" data-dossier data-tour="detail-dossier" title="ملف واحد يجمع التفاصيل والنماذج والصور والمستندات">${icon('file')} الملف الشامل</button>
-    ${can('view.reports') ? `<a class="btn sm ghost" href="#/reports?ids=${p.id}" data-tour="detail-report">${icon('file')} تقرير</a>` : ''}
+    ${can('view.reports') ? `<a class="btn sm ghost" href="#/reports?ids=${p.id}" data-tour="detail-report">${icon('file')} تقرير</a><a class="btn sm ghost" href="#/reports/marketing?p=${p.id}" title="تقرير تسويقي لهذه الشراكة">${icon('star')} تقرير تسويقي</a>` : ''}
     ${canEdit ? `<a class="btn sm primary" href="#/partnerships/${p.id}/edit">${icon('edit')} تعديل</a>` : ''}
     ${can('delete.partnership') ? `<button class="btn sm danger" data-del>${icon('trash')}</button>` : ''}</div></div>
   <div class="dbody"><div>
