@@ -343,7 +343,7 @@ async function cloudEnter() {
   if (!D.settings) await seedAll();
   Cloud.ready = ready;
   if (ready) {
-    if (migrate()) { await Repo.saveSettings(); for (const c of ['partnerships', 'achievements']) await Store.putMany(c, D[c]); }
+    if (migrate()) { await Repo.saveSettings(); for (const c of ['partnerships', 'achievements', 'partners']) await Store.putMany(c, D[c]); }
     Cloud.startPoll(); Cloud.kick();
   }
   const a = typeof currentLogin === 'function' && currentLogin(); if (a) authApply(a);

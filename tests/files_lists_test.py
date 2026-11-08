@@ -101,8 +101,8 @@ async def main():
         async with pg.expect_download() as dl:
             await go('#/partnerships'); await pg.click('[data-xls]')
         d = await dl.value; await d.save_as('/tmp/exp.xlsx')
-        import openpyxl; ws = openpyxl.load_workbook('/tmp/exp.xlsx').active
-        hdr = [c.value for c in ws[2]]
+        import openpyxl; ws = openpyxl.load_workbook('/tmp/exp.xlsx')['الشراكات']
+        hdr = [c.value for r in range(1, 6) for c in ws[r]]
         ok('excel has تصنيف الشراكة column', 'تصنيف الشراكة' in hdr)
         # migration from v3
         await E("""(async()=>{ D.settings.schema=3; delete D.settings.lists.categories; D.settings.lists.attachmentCats=D.settings.lists.attachmentCats.map(c=>c==='الاتفاقية'?'وثيقة المذكرة':c); const p=D.partnerships.find(x=>x.title==='وقف الأمير صيته بنت عبدالعزيز'); p.coverFileId='lib:afforest'; p.attachments=[{id:'a1',fileId:'lib:palms',name:'x',type:'image/jpeg',size:1,category:'وثيقة المذكرة'}]; D.partnerships.forEach(x=>delete x.categories); await Repo.saveSettings(); await Store.putMany('partnerships',D.partnerships); })()""")

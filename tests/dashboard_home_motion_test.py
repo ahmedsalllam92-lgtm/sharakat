@@ -29,7 +29,7 @@ async def main():
         ok('countdown cards match expiries (max 4)', await E("document.querySelectorAll('.ct-c').length") == min(4, exp))
         nd = await E("visiblePartnerships().filter(p=>!p.isDraft).length")
         ok('quality matrix: one dot per field × partnership', await E("document.querySelectorAll('.qm-d').length") == await E("CORE_FIELDS.length") * min(30, nd))
-        ok('missing dots match missing fields', await E("document.querySelectorAll('.qm-d.x').length") == await E("visiblePartnerships().filter(p=>!p.isDraft).reduce((t,p)=>t+missingFields(p).length,0)"))
+        ok('missing dots match missing fields', await E("document.querySelectorAll('.qm-d.x').length") == await E("visiblePartnerships().filter(p=>!p.isDraft).map(p=>missingFields(p).length).sort((a,b)=>b-a).slice(0,30).reduce((t,n)=>t+n,0)"))
         ok('proposal flow nodes link to proposals', await E("[...document.querySelectorAll('.pf-s')].every(a=>a.getAttribute('href').startsWith('#/proposals?status='))"))
         # settings tabs horizontal
         await E("location.hash='#/settings/lists'"); await pg.wait_for_timeout(700)

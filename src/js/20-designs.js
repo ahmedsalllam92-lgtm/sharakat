@@ -85,7 +85,7 @@ function liveCounts() {
   const st = (k) => list.filter((p) => k.includes(pStatus(p))).length;
   const linked = new Set(list.map((p) => p.partnerId));
   const anyLinked = new Set(D.partnerships.map((p) => p.partnerId));
-  const partners = D.partners.filter((pr) => linked.has(pr.id) || (!anyLinked.has(pr.id) && (showDemo() || !pr.demo))).length;
+  const partners = D.partners.filter((pr) => linked.has(pr.id) || (!anyLinked.has(pr.id) && !pr.target && (showDemo() || !pr.demo))).length; // الجهات المستهدفة لا تُعد جهات شريكة
   return { active: st(['active', 'soon']), soon: st(['soon']), ended: st(['ended']), partners, total: list.length };
 }
 function heroBeacons() {

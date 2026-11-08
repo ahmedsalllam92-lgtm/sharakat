@@ -18,21 +18,23 @@ function dupPairs() {
 }
 function renderPartners(el) {
   if (!can('view.partners')) { el.innerHTML = noAccessHTML(); return; }
-  const st = { q: '', sector: '' };
+  const st = { q: '', sector: '', kind: '' };
   const manage = can('manage.partners');
   el.innerHTML = `<div class="ph"><div><h1>الجهات الشريكة</h1><p>سجل موحد للجهات يمنع تكرار الجهة بأسماء مختلفة، ويربط كل جهة بشراكاتها ومقترحاتها.</p></div>
     <div class="ph-actions">${manage ? `<button class="btn primary" data-addp>${icon('plus')} جهة جديدة</button>` : ''}</div></div>
     <div id="dupBox"></div>
     <div class="reg-tools"><div class="searchbox">${icon('search')}<input id="pq" type="search" placeholder="بحث بالاسم أو الاسم البديل…" aria-label="بحث في الجهات"></div>
+      <div class="seg" id="pkind"><button class="on" data-k="">كل الجهات</button><button data-k="has">لها شراكات</button><button data-k="target">مستهدفة <b class="pk-n">${D.partners.filter((x) => x.target && (showDemo() || !x.demo) && !D.partnerships.some((p) => p.partnerId === x.id)).length}</b></button></div>
       <div class="seg" id="psec"><button class="on" data-s="">الكل</button>${L('sectors').map((s) => `<button data-s="${esc(s)}">${esc(s)}</button>`).join('')}</div></div>
     <div id="pbody" data-tour="partners-list"></div>`;
   const draw = () => {
     const pairs = manage ? dupPairs() : [];
     $('#dupBox', el).innerHTML = pairs.length ? `<div class="note warn" style="margin-bottom:16px">${icon('merge')}<span class="grow">جهات بأسماء متقاربة قد تكون مكررة: ${pairs.slice(0, 4).map(([a, b]) => `<b>${esc(a.name)}</b> و<b>${esc(b.name)}</b> <button class="btn sm" data-merge="${a.id}" data-into="${b.id}" style="margin-inline-start:6px">مراجعة ودمج</button>`).join(' — ')}</span></div>` : '';
-    const list = D.partners.filter((x) => (showDemo() || !x.demo) && (!st.sector || x.sector === st.sector) && matchQ(x.name + ' ' + (x.aliases || []).join(' '), st.q)).sort((a, b) => a.name.localeCompare(b.name, 'ar'));
+    const isT = (x) => !!x.target && !D.partnerships.some((p) => p.partnerId === x.id);
+    const list = D.partners.filter((x) => (showDemo() || !x.demo) && (!st.sector || x.sector === st.sector) && (!st.kind || (st.kind === 'target' ? isT(x) : D.partnerships.some((p) => p.partnerId === x.id))) && matchQ(x.name + ' ' + (x.aliases || []).join(' '), st.q)).sort((a, b) => a.name.localeCompare(b.name, 'ar'));
     if (!list.length) { $('#pbody', el).innerHTML = `<div class="panel">${emptyHTML({ ic: 'building', title: st.q ? `لا توجد جهة باسم «${st.q}»` : 'لا توجد جهات', text: st.q ? 'يتجاهل البحث الفروق بين الهمزات والتاء المربوطة وكلمات مثل «شركة» و«جمعية».' : '', actions: manage ? `<button class="btn primary" data-addp>${icon('plus')} إضافة جهة</button>` : '' })}</div>`; return; }
     $('#pbody', el).innerHTML = `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>الجهة</th><th>القطاع</th><th>الشراكات</th><th>المقترحات</th><th>أسماء بديلة</th>${manage ? '<th></th>' : ''}</tr></thead><tbody>
-      ${list.map((pr) => { const s = partnerStats(pr); return `<tr data-prow="${pr.id}"><td><div class="t-name">${plateHTML(pr, 40)}<div><b>${esc(pr.name)} ${demoTag(pr)}</b>${pr.website ? `<span dir="ltr">${esc(pr.website)}</span>` : ''}</div></div></td>
+      ${list.map((pr) => { const s = partnerStats(pr); return `<tr data-prow="${pr.id}"><td><div class="t-name">${plateHTML(pr, 40)}<div><b>${esc(pr.name)} ${demoTag(pr)}${isT(pr) ? ` <span class="chip pk-t" title="${esc(pr.targetNote || 'جهة مستهدفة')}">مستهدفة</span>` : ''}</b>${isT(pr) && pr.targetNote && pr.targetNote !== 'جهة مستهدفة في ملف الحصر' ? `<span>${esc(pr.targetNote)}</span>` : ''}${pr.website ? `<span dir="ltr">${esc(pr.website)}</span>` : ''}</div></div></td>
         <td>${esc(pr.sector || '—')}</td><td>${s.ps.length ? `<a href="#/partnerships?partner=${pr.id}">${s.ps.length}</a>` : '<span class="faint">0</span>'}</td><td>${s.props.length || '<span class="faint">0</span>'}</td>
         <td class="small muted">${esc((pr.aliases || []).join('، ') || '—')}</td>${manage ? `<td style="white-space:nowrap"><button class="btn sm ghost" data-editp="${pr.id}">${icon('edit')} تعديل</button></td>` : ''}</tr>`; }).join('')}</tbody></table></div>`;
     hydrateFiles($('#pbody', el));
@@ -40,6 +42,7 @@ function renderPartners(el) {
   draw();
   $('#pq', el).oninput = debounce((e) => { st.q = e.target.value.trim(); draw(); }, 150);
   el.onclick = async (e) => {
+    const k = e.target.closest('[data-k]'); if (k) { st.kind = k.dataset.k; $$('#pkind button', el).forEach((b) => b.classList.toggle('on', b === k)); draw(); return; }
     const s = e.target.closest('[data-s]'); if (s) { st.sector = s.dataset.s; $$('#psec button', el).forEach((b) => b.classList.toggle('on', b === s)); draw(); return; }
     if (e.target.closest('[data-addp]')) { const r = await partnerDialog(null); if (r) draw(); return; }
     const ed = e.target.closest('[data-editp]'); if (ed) { e.stopPropagation(); const r = await partnerDialog(partnerById(ed.dataset.editp)); if (r) draw(); return; }

@@ -57,7 +57,7 @@ for key, title in ASSETS:
         pth = os.path.join(ROOT, 'assets/photos', key + ext)
         if os.path.exists(pth): assets[key] = {'title': title, 'src': f'data:{mime};base64,' + base64.b64encode(open(pth, 'rb').read()).decode()}; break
 lib_js = 'const IMG_LIB = ' + _json.dumps(lib, ensure_ascii=False) + ';\nconst ASSET_IMG = ' + _json.dumps(assets, ensure_ascii=False) + ';\n'
-js_files = [os.path.join(ROOT, 'src/seed_real.js')] + sorted(glob.glob(os.path.join(ROOT, 'src/js/*.js')))
+js_files = [os.path.join(ROOT, 'src/seed_real.js')] + ([os.path.join(ROOT, 'src/seed_real2.js')] if os.path.exists(os.path.join(ROOT, 'src/seed_real2.js')) else []) + sorted(glob.glob(os.path.join(ROOT, 'src/js/*.js')))
 js = lib_js + '\n'.join(f'/* —— {os.path.basename(f)} —— */\n' + open(f, encoding='utf-8').read() for f in js_files)
 js = js.replace('</script', '<\\/script')
 vendor = ''

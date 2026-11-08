@@ -248,6 +248,10 @@ function setData(b) {
       <label class="row" style="gap:12px;justify-content:space-between"><span><b style="font-weight:600">إظهار البيانات التجريبية</b><div class="small muted">${D.partnerships.filter((p) => p.demo).length} شراكة و${D.proposals.filter((p) => p.demo).length} مقترحات و${D.achievements.filter((p) => p.demo).length} إنجازات تجريبية، مميزة بوسم «تجريبي» ولا تمثل بيانات فعلية.</div></span><span class="switch"><input type="checkbox" id="dDemo" ${showDemo() ? 'checked' : ''}><i></i></span></label>
       <p class="small muted" style="margin-top:12px">السجلات الثلاثة المستوردة من ملف الحصر تبقى ظاهرة دائمًا. عند الإخفاء تُحسب المؤشرات من البيانات الفعلية فقط.</p>
       <div class="row" style="margin-top:12px"><button class="btn danger" id="dPurge">${icon('trash')} حذف البيانات التجريبية نهائيًا</button></div></div></div>
+    ${can('edit.partnership') ? `<div class="panel" style="margin-top:18px" id="dContacts"><div class="panel-h"><h3>بيانات التواصل من ملف الحصر</h3><span class="sub">ضباط الاتصال: الاسم والبريد والجوال</span></div><div class="panel-b">
+      <p class="small muted" style="margin-bottom:12px">بيانات التواصل الشخصية لا تُحفظ في شيفرة المنصة المنشورة. اختر «ملف حصر الشراكات» من جهازك لتُقرأ منه أعمدة ضابط الاتصال والبريد والجوال وتُحفظ في بيانات المنصة${Cloud.on ? ' المشتركة المحمية بتسجيل الدخول' : ''}. لا يُرفع الملف نفسه ولا يتغير شيء غير بيانات التواصل.</p>
+      <label class="btn">${icon('upload')} اختيار ملف الحصر (xlsx)<input type="file" accept=".xlsx" hidden id="dCImp"></label>
+      <span class="small muted" id="dCStat" style="margin-inline-start:10px">${D.partnerships.filter((p) => !p.demo && (p.contactEmail || p.contactPhone)).length} شراكة لها بيانات تواصل حاليًا</span></div></div>` : ''}
     <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>النسخ الاحتياطي والاستعادة</h3></div><div class="panel-b">
       <p class="small muted" style="margin-bottom:14px">${Cloud.on ? 'البيانات محفوظة على خادم المنصة المشتركة، مع نسخة على هذا الجهاز للعرض السريع. صدّر نسخة احتياطية دورية للاحتفاظ بها خارج المنصة.' : `تُحفظ البيانات والمرفقات في متصفح هذا الجهاز (${Store.mode === 'idb' ? 'IndexedDB' : 'ذاكرة مؤقتة — لن تبقى بعد إغلاق الصفحة'}). صدّر نسخة احتياطية دورية، أو لنقل البيانات إلى جهاز آخر.`}</p>
       <div class="row wrap"><button class="btn primary" id="dExp">${icon('download')} تصدير نسخة احتياطية (JSON مع المرفقات)</button>
@@ -270,6 +274,12 @@ function setData(b) {
   Store.allFiles().then((fs) => { const tot = fs.reduce((a, f) => a + (f.size || 0), 0); $('#dStat', b) && ($('#dStat', b).textContent = `المرفقات المحفوظة: ${fs.length} ملف (${fmtSize(tot)}).`); });
   b.onchange = async (e) => {
     if (e.target.id === 'dDemo') { await setDemo(e.target.checked); setData(b); }
+    if (e.target.id === 'dCImp' && e.target.files[0]) {
+      const st = $('#dCStat', b); st.textContent = 'جارٍ القراءة…';
+      try { const r = await importContactsFromXlsx(e.target.files[0]); toast(r.n ? `حُدّثت بيانات التواصل لـ ${r.n} شراكة` : 'لا جديد: بيانات التواصل مطابقة للملف'); setData(b); }
+      catch (er) { st.textContent = er.message; toast(er.message, 'err'); }
+      e.target.value = ''; return;
+    }
     if (e.target.id === 'dImp' && e.target.files[0]) {
       if (!(await confirmDlg('ستُستبدل جميع البيانات الحالية في هذا المتصفح بمحتوى النسخة الاحتياطية. يُنصح بتصدير نسخة من الوضع الحالي أولًا.', { title: 'استعادة نسخة احتياطية', ok: 'استعادة', danger: true }))) { e.target.value = ''; return; }
       try { $('#dStat', b).innerHTML = '<span class="spinner" style="width:16px;height:16px;display:inline-block;vertical-align:middle"></span> جارٍ الاستعادة…'; await restoreBackup(e.target.files[0]); applyTheme(); renderShell(); toast('استُعيدت النسخة الاحتياطية'); go('#/'); }

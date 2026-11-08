@@ -90,14 +90,4 @@ function partnershipRows(list) {
     ];
   });
 }
-function exportPartnershipsXlsx(list, base) {
-  if (!list.length) return toast('لا توجد سجلات لتصديرها ضمن الفلاتر الحالية.', 'err');
-  const headers = [...REAL_SAMPLE.headers, 'الرمز', 'الحالة المحسوبة', 'مرحلة الشراكة', 'تصنيف الشراكة', 'آخر تحديث', 'ملاحظة'];
-  const widths = [6, 34, 12, 16, 70, 22, 30, 15, 14, 14, 60, 60, 30, 30, 30, 22, 34, 14, 36, 16, 16, 18, 30, 22, 16];
-  const blob = buildXlsx({
-    sheetName: 'ملف الشراكات', title: REAL_SAMPLE.sheetTitle, headers, rows: partnershipRows(list), widths,
-    note: `صُدّر من ${D.settings.org.platform} في ${fmtDT(nowISO())} — ${list.length} سجل${can('view.contacts') ? '' : ' — بيانات التواصل محجوبة حسب الدور'}. الأعمدة A إلى S مطابقة لملف الحصر الأصلي.`,
-  });
-  download(`${base}-${isoDate(today())}.xlsx`, blob);
-  toast(`صُدّر ${list.length} سجل إلى Excel`);
-}
+/* exportPartnershipsXlsx في 18b-xlsx-book.js */

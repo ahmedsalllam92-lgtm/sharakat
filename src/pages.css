@@ -2995,3 +2995,8 @@ body:has(.pm.stuck) .js-nav{opacity:0;pointer-events:none;transform:translateY(-
 .px-out{align-content:center;align-items:center}
 .px-now{top:auto;bottom:0;transform:translateX(-50%)}
 .px-now::before{content:"";position:absolute;left:50%;bottom:100%;width:2px;height:150px;background:linear-gradient(0deg,rgba(176,138,62,.6),rgba(176,138,62,0));transform:translateX(-50%)}
+
+/* الجهات المستهدفة */
+#pkind{margin-inline-end:8px}
+#pkind .pk-n{font-weight:600;font-size:11px;margin-inline-start:4px;opacity:.75}
+.chip.pk-t{background:color-mix(in srgb,var(--gold) 16%,var(--paper));color:var(--gold-ink,#7a5c1e);border-color:transparent;font-size:11px;padding:1px 8px;vertical-align:middle}

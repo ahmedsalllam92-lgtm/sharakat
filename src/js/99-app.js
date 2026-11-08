@@ -371,6 +371,7 @@ function migrate() {
   if (!s.lists.attachmentCats.includes(WF_CAT)) { s.lists.attachmentCats.push(WF_CAT); changed = true; }
   if (!s.wfDepts) { s.wfDepts = { ...WF_DEPT_DEFAULTS }; changed = true; }
   if (!s.wfTemplates) { s.wfTemplates = {}; changed = true; }
+  if ((s.realV || 1) < 2 && applyRealV2()) { s.realV = 2; changed = true; }
   if (s.schema < 5) {
     if (!s.org.platform || s.org.platform === 'منصة الشراكات') s.org.platform = 'منظومة الشراكات';
     if (!s.alertDays) s.alertDays = 30;
@@ -385,7 +386,7 @@ async function boot() {
     await Store.open();
     await Repo.load();
     if (!D.settings) await seedAll();
-    if (migrate()) { await Repo.saveSettings(); for (const c of ['partnerships', 'achievements']) await Store.putMany(c, D[c]); }
+    if (migrate()) { await Repo.saveSettings(); for (const c of ['partnerships', 'achievements', 'partners']) await Store.putMany(c, D[c]); }
     applyTheme();
     if (!authBoot()) { showLogin(); splashSync(); return; }
     if (Cloud.on) { if (!(await cloudEnter())) return; applyTheme(); }
