@@ -325,7 +325,7 @@ function printDossier(p) {
   const html = document.documentElement; html.classList.add('printing-dossier');
   let st = $('#dosPage'); if (!st) { st = document.createElement('style'); st.id = 'dosPage'; document.head.appendChild(st); }
   const run = ($('#dossier .dossier') || {}).dataset ? $('#dossier .dossier').dataset.run : '';
-  st.textContent = `@page{size:A4;margin:16mm 14mm 18mm;@bottom-center{content:"${String(run).replace(/["\\]/g, '')} — صفحة " counter(page) " من " counter(pages);font-family:'Expo Arabic','IBM Plex Sans Arabic',sans-serif;font-size:8.5pt;color:#6B756F}}@page :first{@bottom-center{content:none}}`;
+  st.textContent = `@page{size:A4;margin:16mm 14mm 18mm;@bottom-center{content:"${String(run).replace(/["\\]/g, '')} — صفحة " counter(page) " من " counter(pages);font-family:'SaudiRiyal','Expo Arabic','IBM Plex Sans Arabic',sans-serif;font-size:8.5pt;color:#6B756F}}@page :first{@bottom-center{content:none}}`;
   const prev = document.title; document.title = `الملف الشامل — ${partnerName(p)}`;
   const done = () => { html.classList.remove('printing-dossier'); st.textContent = ''; document.title = prev; window.removeEventListener('afterprint', done); };
   window.addEventListener('afterprint', done);
@@ -351,7 +351,7 @@ async function dossierZip(p, secs) {
   const div = document.createElement('div'); div.innerHTML = html;
   await Promise.all($$('img', div).map(async (im) => { if (im.src.startsWith('blob:')) { try { im.src = await blobToDataURL(await (await fetch(im.src)).blob()); } catch (_) { /* تجاهل */ } } }));
   const css = [...document.querySelectorAll('style')].map((s) => s.textContent).join('\n').match(/\/\*DOSSIER-CSS\*\/[\s\S]*?\/\*DOSSIER-CSS-END\*\//);
-  zip.file(`الملف الشامل — ${name}.html`, `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>الملف الشامل — ${esc(name)}</title><style>body{margin:0;background:#EDEAE2;font-family:'Expo Arabic','IBM Plex Sans Arabic',Tahoma,sans-serif}${css ? css[0] : ''}</style></head><body><div id="dossier" class="standalone"><div class="ds-scroll">${div.innerHTML}</div></div></body></html>`);
+  zip.file(`الملف الشامل — ${name}.html`, `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>الملف الشامل — ${esc(name)}</title><style>body{margin:0;background:#EDEAE2;font-family:'SaudiRiyal','Expo Arabic','IBM Plex Sans Arabic',Tahoma,sans-serif}${css ? css[0] : ''}</style></head><body><div id="dossier" class="standalone"><div class="ds-scroll">${div.innerHTML}</div></div></body></html>`);
   const out = await zip.generateAsync({ type: 'blob' });
   download(`حزمة الشراكة — ${name}.zip`, out);
   await Repo.log('partnership.dossier', 'partnership', p.id, p.code, 'تنزيل حزمة الشراكة (ZIP)');

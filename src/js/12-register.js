@@ -172,7 +172,7 @@ function pcardHTML(p) {
       <dl class="pc-facts">
         <div class="${st === 'soon' ? 'w' : ''}"><dt>المتبقي</dt><dd>${rem}</dd></div>
         <div class="${ev !== null ? 'e-' + evalTone(ev) : ''}"><dt>التقييم</dt><dd>${ev !== null ? `<b>${ev}</b><small>/100</small>` : '<small>لم تُقيَّم</small>'}</dd></div>
-        <div><dt>القيمة</dt><dd>${P.total ? `<b>${sarShort(P.total)}</b><small>ر.س</small>` : '<small>—</small>'}</dd></div>
+        <div><dt>القيمة</dt><dd>${P.total ? `<b>${sarShort(P.total)}</b><small>⃁</small>` : '<small>—</small>'}</dd></div>
       </dl>
     </div>
     <footer class="pc-foot">

@@ -7,7 +7,7 @@
 const SECTOR_FORM = ['قطاع حكومي', 'قطاع شبه حكومي', 'قطاع خاص', 'قطاع غير ربحي', 'قطاع التعليم'];
 const SECTOR_TO_FORM = { 'حكومي': 'قطاع حكومي', 'شبه حكومي': 'قطاع شبه حكومي', 'خاص': 'قطاع خاص', 'غير ربحي': 'قطاع غير ربحي', 'تعليمي': 'قطاع التعليم' };
 const OK_NO = [['ok', 'مناسب'], ['no', 'غير مناسب']];
-const sar = (n) => (n || n === 0 ? `${nf(Math.round(+n))} ر.س` : '—');
+const sar = (n) => (n || n === 0 ? `${nf(Math.round(+n))} ⃁` : '—');
 const goalCode = (g) => (String(g).match(/^([A-Z]{1,3}\d?)\s*[:：]/) || [])[1] || g;
 const goalCodes = () => L('goals').map((g) => ({ k: goalCode(g), t: g }));
 
@@ -66,7 +66,7 @@ const FORMS = {
       { t: 'معايير التقييم المبدئي', note: `لكل معيار وزن، والدرجة مجموع أوزان المعايير «المناسبة». أقل من ${ievCfg().th[0]}% «${IEV_RES[2]}»، ومن ${ievCfg().th[0]}% إلى ${ievCfg().th[1]}% «${IEV_RES[1]}»، وأكثر من ${ievCfg().th[1]}% «${IEV_RES[0]}». تُعدَّل المعايير والأوزان من الإعدادات.`, fields: [{ k: 'crit', type: 'checklist', opts: OK_NO, items: ievCfg().crit.map((c) => c.t), weights: ievCfg().crit.map((c) => +c.w || 0), req: true }] },
       { t: 'القيمة والأثر المتوقعان', fields: [
         { k: 'valueTypes', l: 'نوع القيمة المتوقعة', type: 'multi', list: 'valueTypes', opts: L('valueTypes') },
-        { k: 'valueSar', l: 'القيمة المالية التقديرية (ر.س)', type: 'number', hint: 'اختياري — تقدير أولي لقيمة ما تقدمه الجهة.' },
+        { k: 'valueSar', l: 'القيمة المالية التقديرية (⃁)', type: 'number', hint: 'اختياري — تقدير أولي لقيمة ما تقدمه الجهة.' },
         { k: 'impact', l: 'الأثر المتوقع', type: 'textarea', def: R.added },
       ] },
       { t: 'التوصية', fields: [
@@ -173,7 +173,7 @@ const FORMS = {
       { t: 'معايير تقييم الشراكة', note: 'كل معيار من 1 (ضعيف) إلى 5 (ممتاز)، والدرجة النهائية موزونة.', fields: [{ k: 'scores', type: 'scores', items: EVAL_CRIT, req: true }] },
       { t: 'القيمة والأثر المتحققان', fields: [
         { k: 'valueTypes', l: 'القيمة المتحققة', type: 'multi', list: 'valueTypes', opts: L('valueTypes') },
-        { k: 'valueSar', l: 'القيمة المالية المتحققة (ر.س)', type: 'number' },
+        { k: 'valueSar', l: 'القيمة المالية المتحققة (⃁)', type: 'number' },
         { k: 'impactLevel', l: 'مستوى الأثر', type: 'chips', opts: ['مرتفع', 'متوسط', 'منخفض', 'لم يظهر بعد'], req: true },
         { k: 'impact', l: 'وصف الأثر', type: 'textarea' },
       ] },
@@ -540,10 +540,10 @@ function wordForm(kind, rec, key, evalIdx = null) {
    ===================================================================== */
 const FIN_FIELDS = [
   { k: 'model', l: 'النموذج المالي للشراكة', type: 'chips', opts: () => L('financeModels') },
-  { k: 'partnerSar', l: 'مساهمة الشريك المالية (ر.س)', type: 'number' },
-  { k: 'murojSar', l: 'مساهمة المؤسسة المالية (ر.س)', type: 'number' },
-  { k: 'inkindSar', l: 'القيمة العينية والمعرفية التقديرية (ر.س)', type: 'number' },
-  { k: 'spentSar', l: 'المصروف حتى الآن (ر.س)', type: 'number' },
+  { k: 'partnerSar', l: 'مساهمة الشريك المالية (⃁)', type: 'number' },
+  { k: 'murojSar', l: 'مساهمة المؤسسة المالية (⃁)', type: 'number' },
+  { k: 'inkindSar', l: 'القيمة العينية والمعرفية التقديرية (⃁)', type: 'number' },
+  { k: 'spentSar', l: 'المصروف حتى الآن (⃁)', type: 'number' },
   { k: 'status', l: 'الوضع المالي', type: 'chips', opts: () => L('financeStatus') },
   { k: 'notes', l: 'ملاحظات مالية', type: 'textarea' },
 ];
@@ -557,7 +557,7 @@ function profileSectionHTML(p) {
   const P = pProfile(p), f = P.fin, edit = can('edit.partnership');
   const ev = P.ev; const evs = (p.evals || []).filter((e) => e.status === 'done');
   const kv = (l, v, cls = '') => `<div class="${cls}"><dt>${esc(l)}</dt><dd>${v || '<span class="faint">لم يُحدَّد</span>'}</dd></div>`;
-  const money = (x) => (x === 0 || x === '0' ? '0 ر.س' : x ? sar(x) : '');
+  const money = (x) => (x === 0 || x === '0' ? '0 ⃁' : x ? sar(x) : '');
   const fin = can('view.internal') || wfInvolved(p);
   const ring = (s) => { const r = 26, C = 2 * Math.PI * r; return `<svg viewBox="0 0 64 64" class="pf-ring ${evalTone(s)}" aria-hidden="true"><circle cx="32" cy="32" r="${r}" class="bg"/><circle cx="32" cy="32" r="${r}" class="v" stroke-dasharray="${(s / 100 * C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 32 32)"/><text x="32" y="37" text-anchor="middle">${s}</text></svg>`; };
   return `<section class="dsec pf-sec" id="profile"><h2>التصنيف والقيمة والتقييم ${edit ? `<button class="btn sm" type="button" data-pfedit>${icon('edit')} تعديل</button>` : ''}</h2>

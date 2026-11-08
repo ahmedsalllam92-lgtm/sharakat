@@ -453,15 +453,15 @@ function boChEval(X) {
         <div class="bo-orig">${orig.map((o) => `<span class="${o.k === 'غير محدد' ? 'na' : ''}"><b>${o.n}</b>${esc(o.k)}</span>`).join('')}</div></div>
     </div>
     <div class="bo-fin">
-      <div><span>مساهمات الشركاء</span><b class="cu" data-v="${fin.partner}">${nf(fin.partner)}</b><small>ر.س</small></div>
-      <div><span>مساهمات المؤسسة</span><b class="cu" data-v="${fin.muroj}">${nf(fin.muroj)}</b><small>ر.س</small></div>
-      <div><span>القيمة العينية والمعرفية</span><b class="cu" data-v="${fin.inkind}">${nf(fin.inkind)}</b><small>ر.س</small></div>
-      <div class="tot"><span>القيمة الإجمالية للمحفظة</span><b class="cu" data-v="${fin.total}">${nf(fin.total)}</b><small>ر.س</small></div>
-      <div class="sp"><span>نسبة الصرف من الالتزامات المالية</span><div class="bo-meter"><i style="width:${fin.partner + fin.muroj ? Math.min(100, Math.round(fin.spent / (fin.partner + fin.muroj) * 100)) : 0}%"></i></div><small>${nf(fin.spent)} ر.س مصروف${late.length ? ` · <em>${late.length} ${late.length === 1 ? 'شراكة متأخرة' : 'شراكات متأخرة'} ماليًا</em>` : ''}</small></div>
+      <div><span>مساهمات الشركاء</span><b class="cu" data-v="${fin.partner}">${nf(fin.partner)}</b><small>⃁</small></div>
+      <div><span>مساهمات المؤسسة</span><b class="cu" data-v="${fin.muroj}">${nf(fin.muroj)}</b><small>⃁</small></div>
+      <div><span>القيمة العينية والمعرفية</span><b class="cu" data-v="${fin.inkind}">${nf(fin.inkind)}</b><small>⃁</small></div>
+      <div class="tot"><span>القيمة الإجمالية للمحفظة</span><b class="cu" data-v="${fin.total}">${nf(fin.total)}</b><small>⃁</small></div>
+      <div class="sp"><span>نسبة الصرف من الالتزامات المالية</span><div class="bo-meter"><i style="width:${fin.partner + fin.muroj ? Math.min(100, Math.round(fin.spent / (fin.partner + fin.muroj) * 100)) : 0}%"></i></div><small>${nf(fin.spent)} ⃁ مصروف${late.length ? ` · <em>${late.length} ${late.length === 1 ? 'شراكة متأخرة' : 'شراكات متأخرة'} ماليًا</em>` : ''}</small></div>
     </div>
     ${recs.length ? `<div class="tbl-wrap"><table class="tbl bo-rt bo-evt"><thead><tr><th>الشراكة</th><th>التصنيف</th><th>المجال</th><th>آخر تقييم</th><th>التوصية</th><th>القيمة الإجمالية</th></tr></thead><tbody>
       ${recs.map(({ p, e }) => { const P = pProfile(p); return `<tr data-href="#/partnerships/${p.id}"><td><b>${esc(partnerName(p))}</b> ${demoTag(p)}<small>${esc(e.data.period || '')}</small></td><td>${esc(P.ptype || '—')}</td><td>${esc(P.domain || '—')}</td><td><span class="bo-evs ${evalTone(e.score)}"><b>${e.score}%</b>${evalGrade(e.score)}</span></td><td>${esc(e.data.rec || '—')}</td><td><span class="num">${P.total ? sar(P.total) : '—'}</span></td></tr>`; }).join('')}</tbody></table></div>` : ''}
-    ${boInsight(avg !== null ? `متوسط تقييم الشراكات ${boB(avg + '%')} (${evalGrade(avg)})؛ ${boB(strategic)} من ${nd.length} شراكة مصنّفة شريكًا استراتيجيًا، و${boB(personal)} بدأت بعلاقة شخصية. ${notEval.length ? `${plural(notEval.length, 'شراكة سارية واحدة لم تُقيَّم', 'شراكتان ساريتان لم تُقيَّما', 'شراكات سارية لم تُقيَّم', 'شراكة سارية لم تُقيَّم')} بعد.` : ''}${fin.total ? ` القيمة الإجمالية للمحفظة ${boB(nf(fin.total))} ر.س.` : ''}` : `لم تُقيَّم الشراكات بعد؛ يُقترح تعبئة نموذج تقييم الشراكة لكل شراكة سارية قبل الإحاطة القادمة.`)}`;
+    ${boInsight(avg !== null ? `متوسط تقييم الشراكات ${boB(avg + '%')} (${evalGrade(avg)})؛ ${boB(strategic)} من ${nd.length} شراكة مصنّفة شريكًا استراتيجيًا، و${boB(personal)} بدأت بعلاقة شخصية. ${notEval.length ? `${plural(notEval.length, 'شراكة سارية واحدة لم تُقيَّم', 'شراكتان ساريتان لم تُقيَّما', 'شراكات سارية لم تُقيَّم', 'شراكة سارية لم تُقيَّم')} بعد.` : ''}${fin.total ? ` القيمة الإجمالية للمحفظة ${boB(nf(fin.total))} ⃁.` : ''}` : `لم تُقيَّم الشراكات بعد؛ يُقترح تعبئة نموذج تقييم الشراكة لكل شراكة سارية قبل الإحاطة القادمة.`)}`;
 }
 
 /* 03 — منظومة الشركاء: شبكة شعاعية حول المؤسسة */

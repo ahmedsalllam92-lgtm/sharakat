@@ -134,7 +134,7 @@ function mkSlidesOne(p) {
   /* 3. أبرز الأرقام */
   const G = [];
   if (dur) G.push([dur[0], nf(dur[0]), 'مدة الشراكة (' + dur[1] + ')']);
-  if (P.total) G.push([P.total, sarShort(P.total).replace(' مليون', 'M').replace(' ألف', 'K'), 'ريال قيمة تقديرية']);
+  if (P.total) G.push([P.total, sarShort(P.total).replace(' مليون', 'M').replace(' ألف', 'K'), '⃁ قيمة تقديرية']);
   if (p.highlight && p.highlight.value) G.push([0, String(p.highlight.value), p.highlight.label || 'أبرز نتيجة']);
   if (G.length < 3 && outs.length) G.push([outs.length, nf(outs.length), 'مخرجًا مستهدفًا']);
   if (G.length < 3 && coop.length) G.push([coop.length, nf(coop.length), 'مجالًا للتعاون']);
@@ -201,9 +201,9 @@ function mkSlidesOne(p) {
     const parts = [[+f.partnerSar || 0, 'مساهمة الشريك', 'a'], [+f.inkindSar || 0, 'قيمة عينية ومعرفية', 'c'], [+f.murojSar || 0, 'مساهمة المؤسسة', 'b']].filter((x) => x[0]);
     S.push(['mult', 'night', 'القيمة', `
       <div class="mx-mult">
-        ${mult >= 1 ? `<div class="mx-eq"><span class="one"><b>1</b>ريال من المؤسسة</span><span class="op">=</span><span class="many"><b data-cnt="${mult.toFixed(1)}" data-dec="1">${mult.toFixed(1)}</b>ريال من الشريك</span></div><p class="mx-eq-s">${mkE(k('va.s'), `مقابل كل ريال تساهم به المؤسسة، يساهم الشريك بنحو ${mult.toFixed(1)} ريال.`)}</p>` : `<div class="mx-eq solo"><span class="many"><b>${sarShort(P.total)}</b>ريال قيمة تقديرية</span></div>`}
+        ${mult >= 1 ? `<div class="mx-eq"><span class="one"><b>1<small class="cur">⃁</small></b>من المؤسسة</span><span class="op">=</span><span class="many"><b data-cnt="${mult.toFixed(1)}" data-dec="1" data-suf="&lt;small class=&quot;cur&quot;&gt;⃁&lt;/small&gt;">${mult.toFixed(1)}<small class="cur">⃁</small></b>من الشريك</span></div><p class="mx-eq-s">${mkE(k('va.s'), `مقابل كل ⃁ تساهم به المؤسسة، يساهم الشريك بنحو ${mult.toFixed(1)} ⃁.`)}</p>` : `<div class="mx-eq solo"><span class="many"><b>${sarShort(P.total)}</b>⃁ قيمة تقديرية</span></div>`}
         ${parts.length ? `<div class="mx-bars-h">${parts.map(([v, l, c], i) => `<div class="${c}" style="--w:${(v / P.total * 100).toFixed(1)}%;--i:${i}"><span>${l}</span><i></i><b>${sarShort(v)}</b></div>`).join('')}</div>` : ''}
-        <div class="mx-total"><span>إجمالي القيمة</span><b>${sarShort(P.total)}</b><small>ريال سعودي</small></div>
+        <div class="mx-total"><span>إجمالي القيمة</span><b>${sarShort(P.total)}</b><small>⃁</small></div>
       </div>`]);
   }
   /* 10. التقييم */
@@ -246,16 +246,16 @@ function mkSlides() {
       <div class="mx-key"><span><i class="a"></i>سارية</span><span><i class="g"></i>ذهبية</span><span><i class="u"></i>قادمة أو قيد الإعداد</span><span><i class="e"></i>منتهية</span></div>
     </div>`]);
   /* 2. السطر الواحد: كلمة بكلمة */
-  const man = rptVal('mk.man.t', `خلال ${yrs} بنينا ${X.signed.length} شراكة مع ${X.partners.length} جهة${X.value ? `، بقيمة تتجاوز ${sarShort(X.value)} ريال` : ''}، بهدف تحقيق أثر بيئي ملموس وقابل للقياس.`);
+  const man = rptVal('mk.man.t', `خلال ${yrs} بنينا ${X.signed.length} شراكة مع ${X.partners.length} جهة${X.value ? `، بقيمة تتجاوز ${sarShort(X.value)} ⃁` : ''}، بهدف تحقيق أثر بيئي ملموس وقابل للقياس.`);
   S.push(['line', 'paper', 'الملخص', `
     <span class="mx-qm" aria-hidden="true">“</span>
-    <p class="mx-line" data-ek="mk.man.t" data-base="${esc(`خلال ${yrs} بنينا ${X.signed.length} شراكة مع ${X.partners.length} جهة${X.value ? `، بقيمة تتجاوز ${sarShort(X.value)} ريال` : ''}، بهدف تحقيق أثر بيئي ملموس وقابل للقياس.`)}" contenteditable="true" spellcheck="false">${man.split(/\s+/).map((w, i) => `<span class="${/[0-9٠-٩]/.test(w) ? 'n' : ''}" style="--w:${i}">${esc(w)}</span>`).join(' ')}</p>
+    <p class="mx-line" data-ek="mk.man.t" data-base="${esc(`خلال ${yrs} بنينا ${X.signed.length} شراكة مع ${X.partners.length} جهة${X.value ? `، بقيمة تتجاوز ${sarShort(X.value)} ⃁` : ''}، بهدف تحقيق أثر بيئي ملموس وقابل للقياس.`)}" contenteditable="true" spellcheck="false">${man.split(/\s+/).map((w, i) => `<span class="${/[0-9٠-٩]/.test(w) ? 'n' : ''}" style="--w:${i}">${esc(w)}</span>`).join(' ')}</p>
     <div class="mx-sig"><i></i>${esc(org.dept)} — ${esc(org.name)}</div>`]);
   /* 3. ثلاثة أرقام عملاقة تمتلئ بالذهب */
   const actPct = X.act.length ? Math.round(X.activated / X.act.length * 100) : 0;
   S.push(['three', 'night', 'بالأرقام', `
     <h2 class="mx-h">${mkE('num.h', 'أبرز الأرقام')}</h2>
-    <div class="mx-giants">${[[X.partners.length, mkNum(X.partners.length), 'جهة شريكة'], [X.act.length, mkNum(X.act.length), 'شراكة سارية الآن'], [X.value || X.outputs.length, X.value ? sarShort(X.value).replace(' مليون', 'M').replace(' ألف', 'K') : mkNum(X.outputs.length), X.value ? 'ريال قيمة تقديرية' : 'مخرجًا موثّقًا']].map(([v, t, l], i) => `<div class="mx-gi" style="--i:${i}"><b data-t="${esc(t)}">${esc(t)}</b><span>${l}</span></div>`).join('')}</div>
+    <div class="mx-giants">${[[X.partners.length, mkNum(X.partners.length), 'جهة شريكة'], [X.act.length, mkNum(X.act.length), 'شراكة سارية الآن'], [X.value || X.outputs.length, X.value ? sarShort(X.value).replace(' مليون', 'M').replace(' ألف', 'K') : mkNum(X.outputs.length), X.value ? '⃁ قيمة تقديرية' : 'مخرجًا موثّقًا']].map(([v, t, l], i) => `<div class="mx-gi" style="--i:${i}"><b data-t="${esc(t)}">${esc(t)}</b><span>${l}</span></div>`).join('')}</div>
     <div class="mx-ticker">${[[X.outputs.length, 'مخرجًا موثّقًا'], [actPct + '%', 'نسبة التفعيل'], [X.avgEv === null ? '—' : X.avgEv + '/100', 'متوسط التقييم'], [X.depts.size, 'إدارة داخلية شريكة'], [X.signed.length, 'مذكرة موقّعة']].map(([v, l]) => `<span><b>${esc(String(v))}</b>${l}</span>`).join('<i>✦</i>')}</div>`]);
   /* 4. كوكبة الشركاء */
   const PR = X.partners.slice(0, 18), rings = [150, 230, 305];
@@ -323,9 +323,9 @@ function mkSlides() {
     const parts = [[X.fin.partner, 'مساهمات الشركاء', 'a'], [X.fin.inkind, 'قيمة عينية ومعرفية', 'c'], [X.fin.muroj, 'مساهمة المؤسسة', 'b']].filter((x) => x[0]);
     S.push(['mult', 'night', 'القيمة', `
       <div class="mx-mult">
-        ${mult >= 1 ? `<div class="mx-eq"><span class="one"><b>1</b>ريال من المؤسسة</span><span class="op">=</span><span class="many"><b data-cnt="${mult.toFixed(1)}" data-dec="1">${mult.toFixed(1)}</b>ريال من الشركاء</span></div><p class="mx-eq-s">${mkE('va.s', `مقابل كل ريال تساهم به المؤسسة، يساهم الشركاء بنحو ${mult.toFixed(1)} ريال.`)}</p>` : `<div class="mx-eq solo"><span class="many"><b>${sarShort(X.value)}</b>ريال قيمة تقديرية</span></div>`}
+        ${mult >= 1 ? `<div class="mx-eq"><span class="one"><b>1<small class="cur">⃁</small></b>من المؤسسة</span><span class="op">=</span><span class="many"><b data-cnt="${mult.toFixed(1)}" data-dec="1" data-suf="&lt;small class=&quot;cur&quot;&gt;⃁&lt;/small&gt;">${mult.toFixed(1)}<small class="cur">⃁</small></b>من الشركاء</span></div><p class="mx-eq-s">${mkE('va.s', `مقابل كل ⃁ تساهم به المؤسسة، يساهم الشركاء بنحو ${mult.toFixed(1)} ⃁.`)}</p>` : `<div class="mx-eq solo"><span class="many"><b>${sarShort(X.value)}</b>⃁ قيمة تقديرية</span></div>`}
         <div class="mx-bars-h">${parts.map(([v, l, c], i) => `<div class="${c}" style="--w:${(v / X.value * 100).toFixed(1)}%;--i:${i}"><span>${l}</span><i></i><b>${sarShort(v)}</b></div>`).join('')}</div>
-        <div class="mx-total"><span>إجمالي القيمة</span><b>${sarShort(X.value)}</b><small>ريال سعودي</small></div>
+        <div class="mx-total"><span>إجمالي القيمة</span><b>${sarShort(X.value)}</b><small>⃁</small></div>
       </div>`]);
   }
   /* 10. الخطوات القادمة */
@@ -351,7 +351,7 @@ function mkPlay(sl) {
   sl.classList.add('play');
   sl.querySelectorAll('[data-cnt]').forEach((b) => {
     const to = +b.dataset.cnt, dec = +b.dataset.dec || 0, fmt = b.dataset.fmt, t0 = performance.now(), d = 1500;
-    const step = (t) => { const k = Math.min(1, (t - t0) / d), v = to * (1 - Math.pow(1 - k, 3)); b.textContent = dec ? v.toFixed(dec) : fmt ? nf(Math.round(v)) : nf(Math.round(v)); if (k < 1) requestAnimationFrame(step); };
+    const step = (t) => { const k = Math.min(1, (t - t0) / d), v = to * (1 - Math.pow(1 - k, 3)); const txt = dec ? v.toFixed(dec) : nf(Math.round(v)); if (b.dataset.suf) b.innerHTML = txt + b.dataset.suf; else b.textContent = txt; /* اللاحقة (علامة الريال) تبقى أثناء العدّ */ if (k < 1) requestAnimationFrame(step); };
     setTimeout(() => requestAnimationFrame(step), 500);
   });
 }

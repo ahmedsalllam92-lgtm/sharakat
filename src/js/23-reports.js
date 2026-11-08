@@ -422,7 +422,7 @@ function specHTML(slide) {
     if (e.k === 'text') {
       const lines = e.text.split('\n');
       const inner = lines.map((l, k) => `<span class="${e.firstBold && k === 0 && lines.length > 1 ? 'fb' : ''}">${esc(l)}</span>`).join('<br>');
-      return `<div class="rs2-t${e.key ? ' ed' : ''}" style="${box}font-family:'Expo Arabic','${e.font || RC.font}','IBM Plex Sans Arabic',Tahoma,sans-serif;font-size:${e.size}px;line-height:${e.lh};color:${e.color};font-weight:${e.bold ? 700 : 400};text-align:${e.align};justify-content:${e.valign === 'middle' ? 'center' : 'flex-start'};${e.ltr ? 'direction:ltr;' : ''}"${e.key ? ` contenteditable="true" spellcheck="false" data-ek="${esc(e.key)}" data-base="${esc(e.text)}"` : ''}><div class="rs2-tx">${inner}</div></div>`;
+      return `<div class="rs2-t${e.key ? ' ed' : ''}" style="${box}font-family:'SaudiRiyal','Expo Arabic','${e.font || RC.font}','IBM Plex Sans Arabic',Tahoma,sans-serif;font-size:${e.size}px;line-height:${e.lh};color:${e.color};font-weight:${e.bold ? 700 : 400};text-align:${e.align};justify-content:${e.valign === 'middle' ? 'center' : 'flex-start'};${e.ltr ? 'direction:ltr;' : ''}"${e.key ? ` contenteditable="true" spellcheck="false" data-ek="${esc(e.key)}" data-base="${esc(e.text)}"` : ''}><div class="rs2-tx">${inner}</div></div>`;
     }
     return '';
   }).join('')}</div>`;

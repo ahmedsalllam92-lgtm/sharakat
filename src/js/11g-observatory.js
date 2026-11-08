@@ -214,7 +214,7 @@ function obPulse(m, V, P) {
       ${tile({ ic: 'clock', l: `تنتهي خلال ${D.settings.expiryDays} يومًا`, v: cu(m.soon.length, 'soon'), s: near ? `الأقرب: ${esc(partnerName(near))}` : 'لا شيء قريب', attr: 'data-drawer="soon"', tone: m.soon.length ? 'warn' : '' })}
       ${tile({ ic: 'layers', l: 'في المسار المعتمد', v: cu(P.items.length, 'pipe'), s: P.late.length ? `${P.late.length} متأخرة أكثر من ${(D.settings.infoAgeDays || 7) * 2} يومًا` : 'لا مذكرات متأخرة', attr: 'data-obscroll="obMetro"', tone: P.late.length ? 'warn' : '' })}
       ${tile({ ic: 'star', l: 'متوسط التقييم', v: V.avg !== null ? `${cu(V.avg, 'eval')}<em>/100</em>` : '<b>—</b>', s: V.avg !== null ? `${evalGrade(V.avg)} · ${V.ev.length} مقيّمة` : 'لا تقييمات بعد', attr: 'data-obscroll="obCompass"', tone: V.avg !== null && V.avg < 65 ? 'warn' : '' })}
-      ${tile({ ic: 'chart', l: 'القيمة التقديرية', v: V.fin.total ? `<b>${sarShort(V.fin.total)}</b><em>ر.س</em>` : '<b>—</b>', s: V.fin.cash ? `صُرف ${spend}% من الالتزامات` : 'لم تُسجَّل قيم مالية', attr: 'data-obscroll="obCompass"' })}
+      ${tile({ ic: 'chart', l: 'القيمة التقديرية', v: V.fin.total ? `<b>${sarShort(V.fin.total)}</b><em>⃁</em>` : '<b>—</b>', s: V.fin.cash ? `صُرف ${spend}% من الالتزامات` : 'لم تُسجَّل قيم مالية', attr: 'data-obscroll="obCompass"' })}
       ${tile({ ic: 'users', l: 'الجهات الشريكة', v: cu(m.nPartners, 'partners'), s: `في ${plural(Object.keys(m.partnersBy).length, 'قطاع واحد', 'قطاعين', 'قطاعات', 'قطاعًا')}`, attr: 'data-drawer="partners"' })}
     </div>
     <div class="ob-now" data-tour="dash-actions"><h3>${icon('flag')} يحتاج قرارًا الآن</h3>
@@ -278,7 +278,7 @@ function obCompass(V) {
         <text x="${(L_ + W - R_) / 2}" y="${H - 3}" text-anchor="middle" class="axt">درجة التقييم من 100</text>
         ${dots}
       </svg>
-      <ol class="ob-cl">${pts.map((d, i) => `<li><a href="#/partnerships/${d.p.id}" data-pti="${i}"><em style="background:${col(d.p)}">${i + 1}</em><span><b>${esc(partnerName(d.p))}</b><small>${quad(d)} · ${d.v ? sarShort(d.v) + ' ر.س' : 'بلا قيمة مسجّلة'}</small></span><strong class="${evalTone(d.s)}">${d.s}</strong></a></li>`).join('')}</ol>
+      <ol class="ob-cl">${pts.map((d, i) => `<li><a href="#/partnerships/${d.p.id}" data-pti="${i}"><em style="background:${col(d.p)}">${i + 1}</em><span><b>${esc(partnerName(d.p))}</b><small>${quad(d)} · ${d.v ? sarShort(d.v) + ' ⃁' : 'بلا قيمة مسجّلة'}</small></span><strong class="${evalTone(d.s)}">${d.s}</strong></a></li>`).join('')}</ol>
     </div>` : '<div class="empty-chart">لم تُقيَّم أي شراكة بعد. يُعبَّأ نموذج تقييم الشراكة من صفحة كل شراكة، فتظهر هنا.</div>'}
     ${V.notEval.length ? `<div class="ob-noeval"><span>${icon('alert')} سارية بلا تقييم:</span>${V.notEval.slice(0, 4).map((p) => `<a href="#/partnerships/${p.id}#profile">${esc(partnerName(p))}</a>`).join('')}${V.notEval.length > 4 ? `<em>+${V.notEval.length - 4}</em>` : ''}</div>` : ''}
   </section>`;

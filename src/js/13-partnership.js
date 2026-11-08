@@ -174,7 +174,7 @@ function pFactsHTML(p) {
     ${cell('flag', 'الحالة', esc(statusLabel(st)), dl !== null && ['active', 'soon'].includes(st) ? `متبقٍ ${plural(dl, 'يوم واحد', 'يومان', 'أيام', 'يومًا')}` : p.endDate ? 'حتى ' + fmtDate(p.endDate, 'short') : '', '#ov', st === 'soon' ? 'warn' : '')}
     ${wf ? cell('layers', 'مسار المذكرة', `${done} من ${WF_STEPS.length}`, wf.cur ? `${wf.cur.n}. ${esc(wf.cur.t)}` : 'اكتمل المسار', '#wf') : ''}
     ${cell('star', 'آخر تقييم', P.ev && P.ev.score !== null ? `${P.ev.score} <span class="pfx-u">من 100</span>` : 'لم تُقيَّم', P.ev && P.ev.score !== null ? evalGrade(P.ev.score) : 'نموذج تقييم الشراكة', '#profile', P.ev && P.ev.score !== null ? evalTone(P.ev.score) : 'mute')}
-    ${can('view.internal') ? cell('chart', 'القيمة التقديرية', P.total ? sarShort(P.total) + ' <span class="pfx-u">ر.س</span>' : '—', P.ptype || 'تصنيف غير محدد', '#profile') : ''}
+    ${can('view.internal') ? cell('chart', 'القيمة التقديرية', P.total ? sarShort(P.total) + ' <span class="pfx-u">⃁</span>' : '—', P.ptype || 'تصنيف غير محدد', '#profile') : ''}
     ${can('view.internal') ? cell('clip', 'الملفات والصور', String(files), files ? `${partnershipPhotos(p).length} صورة` : 'لا ملفات بعد', '#files') : ''}
   </div>`;
 }

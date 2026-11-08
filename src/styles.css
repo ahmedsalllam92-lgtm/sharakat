@@ -1,3 +1,7 @@
+/* علامة الريال السعودي الجديدة (U+20C1): خط صغير يحوي الرمز وحده — حزمة riyal، رخصة MIT.
+   يتقدم كل قوائم الخطوط ومقيَّد بهذا الحرف فقط، فتظهر العلامة في أي نص أو عنوان أو نموذج أو تقرير. */
+@font-face{font-family:'SaudiRiyal';font-style:normal;font-weight:100 500;font-display:block;src:url(data:font/woff2;base64,d09GMk9UVE8AAAKEAAkAAAAABTwAAAI+AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAADYIsBmAALAE2AiQDCAQGBYRbByAbmgTILgt4auWwq0mp1sGRujS1TBqMuZ3+cT4/jATP11h7fwUzqVJJ5pmbTjPJLCKWvVuiRNoN00/s74/5/qLDMqjOk0aRbUnjEY7KxiNcN0AMDnei1TVdq9kT+VtdUMGrLydGvrtgaPqeBcfkRYKVHo4G8urLpgaMwsj3aYMOOCJ5NvANdL7bep4/NAgrYhCDfMAxVrVcKLdGMIKIpI6Wx+naj0UfASRS/5FWSNah0oTKxrnIbEoB5tJLARYz93JICwesSEqhQm/40IQtJusZl8qXce7Qb5RtllAA4sCImOdoXbzjnye8/d5OS6v8OksKenP5fPK2+5Hw94oP/h6w/+4yjndBEFwJf3xJc0NCM/1ivVEkueiDqr7TjvD0CmJu0Y0Ec9LNjYvKjPwtLC7e93n3tHd3fn6bcDnn7OFo59idJOyDVL77TX8VPaekofU62gMPalOdALbqMPInUZCOAArBdAL8FWeflX+gKJGQ+LpXAQSNACkYKgCDQaDi5w56+wEBjBbo9fQLSWbPkxSGAW/d5YBeG7m0jqiAOFvXWE52NTROVMOAQpXcgKJCY4NgAYp40qFJZw+GVGpgSWYWcaTQx+P5eAJoIk2iyTSFptI0lqFRSeZYNGISAUU3ICRhoUgjD5oybmEoohOWPJYQRwFTPN7yBNBEmkSTaQpNpWk8wwozDZdVDDHKjElzu7/HyFOkT400nUcs2WuFaqWKKw+l7/03MEmeDl3KNGmgooM2Oit8Qm2q6BJrHywEAAA=) format('woff2');unicode-range:U+20C1}
+@font-face{font-family:'SaudiRiyal';font-style:normal;font-weight:600 900;font-display:block;src:url(data:font/woff2;base64,d09GMk9UVE8AAAJcAAkAAAAABRAAAAIYAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAADYIjBmAALAE2AiQDCAQGBYQ3ByAbbQTIjtRG+UoGEjxfa+X7PdMLgBN2zOUJFBF1AEizRJSpOHJbUVHLdzXw7/9z7/j/2mBLL0aBXPXauGgD7kFP4zZYJ+Bta3JgeYBZOzueGNQvMsggGS79yuRLBFsQEd+UZdvmrRy/ZuVCRKRXM0+zoJpFq1myjWnvbMd1EVgVLgJro6YI0i2GFgmk8uWe30ysb+9+jKATfLQ9Nq1e1r/vhH6AGJSI/TD5Q/hE823DlTRG71i6d9GRBZ5G5Ye+/vDSk9PPPB2VCbrxuTEuOf52fao2DXRj5wt9/VHe2Uzr+ZuWrFq9xGM6fuqum8S+VS/YWNY5RHfsnU3OuPVBm46CMz6ZqF3y2Kvv+sGZO1ev3va8+6WN0WcvnLpoLnlMw6+rdzdDK7Sdc0JY1h71Ag3quHoOnGiLyF/6iUIdBFAos9KMdd6GAv8AqhmJSnV4F0CwECCAjQPY2Ag4b4fT37EIwHKBQ/8fjpoTHlnzWISZSrcNQ0vI2j2LYtlICByXeyxKNKim7oVlEih0lVtIQnA6BA1Q2IRhEWATbHzkofEzDS68DJNunvSAvexjPwc4yCERsWgmuhILsb2Aog8g+NBQeIjDIsM+2CToAU2KOXARY7x086QH7GUf+znAQQ7JiFejrqdqZArL2MY8HnbeeNawkoW317Hqx4m9xBM77/fvzGAR69nAMtawGoe+9KafM5w70GE4e3gsFA==) format('woff2');unicode-range:U+20C1}
 /* ===== منصة الشراكات — الأنماط ===== */
 :root{
   --bg:#F3F6F5; --paper:#FFFFFF; --paper-2:#F3F7F6; --paper-3:#EAF1EE;
@@ -13,7 +17,7 @@
   --shadow-lg:0 24px 60px -24px rgba(11,63,56,.35);
   --r-s:6px; --r-m:10px; --r-l:16px;
   --side:264px; --top:60px;
-  --font:'Expo Arabic','IBM Plex Sans Arabic',Tahoma,'Segoe UI',system-ui,sans-serif;
+  --font:'SaudiRiyal','Expo Arabic','IBM Plex Sans Arabic',Tahoma,'Segoe UI',system-ui,sans-serif;
   color-scheme:light;
 }
 :root[data-theme="dark"]{

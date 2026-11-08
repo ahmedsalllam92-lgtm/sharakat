@@ -95,7 +95,7 @@ function dzValueHTML(nd, sel) {
       ${V.notEval.length ? `<p class="dv-warn">${icon('alert')} ${plural(V.notEval.length, 'شراكة سارية بلا تقييم', 'شراكتان ساريتان بلا تقييم', 'شراكات سارية بلا تقييم', 'شراكة سارية بلا تقييم')}</p>` : ''}
     </section>
     <section class="dz3-dc c6 dv-fin"><header><h3>القيمة والوضع المالي</h3><p>من بطاقة التصنيف والقيمة في كل شراكة</p></header>
-      <div class="dv-fin-top"><div><span>القيمة الإجمالية التقديرية</span><b>${f.total ? sarShort(f.total) : '—'}</b><small>ريال سعودي</small></div>
+      <div class="dv-fin-top"><div><span>القيمة الإجمالية التقديرية</span><b>${f.total ? sarShort(f.total) : '—'}</b><small>⃁</small></div>
         <div class="dv-stack" role="img" aria-label="مكونات القيمة">${[['partner', 'مساهمة الشركاء', 'var(--petrol)'], ['muroj', 'مساهمة المؤسسة', 'var(--gold)'], ['inkind', 'قيمة عينية ومعرفية', 'var(--petrol-3)']].map(([k, l, c]) => `<i style="flex:${f[k] || 0};background:${c}" title="${l}: ${sar(f[k])}"></i>`).join('')}</div>
         <ul class="dv-lg sm">${[['partner', 'مساهمة الشركاء', 'var(--petrol)'], ['muroj', 'مساهمة المؤسسة', 'var(--gold)'], ['inkind', 'قيمة عينية ومعرفية', 'var(--petrol-3)']].map(([k, l, c]) => `<li><i style="background:${c}"></i><span>${l}</span><b>${f[k] ? sarShort(f[k]) : '—'}</b></li>`).join('')}</ul></div>
       <div class="dv-spend"><div><span>المصروف من الالتزامات المالية</span><b>${pct(f.spent, f.cash)}%</b></div><i><em style="width:${Math.min(100, pct(f.spent, f.cash))}%"></em></i><small>${sar(f.spent)} من ${sar(f.cash)}</small></div>
