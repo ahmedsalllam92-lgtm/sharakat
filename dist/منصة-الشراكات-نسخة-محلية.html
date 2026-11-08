@@ -3525,45 +3525,10 @@ a.chip.cat:hover{background:var(--mist)}
 /* — مسار الشراكة — */
 .pr-legend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;font-size:12.5px;color:var(--muted);margin-bottom:12px}
 .pr-legend span{display:inline-flex;align-items:center;gap:7px}
-.pr-legend .k{width:22px;height:14px;border:1.5px solid var(--line-2);border-radius:4px;background:var(--paper)}
-.pr-legend .k.start{border-radius:999px;border-color:var(--petrol-3);background:var(--mist)}
-.pr-legend .k.decision{border-color:var(--gold);background:var(--sand);transform:skewX(-14deg)}
-.pr-legend .k.end{border-radius:999px;background:var(--ink-2);border-color:var(--ink-2)}
-.pr-legend .k.ext{border-style:dashed}
 .pr-hint{margin-inline-start:auto}
 .pr-hint .ic{width:14px;height:14px}
 .pr-n-s{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:var(--gold);color:#fff;font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums}
-.pr-map-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-l);background:var(--paper);-webkit-overflow-scrolling:touch}
-.pr-map{position:relative;display:grid;grid-template-columns:168px repeat(var(--nc),150px);grid-template-rows:46px repeat(var(--nl),minmax(112px,auto));width:calc(168px + var(--nc) * 150px)}
-.pr-corner{grid-row:1;grid-column:1;position:sticky;right:0;z-index:4;background:var(--paper);border-bottom:1px solid var(--line-2)}
-.pr-phase{display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:700;color:var(--ink-2);background:var(--paper-2);border-bottom:1px solid var(--line-2);border-right:1px solid var(--line);position:relative;z-index:2}
-.pr-phase em{font-style:normal;font-size:11px;color:var(--gold);font-variant-numeric:tabular-nums}
-.pr-lane-h{grid-column:1;position:sticky;right:0;z-index:4;display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--paper);border-bottom:1px solid var(--line);border-left:1px solid var(--line-2);box-shadow:-6px 0 12px -10px rgba(0,0,0,.25)}
-.pr-lane-h .ic{width:18px;height:18px;flex:none;color:var(--lc)}
-.pr-lane-h b{display:block;font-size:13.5px;font-weight:700;line-height:1.4}
-.pr-lane-h small{display:block;font-size:11.5px;color:var(--faint)}
-.pr-lane-h::before{content:"";position:absolute;right:0;top:12px;bottom:12px;width:3px;border-radius:2px;background:var(--lc)}
-.pr-lane-bg{z-index:0;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--lc) 5%,transparent)}
 .l-dept{--lc:var(--info)}.l-team{--lc:var(--petrol-3)}.l-appr{--lc:var(--gold)}.l-part{--lc:var(--faint)}.l-lead{--lc:var(--sec-2,var(--gold-2))}
-.pr-node{position:relative;z-index:3;align-self:center;justify-self:stretch;margin:12px 14px;padding:10px 12px;border:1.5px solid color-mix(in srgb,var(--lc) 55%,var(--line));border-radius:10px;background:var(--paper);font:inherit;color:var(--ink);text-align:right;cursor:pointer;display:flex;flex-direction:column;gap:4px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 6px 14px -12px rgba(0,0,0,.35);transition:transform .15s,box-shadow .15s,border-color .15s}
-.pr-node:hover,.pr-node:focus-visible{transform:translateY(-2px);border-color:var(--lc);box-shadow:var(--shadow)}
-.pr-node.on{outline:2px solid var(--gold);outline-offset:2px}
-.pr-t{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;line-height:1.45}
-.pr-t .ic{width:13px;height:13px;flex:none;fill:currentColor}
-.pr-st{font-size:11px;color:var(--muted);line-height:1.5}
-.pr-node.start{border-radius:999px;padding:10px 16px;background:color-mix(in srgb,var(--lc) 10%,var(--paper))}
-.pr-node.end{border-radius:999px;padding:10px 16px;background:var(--ink-2);border-color:var(--ink-2);color:var(--paper)}
-.pr-node.end .pr-st{color:color-mix(in srgb,var(--paper) 75%,transparent)}
-.pr-node.decision{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 9%,var(--paper));border-width:2px}
-.pr-node.decision::before{content:"";position:absolute;top:-7px;right:14px;width:12px;height:12px;background:var(--gold);transform:rotate(45deg);border-radius:2px}
-.pr-node.ext{border-style:dashed;background:var(--paper-2);box-shadow:none}
-.pr-n{position:absolute;top:-10px;left:-8px;min-width:24px;height:24px;padding:0 7px;border-radius:999px;background:var(--gold);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center;box-shadow:0 0 0 3px var(--paper);font-variant-numeric:tabular-nums}
-.pr-edges{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:visible}
-.pr-edges marker path{fill:var(--muted)}
-.pr-e{fill:none;stroke:var(--muted);stroke-width:1.4;opacity:.75}
-.pr-e.back{stroke:var(--gold);stroke-dasharray:5 4;opacity:.9}
-.pr-e.long{stroke-dasharray:2 4}
-.pr-el{font-size:11px;font-weight:600;fill:var(--ink-2);paint-order:stroke;stroke:var(--paper);stroke-width:4px;stroke-linejoin:round}
 .pr-side-notes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 26px}
 .pr-side-notes>div{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r-m);background:var(--paper);font-size:13.5px;line-height:1.8;color:var(--ink-2)}
 .pr-side-notes .ic{width:16px;height:16px;flex:none;margin-top:4px;color:var(--gold)}
@@ -3617,12 +3582,8 @@ button.rc[disabled]{cursor:default}
 .pr-dr-step.nx{border-color:color-mix(in srgb,var(--petrol-3) 50%,var(--line))}
 .pr-dr-step .ic{width:13px;height:13px}
 @media (max-width:1100px){.pr-cols{grid-template-columns:1fr}}
-@media (max-width:760px){.pr-side-notes,.pr-accts{grid-template-columns:1fr}.pr-hint{margin-inline-start:0}.pr-map{grid-template-columns:120px repeat(var(--nc),136px);width:calc(120px + var(--nc) * 136px)}.pr-lane-h small{display:none}.pr-lane-h{padding:8px 10px}}
+@media (max-width:760px){.pr-side-notes,.pr-accts{grid-template-columns:1fr}.pr-hint{margin-inline-start:0}}
 @media print{
-  .pr-map-wrap{overflow:visible;border:0}
-  .pr-map{zoom:.47}
-  .pr-lane-h,.pr-corner{position:static}
-  .pr-node,.pr-lane-bg,.pr-n,.rc,.pr-phase{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .pr-raci{break-before:page;zoom:.72}
   .pr-mx tr{break-inside:avoid}
   .pr-cols{break-before:page;grid-template-columns:1fr 1fr!important;zoom:.8}
@@ -4174,7 +4135,7 @@ html.dossier-open,html.dossier-open body{overflow:hidden}
   [data-design="board"] .bo-ch[data-ch="sum"]{zoom:.9}[data-design="board"] .bo-ch[data-ch="eval"]{zoom:.8}[data-design="board"] #boPrintF{display:none!important}[data-design="board"] .bo-ch[data-ch="dec"]{zoom:.84}[data-design="board"] .bo-ch[data-ch="impact"]{zoom:.95}
   /* مسار الشراكة: بلا صفحة شبه فارغة */
   [data-design="board"] .ph{margin-bottom:10px!important;padding-bottom:8px!important}[data-design="board"] .ph h1{font-size:26px!important}.pr-legend{margin:4px 0!important}
-  .pr-map{zoom:.4!important}.pr-side-notes{break-before:avoid;margin-top:6px!important}.pr-raci{zoom:.6!important}.pr-cols{zoom:.66!important}
+  .pr-side-notes{break-before:avoid;margin-top:6px!important}.pr-raci{zoom:.6!important}.pr-cols{zoom:.66!important}
   /* مركز الصور */
   .m-grid{grid-template-columns:repeat(4,1fr)!important}
   .m-tile{break-inside:avoid}
@@ -5516,35 +5477,6 @@ html.rq-in #dsw,html.rq-in .tour-top{display:none!important}
 .ff>.ff-chip.add{display:inline-flex;align-items:center;gap:5px;width:auto;justify-self:start;align-self:flex-start;margin-top:8px;padding:5px 12px}
 .wf-phases{grid-auto-columns:minmax(196px,1fr)!important}
 
-/* =====================================================================
-   مخطط الجهات: تصميم رسمي مدمج — صناديق أصغر، وخط عادي، وتباين هادئ
-   ===================================================================== */
-.pr-map{grid-template-columns:142px repeat(var(--nc),120px)!important;grid-template-rows:34px repeat(var(--nl),minmax(78px,auto))!important;width:calc(142px + var(--nc) * 120px)!important;background-image:radial-gradient(color-mix(in srgb,var(--ink) 9%,transparent) 1px,transparent 1px);background-size:14px 14px}
-.pr-phase{font-size:11.5px!important;font-weight:500!important;letter-spacing:0;color:var(--ink-2);background:var(--paper)!important;border-bottom:1px solid var(--line)!important;position:relative}
-.pr-phase::after{content:"";position:absolute;bottom:-1px;inset-inline:18%;height:2px;background:var(--gold);opacity:.7}
-.pr-phase em{font-size:10px!important}
-.pr-lane-h{padding:6px 10px!important;gap:8px!important}
-.pr-lane-h .ic{width:14px!important;height:14px!important}
-.pr-lane-h b{font-size:11.5px!important;font-weight:500!important}
-.pr-lane-h small{font-size:10px!important;line-height:1.45}
-.pr-lane-bg{background:transparent!important}
-.pr-lane-bg:nth-of-type(4n){background:color-mix(in srgb,var(--paper-2) 55%,transparent)!important}
-.pr-node{margin:8px 7px!important;padding:6px 8px 6px!important;border-width:1px!important;border-radius:6px!important;background:var(--paper)!important;box-shadow:0 1px 0 color-mix(in srgb,var(--ink) 6%,transparent),0 6px 14px -12px rgba(0,0,0,.35)!important;border-color:color-mix(in srgb,var(--lc) 35%,var(--line))!important;border-inline-start:3px solid var(--lc)!important;text-align:start}
-.pr-node:hover,.pr-node:focus-visible{transform:translateY(-1px)!important}
-.pr-t{font-size:11.2px!important;font-weight:500!important;line-height:1.45!important;gap:4px!important}
-.pr-t .ic{width:10px!important;height:10px!important}
-.pr-st{font-size:9.6px!important;line-height:1.45!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.pr-num{top:-7px!important;right:auto!important;inset-inline-end:6px;font-size:9px!important;font-weight:500!important;padding:0 5px!important;line-height:14px}
-.pr-n{top:-8px!important;left:-6px!important;min-width:17px!important;height:17px!important;font-size:9.5px!important;font-weight:600!important;padding:0 5px!important}
-.pr-node.decision{background:color-mix(in srgb,var(--gold) 6%,var(--paper))!important;border-color:color-mix(in srgb,var(--gold) 45%,var(--line))!important;border-inline-start-color:var(--gold)!important;border-width:1px!important;border-inline-start-width:3px!important}
-.pr-node.decision::before{width:7px!important;height:7px!important;top:-4px!important;right:auto!important;inset-inline-start:10px}
-.pr-node.start,.pr-node.end{border-radius:999px!important;padding:6px 12px!important;border-inline-start-width:1px!important;text-align:center}
-.pr-node.start{background:color-mix(in srgb,var(--lc) 8%,var(--paper))!important}
-.pr-node.end{background:var(--ink-2)!important;color:var(--paper)}
-.pr-e{stroke-width:1!important;opacity:.6!important}
-.pr-el{font-size:9.5px!important;font-weight:400!important}
-.pr-legend{font-size:11px}
-.pr-legend .k{transform:scale(.8)}
 /* مصفوفة المسؤوليات أخف */
 .pr-mx th,.pr-mx td{font-size:11.5px;font-weight:400}
 .pr-mx thead th{font-weight:500}
@@ -6293,6 +6225,102 @@ body:has(#shkLogin) .modal-bg{z-index:99995}
   .tbl.rt tr.rt-grp td{position:static}
   .rt-bar{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+
+/* =====================================================================
+   مخطط الجهات — مخطط مسارات عمودي رسمي
+   ===================================================================== */
+.pm-legend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;font-size:12px;color:var(--muted);margin:4px 0 12px}
+.pm-legend span{display:inline-flex;align-items:center;gap:7px}
+.pm-legend .lk{width:24px;height:14px;border-radius:4px;border:1px solid var(--line-2);background:var(--paper);flex:none}
+.pm-legend .lk.start{border-radius:999px;background:var(--petrol);border-color:var(--petrol)}
+.pm-legend .lk.end{border-radius:999px;background:var(--paper);border:1.5px solid var(--ink-2)}
+.pm-legend .lk.dec{border-color:color-mix(in srgb,var(--gold) 60%,var(--line));background:color-mix(in srgb,var(--gold) 10%,var(--paper));box-shadow:inset -3px 0 0 var(--gold)}
+.pm-legend .lk.multi{box-shadow:3px -3px 0 -1px var(--paper),3px -3px 0 0 var(--line-2)}
+.pm-legend .lk.ext{border-style:dashed;border-color:var(--muted)}
+.pm-legend .lk-ln{width:30px;height:10px;fill:none;stroke:var(--ink-2);stroke-width:1.4}
+.pm-legend .lk-ln .h{fill:var(--ink-2);stroke:none}
+.pm-legend .lk-ln.back{stroke:var(--gold-ink,var(--gold));stroke-dasharray:4 3}.pm-legend .lk-ln.back .h{fill:var(--gold-ink,var(--gold))}
+.pm-legend .pr-n-s{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--gold);color:#fff;font-size:11px;font-weight:700}
+.pm-wrap{overflow-x:auto;overflow-y:visible;border:1px solid var(--line);border-radius:16px;background:var(--paper);box-shadow:0 1px 2px rgba(15,40,34,.04),0 12px 30px -24px rgba(15,40,34,.35)}
+.pm{position:relative;font-family:var(--font)}
+/* الرأس */
+.pm-head{position:sticky;top:0;z-index:6;height:64px;background:linear-gradient(180deg,var(--paper),var(--paper-2));border-bottom:1px solid var(--line)}
+.pm-lh{position:absolute;top:0;height:64px;display:flex;align-items:center;gap:9px;padding:0 12px;border-inline-start:1px solid var(--line);box-sizing:border-box}
+.pm-lh::after{content:"";position:absolute;bottom:-1px;inset-inline:12px;height:2px;border-radius:2px;background:var(--lc,var(--petrol-3));opacity:.55}
+.pm-lic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--lc,var(--petrol-3)) 12%,var(--paper));color:var(--lc,var(--petrol-3))}
+.pm-lic .ic{width:15px;height:15px}
+.pm-lh b{display:block;font-size:12.5px;font-weight:700;color:var(--ink);line-height:1.35}
+.pm-lh small{display:block;font-size:10.5px;color:var(--muted);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical}
+.pm-rail-h{position:absolute;right:0;top:0;width:var(--rail);height:64px;display:grid;place-items:center;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.3px}
+/* ألوان الجهات */
+.pm .l-requester{--lc:#3E7CB1}.pm .l-partnerships{--lc:var(--petrol)}.pm .l-concerned{--lc:#5B8C7B}.pm .l-strategy{--lc:#B08A3E}.pm .l-legal{--lc:#7A5C99}.pm .l-excellency{--lc:#8A6D3B}.pm .l-bizdev{--lc:#2E9E6A}
+/* الجسم */
+.pm-body{position:relative}
+.pm-band{position:absolute;left:0;right:0;border-top:1px solid var(--line)}
+.pm-band:first-child{border-top:0}
+.pm-band.alt{background:color-mix(in srgb,var(--paper-2) 70%,transparent)}
+.pm-ph{position:absolute;right:0;top:0;bottom:0;width:var(--rail);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:10px;box-sizing:border-box;border-inline-end:1px solid var(--line);background:linear-gradient(270deg,color-mix(in srgb,var(--pc) 7%,transparent),transparent)}
+.pm-ph::before{content:"";position:absolute;right:0;top:14px;bottom:14px;width:3px;border-radius:3px 0 0 3px;background:var(--pc)}
+.pm-ph em{font-style:normal;font-size:20px;font-weight:700;color:var(--pc);font-variant-numeric:tabular-nums;line-height:1}
+.pm-ph span{font-size:12px;font-weight:600;color:var(--ink-2);line-height:1.5}
+.pm-col{position:absolute;top:0;bottom:0;border-inline-start:1px dashed color-mix(in srgb,var(--line-2) 70%,transparent);pointer-events:none}
+.pm-edges{position:absolute;left:0;top:0;z-index:2;pointer-events:none;overflow:visible}
+/* الأسهم */
+.pm-e{fill:none;stroke:color-mix(in srgb,var(--ink-2) 70%,transparent);stroke-width:1.35;stroke-linejoin:round;transition:stroke .2s,opacity .2s,stroke-width .2s}
+.pm-e.back{stroke:var(--gold-ink,var(--gold));stroke-dasharray:5 4}
+.pm-e.long{stroke:var(--petrol-3);stroke-dasharray:2.5 4}
+.pm-e.stop{stroke:color-mix(in srgb,var(--danger) 70%,var(--muted))}
+.pm-edges marker .a{fill:color-mix(in srgb,var(--ink-2) 80%,transparent)}.pm-edges marker .b{fill:var(--gold-ink,var(--gold))}.pm-edges marker .s{fill:color-mix(in srgb,var(--danger) 70%,var(--muted))}
+.pm.hl .pm-e{opacity:.18}.pm.hl .pm-e.on{opacity:1;stroke-width:2}
+.pm-chip rect{fill:var(--paper);stroke:var(--line);stroke-width:1}
+.pm-chip text{font-size:10.5px;font-weight:600;fill:var(--ink-2);font-family:var(--font)}
+.pm-chip.back rect{fill:color-mix(in srgb,var(--gold) 12%,var(--paper));stroke:color-mix(in srgb,var(--gold) 45%,var(--line))}.pm-chip.back text{fill:var(--gold-ink,var(--gold))}
+.pm-chip.long rect{fill:var(--mist-2);stroke:transparent}.pm-chip.long text{fill:var(--petrol)}
+.pm-chip.stop rect{fill:var(--danger-bg);stroke:transparent}.pm-chip.stop text{fill:var(--danger)}
+.pm.hl .pm-chip{opacity:.35}
+/* العقد */
+.pm-n{position:absolute;z-index:3;box-sizing:border-box;display:flex;align-items:center;gap:9px;padding:8px 10px;margin:0;text-align:start;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line-2);border-radius:11px;box-shadow:0 1px 1px rgba(15,40,34,.04),0 6px 16px -12px rgba(15,40,34,.4);cursor:pointer;transition:transform .18s,box-shadow .18s,border-color .18s}
+.pm-n::before{content:"";position:absolute;inset-inline-start:-1px;top:9px;bottom:9px;width:3px;border-radius:0 3px 3px 0;background:var(--lc)}
+.pm-n:hover,.pm-n:focus-visible{transform:translateY(-2px);border-color:var(--lc);box-shadow:0 2px 4px rgba(15,40,34,.06),0 14px 28px -16px rgba(15,40,34,.5);outline:none;z-index:4}
+.pm-n.on{box-shadow:0 0 0 2px var(--gold),0 14px 28px -16px rgba(15,40,34,.5)}
+.pm-n .pr-num{position:absolute;top:-10px;right:auto;inset-inline-start:12px;width:22px;height:20px;padding:0;border:0;border-radius:999px;display:grid;place-items:center;font-size:10.5px;font-weight:700;color:#fff;background:var(--pc);font-variant-numeric:tabular-nums;box-shadow:0 0 0 2px var(--paper)}
+.pm-tx{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.pm-n{padding-top:10px}.pm-n .pr-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;font-weight:600;line-height:1.4;color:var(--ink)}
+.pm-n .pr-st{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;font-size:10.3px;line-height:1.45;color:var(--muted)}
+.pm-tag{position:absolute;bottom:-8px;inset-inline-end:10px;display:inline-flex;align-items:center;gap:3px;font-size:9.5px;font-weight:700;line-height:16px;padding:0 7px;border-radius:999px;background:var(--gold);color:#fff;box-shadow:0 0 0 2px var(--paper)}
+.pm-tag.ext{inset-inline-end:auto;inset-inline-start:12px;background:var(--paper);color:var(--muted);border:1px dashed var(--line-2);box-shadow:none}
+.pm-tag .ic{width:10px;height:10px}
+.pm-n.decision{border-color:color-mix(in srgb,var(--gold) 55%,var(--line));background:color-mix(in srgb,var(--gold) 6%,var(--paper))}
+.pm-n.multi{box-shadow:4px -4px 0 -1px var(--paper),4px -4px 0 0 var(--line-2),0 6px 16px -12px rgba(15,40,34,.4)}
+.pm-n.multi:hover{box-shadow:4px -4px 0 -1px var(--paper),4px -4px 0 0 var(--line-2),0 14px 28px -16px rgba(15,40,34,.5)}
+.pm-n.ext{border-style:dashed;background:var(--paper-2)}
+.pm-n.start,.pm-n.end{border-radius:999px;padding:6px 14px 6px 10px;justify-content:flex-start}
+.pm-n.start::before,.pm-n.end::before{display:none}
+.pm-n.start{background:var(--petrol);border-color:var(--petrol);color:#fff}
+.pm-n.start .pr-t{color:#fff;-webkit-line-clamp:1}.pm-n.start .pr-st{color:color-mix(in srgb,#fff 70%,transparent)}
+.pm-n.end{background:var(--paper);border:1.5px solid var(--ink-2)}
+.pm-n.end .pr-t{-webkit-line-clamp:1}
+.pm-n.end.stop{border-color:color-mix(in srgb,var(--danger) 55%,var(--line))}
+.pm-ic{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,#fff 18%,transparent)}
+.pm-n.end .pm-ic{background:var(--ink-2);color:var(--paper)}.pm-n.end.stop .pm-ic{background:var(--danger)}
+.pm-ic .ic{width:12px;height:12px;fill:currentColor}
+.pm-n .pr-n{position:absolute;top:-9px;inset-inline-end:-7px;min-width:20px;height:20px;padding:0 6px;border-radius:999px;display:grid;place-items:center;background:var(--gold);color:#fff;font-size:10.5px;font-weight:700;box-shadow:0 0 0 2px var(--paper);animation:pmPulse 2.4s ease-in-out infinite}
+@keyframes pmPulse{0%,100%{box-shadow:0 0 0 2px var(--paper),0 0 0 2px color-mix(in srgb,var(--gold) 0%,transparent)}50%{box-shadow:0 0 0 2px var(--paper),0 0 0 6px color-mix(in srgb,var(--gold) 25%,transparent)}}
+@media (prefers-reduced-motion:reduce){.pm-n .pr-n{animation:none}}
+@media print{
+  .pm-wrap{overflow:visible!important;border:1px solid #DCE5E1;box-shadow:none!important;width:max-content;max-width:100%;margin-inline:auto}
+  .pm-head{position:relative}
+  .pm{zoom:var(--pz,.67)}
+  .pm-n,.pm-band,.pm-ph,.pm-lic,.pm-tag,.pr-n,.pm-chip{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .pm-n .pr-n{animation:none}
+  .pm-wrap{break-inside:avoid}
+}
+
+.pm.narrow .pm-n:not(.start):not(.end) .pr-st{display:none}
+.pm.narrow .pm-n:not(.start):not(.end) .pr-t{-webkit-line-clamp:3;font-size:11.5px;line-height:1.38}
+.pm-n.start,.pm-n.end{padding-top:6px}
+.pm-n.start .pr-t,.pm-n.end .pr-t{-webkit-line-clamp:2!important;font-size:11.5px;line-height:1.35}
+.pm.narrow .pm-n.start .pr-st,.pm.narrow .pm-n.end .pr-st{display:none}
 </style>
 </head>
 <body>
@@ -17291,15 +17319,25 @@ function renderProcess(el) {
       </div></div>
     </section>
     <section class="js-map-sec" id="prMapSec"><header class="js-sh"><div><h2>مخطط الجهات</h2><p>من يفعل ماذا: كل خطوة في مسار الجهة المسؤولة عنها، والأسهم تبيّن الانتقال والإعادة.</p></div></header>
-    <div class="pr-legend"><span><i class="k start"></i>بداية</span><span><i class="k"></i>خطوة</span><span><i class="k decision"></i>قرار أو اعتماد</span><span><i class="k end"></i>نهاية</span><span><b class="pr-n-s">3</b>سجلات في هذه الخطوة الآن</span><span class="pr-hint">${icon('info')}اضغط أي خطوة لعرض مستنداتها وسجلاتها</span></div>
-    <section class="pr-map-wrap" aria-label="مخطط مسار الشراكة">
-      <div class="pr-map" id="prMap" style="--nc:${NC};--nl:${PR_LANES.length}">
-        <div class="pr-corner"></div>
-        ${PR_PHASES.map((ph, i) => `<div class="pr-phase" style="grid-column:${ph.from + 2} / ${ph.to + 3};grid-row:1"><em>${pad(i + 1)}</em>${ph.t}</div>`).join('')}
-        ${PR_LANES.map((l, i) => `<div class="pr-lane-h l-${l.id}" style="grid-row:${i + 2}">${icon(l.ic)}<span><b>${l.t}</b><small>${l.s}</small></span></div><div class="pr-lane-bg l-${l.id}" style="grid-row:${i + 2};grid-column:2 / ${NC + 2}"></div>`).join('')}
-        ${PR_STEPS.map((s) => { const n = cnt(s); return `<button type="button" class="pr-node ${s.kind || ''} l-${s.lane}" data-step="${s.id}" style="grid-column:${s.col + 2};grid-row:${laneOf(s.lane) + 2}">
-          ${s.wf ? `<span class="pr-num">${s.wf.n}</span>` : ''}<span class="pr-t">${s.kind === 'start' ? icon('play') : s.kind === 'end' ? icon('flag') : ''}${esc(s.t)}</span><span class="pr-st">${esc(s.st)}</span>${n ? `<b class="pr-n" title="سجلات في هذه الخطوة الآن">${n}</b>` : ''}</button>`; }).join('')}
-        <svg class="pr-edges" aria-hidden="true"><defs><marker id="prArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs></svg>
+    <div class="pr-legend pm-legend">
+      <span><i class="lk start"></i>بداية</span><span><i class="lk step"></i>خطوة</span><span><i class="lk dec"></i>قرار أو اعتماد</span><span><i class="lk multi"></i>عدة إدارات</span><span><i class="lk ext"></i>خارج المنصة (بخطاب)</span><span><i class="lk end"></i>نهاية</span>
+      <span><svg class="lk-ln" viewBox="0 0 30 10"><path d="M1 5H27"/><path d="M23 1.5 28 5l-5 3.5" class="h"/></svg>انتقال</span><span><svg class="lk-ln back" viewBox="0 0 30 10"><path d="M1 5H27"/><path d="M23 1.5 28 5l-5 3.5" class="h"/></svg>إعادة بملاحظات</span>
+      <span><b class="pr-n-s">3</b>سجلات في الخطوة الآن</span><span class="pr-hint">${icon('info')}اضغط أي خطوة لعرض مستنداتها وسجلاتها</span></div>
+    <section class="pr-map-wrap pm-wrap" aria-label="مخطط مسار الشراكة">
+      <div class="pr-map pm" id="prMap">
+        <div class="pm-head">${PR_LANES.map((l) => `<div class="pr-lane-h pm-lh l-${l.id}" data-lane="${l.id}"><span class="pm-lic">${icon(l.ic)}</span><span><b>${l.t}</b><small>${l.s}</small></span></div>`).join('')}<div class="pm-rail-h">المرحلة</div></div>
+        <div class="pm-body">
+          ${PR_PHASES.map((ph, i) => `<div class="pm-band ${i % 2 ? 'alt' : ''}" data-ph="${i}"><div class="pr-phase pm-ph" style="--pc:${PH_C[i]}"><em>${pad(i + 1)}</em><span>${ph.t}</span></div></div>`).join('')}
+          ${PR_LANES.map((l) => `<div class="pm-col" data-lane="${l.id}"></div>`).join('')}
+          <svg class="pr-edges pm-edges" aria-hidden="true"></svg>
+          ${PR_STEPS.map((x) => { const n = cnt(x), w = x.wf; const cls = [x.kind || 'step', w && w.kind === 'multi' ? 'multi' : '', w && (w.via === 'letter' || WF_EXTERNAL.includes(w.actor)) ? 'ext' : '', x.id === 'closed' ? 'stop' : ''].join(' ');
+            const pi = w ? WF_PHASES.findIndex((p) => p.id === w.ph) : -1;
+            return `<button type="button" class="pr-node pm-n ${cls} l-${x.lane}" data-step="${x.id}" style="--pc:${pi >= 0 ? PH_C[pi] : 'var(--petrol)'}" aria-label="${esc((w ? w.n + '. ' : '') + x.t)}">
+              ${w ? `<span class="pr-num">${w.n}</span>` : `<span class="pm-ic">${icon(x.kind === 'start' ? 'play' : 'flag')}</span>`}
+              <span class="pm-tx"><span class="pr-t">${esc(x.t)}</span><span class="pr-st">${esc(x.st)}</span></span>
+              ${x.kind === 'decision' ? `<span class="pm-tag">${w && w.kind === 'decision' ? 'قرار' : 'اعتماد'}</span>` : ''}${w && (w.via === 'letter' || WF_EXTERNAL.includes(w.actor)) ? `<span class="pm-tag ext">${icon('mail')}بخطاب</span>` : ''}
+              ${n ? `<b class="pr-n" title="سجلات في هذه الخطوة الآن">${n}</b>` : ''}</button>`; }).join('')}
+        </div>
       </div>
     </section>
     <div class="pr-side-notes"><div>${icon('alert')}<span><b>المستندات شرط للانتقال:</b> لا تكتمل الخطوة حتى يُرفع مستندها المطلوب، ويمكن تنزيل النموذج الفارغ من داخل الخطوة.</span></div>
@@ -17329,7 +17367,11 @@ function renderProcess(el) {
   const mx = $('.pr-mx', el);
   if (mx) { mx.addEventListener('mouseover', (e) => { const td = e.target.closest('td,th'); $$('.pr-mx .hx', el).forEach((x) => x.classList.remove('hx')); if (!td || !td.closest('tbody')) return; const tr = td.parentElement, i = [...tr.children].indexOf(td); tr.classList.add('hx'); if (i > 0 && i <= PR_ROLES.length) $$(`.pr-mx tr > :nth-child(${i + 1})`, el).forEach((c) => c.classList.add('hx')); }); mx.addEventListener('mouseleave', () => $$('.pr-mx .hx', el).forEach((x) => x.classList.remove('hx'))); }
   drawPrEdges(el);
-  const ro = new ResizeObserver(() => drawPrEdges(el)); ro.observe($('#prMap', el));
+  const ro = new ResizeObserver(() => drawPrEdges(el)); ro.observe($('.pm-wrap', el));
+  /* الطباعة: يُعاد رسم المخطط بعرض الصفحة ثم يعود */
+  if (window.__prPr) { window.removeEventListener('beforeprint', window.__prPr[0]); window.removeEventListener('afterprint', window.__prPr[1]); }
+  window.__prPr = [() => el.isConnected && drawPrEdges(el, 1040), () => el.isConnected && setTimeout(() => drawPrEdges(el), 50)];
+  window.addEventListener('beforeprint', window.__prPr[0]); window.addEventListener('afterprint', window.__prPr[1]);
   el.onclick = (e) => {
     const js = e.target.closest('[data-jstep]'); if (js) return prStepPanel(js.dataset.jstep);
     const jg = e.target.closest('[data-jgo]'); if (jg) { e.preventDefault(); const t = $('#' + jg.dataset.jgo, el); if (t) window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' }); return; }
@@ -17339,32 +17381,107 @@ function renderProcess(el) {
   };
 }
 
-/* أسهم المخطط تُرسم من مواقع الخطوات الفعلية على الشاشة */
-function drawPrEdges(el) {
-  const map = $('#prMap', el), svg = map && $('.pr-edges', map); if (!svg) return;
-  const R = map.getBoundingClientRect();
-  svg.setAttribute('viewBox', `0 0 ${R.width} ${R.height}`); svg.setAttribute('width', R.width); svg.setAttribute('height', R.height);
-  const box = (id) => { const n = $(`.pr-node[data-step="${id}"]`, map); if (!n) return null; const b = n.getBoundingClientRect(); return { l: b.left - R.left, r: b.right - R.left, t: b.top - R.top, b: b.bottom - R.top, cx: (b.left + b.right) / 2 - R.left, cy: (b.top + b.bottom) / 2 - R.top }; };
-  let out = svg.querySelector('defs').outerHTML;
-  PR_EDGES.forEach(([a, b, label, kind]) => {
-    const A = box(a), B = box(b); if (!A || !B) return;
-    let d, lx, ly;
-    if (kind === 'back') {
-      const y = Math.min(A.t, B.t) - 22;
-      d = `M${A.cx} ${A.t}C${A.cx} ${y} ${B.cx} ${y} ${B.cx} ${B.t}`; lx = (A.cx + B.cx) / 2; ly = y + 2;
-    } else if (kind === 'long') {
-      const y = Math.max(A.b, B.b) + 18; d = `M${A.cx} ${A.b}C${A.cx} ${y + 30} ${B.cx} ${y + 30} ${B.cx} ${B.b}`; lx = (A.cx + B.cx) / 2; ly = y + 22;
-    } else if (Math.abs(A.cx - B.cx) < 30) {
-      const down = B.cy > A.cy; const y0 = down ? A.b : A.t, y1 = down ? B.t : B.b;
-      d = `M${A.cx} ${y0}L${B.cx} ${y1}`; lx = A.cx + 6; ly = (y0 + y1) / 2;
-    } else {
-      const x0 = A.l, x1 = B.r, mx = (x0 + x1) / 2;
-      d = `M${x0} ${A.cy}C${mx} ${A.cy} ${mx} ${B.cy} ${x1} ${B.cy}`; lx = mx; ly = (A.cy + B.cy) / 2;
-    }
-    out += `<path d="${d}" class="pr-e ${kind || ''}" marker-end="url(#prArr)"/>`;
-    if (label) out += `<text x="${lx.toFixed(1)}" y="${(ly - 5).toFixed(1)}" text-anchor="middle" class="pr-el">${esc(label)}</text>`;
+/* =====================================================================
+   مخطط الجهات: مخطط مسارات عمودي (الجهات أعمدة، والخطوات تنزل بالترتيب).
+   - صف لكل خطوة؛ البدايتان في الصف الأول، و«إغلاق الطلب» بجوار التقييم، و«مذكرة مفعّلة» بعد آخر خطوة.
+   - أسهم بزوايا قائمة مستديرة الأطراف؛ الإعادات بملاحظات في ممرات جانبية مستقلة يسار المخطط؛
+     والتسجيل المباشر في ممر داخل عمود إدارة الشراكات حتى لا يقطع أي خطوة.
+   - كل المواقع تُحسب من عرض الحاوية، فيملأ المخطط العرض المتاح دون تمرير أفقي إلا على الشاشات الضيقة.
+   ===================================================================== */
+function prRows() {
+  const R = {}; WF_STEPS.forEach((x, i) => { R[x.id] = i; });
+  R.direct = 0;
+  const cl = PR_EDGES.find((e) => e[1] === 'closed'); R.closed = cl ? R[cl[0]] : 2;
+  R.active = WF_STEPS.length;
+  return R;
+}
+function prLaneOfLayout(x) {
+  if (x.id === 'active') return WF_STEPS[WF_STEPS.length - 1].actor;
+  return x.lane;
+}
+function drawPrEdges(el, forceW) {
+  const map = $('#prMap', el); if (!map) return;
+  const wrap = map.parentElement, body = $('.pm-body', map), svg = $('.pm-edges', map);
+  const NL = PR_LANES.length, ROWS = WF_STEPS.length + 1;
+  const back = PR_EDGES.filter((e) => e[3] === 'back');
+  const RAIL = 96, GUT = 26 + back.length * 16, PAD = 8;
+  const printing = window.matchMedia && matchMedia('print').matches;
+  if (printing && !forceW) return; // أثناء الطباعة يبقى تخطيط الطباعة الثابت
+  const W = Math.max(forceW || wrap.clientWidth, RAIL + GUT + NL * 122);
+  map.style.setProperty('--pz', (700 / W).toFixed(3)); // تصغير المخطط ليملأ عرض صفحة A4
+  const LW = (W - RAIL - GUT) / NL, PITCH = 92, NH = 66;
+  map.classList.toggle('narrow', LW < 176);
+  const H = ROWS * PITCH + 18;
+  map.style.width = W + 'px'; body.style.height = H + 'px';
+  map.style.setProperty('--lw', LW + 'px'); map.style.setProperty('--rail', RAIL + 'px'); map.style.setProperty('--gut', GUT + 'px');
+  const laneIdx = (id) => Math.max(0, PR_LANES.findIndex((l) => l.id === id));
+  const laneR = (i) => W - RAIL - i * LW, laneL = (i) => laneR(i) - LW; // من اليمين
+  const rows = prRows(), rowY = (r) => 9 + r * PITCH;
+  // الرؤوس والأعمدة والمراحل
+  $$('.pm-lh', map).forEach((h, i) => { h.style.width = LW + 'px'; h.style.left = laneL(i) + 'px'; });
+  $$('.pm-col', map).forEach((c, i) => { c.style.left = laneL(i) + 'px'; c.style.width = LW + 'px'; });
+  const phRows = PR_PHASES.map((ph, i) => ({ r0: ph.from, r1: i === PR_PHASES.length - 1 ? ROWS - 1 : ph.to }));
+  $$('.pm-band', map).forEach((b, i) => { const { r0, r1 } = phRows[i]; const y0 = i === 0 ? 0 : rowY(r0) - (PITCH - NH) / 4, y1 = i === phRows.length - 1 ? H : rowY(r1 + 1) - (PITCH - NH) / 4; b.style.top = y0 + 'px'; b.style.height = (y1 - y0) + 'px'; });
+  // العقد
+  const box = {};
+  $$('.pm-n', map).forEach((n) => {
+    const x = PR_STEPS.find((s) => s.id === n.dataset.step); if (!x) return;
+    const li = laneIdx(prLaneOfLayout(x)), r = rows[x.id];
+    const pill = x.kind === 'start' || x.kind === 'end';
+    const w = LW - PAD * 2, h = pill ? 52 : NH;
+    const l = laneL(li) + (LW - w) / 2, t = rowY(r) + (PITCH - h) / 2 - (PITCH - NH) / 4;
+    Object.assign(n.style, { left: l + 'px', top: t + 'px', width: w + 'px', height: h + 'px' });
+    box[x.id] = { l, r: l + w, t, b: t + h, cx: l + w / 2, cy: t + h / 2, li, row: r };
   });
-  svg.innerHTML = out;
+  // الأسهم
+  const RC = 7;
+  const path = (pts) => { // خط بزوايا قائمة مستديرة
+    let d = `M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+    for (let i = 1; i < pts.length; i++) {
+      const [x, y] = pts[i];
+      if (i < pts.length - 1) {
+        const [px, py] = pts[i - 1], [nx, ny] = pts[i + 1];
+        const d1 = Math.hypot(x - px, y - py), d2 = Math.hypot(nx - x, ny - y), r = Math.min(RC, d1 / 2, d2 / 2);
+        const ax = x - ((x - px) / (d1 || 1)) * r, ay = y - ((y - py) / (d1 || 1)) * r, bx = x + ((nx - x) / (d2 || 1)) * r, by = y + ((ny - y) / (d2 || 1)) * r;
+        d += `L${ax.toFixed(1)} ${ay.toFixed(1)}Q${x.toFixed(1)} ${y.toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)}`;
+      } else d += `L${x.toFixed(1)} ${y.toFixed(1)}`;
+    }
+    return d;
+  };
+  const chip = (x, y, t, cls = '', anchor = 'middle') => { const w = t.length * 5.6 + 14; const x0 = anchor === 'start' ? x : anchor === 'end' ? x - w : x - w / 2; return `<g class="pm-chip ${cls}"><rect x="${x0.toFixed(1)}" y="${(y - 9).toFixed(1)}" width="${w.toFixed(1)}" height="18" rx="9"/><text x="${(x0 + w / 2).toFixed(1)}" y="${(y + 3.6).toFixed(1)}" text-anchor="middle">${esc(t)}</text></g>`; };
+  let paths = '', chips = '';
+  const sortedBack = back.slice().sort((p, q) => (box[q[0]].row - box[q[1]].row) - (box[p[0]].row - box[p[1]].row));
+  PR_EDGES.forEach(([a, b, label, kind]) => {
+    const A = box[a], B = box[b]; if (!A || !B) return;
+    let pts, lx, ly, cls = kind || '', anchor = 'middle';
+    if (kind === 'back') {
+      const k = sortedBack.findIndex((e) => e[0] === a && e[1] === b), gx = 12 + k * 16;
+      const ya = A.cy + 8, yb = B.cy + 8;
+      pts = [[A.l, ya], [gx, ya], [gx, yb], [B.l, yb]]; lx = gx + 7; ly = (ya + yb) / 2; anchor = 'start';
+    } else if (kind === 'long') {
+      const cx = laneL(A.li) + 6;
+      pts = [[A.l, A.cy], [cx, A.cy], [cx, B.cy], [B.l, B.cy]]; lx = cx - 5; ly = (A.cy + B.cy) / 2; anchor = 'end';
+    } else if (A.row === B.row) {
+      const toRight = B.cx > A.cx; pts = [[toRight ? A.r : A.l, A.cy], [toRight ? B.l : B.r, B.cy]]; lx = (pts[0][0] + pts[1][0]) / 2; ly = A.cy - 13; cls += ' side';
+    } else if (A.li === B.li) {
+      pts = [[A.cx, A.b], [B.cx, B.t]]; lx = A.cx; ly = (A.b + B.t) / 2;
+    } else {
+      const ym = (A.b + B.t) / 2; pts = [[A.cx, A.b], [A.cx, ym], [B.cx, ym], [B.cx, B.t]]; lx = (A.cx + B.cx) / 2; ly = ym;
+    }
+    if (b === 'closed') cls += ' stop';
+    paths += `<path d="${path(pts)}" class="pr-e pm-e ${cls}" data-from="${a}" data-to="${b}" marker-end="url(#pmArr${kind === 'back' ? 'B' : b === 'closed' ? 'S' : ''})"/>`;
+    const roomy = !cls.includes('side') || Math.abs(pts[1][0] - pts[0][0]) > label.length * 5.6 + 20; // لا وسم إن ضاق المكان (والوصف ظاهر في الخطوة نفسها)
+    if (label && roomy) chips += chip(lx, ly, label, cls, anchor);
+  });
+  svg.setAttribute('width', W); svg.setAttribute('height', H); svg.style.width = W + 'px'; svg.style.height = H + 'px'; svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  const mk = (id, c) => `<marker id="${id}" viewBox="0 0 10 10" refX="8.6" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse"><path d="M1 1.2L9 5L1 8.8z" class="${c}"/></marker>`;
+  svg.innerHTML = `<defs>${mk('pmArr', 'a')}${mk('pmArrB', 'b')}${mk('pmArrS', 's')}</defs><g class="pm-paths">${paths}</g><g class="pm-chips">${chips}</g>`;
+  // إبراز مسارات الخطوة عند المرور
+  if (!map._hov) {
+    map._hov = true;
+    map.addEventListener('mouseover', (e) => { const n = e.target.closest('.pm-n'); map.classList.toggle('hl', !!n); $$('.pm-e', map).forEach((p) => p.classList.toggle('on', !!n && (p.dataset.from === n.dataset.step || p.dataset.to === n.dataset.step))); });
+    map.addEventListener('mouseleave', () => { map.classList.remove('hl'); $$('.pm-e.on', map).forEach((p) => p.classList.remove('on')); });
+  }
 }
 
 /* لوحة تفاصيل الخطوة */

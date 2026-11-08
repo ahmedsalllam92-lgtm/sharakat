@@ -96,15 +96,25 @@ function renderProcess(el) {
       </div></div>
     </section>
     <section class="js-map-sec" id="prMapSec"><header class="js-sh"><div><h2>مخطط الجهات</h2><p>من يفعل ماذا: كل خطوة في مسار الجهة المسؤولة عنها، والأسهم تبيّن الانتقال والإعادة.</p></div></header>
-    <div class="pr-legend"><span><i class="k start"></i>بداية</span><span><i class="k"></i>خطوة</span><span><i class="k decision"></i>قرار أو اعتماد</span><span><i class="k end"></i>نهاية</span><span><b class="pr-n-s">3</b>سجلات في هذه الخطوة الآن</span><span class="pr-hint">${icon('info')}اضغط أي خطوة لعرض مستنداتها وسجلاتها</span></div>
-    <section class="pr-map-wrap" aria-label="مخطط مسار الشراكة">
-      <div class="pr-map" id="prMap" style="--nc:${NC};--nl:${PR_LANES.length}">
-        <div class="pr-corner"></div>
-        ${PR_PHASES.map((ph, i) => `<div class="pr-phase" style="grid-column:${ph.from + 2} / ${ph.to + 3};grid-row:1"><em>${pad(i + 1)}</em>${ph.t}</div>`).join('')}
-        ${PR_LANES.map((l, i) => `<div class="pr-lane-h l-${l.id}" style="grid-row:${i + 2}">${icon(l.ic)}<span><b>${l.t}</b><small>${l.s}</small></span></div><div class="pr-lane-bg l-${l.id}" style="grid-row:${i + 2};grid-column:2 / ${NC + 2}"></div>`).join('')}
-        ${PR_STEPS.map((s) => { const n = cnt(s); return `<button type="button" class="pr-node ${s.kind || ''} l-${s.lane}" data-step="${s.id}" style="grid-column:${s.col + 2};grid-row:${laneOf(s.lane) + 2}">
-          ${s.wf ? `<span class="pr-num">${s.wf.n}</span>` : ''}<span class="pr-t">${s.kind === 'start' ? icon('play') : s.kind === 'end' ? icon('flag') : ''}${esc(s.t)}</span><span class="pr-st">${esc(s.st)}</span>${n ? `<b class="pr-n" title="سجلات في هذه الخطوة الآن">${n}</b>` : ''}</button>`; }).join('')}
-        <svg class="pr-edges" aria-hidden="true"><defs><marker id="prArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs></svg>
+    <div class="pr-legend pm-legend">
+      <span><i class="lk start"></i>بداية</span><span><i class="lk step"></i>خطوة</span><span><i class="lk dec"></i>قرار أو اعتماد</span><span><i class="lk multi"></i>عدة إدارات</span><span><i class="lk ext"></i>خارج المنصة (بخطاب)</span><span><i class="lk end"></i>نهاية</span>
+      <span><svg class="lk-ln" viewBox="0 0 30 10"><path d="M1 5H27"/><path d="M23 1.5 28 5l-5 3.5" class="h"/></svg>انتقال</span><span><svg class="lk-ln back" viewBox="0 0 30 10"><path d="M1 5H27"/><path d="M23 1.5 28 5l-5 3.5" class="h"/></svg>إعادة بملاحظات</span>
+      <span><b class="pr-n-s">3</b>سجلات في الخطوة الآن</span><span class="pr-hint">${icon('info')}اضغط أي خطوة لعرض مستنداتها وسجلاتها</span></div>
+    <section class="pr-map-wrap pm-wrap" aria-label="مخطط مسار الشراكة">
+      <div class="pr-map pm" id="prMap">
+        <div class="pm-head">${PR_LANES.map((l) => `<div class="pr-lane-h pm-lh l-${l.id}" data-lane="${l.id}"><span class="pm-lic">${icon(l.ic)}</span><span><b>${l.t}</b><small>${l.s}</small></span></div>`).join('')}<div class="pm-rail-h">المرحلة</div></div>
+        <div class="pm-body">
+          ${PR_PHASES.map((ph, i) => `<div class="pm-band ${i % 2 ? 'alt' : ''}" data-ph="${i}"><div class="pr-phase pm-ph" style="--pc:${PH_C[i]}"><em>${pad(i + 1)}</em><span>${ph.t}</span></div></div>`).join('')}
+          ${PR_LANES.map((l) => `<div class="pm-col" data-lane="${l.id}"></div>`).join('')}
+          <svg class="pr-edges pm-edges" aria-hidden="true"></svg>
+          ${PR_STEPS.map((x) => { const n = cnt(x), w = x.wf; const cls = [x.kind || 'step', w && w.kind === 'multi' ? 'multi' : '', w && (w.via === 'letter' || WF_EXTERNAL.includes(w.actor)) ? 'ext' : '', x.id === 'closed' ? 'stop' : ''].join(' ');
+            const pi = w ? WF_PHASES.findIndex((p) => p.id === w.ph) : -1;
+            return `<button type="button" class="pr-node pm-n ${cls} l-${x.lane}" data-step="${x.id}" style="--pc:${pi >= 0 ? PH_C[pi] : 'var(--petrol)'}" aria-label="${esc((w ? w.n + '. ' : '') + x.t)}">
+              ${w ? `<span class="pr-num">${w.n}</span>` : `<span class="pm-ic">${icon(x.kind === 'start' ? 'play' : 'flag')}</span>`}
+              <span class="pm-tx"><span class="pr-t">${esc(x.t)}</span><span class="pr-st">${esc(x.st)}</span></span>
+              ${x.kind === 'decision' ? `<span class="pm-tag">${w && w.kind === 'decision' ? 'قرار' : 'اعتماد'}</span>` : ''}${w && (w.via === 'letter' || WF_EXTERNAL.includes(w.actor)) ? `<span class="pm-tag ext">${icon('mail')}بخطاب</span>` : ''}
+              ${n ? `<b class="pr-n" title="سجلات في هذه الخطوة الآن">${n}</b>` : ''}</button>`; }).join('')}
+        </div>
       </div>
     </section>
     <div class="pr-side-notes"><div>${icon('alert')}<span><b>المستندات شرط للانتقال:</b> لا تكتمل الخطوة حتى يُرفع مستندها المطلوب، ويمكن تنزيل النموذج الفارغ من داخل الخطوة.</span></div>
@@ -134,7 +144,11 @@ function renderProcess(el) {
   const mx = $('.pr-mx', el);
   if (mx) { mx.addEventListener('mouseover', (e) => { const td = e.target.closest('td,th'); $$('.pr-mx .hx', el).forEach((x) => x.classList.remove('hx')); if (!td || !td.closest('tbody')) return; const tr = td.parentElement, i = [...tr.children].indexOf(td); tr.classList.add('hx'); if (i > 0 && i <= PR_ROLES.length) $$(`.pr-mx tr > :nth-child(${i + 1})`, el).forEach((c) => c.classList.add('hx')); }); mx.addEventListener('mouseleave', () => $$('.pr-mx .hx', el).forEach((x) => x.classList.remove('hx'))); }
   drawPrEdges(el);
-  const ro = new ResizeObserver(() => drawPrEdges(el)); ro.observe($('#prMap', el));
+  const ro = new ResizeObserver(() => drawPrEdges(el)); ro.observe($('.pm-wrap', el));
+  /* الطباعة: يُعاد رسم المخطط بعرض الصفحة ثم يعود */
+  if (window.__prPr) { window.removeEventListener('beforeprint', window.__prPr[0]); window.removeEventListener('afterprint', window.__prPr[1]); }
+  window.__prPr = [() => el.isConnected && drawPrEdges(el, 1040), () => el.isConnected && setTimeout(() => drawPrEdges(el), 50)];
+  window.addEventListener('beforeprint', window.__prPr[0]); window.addEventListener('afterprint', window.__prPr[1]);
   el.onclick = (e) => {
     const js = e.target.closest('[data-jstep]'); if (js) return prStepPanel(js.dataset.jstep);
     const jg = e.target.closest('[data-jgo]'); if (jg) { e.preventDefault(); const t = $('#' + jg.dataset.jgo, el); if (t) window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' }); return; }
@@ -144,32 +158,107 @@ function renderProcess(el) {
   };
 }
 
-/* أسهم المخطط تُرسم من مواقع الخطوات الفعلية على الشاشة */
-function drawPrEdges(el) {
-  const map = $('#prMap', el), svg = map && $('.pr-edges', map); if (!svg) return;
-  const R = map.getBoundingClientRect();
-  svg.setAttribute('viewBox', `0 0 ${R.width} ${R.height}`); svg.setAttribute('width', R.width); svg.setAttribute('height', R.height);
-  const box = (id) => { const n = $(`.pr-node[data-step="${id}"]`, map); if (!n) return null; const b = n.getBoundingClientRect(); return { l: b.left - R.left, r: b.right - R.left, t: b.top - R.top, b: b.bottom - R.top, cx: (b.left + b.right) / 2 - R.left, cy: (b.top + b.bottom) / 2 - R.top }; };
-  let out = svg.querySelector('defs').outerHTML;
-  PR_EDGES.forEach(([a, b, label, kind]) => {
-    const A = box(a), B = box(b); if (!A || !B) return;
-    let d, lx, ly;
-    if (kind === 'back') {
-      const y = Math.min(A.t, B.t) - 22;
-      d = `M${A.cx} ${A.t}C${A.cx} ${y} ${B.cx} ${y} ${B.cx} ${B.t}`; lx = (A.cx + B.cx) / 2; ly = y + 2;
-    } else if (kind === 'long') {
-      const y = Math.max(A.b, B.b) + 18; d = `M${A.cx} ${A.b}C${A.cx} ${y + 30} ${B.cx} ${y + 30} ${B.cx} ${B.b}`; lx = (A.cx + B.cx) / 2; ly = y + 22;
-    } else if (Math.abs(A.cx - B.cx) < 30) {
-      const down = B.cy > A.cy; const y0 = down ? A.b : A.t, y1 = down ? B.t : B.b;
-      d = `M${A.cx} ${y0}L${B.cx} ${y1}`; lx = A.cx + 6; ly = (y0 + y1) / 2;
-    } else {
-      const x0 = A.l, x1 = B.r, mx = (x0 + x1) / 2;
-      d = `M${x0} ${A.cy}C${mx} ${A.cy} ${mx} ${B.cy} ${x1} ${B.cy}`; lx = mx; ly = (A.cy + B.cy) / 2;
-    }
-    out += `<path d="${d}" class="pr-e ${kind || ''}" marker-end="url(#prArr)"/>`;
-    if (label) out += `<text x="${lx.toFixed(1)}" y="${(ly - 5).toFixed(1)}" text-anchor="middle" class="pr-el">${esc(label)}</text>`;
+/* =====================================================================
+   مخطط الجهات: مخطط مسارات عمودي (الجهات أعمدة، والخطوات تنزل بالترتيب).
+   - صف لكل خطوة؛ البدايتان في الصف الأول، و«إغلاق الطلب» بجوار التقييم، و«مذكرة مفعّلة» بعد آخر خطوة.
+   - أسهم بزوايا قائمة مستديرة الأطراف؛ الإعادات بملاحظات في ممرات جانبية مستقلة يسار المخطط؛
+     والتسجيل المباشر في ممر داخل عمود إدارة الشراكات حتى لا يقطع أي خطوة.
+   - كل المواقع تُحسب من عرض الحاوية، فيملأ المخطط العرض المتاح دون تمرير أفقي إلا على الشاشات الضيقة.
+   ===================================================================== */
+function prRows() {
+  const R = {}; WF_STEPS.forEach((x, i) => { R[x.id] = i; });
+  R.direct = 0;
+  const cl = PR_EDGES.find((e) => e[1] === 'closed'); R.closed = cl ? R[cl[0]] : 2;
+  R.active = WF_STEPS.length;
+  return R;
+}
+function prLaneOfLayout(x) {
+  if (x.id === 'active') return WF_STEPS[WF_STEPS.length - 1].actor;
+  return x.lane;
+}
+function drawPrEdges(el, forceW) {
+  const map = $('#prMap', el); if (!map) return;
+  const wrap = map.parentElement, body = $('.pm-body', map), svg = $('.pm-edges', map);
+  const NL = PR_LANES.length, ROWS = WF_STEPS.length + 1;
+  const back = PR_EDGES.filter((e) => e[3] === 'back');
+  const RAIL = 96, GUT = 26 + back.length * 16, PAD = 8;
+  const printing = window.matchMedia && matchMedia('print').matches;
+  if (printing && !forceW) return; // أثناء الطباعة يبقى تخطيط الطباعة الثابت
+  const W = Math.max(forceW || wrap.clientWidth, RAIL + GUT + NL * 122);
+  map.style.setProperty('--pz', (700 / W).toFixed(3)); // تصغير المخطط ليملأ عرض صفحة A4
+  const LW = (W - RAIL - GUT) / NL, PITCH = 92, NH = 66;
+  map.classList.toggle('narrow', LW < 176);
+  const H = ROWS * PITCH + 18;
+  map.style.width = W + 'px'; body.style.height = H + 'px';
+  map.style.setProperty('--lw', LW + 'px'); map.style.setProperty('--rail', RAIL + 'px'); map.style.setProperty('--gut', GUT + 'px');
+  const laneIdx = (id) => Math.max(0, PR_LANES.findIndex((l) => l.id === id));
+  const laneR = (i) => W - RAIL - i * LW, laneL = (i) => laneR(i) - LW; // من اليمين
+  const rows = prRows(), rowY = (r) => 9 + r * PITCH;
+  // الرؤوس والأعمدة والمراحل
+  $$('.pm-lh', map).forEach((h, i) => { h.style.width = LW + 'px'; h.style.left = laneL(i) + 'px'; });
+  $$('.pm-col', map).forEach((c, i) => { c.style.left = laneL(i) + 'px'; c.style.width = LW + 'px'; });
+  const phRows = PR_PHASES.map((ph, i) => ({ r0: ph.from, r1: i === PR_PHASES.length - 1 ? ROWS - 1 : ph.to }));
+  $$('.pm-band', map).forEach((b, i) => { const { r0, r1 } = phRows[i]; const y0 = i === 0 ? 0 : rowY(r0) - (PITCH - NH) / 4, y1 = i === phRows.length - 1 ? H : rowY(r1 + 1) - (PITCH - NH) / 4; b.style.top = y0 + 'px'; b.style.height = (y1 - y0) + 'px'; });
+  // العقد
+  const box = {};
+  $$('.pm-n', map).forEach((n) => {
+    const x = PR_STEPS.find((s) => s.id === n.dataset.step); if (!x) return;
+    const li = laneIdx(prLaneOfLayout(x)), r = rows[x.id];
+    const pill = x.kind === 'start' || x.kind === 'end';
+    const w = LW - PAD * 2, h = pill ? 52 : NH;
+    const l = laneL(li) + (LW - w) / 2, t = rowY(r) + (PITCH - h) / 2 - (PITCH - NH) / 4;
+    Object.assign(n.style, { left: l + 'px', top: t + 'px', width: w + 'px', height: h + 'px' });
+    box[x.id] = { l, r: l + w, t, b: t + h, cx: l + w / 2, cy: t + h / 2, li, row: r };
   });
-  svg.innerHTML = out;
+  // الأسهم
+  const RC = 7;
+  const path = (pts) => { // خط بزوايا قائمة مستديرة
+    let d = `M${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+    for (let i = 1; i < pts.length; i++) {
+      const [x, y] = pts[i];
+      if (i < pts.length - 1) {
+        const [px, py] = pts[i - 1], [nx, ny] = pts[i + 1];
+        const d1 = Math.hypot(x - px, y - py), d2 = Math.hypot(nx - x, ny - y), r = Math.min(RC, d1 / 2, d2 / 2);
+        const ax = x - ((x - px) / (d1 || 1)) * r, ay = y - ((y - py) / (d1 || 1)) * r, bx = x + ((nx - x) / (d2 || 1)) * r, by = y + ((ny - y) / (d2 || 1)) * r;
+        d += `L${ax.toFixed(1)} ${ay.toFixed(1)}Q${x.toFixed(1)} ${y.toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)}`;
+      } else d += `L${x.toFixed(1)} ${y.toFixed(1)}`;
+    }
+    return d;
+  };
+  const chip = (x, y, t, cls = '', anchor = 'middle') => { const w = t.length * 5.6 + 14; const x0 = anchor === 'start' ? x : anchor === 'end' ? x - w : x - w / 2; return `<g class="pm-chip ${cls}"><rect x="${x0.toFixed(1)}" y="${(y - 9).toFixed(1)}" width="${w.toFixed(1)}" height="18" rx="9"/><text x="${(x0 + w / 2).toFixed(1)}" y="${(y + 3.6).toFixed(1)}" text-anchor="middle">${esc(t)}</text></g>`; };
+  let paths = '', chips = '';
+  const sortedBack = back.slice().sort((p, q) => (box[q[0]].row - box[q[1]].row) - (box[p[0]].row - box[p[1]].row));
+  PR_EDGES.forEach(([a, b, label, kind]) => {
+    const A = box[a], B = box[b]; if (!A || !B) return;
+    let pts, lx, ly, cls = kind || '', anchor = 'middle';
+    if (kind === 'back') {
+      const k = sortedBack.findIndex((e) => e[0] === a && e[1] === b), gx = 12 + k * 16;
+      const ya = A.cy + 8, yb = B.cy + 8;
+      pts = [[A.l, ya], [gx, ya], [gx, yb], [B.l, yb]]; lx = gx + 7; ly = (ya + yb) / 2; anchor = 'start';
+    } else if (kind === 'long') {
+      const cx = laneL(A.li) + 6;
+      pts = [[A.l, A.cy], [cx, A.cy], [cx, B.cy], [B.l, B.cy]]; lx = cx - 5; ly = (A.cy + B.cy) / 2; anchor = 'end';
+    } else if (A.row === B.row) {
+      const toRight = B.cx > A.cx; pts = [[toRight ? A.r : A.l, A.cy], [toRight ? B.l : B.r, B.cy]]; lx = (pts[0][0] + pts[1][0]) / 2; ly = A.cy - 13; cls += ' side';
+    } else if (A.li === B.li) {
+      pts = [[A.cx, A.b], [B.cx, B.t]]; lx = A.cx; ly = (A.b + B.t) / 2;
+    } else {
+      const ym = (A.b + B.t) / 2; pts = [[A.cx, A.b], [A.cx, ym], [B.cx, ym], [B.cx, B.t]]; lx = (A.cx + B.cx) / 2; ly = ym;
+    }
+    if (b === 'closed') cls += ' stop';
+    paths += `<path d="${path(pts)}" class="pr-e pm-e ${cls}" data-from="${a}" data-to="${b}" marker-end="url(#pmArr${kind === 'back' ? 'B' : b === 'closed' ? 'S' : ''})"/>`;
+    const roomy = !cls.includes('side') || Math.abs(pts[1][0] - pts[0][0]) > label.length * 5.6 + 20; // لا وسم إن ضاق المكان (والوصف ظاهر في الخطوة نفسها)
+    if (label && roomy) chips += chip(lx, ly, label, cls, anchor);
+  });
+  svg.setAttribute('width', W); svg.setAttribute('height', H); svg.style.width = W + 'px'; svg.style.height = H + 'px'; svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  const mk = (id, c) => `<marker id="${id}" viewBox="0 0 10 10" refX="8.6" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse"><path d="M1 1.2L9 5L1 8.8z" class="${c}"/></marker>`;
+  svg.innerHTML = `<defs>${mk('pmArr', 'a')}${mk('pmArrB', 'b')}${mk('pmArrS', 's')}</defs><g class="pm-paths">${paths}</g><g class="pm-chips">${chips}</g>`;
+  // إبراز مسارات الخطوة عند المرور
+  if (!map._hov) {
+    map._hov = true;
+    map.addEventListener('mouseover', (e) => { const n = e.target.closest('.pm-n'); map.classList.toggle('hl', !!n); $$('.pm-e', map).forEach((p) => p.classList.toggle('on', !!n && (p.dataset.from === n.dataset.step || p.dataset.to === n.dataset.step))); });
+    map.addEventListener('mouseleave', () => { map.classList.remove('hl'); $$('.pm-e.on', map).forEach((p) => p.classList.remove('on')); });
+  }
 }
 
 /* لوحة تفاصيل الخطوة */
