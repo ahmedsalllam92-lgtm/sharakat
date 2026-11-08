@@ -226,7 +226,7 @@ async function uploadToPartnership(p, cat, files) {
 const rerenderKeep = () => { const y = scrollY; route(); window.scrollTo(0, y); };
 const AUDIT_LABELS = {
   'partnership.create': 'إنشاء سجل الشراكة', 'partnership.update': 'تعديل البيانات', 'partnership.delete': 'حذف سجل الشراكة', 'partnership.confirm': 'تأكيد قيمة مستوردة', 'partnership.publish': 'تغيير الظهور في الواجهة',
-  'home.featured': 'تغيير العرض المميز', 'partnership.golden': 'الشراكات الذهبية', 'partnership.files': 'تحديث ملفات الشراكة', 'list.add': 'إضافة قيمة إلى قائمة', 'proposal.create': 'إنشاء مقترح', 'proposal.submit': 'تقديم مقترح', 'proposal.status': 'تغيير حالة مقترح', 'proposal.note': 'ملاحظة على مقترح', 'proposal.update': 'تحديث مقترح',
+  'home.featured': 'تغيير العرض المميز', 'partnership.golden': 'الشراكات الذهبية', 'list.request': 'اقتراح خيار جديد', 'list.decision': 'قرار على خيار مقترح', 'workflow.direct': 'تسجيل مباشر', 'partnership.files': 'تحديث ملفات الشراكة', 'list.add': 'إضافة قيمة إلى قائمة', 'proposal.create': 'إنشاء مقترح', 'proposal.submit': 'تقديم مقترح', 'proposal.status': 'تغيير حالة مقترح', 'proposal.note': 'ملاحظة على مقترح', 'proposal.update': 'تحديث مقترح',
   'partner.create': 'إضافة جهة', 'partner.update': 'تعديل جهة', 'partner.merge': 'دمج جهتين', 'partner.delete': 'حذف جهة', 'settings.update': 'تعديل الإعدادات', 'content.save': 'حفظ محتوى', 'content.delete': 'حذف محتوى',
   'partnership.dossier': 'تجهيز الملف الشامل', seed: 'تهيئة المنصة', backup: 'نسخة احتياطية', restore: 'استعادة نسخة احتياطية', 'demo.toggle': 'إظهار/إخفاء البيانات التجريبية', 'role.switch': 'معاينة بحساب آخر', 'auth.login': 'تسجيل دخول', 'notify.read': 'قراءة الإشعارات', 'auth.logout': 'تسجيل خروج', 'auth.password': 'تغيير كلمة مرور',
 };

@@ -313,7 +313,7 @@ async function convertProposal(x, { partnerId, newPartner }) {
 }
 
 /* ===== إضافة قيمة إلى قائمة من داخل أي شراكة — تظهر لكل الشراكات وفي صفحة «القوائم» ===== */
-const LIST_TITLES = { domains: 'مجالات عمل الجهات', partnerTypes: 'تصنيف الشراكة', originTypes: 'بداية العلاقة', valueTypes: 'أنواع القيمة', financeModels: 'النماذج المالية', financeStatus: 'الوضع المالي', sectors: 'القطاعات', classifications: 'تصنيفات المذكرات', categories: 'تصنيفات الشراكة', departments: 'الإدارات', team: 'فريق إدارة الشراكات', activation: 'حالات التفعيل', attachmentCats: 'تصنيفات الملفات', goals: 'الأهداف الاستراتيجية' };
+const LIST_TITLES = { formSectors: 'نوع الجهة (القطاع) في النماذج', domains: 'مجالات عمل الجهات', partnerTypes: 'تصنيف الشراكة', originTypes: 'بداية العلاقة', valueTypes: 'أنواع القيمة', financeModels: 'النماذج المالية', financeStatus: 'الوضع المالي', sectors: 'القطاعات', classifications: 'تصنيفات المذكرات', categories: 'تصنيفات الشراكة', departments: 'الإدارات', team: 'فريق إدارة الشراكات', activation: 'حالات التفعيل', attachmentCats: 'تصنيفات الملفات', goals: 'الأهداف الاستراتيجية' };
 async function addListValue(listKey, v, from) {
   v = String(v || '').trim();
   if (!v || L(listKey).some((x) => normAr(x) === normAr(v))) return false;

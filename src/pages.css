@@ -2001,3 +2001,59 @@ html.rq-in #dsw,html.rq-in .tour-top{display:none!important}
 .home .gold-sec{margin-top:8px}
 @media (max-width:720px){.gold-sec{padding:22px 16px;border-radius:16px}.gold-head h2{font-size:20px}.gold-grid{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.gold-bg i,.gc-star svg,.gcard{animation:none}}
+
+/* =====================================================================
+   مسار الطلب/المذكرة: مراحل متتابعة بتصميم رسمي
+   ===================================================================== */
+.wf-next{display:flex;align-items:center;gap:14px;margin:0 0 16px;padding:14px 16px;border-radius:var(--r-m,12px);background:linear-gradient(135deg,color-mix(in srgb,var(--petrol) 10%,var(--paper)),var(--paper));border:1px solid color-mix(in srgb,var(--petrol) 35%,var(--line));border-inline-start:4px solid var(--gold)}
+.wf-next.soft{border-inline-start-color:var(--petrol);background:var(--paper-2)}
+.wf-next>div{flex:1;min-width:0}.wf-next b{display:block;font-size:14px;color:var(--ink)}.wf-next small{display:block;font-size:12px;color:var(--muted);line-height:1.7}
+.wf-next-ic{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--petrol);color:#fff}
+.wf-next-ic .ic{width:18px;height:18px}
+.wf-phases{display:grid!important;grid-auto-flow:column;grid-auto-columns:minmax(232px,1fr);grid-template-columns:none!important;gap:0!important;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.wf-ph{position:relative;border:0!important;background:none!important;padding:0 6px!important;min-width:0}
+.wf-ph-h{display:flex!important;align-items:center;gap:8px;margin:0 0 10px!important;font-size:13px;position:relative}
+.wf-ph-h em{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px!important;font-weight:700;background:var(--paper);border:2px solid var(--line);color:var(--muted)!important;position:relative;z-index:1;font-variant-numeric:tabular-nums}
+.wf-ph-h em .ic{width:14px;height:14px}
+.wf-ph-h span{font-weight:700;color:var(--ink-2);white-space:nowrap}
+.wf-ph-h small{font-size:11px;color:var(--faint,var(--muted));font-variant-numeric:tabular-nums}
+.wf-ph-h::after{content:"";flex:1;height:2px;background:var(--line);margin-inline-start:4px;margin-inline-end:-12px;min-width:16px}
+.wf-ph:last-child .wf-ph-h::after{display:none}
+.wf-ph.done .wf-ph-h em{background:var(--petrol);border-color:var(--petrol);color:#fff!important}
+.wf-ph.done .wf-ph-h::after{background:var(--petrol)}
+.wf-ph.cur .wf-ph-h em{border-color:var(--gold);color:var(--gold)!important;box-shadow:0 0 0 4px color-mix(in srgb,var(--gold) 18%,transparent)}
+.wf-ph.cur .wf-ph-h::after{background:linear-gradient(90deg,var(--line),var(--gold))}
+[dir="rtl"] .wf-ph.cur .wf-ph-h::after,.wf-ph.cur .wf-ph-h::after{background:linear-gradient(270deg,var(--gold),var(--line))}
+.wf-ph .wf-list{border:1px solid var(--line);border-radius:var(--r-m,12px);background:var(--paper-2);padding:4px 10px;margin:0}
+.wf-ph.cur .wf-list{border-color:color-mix(in srgb,var(--gold) 55%,var(--line));background:var(--paper);box-shadow:0 10px 26px -18px rgba(0,0,0,.35)}
+.wf-ph.lockp .wf-list{opacity:.72}
+.wf-ph .wf-s:first-child{border-top:0}
+[data-design="board"] .wf-ph .wf-list,[data-design="board"] .wf-next{border-radius:3px}
+@media print{.wf-phases{grid-auto-flow:row;grid-template-columns:1fr 1fr!important}.wf-ph-h::after{display:none}}
+
+/* نموذج التقييم المبدئي: الأوزان والدرجة الحية والنتيجة التلقائية */
+.ff-w{display:inline-block;min-width:42px;padding:1px 8px;border-radius:10px;background:var(--paper-2);font-size:12px;font-variant-numeric:tabular-nums}
+.ff-iev{display:flex;align-items:center;gap:14px;margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--paper-2);border:1px solid var(--line)}
+.ff-iev-bar{position:relative;flex:1;height:10px;border-radius:6px;background:var(--line);overflow:visible}
+.ff-iev-bar i{position:absolute;inset-block:0;inset-inline-start:0;border-radius:6px;transition:width .35s ease,background .35s}
+.ff-iev-bar i.hi{background:#1F6B55}.ff-iev-bar i.mid{background:#B08A3E}.ff-iev-bar i.lo{background:#A23A2C}.ff-iev-bar i.pend{background:#8FA59D}
+.ff-iev-bar s{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink-2);opacity:.35;text-decoration:none}
+.ff-iev-t{display:flex;flex-direction:column;min-width:190px}.ff-iev-t b{font-size:18px;font-variant-numeric:tabular-nums}.ff-iev-t span{font-size:12px;color:var(--muted)}
+.ff-auto{display:flex;align-items:center;gap:12px;flex-basis:100%;margin-top:6px;font-size:12px}
+.ff-auto-a{color:#1F6B55;display:inline-flex;align-items:center;gap:5px}.ff-auto-m{color:#8A6A2A;display:inline-flex;align-items:center;gap:5px}
+.ff-auto .ic{width:13px;height:13px}
+.ff-chip.add{border-style:dashed;color:var(--petrol);background:transparent}
+.ff-chip.add .ic{width:13px;height:13px}
+.fxdoc .fx-w{width:60px;text-align:center;font-variant-numeric:tabular-nums}.fxdoc .fx-w span{font-size:10.5px;padding:1px 7px;border-radius:9px;background:#F4F1E8}
+.fxdoc .fx-tbl tfoot td{background:var(--ev-s);font-weight:700;font-size:11px;padding:6px 10px}
+.fxdoc .fx-badge.mid{background:#F6EEDC;color:#8A6A2A}
+.fxdoc .fx-thr{margin:5px 0 0;font-size:9.5px;color:#8A928D}
+
+.lr-list{list-style:none;margin:0;padding:0}
+.lr-list li{display:flex;align-items:center;gap:8px;padding:10px 0;border-top:1px dashed var(--line)}
+.lr-list li:first-child{border-top:0}
+.lr-list li>div{flex:1;min-width:0}.lr-list b{display:block}.lr-list small{color:var(--muted);font-size:12px}
+.tk-lr{margin-bottom:18px;border-inline-start:4px solid var(--gold)}
+.ok-t{color:#1F6B55}.warn-t{color:#A23A2C}
+.ff>.ff-chip.add{display:inline-flex;align-items:center;gap:5px;width:auto;justify-self:start;align-self:flex-start;margin-top:8px;padding:5px 12px}
+.wf-phases{grid-auto-columns:minmax(196px,1fr)!important}

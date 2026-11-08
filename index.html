@@ -5459,6 +5459,62 @@ html.rq-in #dsw,html.rq-in .tour-top{display:none!important}
 .home .gold-sec{margin-top:8px}
 @media (max-width:720px){.gold-sec{padding:22px 16px;border-radius:16px}.gold-head h2{font-size:20px}.gold-grid{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.gold-bg i,.gc-star svg,.gcard{animation:none}}
+
+/* =====================================================================
+   مسار الطلب/المذكرة: مراحل متتابعة بتصميم رسمي
+   ===================================================================== */
+.wf-next{display:flex;align-items:center;gap:14px;margin:0 0 16px;padding:14px 16px;border-radius:var(--r-m,12px);background:linear-gradient(135deg,color-mix(in srgb,var(--petrol) 10%,var(--paper)),var(--paper));border:1px solid color-mix(in srgb,var(--petrol) 35%,var(--line));border-inline-start:4px solid var(--gold)}
+.wf-next.soft{border-inline-start-color:var(--petrol);background:var(--paper-2)}
+.wf-next>div{flex:1;min-width:0}.wf-next b{display:block;font-size:14px;color:var(--ink)}.wf-next small{display:block;font-size:12px;color:var(--muted);line-height:1.7}
+.wf-next-ic{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--petrol);color:#fff}
+.wf-next-ic .ic{width:18px;height:18px}
+.wf-phases{display:grid!important;grid-auto-flow:column;grid-auto-columns:minmax(232px,1fr);grid-template-columns:none!important;gap:0!important;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+.wf-ph{position:relative;border:0!important;background:none!important;padding:0 6px!important;min-width:0}
+.wf-ph-h{display:flex!important;align-items:center;gap:8px;margin:0 0 10px!important;font-size:13px;position:relative}
+.wf-ph-h em{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px!important;font-weight:700;background:var(--paper);border:2px solid var(--line);color:var(--muted)!important;position:relative;z-index:1;font-variant-numeric:tabular-nums}
+.wf-ph-h em .ic{width:14px;height:14px}
+.wf-ph-h span{font-weight:700;color:var(--ink-2);white-space:nowrap}
+.wf-ph-h small{font-size:11px;color:var(--faint,var(--muted));font-variant-numeric:tabular-nums}
+.wf-ph-h::after{content:"";flex:1;height:2px;background:var(--line);margin-inline-start:4px;margin-inline-end:-12px;min-width:16px}
+.wf-ph:last-child .wf-ph-h::after{display:none}
+.wf-ph.done .wf-ph-h em{background:var(--petrol);border-color:var(--petrol);color:#fff!important}
+.wf-ph.done .wf-ph-h::after{background:var(--petrol)}
+.wf-ph.cur .wf-ph-h em{border-color:var(--gold);color:var(--gold)!important;box-shadow:0 0 0 4px color-mix(in srgb,var(--gold) 18%,transparent)}
+.wf-ph.cur .wf-ph-h::after{background:linear-gradient(90deg,var(--line),var(--gold))}
+[dir="rtl"] .wf-ph.cur .wf-ph-h::after,.wf-ph.cur .wf-ph-h::after{background:linear-gradient(270deg,var(--gold),var(--line))}
+.wf-ph .wf-list{border:1px solid var(--line);border-radius:var(--r-m,12px);background:var(--paper-2);padding:4px 10px;margin:0}
+.wf-ph.cur .wf-list{border-color:color-mix(in srgb,var(--gold) 55%,var(--line));background:var(--paper);box-shadow:0 10px 26px -18px rgba(0,0,0,.35)}
+.wf-ph.lockp .wf-list{opacity:.72}
+.wf-ph .wf-s:first-child{border-top:0}
+[data-design="board"] .wf-ph .wf-list,[data-design="board"] .wf-next{border-radius:3px}
+@media print{.wf-phases{grid-auto-flow:row;grid-template-columns:1fr 1fr!important}.wf-ph-h::after{display:none}}
+
+/* نموذج التقييم المبدئي: الأوزان والدرجة الحية والنتيجة التلقائية */
+.ff-w{display:inline-block;min-width:42px;padding:1px 8px;border-radius:10px;background:var(--paper-2);font-size:12px;font-variant-numeric:tabular-nums}
+.ff-iev{display:flex;align-items:center;gap:14px;margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--paper-2);border:1px solid var(--line)}
+.ff-iev-bar{position:relative;flex:1;height:10px;border-radius:6px;background:var(--line);overflow:visible}
+.ff-iev-bar i{position:absolute;inset-block:0;inset-inline-start:0;border-radius:6px;transition:width .35s ease,background .35s}
+.ff-iev-bar i.hi{background:#1F6B55}.ff-iev-bar i.mid{background:#B08A3E}.ff-iev-bar i.lo{background:#A23A2C}.ff-iev-bar i.pend{background:#8FA59D}
+.ff-iev-bar s{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink-2);opacity:.35;text-decoration:none}
+.ff-iev-t{display:flex;flex-direction:column;min-width:190px}.ff-iev-t b{font-size:18px;font-variant-numeric:tabular-nums}.ff-iev-t span{font-size:12px;color:var(--muted)}
+.ff-auto{display:flex;align-items:center;gap:12px;flex-basis:100%;margin-top:6px;font-size:12px}
+.ff-auto-a{color:#1F6B55;display:inline-flex;align-items:center;gap:5px}.ff-auto-m{color:#8A6A2A;display:inline-flex;align-items:center;gap:5px}
+.ff-auto .ic{width:13px;height:13px}
+.ff-chip.add{border-style:dashed;color:var(--petrol);background:transparent}
+.ff-chip.add .ic{width:13px;height:13px}
+.fxdoc .fx-w{width:60px;text-align:center;font-variant-numeric:tabular-nums}.fxdoc .fx-w span{font-size:10.5px;padding:1px 7px;border-radius:9px;background:#F4F1E8}
+.fxdoc .fx-tbl tfoot td{background:var(--ev-s);font-weight:700;font-size:11px;padding:6px 10px}
+.fxdoc .fx-badge.mid{background:#F6EEDC;color:#8A6A2A}
+.fxdoc .fx-thr{margin:5px 0 0;font-size:9.5px;color:#8A928D}
+
+.lr-list{list-style:none;margin:0;padding:0}
+.lr-list li{display:flex;align-items:center;gap:8px;padding:10px 0;border-top:1px dashed var(--line)}
+.lr-list li:first-child{border-top:0}
+.lr-list li>div{flex:1;min-width:0}.lr-list b{display:block}.lr-list small{color:var(--muted);font-size:12px}
+.tk-lr{margin-bottom:18px;border-inline-start:4px solid var(--gold)}
+.ok-t{color:#1F6B55}.warn-t{color:#A23A2C}
+.ff>.ff-chip.add{display:inline-flex;align-items:center;gap:5px;width:auto;justify-self:start;align-self:flex-start;margin-top:8px;padding:5px 12px}
+.wf-phases{grid-auto-columns:minmax(196px,1fr)!important}
 </style>
 </head>
 <body>
@@ -6872,7 +6928,7 @@ async function convertProposal(x, { partnerId, newPartner }) {
 }
 
 /* ===== إضافة قيمة إلى قائمة من داخل أي شراكة — تظهر لكل الشراكات وفي صفحة «القوائم» ===== */
-const LIST_TITLES = { domains: 'مجالات عمل الجهات', partnerTypes: 'تصنيف الشراكة', originTypes: 'بداية العلاقة', valueTypes: 'أنواع القيمة', financeModels: 'النماذج المالية', financeStatus: 'الوضع المالي', sectors: 'القطاعات', classifications: 'تصنيفات المذكرات', categories: 'تصنيفات الشراكة', departments: 'الإدارات', team: 'فريق إدارة الشراكات', activation: 'حالات التفعيل', attachmentCats: 'تصنيفات الملفات', goals: 'الأهداف الاستراتيجية' };
+const LIST_TITLES = { formSectors: 'نوع الجهة (القطاع) في النماذج', domains: 'مجالات عمل الجهات', partnerTypes: 'تصنيف الشراكة', originTypes: 'بداية العلاقة', valueTypes: 'أنواع القيمة', financeModels: 'النماذج المالية', financeStatus: 'الوضع المالي', sectors: 'القطاعات', classifications: 'تصنيفات المذكرات', categories: 'تصنيفات الشراكة', departments: 'الإدارات', team: 'فريق إدارة الشراكات', activation: 'حالات التفعيل', attachmentCats: 'تصنيفات الملفات', goals: 'الأهداف الاستراتيجية' };
 async function addListValue(listKey, v, from) {
   v = String(v || '').trim();
   if (!v || L(listKey).some((x) => normAr(x) === normAr(v))) return false;
@@ -9656,7 +9712,7 @@ async function uploadToPartnership(p, cat, files) {
 const rerenderKeep = () => { const y = scrollY; route(); window.scrollTo(0, y); };
 const AUDIT_LABELS = {
   'partnership.create': 'إنشاء سجل الشراكة', 'partnership.update': 'تعديل البيانات', 'partnership.delete': 'حذف سجل الشراكة', 'partnership.confirm': 'تأكيد قيمة مستوردة', 'partnership.publish': 'تغيير الظهور في الواجهة',
-  'home.featured': 'تغيير العرض المميز', 'partnership.golden': 'الشراكات الذهبية', 'partnership.files': 'تحديث ملفات الشراكة', 'list.add': 'إضافة قيمة إلى قائمة', 'proposal.create': 'إنشاء مقترح', 'proposal.submit': 'تقديم مقترح', 'proposal.status': 'تغيير حالة مقترح', 'proposal.note': 'ملاحظة على مقترح', 'proposal.update': 'تحديث مقترح',
+  'home.featured': 'تغيير العرض المميز', 'partnership.golden': 'الشراكات الذهبية', 'list.request': 'اقتراح خيار جديد', 'list.decision': 'قرار على خيار مقترح', 'workflow.direct': 'تسجيل مباشر', 'partnership.files': 'تحديث ملفات الشراكة', 'list.add': 'إضافة قيمة إلى قائمة', 'proposal.create': 'إنشاء مقترح', 'proposal.submit': 'تقديم مقترح', 'proposal.status': 'تغيير حالة مقترح', 'proposal.note': 'ملاحظة على مقترح', 'proposal.update': 'تحديث مقترح',
   'partner.create': 'إضافة جهة', 'partner.update': 'تعديل جهة', 'partner.merge': 'دمج جهتين', 'partner.delete': 'حذف جهة', 'settings.update': 'تعديل الإعدادات', 'content.save': 'حفظ محتوى', 'content.delete': 'حذف محتوى',
   'partnership.dossier': 'تجهيز الملف الشامل', seed: 'تهيئة المنصة', backup: 'نسخة احتياطية', restore: 'استعادة نسخة احتياطية', 'demo.toggle': 'إظهار/إخفاء البيانات التجريبية', 'role.switch': 'معاينة بحساب آخر', 'auth.login': 'تسجيل دخول', 'notify.read': 'قراءة الإشعارات', 'auth.logout': 'تسجيل خروج', 'auth.password': 'تغيير كلمة مرور',
 };
@@ -10669,6 +10725,7 @@ function renderProposal(el, r) {
       rejected: [['review', 'إعادة فتح المقترح', '']],
       converted: [],
     }[x.status] || [];
+    if (Session.role() === 'admin' && ['submitted', 'review', 'accepted'].includes(x.status)) A.push(['direct', 'تحويل مباشر', '']);
     actionBox = `<div class="review-box no-print"><h3>إجراء إدارة الشراكات</h3>
       ${x.status === 'converted' && pt ? `<p class="small" style="margin-bottom:12px">أُنشئ من المقترح سجل الشراكة <a href="#/partnerships/${pt.id}"><b class="code" style="color:inherit">${esc(pt.code)}</b></a>. مرحلة الشراكة الحالية: <b>${esc(stageLabel(pt.stage))}</b>.</p>` : ''}
       ${x.status === 'info' ? `<p class="small muted" style="margin-bottom:12px">بانتظار استكمال الإدارة المقدمة منذ ${relDays(infoReq ? infoReq.at : x.updatedAt).replace('قبل ', '')}.</p>` : ''}
@@ -10722,6 +10779,7 @@ function renderProposal(el, r) {
     const a = e.target.closest('[data-act]'); if (!a) return;
     const k = a.dataset.act;
     if (k === 'convert') return convertDialog(x);
+    if (k === 'direct') return convertDialog(x, true);
     if (k === 'info') { const v = await inputDlg({ title: 'طلب استكمال معلومات', label: 'ما المطلوب من الإدارة المقدمة؟', hint: 'تظهر الرسالة للإدارة المقدمة مع زر «استكمال المقترح».', ok: 'إرسال الطلب' }); if (!v) return; await setPropStatus(x, 'info', v.value, 'all'); toast('أُرسل طلب الاستكمال'); return route(); }
     if (k === 'rejected') { const v = await inputDlg({ title: 'عدم قبول المقترح', label: 'سبب عدم القبول', hint: 'يظهر السبب للإدارة المقدمة.', ok: 'تأكيد عدم القبول' }); if (!v) return; await setPropStatus(x, 'rejected', v.value, 'all'); toast('سُجّل عدم قبول المقترح'); return route(); }
     if (k === 'accepted' && !wfEvalDone(x)) { const c = wfStateOf('proposal', x).cur; toast('يُقبل المقترح بعد منهجية بناء الشراكات والتقييم المبدئي للشريك.'); return c && wfStepDialog('proposal', x, c.id, () => route()); }
@@ -10729,7 +10787,7 @@ function renderProposal(el, r) {
     if (k === 'review') { await setPropStatus(x, 'review', '', 'all'); toast('المقترح قيد الدراسة'); return route(); }
   };
 }
-function convertDialog(x) {
+function convertDialog(x, direct = false) {
   const sim = findSimilarPartners(x.partnerName);
   const best = sim.find((s) => nameSimilarity(s.name, x.partnerName) >= 0.85);
   const m = Modal.open({
@@ -10742,13 +10800,15 @@ function convertDialog(x) {
       </div>
       <table class="map-tbl"><thead><tr><th>من المقترح</th><th></th><th>إلى سجل الشراكة</th></tr></thead><tbody>
         ${proposalMapping(x).map(([a, v, b]) => `<tr><td><b style="font-weight:500">${esc(a)}</b>${v ? `<div class="xs muted" style="margin-top:2px;max-height:40px;overflow:hidden">${esc(String(v).slice(0, 120))}</div>` : '<div class="xs faint">فارغ</div>'}</td><td>←</td><td>${esc(b)}</td></tr>`).join('')}</tbody></table>`,
-    foot: `<button class="btn primary" data-ok>${icon('convert')} إنشاء سجل الشراكة</button><button class="btn ghost" data-mclose>إلغاء</button>`,
+    foot: `${Session.role() === 'admin' ? `<label class="check small" style="margin-inline-end:auto"><input type="checkbox" id="cvDirect" ${direct ? 'checked' : ''}> تسجيل مباشر: تجاوز مراحل المسار حتى «${esc((WF_STEPS.find((s) => s.id === 'signed') || {}).t || 'التوقيع')}»</label>` : ''}<button class="btn primary" data-ok>${icon('convert')} إنشاء سجل الشراكة</button><button class="btn ghost" data-mclose>إلغاء</button>`,
   });
   m.el.querySelector('[data-ok]').onclick = async () => {
     const pid = (m.el.querySelector('input[name=cvp]:checked') || {}).value || '';
+    const dir = !!(m.el.querySelector('#cvDirect') || {}).checked;
     const rec = await convertProposal(x, { partnerId: pid, newPartner: { name: x.partnerName, sector: x.partnerSector } });
+    if (dir) await wfDirect(x, rec);
     m.close();
-    toast(`أُنشئ سجل الشراكة ${rec.code}`);
+    toast(dir ? `أُنشئ سجل الشراكة ${rec.code} مباشرة — الخطوة الحالية: التوقيع` : `أُنشئ سجل الشراكة ${rec.code}`);
     go('#/partnerships/' + rec.id);
   };
 }
@@ -10871,6 +10931,7 @@ const SET_TABS = [
   { id: 'tour', t: 'استعراض المنصة', perm: null },
   { id: 'home', t: 'محتوى الرئيسية', perm: 'manage.content' },
   { id: 'lists', t: 'القوائم', perm: 'manage.lists' },
+  { id: 'forms', t: 'إعدادات النماذج', perm: 'manage.accounts' },
   { id: 'roles', t: 'الحسابات والصلاحيات', perm: null },
   { id: 'data', t: 'البيانات والنسخ الاحتياطي', perm: 'manage.backup' },
   { id: 'audit', t: 'سجل التغييرات', perm: 'view.audit' },
@@ -10882,7 +10943,42 @@ function renderSettings(el, r) {
   el.innerHTML = `<div class="ph"><div><h1>الإعدادات</h1><p>إدارة التصنيفات والجهات والإدارات ومحتوى الرئيسية والبيانات، مع سجل مبسط للتغييرات.</p></div></div>
     <div class="set-wrap"><nav class="set-nav">${tabs.map((t) => `<a href="#/settings/${t.id}" class="${t.id === tab ? 'on' : ''}">${t.t}</a>`).join('')}<a href="#/partners">الجهات الشريكة</a></nav><div id="sbody"></div></div>`;
   const body = $('#sbody', el);
-  ({ general: setGeneral, design: setDesignTab, tour: setTourTab, home: setHome, lists: setLists, roles: setRoles, data: setData, audit: setAudit })[tab](body);
+  ({ general: setGeneral, design: setDesignTab, tour: setTourTab, home: setHome, lists: setLists, forms: setFormsCfg, roles: setRoles, data: setData, audit: setAudit })[tab](body);
+}
+/* إعدادات النماذج: معايير التقييم المبدئي وأوزانها وحدود النتيجة */
+function setFormsCfg(b) {
+  const c = ievCfg(); let rows = c.crit.map((x) => ({ ...x }));
+  const draw = () => {
+    const tot = rows.reduce((t, r) => t + (+r.w || 0), 0);
+    b.innerHTML = `<div class="panel" id="ievCfg"><div class="panel-h"><h3>معايير التقييم المبدئي للشريك</h3><span class="sub">الدرجة = مجموع أوزان المعايير «المناسبة» ÷ مجموع الأوزان</span></div><div class="panel-b">
+      <div class="tbl-wrap"><table class="tbl iev-tbl"><thead><tr><th>م</th><th>المعيار</th><th>الوزن (%)</th><th></th></tr></thead><tbody>
+      ${rows.map((r, i) => `<tr><td class="c">${i + 1}</td><td><input class="in" data-ievt="${i}" value="${esc(r.t)}"></td><td style="width:120px"><input class="in num" type="number" min="0" max="100" data-ievw="${i}" value="${+r.w || 0}"></td><td style="width:60px"><button class="btn sm ghost" type="button" data-ievdel="${i}" ${rows.length < 2 ? 'disabled' : ''} title="حذف">${icon('trash')}</button></td></tr>`).join('')}
+      </tbody><tfoot><tr><td></td><td><button class="btn sm" type="button" data-ievadd>${icon('plus')} إضافة معيار</button></td><td><b class="${tot === 100 ? 'ok-t' : 'warn-t'}" id="ievTot">${tot}%</b></td><td></td></tr></tfoot></table></div>
+      <p class="xs muted" style="margin:6px 0 16px">يُفضّل أن يكون مجموع الأوزان 100%، وإن لم يكن تُحسب الدرجة نسبةً من المجموع.</p>
+      <div class="grid2"><div class="field"><label>أقل من هذه النسبة: «${esc(IEV_RES[2])}»</label><input class="in num" type="number" min="1" max="99" id="ievTh0" value="${c.th[0]}"></div>
+        <div class="field"><label>أكثر من هذه النسبة: «${esc(IEV_RES[0])}» (وما بينهما «${esc(IEV_RES[1])}»)</label><input class="in num" type="number" min="1" max="99" id="ievTh1" value="${c.th[1]}"></div></div>
+      <div class="row" style="margin-top:14px;gap:8px"><button class="btn primary" type="button" data-ievsave>حفظ</button><button class="btn ghost" type="button" data-ievreset>استعادة الافتراضي</button></div>
+      <p class="xs muted" style="margin-top:10px">التعديل يسري على النماذج الجديدة وما يُعاد فتحه للتعديل؛ النماذج المكتملة تحتفظ بأوزانها وقت التقييم.</p></div></div>`;
+  };
+  draw();
+  b.oninput = (e) => {
+    if (e.target.dataset.ievt !== undefined) rows[+e.target.dataset.ievt].t = e.target.value;
+    if (e.target.dataset.ievw !== undefined) { rows[+e.target.dataset.ievw].w = Math.max(0, +e.target.value || 0); const t = $('#ievTot', b), tot = rows.reduce((a, r) => a + (+r.w || 0), 0); t.textContent = tot + '%'; t.className = tot === 100 ? 'ok-t' : 'warn-t'; }
+  };
+  b.onclick = async (e) => {
+    if (e.target.closest('[data-ievadd]')) { rows.push({ t: '', w: 0 }); return draw(); }
+    const d = e.target.closest('[data-ievdel]'); if (d) { rows.splice(+d.dataset.ievdel, 1); return draw(); }
+    if (e.target.closest('[data-ievreset]')) { rows = IEV_DEF.crit.map((x) => ({ ...x })); $('#ievTh0', b).value = IEV_DEF.th[0]; $('#ievTh1', b).value = IEV_DEF.th[1]; const th = [...IEV_DEF.th]; draw(); $('#ievTh0', b).value = th[0]; $('#ievTh1', b).value = th[1]; return; }
+    if (e.target.closest('[data-ievsave]')) {
+      const crit = rows.map((r) => ({ t: String(r.t || '').trim(), w: +r.w || 0 })).filter((r) => r.t);
+      const th = [+$('#ievTh0', b).value, +$('#ievTh1', b).value];
+      if (!crit.length) return toast('أضف معيارًا واحدًا على الأقل.', 'err');
+      if (!(th[0] > 0 && th[1] < 100 && th[0] < th[1])) return toast('الحد الأدنى يجب أن يكون أقل من الحد الأعلى، وكلاهما بين 1 و99.', 'err');
+      D.settings.ievCfg = { crit, th };
+      await saveSet('معايير التقييم المبدئي', `${crit.length} معايير — الحدود ${th[0]}% و${th[1]}%`);
+      toast('حُفظت معايير التقييم المبدئي'); rows = crit.map((x) => ({ ...x })); draw();
+    }
+  };
 }
 async function saveSet(label, details = '') { await Repo.saveSettings(); await Repo.log('settings.update', 'settings', 'main', label, details); }
 
@@ -14246,7 +14342,7 @@ function wfSectionHTML(kind, rec) {
       <span class="wf-dot">${done ? icon(r.decision === 'no' || r.decision === 'reject' ? 'x' : 'check') : s.n}</span>
       <div class="wf-b"><div class="wf-h"><b>${esc(s.t)}</b>${s.ref ? `<span class="wf-ref" title="رقم البند في إجراء المذكرات">البند ${s.ref}</span>` : ''}</div>
         <div class="wf-m"><span class="wf-who">${icon('users')}${esc(wfActorName(s.actor))}</span>
-          ${done ? `<span>${r.legacy ? 'مكتملة قبل اعتماد المسار في المنصة' : `${r.decision === 'no' ? (s.no || 'غير مناسبة') : r.decision === 'reject' ? s.reject : r.decision === 'yes' && s.yes ? s.yes : 'اكتملت'} ${r.at ? '— ' + fmtDT(r.at) : ''}${r.by ? ' — ' + esc(r.by) : ''}`}</span>` : cur ? `<span class="wf-now">${ret ? 'أُعيدت بملاحظات' : lock ? '' : 'الخطوة الحالية'}</span>` : lock ? '<span>بعد التحويل إلى شراكة</span>' : ''}
+          ${done ? `<span>${r.direct ? `تُجووزت بالتسجيل المباشر${r.at ? ' — ' + fmtDT(r.at) : ''}` : r.legacy ? 'مكتملة قبل اعتماد المسار في المنصة' : `${r.decision === 'no' ? (s.no || 'غير مناسبة') : r.decision === 'reject' ? s.reject : r.decision === 'yes' && s.yes ? s.yes : 'اكتملت'} ${r.at ? '— ' + fmtDT(r.at) : ''}${r.by ? ' — ' + esc(r.by) : ''}`}</span>` : cur ? `<span class="wf-now">${ret ? 'أُعيدت بملاحظات' : lock ? '' : 'الخطوة الحالية'}</span>` : lock ? '<span>بعد التحويل إلى شراكة</span>' : ''}
           ${s.kind === 'multi' && kind === 'partnership' && (cur || done) ? `<span class="wf-multi">${multi} من ${need} ${s.id === 'reports' ? 'تقارير' : 'إدارات'}</span>` : ''}</div>
         ${ret && r.note ? `<div class="wf-note">${icon('msg')}${esc(r.note)}</div>` : ''}
         ${(() => { const fs = s.docs.filter((d) => d.form && wfForm(kind, rec, d.form)); return fs.length ? `<div class="wf-docs">${fs.map((d) => { const f = wfForm(kind, rec, d.form); return `<button type="button" class="wf-doc form ${f.status}" data-wfform="${d.form}" title="${esc(FORMS[d.form].title)}">${icon(f.status === 'done' ? 'check' : 'edit')}<span>${esc(FORMS[d.form].short || FORMS[d.form].title)}</span><small>${esc(f.no || '')}${f.status === 'done' ? '' : ' — مسودة'}</small></button>`; }).join('')}</div>` : ''; })()}
@@ -14259,7 +14355,8 @@ function wfSectionHTML(kind, rec) {
   };
   return `<section class="dsec wf-sec" id="wf"><h2>مسار ${kind === 'proposal' ? 'الطلب' : 'المذكرة'} <span class="src">الإجراء المعتمد لشراكة جديدة</span></h2>
     <div class="wf-top"><div class="wf-bar"><i style="width:${pct}%"></i></div><div class="wf-cur ${st.closed ? 'neg' : ''}"><b>${doneN} من ${steps.length}</b><span>${esc(curTxt)}</span></div></div>
-    <div class="wf-phases">${phases.map(({ ph, steps: ss }) => `<div class="wf-ph"><h4><em>${pad(WF_PHASES.indexOf(ph) + 1)}</em>${ph.t}</h4><ol class="wf-list">${ss.map(row).join('')}</ol></div>`).join('')}</div></section>`;
+    ${wfNextHTML(kind, rec, st)}
+    <div class="wf-phases">${phases.map(({ ph, steps: ss }) => { const all = ss.length && ss.every((s) => st.S[s.id] && st.S[s.id].status === 'done'); const curP = st.cur && ss.includes(st.cur); const lockP = kind === 'proposal' && ss.every((s) => s.on === 'partnership'); return `<div class="wf-ph ${all ? 'done' : curP ? 'cur' : ''} ${lockP ? 'lockp' : ''}"><h4 class="wf-ph-h"><em>${all ? icon('check') : pad(WF_PHASES.indexOf(ph) + 1)}</em><span>${ph.t}</span><small>${ss.filter((s) => st.S[s.id] && st.S[s.id].status === 'done').length}/${ss.length}</small></h4><ol class="wf-list">${ss.map(row).join('')}</ol></div>`; }).join('')}</div></section>`;
 }
 
 /* — نافذة تنفيذ الخطوة — */
@@ -14354,6 +14451,30 @@ function wfStepDialog(kind, rec, sid, rerender) {
     await wfApply(kind, rec, s, act, note, fields);
     m.close(); rerender();
   });
+}
+
+/* الخطوة التالية في المقترح المقبول: التحويل إلى شراكة (حتى لا يتوقف المسار بعد التقييم المبدئي) */
+function wfNextHTML(kind, rec, st) {
+  if (kind !== 'proposal' || !can('proposal.review')) return '';
+  if (rec.status === 'accepted') return `<div class="wf-next no-print"><span class="wf-next-ic">${icon('convert')}</span><div><b>الخطوة التالية: تحويل الطلب إلى سجل شراكة</b><small>اكتمل التقييم المبدئي وقُبل الطلب. بعد التحويل تُستكمل مراحل الاجتماع والمذكرة والاعتماد من صفحة الشراكة.</small></div><button class="btn primary" type="button" data-act="convert">${icon('convert')} تحويل إلى شراكة</button></div>`;
+  if (['submitted', 'review'].includes(rec.status) && Session.role() === 'admin') return `<div class="wf-next soft no-print"><span class="wf-next-ic">${icon('flag')}</span><div><b>${st.cur ? `الخطوة الحالية: ${esc(st.cur.t)}` : 'الطلب قيد الدراسة'}</b><small>نفّذها من زر الخطوة في المسار، أو سجّل الشراكة مباشرة إن كانت موقّعة أو معتمدة مسبقًا.</small></div><button class="btn" type="button" data-act="direct">${icon('convert')} تحويل مباشر</button></div>`;
+  return '';
+}
+/* التسجيل المباشر: تُعلَّم مراحل ما قبل التوقيع «مُتجاوَزة» باسم الحساب، وتنتقل الشراكة إلى خطوة التوقيع */
+async function wfDirect(prop, p) {
+  const sign = WF_STEPS.find((s) => s.id === 'signed') || WF_STEPS.find((s) => s.ph === 'sign' && !s.kind);
+  const upto = sign ? WF_STEPS.indexOf(sign) : WF_STEPS.length;
+  const at = nowISO(), by = Session.userName();
+  WF_STEPS.slice(0, upto).forEach((s) => {
+    const own = s.on === 'proposal' && prop ? prop : p;
+    own.wf = own.wf || { steps: {} }; own.wf.steps = own.wf.steps || {};
+    const cur = own.wf.steps[s.id];
+    if (!(cur && cur.status === 'done')) own.wf.steps[s.id] = { status: 'done', direct: true, at, by, decision: s.kind === 'decision' || s.final ? 'yes' : undefined };
+  });
+  if (p.stage === 'prep') p.stage = 'sign';
+  if (prop) await Repo.save('proposals', prop);
+  await Repo.save('partnerships', p);
+  await Repo.log('workflow.direct', 'partnership', p.id, p.code, `تسجيل مباشر: تُجووزت المراحل حتى «${sign ? sign.t : 'النهاية'}»`);
 }
 
 /* — تطبيق الإجراء وآثاره على حالة الطلب أو الشراكة — */
@@ -14451,6 +14572,7 @@ function renderTasks(el) {
   const mineSteps = r0 === 'admin' || r0 === 'team' ? WF_STEPS.filter((s) => s.actor === 'partnerships' || s.kind === 'multi') : r0 === 'dept' ? WF_STEPS.filter((s) => (acc && acc.duties || []).includes(s.actor)) : [];
   const whenSteps = r0 === 'dept' ? WF_STEPS.filter((s) => ['requester', 'concerned'].includes(s.actor) || s.id === 'meeting') : [];
   el.innerHTML = `<div class="ph"><div><h1>مهامي</h1><p>الخطوات التي تنتظر ${esc(acc ? acc.t : 'حسابك')} في مسار الشراكات الجديدة. كل مهمة تفتح الخطوة مباشرة بمستنداتها.</p>${T.length ? `<p class="tk-sum"><b>${T.filter((t) => !t.follow).length}</b> بانتظارك${T.some((t) => t.follow) ? ` · <b>${T.filter((t) => t.follow).length}</b> للمتابعة فقط` : ''}</p>` : ''}</div></div>
+    ${canListDirect() && (D.settings.listReqs || []).length ? `<section class="panel tk-lr"><div class="panel-h"><h3>${icon('plus')} خيارات جديدة بانتظار الاعتماد</h3><span class="sub">اقترحها مستخدمون من خارج إدارة الشراكات؛ تظهر في القوائم بعد الموافقة</span></div><div class="panel-b"><ul class="lr-list">${D.settings.listReqs.map((r) => `<li><div><b>«${esc(r.v)}»</b><small>${esc(LIST_TITLES[r.list] || r.list)} · ${esc(r.by)}${r.from ? ' · من ' + esc(r.from) : ''} · ${relDays(r.at)}</small></div><button class="btn sm primary" type="button" data-lrok="${r.id}">${icon('check')} اعتماد</button><button class="btn sm ghost" type="button" data-lrno="${r.id}">${icon('x')} رفض</button></li>`).join('')}</ul></div></section>` : ''}
     ${T.length ? `<div class="tk-list">${T.map((t) => `<a class="tk ${t.returned ? 'ret' : ''} ${t.follow ? 'fol' : ''}" href="${t.href}" data-tkopen="${t.step.id}" data-tkid="${t.rec.id}" data-tkkind="${t.kind}">
         <span class="tk-n">${t.step.n}</span><span class="tk-b"><b>${esc(t.step.t)}</b><span>${esc(t.name || '')}</span><small>${esc(t.sub || '')}</small></span>
         <span class="tk-m">${t.returned ? '<em class="ret">أُعيدت بملاحظات</em>' : t.follow ? '<em>متابعة</em>' : ''}<small>${t.since ? relDays(t.since) : ''}</small></span>${icon('chevL')}</a>`).join('')}</div>`
@@ -14459,7 +14581,8 @@ function renderTasks(el) {
       <div class="panel-b">${mineSteps.length ? `<h4 class="m-h4" style="margin-top:0">${r0 === 'dept' ? 'يعتمد أو ينفّذ في كل شراكة' : 'خطوات إدارة الشراكات'}</h4><ol class="tk-steps">${mineSteps.map((s) => `<li><span>${s.n}</span><b>${esc(s.t)}</b><small>${esc(s.d)}</small></li>`).join('')}</ol>` : ''}
         ${whenSteps.length ? `<h4 class="m-h4">عندما تكون إدارتكم طالبة الشراكة أو معنية بها</h4><ol class="tk-steps soft">${whenSteps.map((s) => `<li><span>${s.n}</span><b>${esc(s.t)}</b><small>${esc(s.d)}</small></li>`).join('')}</ol>` : ''}
         ${!mineSteps.length && !whenSteps.length ? '<p class="muted small">لا تُسند لهذا الحساب خطوات تنفيذ؛ اطلاع فقط.</p>' : ''}</div></section>`;
-  el.onclick = (e) => {
+  el.onclick = async (e) => {
+    const lr = e.target.closest('[data-lrok],[data-lrno]'); if (lr) { await decideListReq(lr.dataset.lrok || lr.dataset.lrno, !!lr.dataset.lrok); toast(lr.dataset.lrok ? 'اعتُمد الخيار وأُضيف إلى القائمة' : 'رُفض الخيار'); return route(); }
     const a = e.target.closest('[data-tkopen]'); if (!a) return;
     e.preventDefault();
     const kind = a.dataset.tkkind, rec = (kind === 'proposal' ? D.proposals : D.partnerships).find((x) => x.id === a.dataset.tkid);
@@ -14511,7 +14634,7 @@ const FORMS = {
     sections: (R) => [
       { t: 'معلومات أساسية', fields: [
         { k: 'partner', l: 'اسم الجهة الشريكة', type: 'text', def: R.name, req: true },
-        { k: 'sector', l: 'نوع الجهة (القطاع)', type: 'chips', opts: SECTOR_FORM, def: R.sector, req: true },
+        { k: 'sector', l: 'نوع الجهة (القطاع)', type: 'chips', list: 'formSectors', opts: L('formSectors'), def: R.sector, req: true },
       ] },
       { t: 'منهجية بناء الشراكة', note: 'تُستكمل البنود الثمانية لكل شراكة جديدة قبل التقييم المبدئي.', fields: [
         { k: 'm1', n: 1, l: 'تحديد احتياجات المؤسسة', type: 'textarea', req: true, hint: 'الاحتياجات البحثية والاستشارية والفنية لمشروعات المؤسسة، والمجالات التي يمكن الاستفادة فيها من خبرات الجهة.' },
@@ -14530,22 +14653,22 @@ const FORMS = {
     sections: (R, rec) => [
       { t: 'بيانات الجهة وتصنيفها', fields: [
         { k: 'partner', l: 'اسم الجهة', type: 'text', def: R.name, req: true },
-        { k: 'sector', l: 'نوع الجهة (القطاع)', type: 'chips', opts: SECTOR_FORM, def: R.sector, req: true },
-        { k: 'domain', l: 'مجال عمل الجهة', type: 'chips', opts: L('domains'), def: R.domain, req: true, hint: 'بيئة، مياه، سياحة، طاقة… تُدار القائمة من «القوائم».' },
-        { k: 'ptype', l: 'تصنيف الشراكة', type: 'chips', opts: L('partnerTypes'), req: true, def: (rec.profile || {}).ptype || rec.ptype || '' },
-        { k: 'origin', l: 'كيف بدأت العلاقة', type: 'chips', opts: L('originTypes'), req: true, def: (rec.profile || {}).origin || rec.origin || '' },
+        { k: 'sector', l: 'نوع الجهة (القطاع)', type: 'chips', list: 'formSectors', opts: L('formSectors'), def: R.sector, req: true },
+        { k: 'domain', l: 'مجال عمل الجهة', type: 'chips', list: 'domains', opts: L('domains'), def: R.domain, req: true, hint: 'بيئة، مياه، سياحة، طاقة… تُدار القائمة من «القوائم».' },
+        { k: 'ptype', l: 'تصنيف الشراكة', type: 'chips', list: 'partnerTypes', opts: L('partnerTypes'), req: true, def: (rec.profile || {}).ptype || rec.ptype || '' },
+        { k: 'origin', l: 'كيف بدأت العلاقة', type: 'chips', list: 'originTypes', opts: L('originTypes'), req: true, def: (rec.profile || {}).origin || rec.origin || '' },
         { k: 'originBy', l: 'من بدأ العلاقة أو فتح الباب', type: 'text', hint: 'الاسم والصفة، مثل: عضو مجلس الأمناء، الرئيس التنفيذي، الإدارة الطالبة.', def: (rec.profile || {}).originBy || rec.originBy || '' },
       ] },
-      { t: 'معايير التقييم المبدئي', fields: [{ k: 'crit', type: 'checklist', opts: OK_NO, items: ['سمعة الجهة ومصداقيتها', 'مواءمة نشاط الجهة مع رسالة المؤسسة وأهدافها الاستراتيجية', 'قدرات الجهة الفنية والبشرية', 'الملاءة والاستقرار المالي للجهة', 'القيمة المضافة المتوقعة للمؤسسة', 'خلو التعاون من تعارض المصالح والمخاطر القانونية', 'عدم تكرار الشراكة مع جهة مماثلة قائمة'], req: true }] },
+      { t: 'معايير التقييم المبدئي', note: `لكل معيار وزن، والدرجة مجموع أوزان المعايير «المناسبة». أقل من ${ievCfg().th[0]}% «${IEV_RES[2]}»، ومن ${ievCfg().th[0]}% إلى ${ievCfg().th[1]}% «${IEV_RES[1]}»، وأكثر من ${ievCfg().th[1]}% «${IEV_RES[0]}». تُعدَّل المعايير والأوزان من الإعدادات.`, fields: [{ k: 'crit', type: 'checklist', opts: OK_NO, items: ievCfg().crit.map((c) => c.t), weights: ievCfg().crit.map((c) => +c.w || 0), req: true }] },
       { t: 'القيمة والأثر المتوقعان', fields: [
-        { k: 'valueTypes', l: 'نوع القيمة المتوقعة', type: 'multi', opts: L('valueTypes') },
+        { k: 'valueTypes', l: 'نوع القيمة المتوقعة', type: 'multi', list: 'valueTypes', opts: L('valueTypes') },
         { k: 'valueSar', l: 'القيمة المالية التقديرية (ر.س)', type: 'number', hint: 'اختياري — تقدير أولي لقيمة ما تقدمه الجهة.' },
         { k: 'impact', l: 'الأثر المتوقع', type: 'textarea', def: R.added },
       ] },
       { t: 'التوصية', fields: [
-        { k: 'rec', l: 'نتيجة التقييم', type: 'chips', opts: ['الجهة مناسبة', 'مناسبة بشروط', 'الجهة غير مناسبة'], req: true },
+        { k: 'rec', l: 'نتيجة التقييم', type: 'chips', opts: IEV_RES, req: true, auto: 'iev' },
         { k: 'recNote', l: 'المبررات أو الشروط', type: 'textarea' },
-        { k: 'by', l: 'اسم المقيِّم', type: 'text', def: Session.userName(), req: true },
+        { k: 'by', l: 'اسم المقيِّم', type: 'select', opts: partnersAccNames(), def: partnersAccDefault(), req: true },
         { k: 'date', l: 'تاريخ التقييم', type: 'date', def: isoDate(today()), req: true },
       ] },
     ],
@@ -14554,14 +14677,14 @@ const FORMS = {
       if (kind === 'proposal') rec.profile = { ...(rec.profile || {}), ...pf };
       else { Object.assign(rec, { ptype: d.ptype, origin: d.origin, originBy: d.originBy }); const pr = partnerById(rec.partnerId); if (pr && d.domain) { pr.domain = d.domain; Repo.save('partners', pr); } }
     },
-    score: (d) => { const it = Object.values(d.crit || {}); const ok = it.filter((x) => x.v === 'ok').length; return it.length ? `${ok} من ${it.length} معايير مناسبة` : ''; },
+    score: (d) => { const sc = ievScore(d); return sc === null ? '' : `${sc}% — ${d.rec || ievResult(sc)}`; },
   },
   alignment: {
     no: 'ALN', title: 'نموذج مواءمة مذكرات التفاهم مع الأهداف الاستراتيجية للمؤسسة', short: 'نموذج المواءمة الاستراتيجية', step: 'strategy', ic: 'chart',
     sections: (R) => [
       { t: 'معلومات أساسية', fields: [
         { k: 'partner', l: 'اسم الجهة الشريكة', type: 'text', def: R.name, req: true },
-        { k: 'sector', l: 'نوع الجهة (القطاع)', type: 'chips', opts: SECTOR_FORM, def: R.sector, req: true },
+        { k: 'sector', l: 'نوع الجهة (القطاع)', type: 'chips', list: 'formSectors', opts: L('formSectors'), def: R.sector, req: true },
         { k: 'owner', l: 'الإدارة المالكة', type: 'chips', opts: L('departments'), def: R.owner, req: true },
         { k: 'depts', l: 'الإدارات المشاركة', type: 'multi', opts: L('departments'), def: R.depts },
         { k: 'purpose', l: 'الغرض العام من المذكرة', type: 'textarea', def: R.purpose, req: true },
@@ -14640,12 +14763,12 @@ const FORMS = {
     sections: () => [
       { t: 'بيانات التقييم', fields: [
         { k: 'period', l: 'فترة التقييم', type: 'text', def: `${['الربع الأول', 'الربع الثاني', 'الربع الثالث', 'الربع الرابع'][Math.floor(today().getMonth() / 3)]} ${today().getFullYear()}`, req: true },
-        { k: 'by', l: 'المقيِّم', type: 'text', def: Session.userName(), req: true },
+        { k: 'by', l: 'المقيِّم', type: 'select', opts: partnersAccNames(), def: partnersAccDefault(), req: true },
         { k: 'date', l: 'تاريخ التقييم', type: 'date', def: isoDate(today()), req: true },
       ] },
       { t: 'معايير تقييم الشراكة', note: 'كل معيار من 1 (ضعيف) إلى 5 (ممتاز)، والدرجة النهائية موزونة.', fields: [{ k: 'scores', type: 'scores', items: EVAL_CRIT, req: true }] },
       { t: 'القيمة والأثر المتحققان', fields: [
-        { k: 'valueTypes', l: 'القيمة المتحققة', type: 'multi', opts: L('valueTypes') },
+        { k: 'valueTypes', l: 'القيمة المتحققة', type: 'multi', list: 'valueTypes', opts: L('valueTypes') },
         { k: 'valueSar', l: 'القيمة المالية المتحققة (ر.س)', type: 'number' },
         { k: 'impactLevel', l: 'مستوى الأثر', type: 'chips', opts: ['مرتفع', 'متوسط', 'منخفض', 'لم يظهر بعد'], req: true },
         { k: 'impact', l: 'وصف الأثر', type: 'textarea' },
@@ -14658,6 +14781,43 @@ const FORMS = {
     score: (d) => { const s = evalScore(d); return s === null ? '' : `${s}% — ${evalGrade(s)}`; },
   },
 };
+/* التقييم المبدئي: المعايير وأوزانها وحدود النتيجة (تُعدَّل من «الإعدادات ← إعدادات النماذج») */
+const IEV_RES = ['الجهة مناسبة', 'مناسبة بشروط', 'الجهة غير مناسبة'];
+const IEV_DEF = { crit: [['سمعة الجهة ومصداقيتها', 15], ['مواءمة نشاط الجهة مع رسالة المؤسسة وأهدافها الاستراتيجية', 20], ['قدرات الجهة الفنية والبشرية', 15], ['الملاءة والاستقرار المالي للجهة', 15], ['القيمة المضافة المتوقعة للمؤسسة', 15], ['خلو التعاون من تعارض المصالح والمخاطر القانونية', 10], ['عدم تكرار الشراكة مع جهة مماثلة قائمة', 10]].map(([t, w]) => ({ t, w })), th: [50, 70] };
+function ievCfg() { const c = (D.settings && D.settings.ievCfg) || {}; return { crit: (c.crit && c.crit.length ? c.crit : IEV_DEF.crit), th: c.th && c.th.length === 2 ? c.th : IEV_DEF.th }; }
+/* الدرجة = مجموع أوزان المعايير المناسبة ÷ مجموع الأوزان × 100؛ لا درجة قبل تقييم كل المعايير */
+function ievScore(d, cfg) {
+  const C = (cfg || ievCfg()).crit, v = (d && d.crit) || {};
+  if (!C.length || C.some((_, i) => !(v[i] && v[i].v))) return null;
+  const tot = C.reduce((t, c) => t + (+c.w || 0), 0) || 1;
+  return Math.round(C.reduce((t, c, i) => t + (v[i].v === 'ok' ? (+c.w || 0) : 0), 0) / tot * 100);
+}
+function ievResult(sc, cfg) { if (sc === null || sc === undefined) return ''; const th = (cfg || ievCfg()).th; return sc < th[0] ? IEV_RES[2] : sc <= th[1] ? IEV_RES[1] : IEV_RES[0]; }
+/* حسابات إدارة الشراكات (للمقيِّم) */
+const partnersAccNames = () => wfAccounts().filter((a) => ['admin', 'team'].includes(a.role)).map((a) => a.t);
+const partnersAccDefault = () => { const r = Session.role(); return r === 'team' ? Session.member() : r === 'admin' && !isSysAdmin() ? partnersAccNames()[0] : ''; };
+/* إضافة خيار إلى قائمة: مباشرة لحسابات إدارة الشراكات، وبطلب اعتماد لغيرها */
+const canListDirect = () => ['admin', 'team'].includes(Session.role());
+async function requestListValue(list, v, from) {
+  v = String(v || '').trim(); if (!v) return false;
+  if (L(list).some((x) => normAr(x) === normAr(v))) { toast('الخيار موجود بالفعل.', 'err'); return false; }
+  if (canListDirect()) { await addListValue(list, v, from); return 'added'; }
+  D.settings.listReqs = D.settings.listReqs || [];
+  if (D.settings.listReqs.some((r) => r.list === list && normAr(r.v) === normAr(v))) { toast('الخيار مقترح بالفعل وبانتظار الاعتماد.'); return false; }
+  D.settings.listReqs.push({ id: uid('lr'), list, v, from, by: Session.userName(), dept: Session.dept(), at: nowISO() });
+  await Repo.saveSettings();
+  await Repo.log('list.request', 'settings', 'lists', LIST_TITLES[list] || list, `«${v}» — مقترح من ${Session.userName()}`);
+  await notify([{ grp: 'partnerships' }], { t: `طلب إضافة خيار: «${v}»`, b: `${LIST_TITLES[list] || list} — من ${Session.userName()}`, href: '#/tasks', ic: 'plus' });
+  return 'requested';
+}
+async function decideListReq(id, ok) {
+  const L_ = D.settings.listReqs || [], r = L_.find((x) => x.id === id); if (!r) return;
+  D.settings.listReqs = L_.filter((x) => x.id !== id);
+  if (ok) await addListValue(r.list, r.v, `اعتماد طلب ${r.by}`);
+  await Repo.saveSettings();
+  await Repo.log('list.decision', 'settings', 'lists', LIST_TITLES[r.list] || r.list, `«${r.v}» — ${ok ? 'اعتُمد' : 'رُفض'}`);
+  if (r.dept) await notify([{ dept: r.dept }], { t: ok ? `اعتُمد الخيار «${r.v}»` : `لم يُعتمد الخيار «${r.v}»`, b: LIST_TITLES[r.list] || r.list, href: '#/', ic: ok ? 'check' : 'x' });
+}
 const EVAL_CRIT = [
   { k: 'align', l: 'المواءمة الاستراتيجية', d: 'ارتباط الشراكة بأهداف المؤسسة', w: 20 },
   { k: 'outputs', l: 'تحقيق المخرجات المستهدفة', d: 'ما نُفّذ مقارنة بالمخرجات في المذكرة', w: 20 },
@@ -14693,12 +14853,13 @@ function fFieldHTML(f, v, ro) {
     case 'number': return `<div class="field ff" data-fk="${f.k}">${lab}<input class="in num" id="${id}" type="number" min="0" step="1000" value="${esc(v ?? '')}" ${dis}>${hint}</div>`;
     case 'date': return `<div class="field ff" data-fk="${f.k}">${lab}<input class="in" id="${id}" type="date" value="${esc(v || '')}" ${dis}></div>`;
     case 'sign': return `<div class="field ff" data-fk="${f.k}">${lab}<div class="ff-sign">${icon('check')}<span>يُعتمد إلكترونيًا باسم الحساب عند إتمام النموذج</span></div></div>`;
+    case 'select': { const opts = [...new Set([...(f.opts || []), v].filter(Boolean))]; return `<div class="field ff" data-fk="${f.k}">${lab}<select class="in" id="${id}" ${dis}><option value="">اختر</option>${opts.map((o) => `<option ${o === v ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>${hint}</div>`; }
     case 'chips': case 'multi': {
       const vals = f.type === 'multi' ? (v || []) : [v];
-      return `<div class="field ff ${f.opts.length > 4 ? 'full' : ''}" data-fk="${f.k}">${lab}<div class="ff-chips" role="${f.type === 'multi' ? 'group' : 'radiogroup'}">${f.opts.map((o) => `<button type="button" class="ff-chip ${vals.includes(o) ? 'on' : ''}" data-chip="${esc(o)}" ${dis} aria-pressed="${vals.includes(o)}">${f.type === 'multi' ? icon('check') : ''}${esc(o)}</button>`).join('')}</div>${hint}</div>`;
+      return `<div class="field ff ${f.opts.length > 4 ? 'full' : ''}" data-fk="${f.k}">${lab}<div class="ff-chips" role="${f.type === 'multi' ? 'group' : 'radiogroup'}">${f.opts.map((o) => `<button type="button" class="ff-chip ${vals.includes(o) ? 'on' : ''}" data-chip="${esc(o)}" ${dis} aria-pressed="${vals.includes(o)}">${f.type === 'multi' ? icon('check') : ''}${esc(o)}</button>`).join('')}</div>${hint}${f.list && !ro ? `<button type="button" class="ff-chip add" data-chipadd="${f.list}" title="${canListDirect() ? 'يُضاف إلى القائمة مباشرة' : 'يُرسل لإدارة الشراكات للاعتماد'}">${icon('plus')} إضافة خيار</button>` : ''}${f.auto === 'iev' ? `<div class="ff-auto" data-auto="${f.k}"></div>` : ''}</div>`;
     }
-    case 'checklist': return `<div class="field ff full" data-fk="${f.k}"><table class="ff-tbl"><thead><tr><th>م</th><th>عنصر المراجعة</th>${f.opts.map(([, l]) => `<th>${l}</th>`).join('')}<th>الملاحظات</th></tr></thead><tbody>
-      ${f.items.map((it, i) => { const c = (v || {})[i] || {}; return `<tr data-row="${i}"><td class="c">${i + 1}</td><td>${esc(it)}</td>${f.opts.map(([k]) => `<td class="c"><button type="button" class="ff-tick ${c.v === k ? 'on ' + k : ''}" data-tick="${k}" ${dis} aria-label="${esc(it)}">${c.v === k ? icon(k === 'ok' ? 'check' : 'x') : ''}</button></td>`).join('')}<td><input class="in sm" data-note value="${esc(c.n || '')}" ${dis}></td></tr>`; }).join('')}</tbody></table></div>`;
+    case 'checklist': return `<div class="field ff full" data-fk="${f.k}"><table class="ff-tbl"><thead><tr><th>م</th><th>عنصر المراجعة</th>${f.weights ? '<th>الوزن</th>' : ''}${f.opts.map(([, l]) => `<th>${l}</th>`).join('')}<th>الملاحظات</th></tr></thead><tbody>
+      ${f.items.map((it, i) => { const c = (v || {})[i] || {}; return `<tr data-row="${i}"><td class="c">${i + 1}</td><td>${esc(it)}</td>${f.weights ? `<td class="c"><span class="ff-w">${f.weights[i]}%</span></td>` : ''}${f.opts.map(([k]) => `<td class="c"><button type="button" class="ff-tick ${c.v === k ? 'on ' + k : ''}" data-tick="${k}" ${dis} aria-label="${esc(it)}">${c.v === k ? icon(k === 'ok' ? 'check' : 'x') : ''}</button></td>`).join('')}<td><input class="in sm" data-note value="${esc(c.n || '')}" ${dis}></td></tr>`; }).join('')}</tbody></table>${f.weights ? '<div class="ff-iev" id="ffIev"></div>' : ''}</div>`;
     case 'scores': return `<div class="field ff full" data-fk="${f.k}"><table class="ff-tbl ff-sc"><thead><tr><th>المعيار</th><th>الوزن</th><th>التقييم</th><th>ملاحظات</th></tr></thead><tbody>
       ${f.items.map((c) => { const x = (v || {})[c.k] || {}; return `<tr data-row="${c.k}"><td><b>${esc(c.l)}</b><small>${esc(c.d)}</small></td><td class="c">${c.w}%</td><td class="c"><div class="ff-stars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" class="ff-st ${+x.v >= n ? 'on' : ''}" data-score="${n}" ${dis} aria-label="${n}">${n}</button>`).join('')}</div></td><td><input class="in sm" data-note value="${esc(x.n || '')}" ${dis}></td></tr>`; }).join('')}</tbody></table><div class="ff-total" id="ffTotal"></div></div>`;
     case 'clauses': {
@@ -14720,6 +14881,7 @@ function fReadField(box, f) {
     case 'scores': { const o = {}; $$('tr[data-row]', w).forEach((tr) => { const on = $$('.ff-st.on', tr).length; o[tr.dataset.row] = { v: on || '', n: tr.querySelector('[data-note]').value.trim() }; }); return o; }
     case 'clauses': return $$('tr[data-row]', w).map((tr) => ({ text: tr.querySelector('[data-cltext]').value.trim(), goals: $$('.ff-chip.on', tr).map((b) => b.dataset.goal), note: tr.querySelector('[data-note]').value.trim() })).filter((r) => r.text);
     case 'sign': return '';
+    case 'select': { const i = w.querySelector('select'); return i ? i.value : ''; }
     default: { const i = w.querySelector('input,textarea'); return i ? i.value.trim() : ''; }
   }
 }
@@ -14752,14 +14914,49 @@ function openForm(kind, rec, key, { onDone, ro = false, evalIdx = null } = {}) {
   const box = m.el;
   const total = () => { const t = $('#ffTotal', box); if (!t) return; const d = {}; secs.forEach((s) => s.fields.forEach((f) => { d[f.k] = fReadField(box, f); })); const sc = evalScore(d); t.innerHTML = sc === null ? '<span class="faint">تظهر الدرجة الموزونة بعد تقييم كل المعايير</span>' : `<b class="${evalTone(sc)}">${sc}%</b><span>${evalGrade(sc)}</span>`; };
   total();
+  /* التقييم المبدئي: الدرجة من الأوزان، والنتيجة تلقائية ما لم تُحدَّد يدويًا */
+  const fCrit = secs.flatMap((x) => x.fields).find((f) => f.type === 'checklist' && f.weights);
+  const fRec = secs.flatMap((x) => x.fields).find((f) => f.auto === 'iev');
+  box.dataset.recManual = data.recManual ? '1' : '';
+  const ievUpd = () => {
+    if (!fCrit) return;
+    const crit = fReadField(box, fCrit); const sc = ievScore({ crit });
+    const okW = fCrit.items.reduce((t, _, i) => t + ((crit[i] || {}).v === 'ok' ? fCrit.weights[i] : 0), 0), totW = fCrit.weights.reduce((a, b) => a + b, 0) || 1;
+    const pctNow = Math.round(okW / totW * 100), auto = ievResult(sc);
+    const th = ievCfg().th;
+    const bar = $('#ffIev', box);
+    if (bar) bar.innerHTML = `<div class="ff-iev-bar"><i style="width:${pctNow}%" class="${sc === null ? 'pend' : sc < th[0] ? 'lo' : sc <= th[1] ? 'mid' : 'hi'}"></i><s style="inset-inline-start:${th[0]}%"></s><s style="inset-inline-start:${th[1]}%"></s></div><div class="ff-iev-t"><b>${sc === null ? pctNow + '% حتى الآن' : sc + '%'}</b><span>${sc === null ? 'تظهر النتيجة بعد تقييم كل المعايير' : 'النتيجة التلقائية: ' + esc(auto)}</span></div>`;
+    if (!fRec) return;
+    const grp = box.querySelector(`[data-fk="${fRec.k}"]`), manual = box.dataset.recManual === '1';
+    if (!manual && auto) $$('.ff-chip', grp).forEach((b) => { if (b.dataset.chip) b.classList.toggle('on', b.dataset.chip === auto); });
+    const cur = fReadField(box, fRec);
+    const a = grp.querySelector('[data-auto]');
+    if (a) a.innerHTML = manual ? `<span class="ff-auto-m">${icon('edit')} محددة يدويًا${auto && cur !== auto ? ` (التلقائية: ${esc(auto)})` : ''}</span><button type="button" class="linkbtn" data-recauto>${icon('history')} إعادة للتلقائي</button>` : `<span class="ff-auto-a">${icon('check')} ${auto ? 'تُحدَّد تلقائيًا من النسب' : 'ستُحدَّد تلقائيًا بعد تقييم المعايير'}</span>`;
+  };
+  ievUpd();
   box.addEventListener('click', (e) => {
+    const ra = e.target.closest('[data-recauto]'); if (ra) { box.dataset.recManual = ''; ievUpd(); return; }
+    const ca = e.target.closest('[data-chipadd]'); if (ca) {
+      const list = ca.dataset.chipadd, grp = ca.closest('[data-fk]'), fx = secs.flatMap((x) => x.fields).find((x) => x.k === grp.dataset.fk);
+      inputDlg({ title: 'إضافة خيار جديد', label: fx.l || 'الخيار', hint: canListDirect() ? 'يُضاف إلى القائمة فورًا ويظهر في كل النماذج.' : 'يُرسل إلى إدارة الشراكات للاعتماد، ويظهر في القوائم بعد الموافقة.', ok: canListDirect() ? 'إضافة' : 'إرسال للاعتماد', multiline: false }).then(async (res) => {
+        const v = res && typeof res === 'object' ? res.value : res;
+        if (!v) return;
+        const r = await requestListValue(list, v, `${F.short || F.title}`);
+        if (r === 'added') {
+          const b = document.createElement('button'); b.type = 'button'; b.className = 'ff-chip'; b.dataset.chip = v.trim(); b.innerHTML = (fx.type === 'multi' ? icon('check') : '') + esc(v.trim());
+          ca.before(b); b.click(); toast(`أُضيف «${v.trim()}» إلى القائمة`);
+        } else if (r === 'requested') toast('أُرسل الخيار إلى إدارة الشراكات للاعتماد');
+      });
+      return;
+    }
     if (ro && !e.target.closest('[data-ffprint],[data-ffword],[data-mclose]')) return;
     const ch = e.target.closest('.ff-chip'); if (ch && !ch.disabled) {
       const grp = ch.closest('[data-fk]'); const f = secs.flatMap((s) => s.fields).find((x) => x.k === grp.dataset.fk);
       if (ch.dataset.goal || f.type === 'multi') ch.classList.toggle('on'); else { const was = ch.classList.contains('on'); $$('.ff-chip', grp).forEach((b) => b.classList.remove('on')); if (!was) ch.classList.add('on'); }
+      if (f.auto === 'iev') { box.dataset.recManual = '1'; ievUpd(); }
       return;
     }
-    const tk = e.target.closest('.ff-tick'); if (tk) { const tr = tk.closest('tr'); const was = tk.classList.contains('on'); $$('.ff-tick', tr).forEach((b) => { b.className = 'ff-tick'; b.innerHTML = ''; }); if (!was) { tk.classList.add('on', tk.dataset.tick); tk.innerHTML = icon(tk.dataset.tick === 'ok' ? 'check' : 'x'); } return; }
+    const tk = e.target.closest('.ff-tick'); if (tk) { const tr = tk.closest('tr'); const was = tk.classList.contains('on'); $$('.ff-tick', tr).forEach((b) => { b.className = 'ff-tick'; b.innerHTML = ''; }); if (!was) { tk.classList.add('on', tk.dataset.tick); tk.innerHTML = icon(tk.dataset.tick === 'ok' ? 'check' : 'x'); } ievUpd(); return; }
     const st = e.target.closest('.ff-st'); if (st) { const n = +st.dataset.score; $$('.ff-st', st.parentElement).forEach((b) => b.classList.toggle('on', +b.dataset.score <= n)); total(); return; }
     if (e.target.closest('[data-cladd]')) { const tb = box.querySelector('.ff-cl tbody'); const tr = tb.querySelector('tr').cloneNode(true); tr.querySelector('textarea').value = ''; tr.querySelector('[data-note]').value = ''; $$('.ff-chip', tr).forEach((b) => b.classList.remove('on')); tb.appendChild(tr); $$('tr', tb).forEach((r, i) => { r.dataset.row = i; }); tr.querySelector('textarea').focus(); return; }
     const rm = e.target.closest('[data-clrm]'); if (rm) { const tb = rm.closest('tbody'); if ($$('tr', tb).length > 1) rm.closest('tr').remove(); return; }
@@ -14772,6 +14969,7 @@ function openForm(kind, rec, key, { onDone, ro = false, evalIdx = null } = {}) {
     secs.forEach((s) => s.fields.forEach((f) => { d[f.k] = fReadField(box, f); if (mode === 'done' && fMissing(f, d[f.k])) miss.push(f.l || s.t); }));
     $$('.ff.invalid', box).forEach((x) => x.classList.remove('invalid'));
     if (miss.length) { secs.forEach((s) => s.fields.forEach((f) => { if (fMissing(f, d[f.k])) { const w = box.querySelector(`[data-fk="${f.k}"]`); w && w.classList.add('invalid'); } })); toast(`أكمل الحقول المطلوبة: ${miss.slice(0, 3).join('، ')}${miss.length > 3 ? '…' : ''}`, 'err'); const first = box.querySelector('.ff.invalid'); first && first.scrollIntoView({ block: 'center' }); return; }
+    if (fCrit) { d.ievScore = ievScore(d); d.recManual = box.dataset.recManual === '1'; d.ievW = fCrit.weights; }
     const rec0 = { data: d, status: mode, at: nowISO(), by: Session.userName(), byDept: Session.role() === 'dept' ? Session.dept() : D.settings.org.dept };
     let target;
     if (F.periodic) {
@@ -15155,23 +15353,25 @@ function initialEvalDocHTML(kind, rec) {
   const key = 'initialEval', F = FORMS[key], R = fRecInfo(kind, rec), st = formOf(rec, key) || {}, d = st.data || {};
   const fCrit = fdField(F, R, rec, 'crit') || { items: [], opts: [] }, crit = d.crit || {};
   const items = fCrit.items || [], ok = items.filter((_, i) => (crit[i] || {}).v === 'ok').length, no = items.filter((_, i) => (crit[i] || {}).v === 'no').length;
+  const W = d.ievW && d.ievW.length === items.length ? d.ievW : (fCrit.weights || items.map(() => 0));
+  const sc = d.ievScore !== undefined && d.ievScore !== null ? d.ievScore : ievScore(d), autoRes = ievResult(sc), th = ievCfg().th;
   const recOpts = fdOpts(fdField(F, R, rec, 'rec')), ri = recOpts.indexOf(d.rec);
   const tone = ri < 0 ? 'na' : ri === 0 ? 'ex' : ri === recOpts.length - 1 ? 'lo' : 'gd';
   const okLbl = (fCrit.opts || []).map(([k, l]) => [k, l]);
-  const rows = items.map((it, i) => { const c = crit[i] || {}; return `<tr><td class="fx-ix">${i + 1}</td><td><b class="fx-it">${esc(it)}</b>${c.note ? `<small class="fx-nt">${esc(c.note)}</small>` : ''}</td><td class="fx-res"><span class="fx-badge ${c.v || 'na'}">${icon(c.v === 'ok' ? 'check' : c.v === 'no' ? 'x' : 'info')}${esc((okLbl.find(([k]) => k === c.v) || [])[1] || 'لم يُقيَّم')}</span></td></tr>`; }).join('');
+  const rows = items.map((it, i) => { const c = crit[i] || {}; return `<tr><td class="fx-ix">${i + 1}</td><td><b class="fx-it">${esc(it)}</b>${c.n || c.note ? `<small class="fx-nt">${esc(c.n || c.note)}</small>` : ''}</td><td class="fx-w"><span>${W[i] || 0}%</span></td><td class="fx-res"><span class="fx-badge ${c.v || 'na'}">${icon(c.v === 'ok' ? 'check' : c.v === 'no' ? 'x' : 'info')}${esc((okLbl.find(([k]) => k === c.v) || [])[1] || 'لم يُقيَّم')}</span></td></tr>`; }).join('');
   const body = `
     ${fdSec(1, 'بيانات الجهة وتصنيفها', '', `<div class="fx-grid2">
       <div><div class="ev-lbl">نوع الجهة (القطاع)</div>${fdTags(fdOpts(fdField(F, R, rec, 'sector')), d.sector)}</div>
       <div><div class="ev-lbl">تصنيف الشراكة</div>${fdTags(fdOpts(fdField(F, R, rec, 'ptype')), d.ptype)}</div>
       <div><div class="ev-lbl">كيف بدأت العلاقة</div>${fdTags(fdOpts(fdField(F, R, rec, 'origin')), d.origin)}</div>
       <div><div class="ev-lbl">من بدأ العلاقة أو فتح الباب</div><p class="fx-val">${esc(d.originBy || '—')}</p></div></div>`)}
-    ${fdSec(2, 'معايير التقييم المبدئي', `${ok} مناسب · ${no} غير مناسب من ${items.length}`, `<div class="fx-meter"><i class="ok" style="width:${items.length ? ok / items.length * 100 : 0}%"></i><i class="no" style="width:${items.length ? no / items.length * 100 : 0}%"></i></div><table class="ev-tbl fx-tbl"><thead><tr><th>م</th><th>المعيار</th><th>النتيجة</th></tr></thead><tbody>${rows}</tbody></table>`)}
+    ${fdSec(2, 'معايير التقييم المبدئي', `${ok} مناسب · ${no} غير مناسب من ${items.length}`, `<div class="fx-meter"><i class="ok" style="width:${items.length ? ok / items.length * 100 : 0}%"></i><i class="no" style="width:${items.length ? no / items.length * 100 : 0}%"></i></div><table class="ev-tbl fx-tbl"><thead><tr><th>م</th><th>المعيار</th><th>الوزن</th><th>النتيجة</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td></td><td>الدرجة الموزونة (مجموع أوزان المعايير المناسبة)</td><td class="fx-w"><b>${sc === null ? '—' : sc + '%'}</b></td><td>${autoRes ? `<span class="fx-badge ${sc < th[0] ? 'no' : sc <= th[1] ? 'mid' : 'ok'}">${esc(autoRes)}</span>` : ''}</td></tr></tfoot></table><p class="fx-thr">أقل من ${th[0]}%: ${esc(IEV_RES[2])} · من ${th[0]}% إلى ${th[1]}%: ${esc(IEV_RES[1])} · أكثر من ${th[1]}%: ${esc(IEV_RES[0])}</p>`)}
     <div class="ev-two">
       ${fdSec(3, 'القيمة والأثر المتوقعان', '', `<div class="ev-lbl">نوع القيمة المتوقعة</div>${fdTags(fdOpts(fdField(F, R, rec, 'valueTypes')), d.valueTypes || [])}<div class="ev-lbl">الأثر المتوقع</div>${fdQ(d.impact, 'لم يُوصف الأثر المتوقع.')}`)}
-      ${fdSec(4, 'نتيجة التقييم', '', `${fdChoice(recOpts, d.rec, Object.fromEntries(recOpts.map((o, i) => [o, i === 0 ? 'check' : i === recOpts.length - 1 ? 'x' : 'alert'])))}<div class="ev-lbl">المبررات أو الشروط</div>${fdQ(d.recNote, 'لا توجد مبررات مكتوبة.')}`)}
+      ${fdSec(4, 'نتيجة التقييم', d.recManual ? 'محددة يدويًا' : 'محددة تلقائيًا من النسب', `${fdChoice(recOpts, d.rec, Object.fromEntries(recOpts.map((o, i) => [o, i === 0 ? 'check' : i === recOpts.length - 1 ? 'x' : 'alert'])))}<div class="ev-lbl">المبررات أو الشروط</div>${fdQ(d.recNote, 'لا توجد مبررات مكتوبة.')}`)}
     </div>`;
   return fdShell({ kind, rec, key, tone, st,
-    ring: { pct: items.length ? ok / items.length : 0, big: ok, small: '/' + items.length, label: 'معايير مناسبة' },
+    ring: { pct: sc === null ? 0 : sc / 100, big: sc === null ? '—' : sc, small: sc === null ? '' : '%', label: d.rec || autoRes || 'لم يكتمل' },
     facts: [['المقيِّم', esc(d.by || '—')], ['تاريخ التقييم', d.date ? fmtDate(d.date) + 'م' : '—'], ['الحالة', st.status === 'done' ? 'مكتمل ومعتمد' : 'مسودة']],
     kpis: [['مجال عمل الجهة', esc(d.domain || '—')], ['تصنيف الشراكة', esc(d.ptype || '—')], ['القيمة المالية التقديرية', d.valueSar ? sar(d.valueSar) : '—'], ['نتيجة التقييم', esc(d.rec || '—'), 'rec']],
     body });
@@ -15892,6 +16092,7 @@ function migrate() {
   if (!s.deptsV2) { applyOfficialDepartments(); s.deptsV2 = true; changed = true; }
   if (!s.lists.departments.includes(WF_DEPT_DEFAULTS.legal)) { s.lists.departments.push(WF_DEPT_DEFAULTS.legal); changed = true; }
   if (!s.lists.goals.length) { s.lists.goals = [...MUROOJ_GOALS]; changed = true; }
+  if (!s.lists.formSectors || !s.lists.formSectors.length) { s.lists.formSectors = [...SECTOR_FORM]; changed = true; }
   ['شبه حكومي', 'تعليمي'].forEach((x) => { if (!s.lists.sectors.includes(x)) { s.lists.sectors.push(x); changed = true; } });
   if (!s.demoProfiles) { applyDemoProfiles(); s.demoProfiles = true; changed = true; }
   if (!s.lists.attachmentCats.includes(WF_CAT)) { s.lists.attachmentCats.push(WF_CAT); changed = true; }

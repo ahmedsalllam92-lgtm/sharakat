@@ -38,7 +38,7 @@ const FORMS = {
     sections: (R) => [
       { t: 'معلومات أساسية', fields: [
         { k: 'partner', l: 'اسم الجهة الشريكة', type: 'text', def: R.name, req: true },
-        { k: 'sector', l: 'نوع الجهة (القطاع)', type: 'chips', opts: SECTOR_FORM, def: R.sector, req: true },
+        { k: 'sector', l: 'نوع الجهة (القطاع)', type: 'chips', list: 'formSectors', opts: L('formSectors'), def: R.sector, req: true },
       ] },
       { t: 'منهجية بناء الشراكة', note: 'تُستكمل البنود الثمانية لكل شراكة جديدة قبل التقييم المبدئي.', fields: [
         { k: 'm1', n: 1, l: 'تحديد احتياجات المؤسسة', type: 'textarea', req: true, hint: 'الاحتياجات البحثية والاستشارية والفنية لمشروعات المؤسسة، والمجالات التي يمكن الاستفادة فيها من خبرات الجهة.' },
@@ -57,22 +57,22 @@ const FORMS = {
     sections: (R, rec) => [
       { t: 'بيانات الجهة وتصنيفها', fields: [
         { k: 'partner', l: 'اسم الجهة', type: 'text', def: R.name, req: true },
-        { k: 'sector', l: 'نوع الجهة (القطاع)', type: 'chips', opts: SECTOR_FORM, def: R.sector, req: true },
-        { k: 'domain', l: 'مجال عمل الجهة', type: 'chips', opts: L('domains'), def: R.domain, req: true, hint: 'بيئة، مياه، سياحة، طاقة… تُدار القائمة من «القوائم».' },
-        { k: 'ptype', l: 'تصنيف الشراكة', type: 'chips', opts: L('partnerTypes'), req: true, def: (rec.profile || {}).ptype || rec.ptype || '' },
-        { k: 'origin', l: 'كيف بدأت العلاقة', type: 'chips', opts: L('originTypes'), req: true, def: (rec.profile || {}).origin || rec.origin || '' },
+        { k: 'sector', l: 'نوع الجهة (القطاع)', type: 'chips', list: 'formSectors', opts: L('formSectors'), def: R.sector, req: true },
+        { k: 'domain', l: 'مجال عمل الجهة', type: 'chips', list: 'domains', opts: L('domains'), def: R.domain, req: true, hint: 'بيئة، مياه، سياحة، طاقة… تُدار القائمة من «القوائم».' },
+        { k: 'ptype', l: 'تصنيف الشراكة', type: 'chips', list: 'partnerTypes', opts: L('partnerTypes'), req: true, def: (rec.profile || {}).ptype || rec.ptype || '' },
+        { k: 'origin', l: 'كيف بدأت العلاقة', type: 'chips', list: 'originTypes', opts: L('originTypes'), req: true, def: (rec.profile || {}).origin || rec.origin || '' },
         { k: 'originBy', l: 'من بدأ العلاقة أو فتح الباب', type: 'text', hint: 'الاسم والصفة، مثل: عضو مجلس الأمناء، الرئيس التنفيذي، الإدارة الطالبة.', def: (rec.profile || {}).originBy || rec.originBy || '' },
       ] },
-      { t: 'معايير التقييم المبدئي', fields: [{ k: 'crit', type: 'checklist', opts: OK_NO, items: ['سمعة الجهة ومصداقيتها', 'مواءمة نشاط الجهة مع رسالة المؤسسة وأهدافها الاستراتيجية', 'قدرات الجهة الفنية والبشرية', 'الملاءة والاستقرار المالي للجهة', 'القيمة المضافة المتوقعة للمؤسسة', 'خلو التعاون من تعارض المصالح والمخاطر القانونية', 'عدم تكرار الشراكة مع جهة مماثلة قائمة'], req: true }] },
+      { t: 'معايير التقييم المبدئي', note: `لكل معيار وزن، والدرجة مجموع أوزان المعايير «المناسبة». أقل من ${ievCfg().th[0]}% «${IEV_RES[2]}»، ومن ${ievCfg().th[0]}% إلى ${ievCfg().th[1]}% «${IEV_RES[1]}»، وأكثر من ${ievCfg().th[1]}% «${IEV_RES[0]}». تُعدَّل المعايير والأوزان من الإعدادات.`, fields: [{ k: 'crit', type: 'checklist', opts: OK_NO, items: ievCfg().crit.map((c) => c.t), weights: ievCfg().crit.map((c) => +c.w || 0), req: true }] },
       { t: 'القيمة والأثر المتوقعان', fields: [
-        { k: 'valueTypes', l: 'نوع القيمة المتوقعة', type: 'multi', opts: L('valueTypes') },
+        { k: 'valueTypes', l: 'نوع القيمة المتوقعة', type: 'multi', list: 'valueTypes', opts: L('valueTypes') },
         { k: 'valueSar', l: 'القيمة المالية التقديرية (ر.س)', type: 'number', hint: 'اختياري — تقدير أولي لقيمة ما تقدمه الجهة.' },
         { k: 'impact', l: 'الأثر المتوقع', type: 'textarea', def: R.added },
       ] },
       { t: 'التوصية', fields: [
-        { k: 'rec', l: 'نتيجة التقييم', type: 'chips', opts: ['الجهة مناسبة', 'مناسبة بشروط', 'الجهة غير مناسبة'], req: true },
+        { k: 'rec', l: 'نتيجة التقييم', type: 'chips', opts: IEV_RES, req: true, auto: 'iev' },
         { k: 'recNote', l: 'المبررات أو الشروط', type: 'textarea' },
-        { k: 'by', l: 'اسم المقيِّم', type: 'text', def: Session.userName(), req: true },
+        { k: 'by', l: 'اسم المقيِّم', type: 'select', opts: partnersAccNames(), def: partnersAccDefault(), req: true },
         { k: 'date', l: 'تاريخ التقييم', type: 'date', def: isoDate(today()), req: true },
       ] },
     ],
@@ -81,14 +81,14 @@ const FORMS = {
       if (kind === 'proposal') rec.profile = { ...(rec.profile || {}), ...pf };
       else { Object.assign(rec, { ptype: d.ptype, origin: d.origin, originBy: d.originBy }); const pr = partnerById(rec.partnerId); if (pr && d.domain) { pr.domain = d.domain; Repo.save('partners', pr); } }
     },
-    score: (d) => { const it = Object.values(d.crit || {}); const ok = it.filter((x) => x.v === 'ok').length; return it.length ? `${ok} من ${it.length} معايير مناسبة` : ''; },
+    score: (d) => { const sc = ievScore(d); return sc === null ? '' : `${sc}% — ${d.rec || ievResult(sc)}`; },
   },
   alignment: {
     no: 'ALN', title: 'نموذج مواءمة مذكرات التفاهم مع الأهداف الاستراتيجية للمؤسسة', short: 'نموذج المواءمة الاستراتيجية', step: 'strategy', ic: 'chart',
     sections: (R) => [
       { t: 'معلومات أساسية', fields: [
         { k: 'partner', l: 'اسم الجهة الشريكة', type: 'text', def: R.name, req: true },
-        { k: 'sector', l: 'نوع الجهة (القطاع)', type: 'chips', opts: SECTOR_FORM, def: R.sector, req: true },
+        { k: 'sector', l: 'نوع الجهة (القطاع)', type: 'chips', list: 'formSectors', opts: L('formSectors'), def: R.sector, req: true },
         { k: 'owner', l: 'الإدارة المالكة', type: 'chips', opts: L('departments'), def: R.owner, req: true },
         { k: 'depts', l: 'الإدارات المشاركة', type: 'multi', opts: L('departments'), def: R.depts },
         { k: 'purpose', l: 'الغرض العام من المذكرة', type: 'textarea', def: R.purpose, req: true },
@@ -167,12 +167,12 @@ const FORMS = {
     sections: () => [
       { t: 'بيانات التقييم', fields: [
         { k: 'period', l: 'فترة التقييم', type: 'text', def: `${['الربع الأول', 'الربع الثاني', 'الربع الثالث', 'الربع الرابع'][Math.floor(today().getMonth() / 3)]} ${today().getFullYear()}`, req: true },
-        { k: 'by', l: 'المقيِّم', type: 'text', def: Session.userName(), req: true },
+        { k: 'by', l: 'المقيِّم', type: 'select', opts: partnersAccNames(), def: partnersAccDefault(), req: true },
         { k: 'date', l: 'تاريخ التقييم', type: 'date', def: isoDate(today()), req: true },
       ] },
       { t: 'معايير تقييم الشراكة', note: 'كل معيار من 1 (ضعيف) إلى 5 (ممتاز)، والدرجة النهائية موزونة.', fields: [{ k: 'scores', type: 'scores', items: EVAL_CRIT, req: true }] },
       { t: 'القيمة والأثر المتحققان', fields: [
-        { k: 'valueTypes', l: 'القيمة المتحققة', type: 'multi', opts: L('valueTypes') },
+        { k: 'valueTypes', l: 'القيمة المتحققة', type: 'multi', list: 'valueTypes', opts: L('valueTypes') },
         { k: 'valueSar', l: 'القيمة المالية المتحققة (ر.س)', type: 'number' },
         { k: 'impactLevel', l: 'مستوى الأثر', type: 'chips', opts: ['مرتفع', 'متوسط', 'منخفض', 'لم يظهر بعد'], req: true },
         { k: 'impact', l: 'وصف الأثر', type: 'textarea' },
@@ -185,6 +185,43 @@ const FORMS = {
     score: (d) => { const s = evalScore(d); return s === null ? '' : `${s}% — ${evalGrade(s)}`; },
   },
 };
+/* التقييم المبدئي: المعايير وأوزانها وحدود النتيجة (تُعدَّل من «الإعدادات ← إعدادات النماذج») */
+const IEV_RES = ['الجهة مناسبة', 'مناسبة بشروط', 'الجهة غير مناسبة'];
+const IEV_DEF = { crit: [['سمعة الجهة ومصداقيتها', 15], ['مواءمة نشاط الجهة مع رسالة المؤسسة وأهدافها الاستراتيجية', 20], ['قدرات الجهة الفنية والبشرية', 15], ['الملاءة والاستقرار المالي للجهة', 15], ['القيمة المضافة المتوقعة للمؤسسة', 15], ['خلو التعاون من تعارض المصالح والمخاطر القانونية', 10], ['عدم تكرار الشراكة مع جهة مماثلة قائمة', 10]].map(([t, w]) => ({ t, w })), th: [50, 70] };
+function ievCfg() { const c = (D.settings && D.settings.ievCfg) || {}; return { crit: (c.crit && c.crit.length ? c.crit : IEV_DEF.crit), th: c.th && c.th.length === 2 ? c.th : IEV_DEF.th }; }
+/* الدرجة = مجموع أوزان المعايير المناسبة ÷ مجموع الأوزان × 100؛ لا درجة قبل تقييم كل المعايير */
+function ievScore(d, cfg) {
+  const C = (cfg || ievCfg()).crit, v = (d && d.crit) || {};
+  if (!C.length || C.some((_, i) => !(v[i] && v[i].v))) return null;
+  const tot = C.reduce((t, c) => t + (+c.w || 0), 0) || 1;
+  return Math.round(C.reduce((t, c, i) => t + (v[i].v === 'ok' ? (+c.w || 0) : 0), 0) / tot * 100);
+}
+function ievResult(sc, cfg) { if (sc === null || sc === undefined) return ''; const th = (cfg || ievCfg()).th; return sc < th[0] ? IEV_RES[2] : sc <= th[1] ? IEV_RES[1] : IEV_RES[0]; }
+/* حسابات إدارة الشراكات (للمقيِّم) */
+const partnersAccNames = () => wfAccounts().filter((a) => ['admin', 'team'].includes(a.role)).map((a) => a.t);
+const partnersAccDefault = () => { const r = Session.role(); return r === 'team' ? Session.member() : r === 'admin' && !isSysAdmin() ? partnersAccNames()[0] : ''; };
+/* إضافة خيار إلى قائمة: مباشرة لحسابات إدارة الشراكات، وبطلب اعتماد لغيرها */
+const canListDirect = () => ['admin', 'team'].includes(Session.role());
+async function requestListValue(list, v, from) {
+  v = String(v || '').trim(); if (!v) return false;
+  if (L(list).some((x) => normAr(x) === normAr(v))) { toast('الخيار موجود بالفعل.', 'err'); return false; }
+  if (canListDirect()) { await addListValue(list, v, from); return 'added'; }
+  D.settings.listReqs = D.settings.listReqs || [];
+  if (D.settings.listReqs.some((r) => r.list === list && normAr(r.v) === normAr(v))) { toast('الخيار مقترح بالفعل وبانتظار الاعتماد.'); return false; }
+  D.settings.listReqs.push({ id: uid('lr'), list, v, from, by: Session.userName(), dept: Session.dept(), at: nowISO() });
+  await Repo.saveSettings();
+  await Repo.log('list.request', 'settings', 'lists', LIST_TITLES[list] || list, `«${v}» — مقترح من ${Session.userName()}`);
+  await notify([{ grp: 'partnerships' }], { t: `طلب إضافة خيار: «${v}»`, b: `${LIST_TITLES[list] || list} — من ${Session.userName()}`, href: '#/tasks', ic: 'plus' });
+  return 'requested';
+}
+async function decideListReq(id, ok) {
+  const L_ = D.settings.listReqs || [], r = L_.find((x) => x.id === id); if (!r) return;
+  D.settings.listReqs = L_.filter((x) => x.id !== id);
+  if (ok) await addListValue(r.list, r.v, `اعتماد طلب ${r.by}`);
+  await Repo.saveSettings();
+  await Repo.log('list.decision', 'settings', 'lists', LIST_TITLES[r.list] || r.list, `«${r.v}» — ${ok ? 'اعتُمد' : 'رُفض'}`);
+  if (r.dept) await notify([{ dept: r.dept }], { t: ok ? `اعتُمد الخيار «${r.v}»` : `لم يُعتمد الخيار «${r.v}»`, b: LIST_TITLES[r.list] || r.list, href: '#/', ic: ok ? 'check' : 'x' });
+}
 const EVAL_CRIT = [
   { k: 'align', l: 'المواءمة الاستراتيجية', d: 'ارتباط الشراكة بأهداف المؤسسة', w: 20 },
   { k: 'outputs', l: 'تحقيق المخرجات المستهدفة', d: 'ما نُفّذ مقارنة بالمخرجات في المذكرة', w: 20 },
@@ -220,12 +257,13 @@ function fFieldHTML(f, v, ro) {
     case 'number': return `<div class="field ff" data-fk="${f.k}">${lab}<input class="in num" id="${id}" type="number" min="0" step="1000" value="${esc(v ?? '')}" ${dis}>${hint}</div>`;
     case 'date': return `<div class="field ff" data-fk="${f.k}">${lab}<input class="in" id="${id}" type="date" value="${esc(v || '')}" ${dis}></div>`;
     case 'sign': return `<div class="field ff" data-fk="${f.k}">${lab}<div class="ff-sign">${icon('check')}<span>يُعتمد إلكترونيًا باسم الحساب عند إتمام النموذج</span></div></div>`;
+    case 'select': { const opts = [...new Set([...(f.opts || []), v].filter(Boolean))]; return `<div class="field ff" data-fk="${f.k}">${lab}<select class="in" id="${id}" ${dis}><option value="">اختر</option>${opts.map((o) => `<option ${o === v ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>${hint}</div>`; }
     case 'chips': case 'multi': {
       const vals = f.type === 'multi' ? (v || []) : [v];
-      return `<div class="field ff ${f.opts.length > 4 ? 'full' : ''}" data-fk="${f.k}">${lab}<div class="ff-chips" role="${f.type === 'multi' ? 'group' : 'radiogroup'}">${f.opts.map((o) => `<button type="button" class="ff-chip ${vals.includes(o) ? 'on' : ''}" data-chip="${esc(o)}" ${dis} aria-pressed="${vals.includes(o)}">${f.type === 'multi' ? icon('check') : ''}${esc(o)}</button>`).join('')}</div>${hint}</div>`;
+      return `<div class="field ff ${f.opts.length > 4 ? 'full' : ''}" data-fk="${f.k}">${lab}<div class="ff-chips" role="${f.type === 'multi' ? 'group' : 'radiogroup'}">${f.opts.map((o) => `<button type="button" class="ff-chip ${vals.includes(o) ? 'on' : ''}" data-chip="${esc(o)}" ${dis} aria-pressed="${vals.includes(o)}">${f.type === 'multi' ? icon('check') : ''}${esc(o)}</button>`).join('')}</div>${hint}${f.list && !ro ? `<button type="button" class="ff-chip add" data-chipadd="${f.list}" title="${canListDirect() ? 'يُضاف إلى القائمة مباشرة' : 'يُرسل لإدارة الشراكات للاعتماد'}">${icon('plus')} إضافة خيار</button>` : ''}${f.auto === 'iev' ? `<div class="ff-auto" data-auto="${f.k}"></div>` : ''}</div>`;
     }
-    case 'checklist': return `<div class="field ff full" data-fk="${f.k}"><table class="ff-tbl"><thead><tr><th>م</th><th>عنصر المراجعة</th>${f.opts.map(([, l]) => `<th>${l}</th>`).join('')}<th>الملاحظات</th></tr></thead><tbody>
-      ${f.items.map((it, i) => { const c = (v || {})[i] || {}; return `<tr data-row="${i}"><td class="c">${i + 1}</td><td>${esc(it)}</td>${f.opts.map(([k]) => `<td class="c"><button type="button" class="ff-tick ${c.v === k ? 'on ' + k : ''}" data-tick="${k}" ${dis} aria-label="${esc(it)}">${c.v === k ? icon(k === 'ok' ? 'check' : 'x') : ''}</button></td>`).join('')}<td><input class="in sm" data-note value="${esc(c.n || '')}" ${dis}></td></tr>`; }).join('')}</tbody></table></div>`;
+    case 'checklist': return `<div class="field ff full" data-fk="${f.k}"><table class="ff-tbl"><thead><tr><th>م</th><th>عنصر المراجعة</th>${f.weights ? '<th>الوزن</th>' : ''}${f.opts.map(([, l]) => `<th>${l}</th>`).join('')}<th>الملاحظات</th></tr></thead><tbody>
+      ${f.items.map((it, i) => { const c = (v || {})[i] || {}; return `<tr data-row="${i}"><td class="c">${i + 1}</td><td>${esc(it)}</td>${f.weights ? `<td class="c"><span class="ff-w">${f.weights[i]}%</span></td>` : ''}${f.opts.map(([k]) => `<td class="c"><button type="button" class="ff-tick ${c.v === k ? 'on ' + k : ''}" data-tick="${k}" ${dis} aria-label="${esc(it)}">${c.v === k ? icon(k === 'ok' ? 'check' : 'x') : ''}</button></td>`).join('')}<td><input class="in sm" data-note value="${esc(c.n || '')}" ${dis}></td></tr>`; }).join('')}</tbody></table>${f.weights ? '<div class="ff-iev" id="ffIev"></div>' : ''}</div>`;
     case 'scores': return `<div class="field ff full" data-fk="${f.k}"><table class="ff-tbl ff-sc"><thead><tr><th>المعيار</th><th>الوزن</th><th>التقييم</th><th>ملاحظات</th></tr></thead><tbody>
       ${f.items.map((c) => { const x = (v || {})[c.k] || {}; return `<tr data-row="${c.k}"><td><b>${esc(c.l)}</b><small>${esc(c.d)}</small></td><td class="c">${c.w}%</td><td class="c"><div class="ff-stars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" class="ff-st ${+x.v >= n ? 'on' : ''}" data-score="${n}" ${dis} aria-label="${n}">${n}</button>`).join('')}</div></td><td><input class="in sm" data-note value="${esc(x.n || '')}" ${dis}></td></tr>`; }).join('')}</tbody></table><div class="ff-total" id="ffTotal"></div></div>`;
     case 'clauses': {
@@ -247,6 +285,7 @@ function fReadField(box, f) {
     case 'scores': { const o = {}; $$('tr[data-row]', w).forEach((tr) => { const on = $$('.ff-st.on', tr).length; o[tr.dataset.row] = { v: on || '', n: tr.querySelector('[data-note]').value.trim() }; }); return o; }
     case 'clauses': return $$('tr[data-row]', w).map((tr) => ({ text: tr.querySelector('[data-cltext]').value.trim(), goals: $$('.ff-chip.on', tr).map((b) => b.dataset.goal), note: tr.querySelector('[data-note]').value.trim() })).filter((r) => r.text);
     case 'sign': return '';
+    case 'select': { const i = w.querySelector('select'); return i ? i.value : ''; }
     default: { const i = w.querySelector('input,textarea'); return i ? i.value.trim() : ''; }
   }
 }
@@ -279,14 +318,49 @@ function openForm(kind, rec, key, { onDone, ro = false, evalIdx = null } = {}) {
   const box = m.el;
   const total = () => { const t = $('#ffTotal', box); if (!t) return; const d = {}; secs.forEach((s) => s.fields.forEach((f) => { d[f.k] = fReadField(box, f); })); const sc = evalScore(d); t.innerHTML = sc === null ? '<span class="faint">تظهر الدرجة الموزونة بعد تقييم كل المعايير</span>' : `<b class="${evalTone(sc)}">${sc}%</b><span>${evalGrade(sc)}</span>`; };
   total();
+  /* التقييم المبدئي: الدرجة من الأوزان، والنتيجة تلقائية ما لم تُحدَّد يدويًا */
+  const fCrit = secs.flatMap((x) => x.fields).find((f) => f.type === 'checklist' && f.weights);
+  const fRec = secs.flatMap((x) => x.fields).find((f) => f.auto === 'iev');
+  box.dataset.recManual = data.recManual ? '1' : '';
+  const ievUpd = () => {
+    if (!fCrit) return;
+    const crit = fReadField(box, fCrit); const sc = ievScore({ crit });
+    const okW = fCrit.items.reduce((t, _, i) => t + ((crit[i] || {}).v === 'ok' ? fCrit.weights[i] : 0), 0), totW = fCrit.weights.reduce((a, b) => a + b, 0) || 1;
+    const pctNow = Math.round(okW / totW * 100), auto = ievResult(sc);
+    const th = ievCfg().th;
+    const bar = $('#ffIev', box);
+    if (bar) bar.innerHTML = `<div class="ff-iev-bar"><i style="width:${pctNow}%" class="${sc === null ? 'pend' : sc < th[0] ? 'lo' : sc <= th[1] ? 'mid' : 'hi'}"></i><s style="inset-inline-start:${th[0]}%"></s><s style="inset-inline-start:${th[1]}%"></s></div><div class="ff-iev-t"><b>${sc === null ? pctNow + '% حتى الآن' : sc + '%'}</b><span>${sc === null ? 'تظهر النتيجة بعد تقييم كل المعايير' : 'النتيجة التلقائية: ' + esc(auto)}</span></div>`;
+    if (!fRec) return;
+    const grp = box.querySelector(`[data-fk="${fRec.k}"]`), manual = box.dataset.recManual === '1';
+    if (!manual && auto) $$('.ff-chip', grp).forEach((b) => { if (b.dataset.chip) b.classList.toggle('on', b.dataset.chip === auto); });
+    const cur = fReadField(box, fRec);
+    const a = grp.querySelector('[data-auto]');
+    if (a) a.innerHTML = manual ? `<span class="ff-auto-m">${icon('edit')} محددة يدويًا${auto && cur !== auto ? ` (التلقائية: ${esc(auto)})` : ''}</span><button type="button" class="linkbtn" data-recauto>${icon('history')} إعادة للتلقائي</button>` : `<span class="ff-auto-a">${icon('check')} ${auto ? 'تُحدَّد تلقائيًا من النسب' : 'ستُحدَّد تلقائيًا بعد تقييم المعايير'}</span>`;
+  };
+  ievUpd();
   box.addEventListener('click', (e) => {
+    const ra = e.target.closest('[data-recauto]'); if (ra) { box.dataset.recManual = ''; ievUpd(); return; }
+    const ca = e.target.closest('[data-chipadd]'); if (ca) {
+      const list = ca.dataset.chipadd, grp = ca.closest('[data-fk]'), fx = secs.flatMap((x) => x.fields).find((x) => x.k === grp.dataset.fk);
+      inputDlg({ title: 'إضافة خيار جديد', label: fx.l || 'الخيار', hint: canListDirect() ? 'يُضاف إلى القائمة فورًا ويظهر في كل النماذج.' : 'يُرسل إلى إدارة الشراكات للاعتماد، ويظهر في القوائم بعد الموافقة.', ok: canListDirect() ? 'إضافة' : 'إرسال للاعتماد', multiline: false }).then(async (res) => {
+        const v = res && typeof res === 'object' ? res.value : res;
+        if (!v) return;
+        const r = await requestListValue(list, v, `${F.short || F.title}`);
+        if (r === 'added') {
+          const b = document.createElement('button'); b.type = 'button'; b.className = 'ff-chip'; b.dataset.chip = v.trim(); b.innerHTML = (fx.type === 'multi' ? icon('check') : '') + esc(v.trim());
+          ca.before(b); b.click(); toast(`أُضيف «${v.trim()}» إلى القائمة`);
+        } else if (r === 'requested') toast('أُرسل الخيار إلى إدارة الشراكات للاعتماد');
+      });
+      return;
+    }
     if (ro && !e.target.closest('[data-ffprint],[data-ffword],[data-mclose]')) return;
     const ch = e.target.closest('.ff-chip'); if (ch && !ch.disabled) {
       const grp = ch.closest('[data-fk]'); const f = secs.flatMap((s) => s.fields).find((x) => x.k === grp.dataset.fk);
       if (ch.dataset.goal || f.type === 'multi') ch.classList.toggle('on'); else { const was = ch.classList.contains('on'); $$('.ff-chip', grp).forEach((b) => b.classList.remove('on')); if (!was) ch.classList.add('on'); }
+      if (f.auto === 'iev') { box.dataset.recManual = '1'; ievUpd(); }
       return;
     }
-    const tk = e.target.closest('.ff-tick'); if (tk) { const tr = tk.closest('tr'); const was = tk.classList.contains('on'); $$('.ff-tick', tr).forEach((b) => { b.className = 'ff-tick'; b.innerHTML = ''; }); if (!was) { tk.classList.add('on', tk.dataset.tick); tk.innerHTML = icon(tk.dataset.tick === 'ok' ? 'check' : 'x'); } return; }
+    const tk = e.target.closest('.ff-tick'); if (tk) { const tr = tk.closest('tr'); const was = tk.classList.contains('on'); $$('.ff-tick', tr).forEach((b) => { b.className = 'ff-tick'; b.innerHTML = ''; }); if (!was) { tk.classList.add('on', tk.dataset.tick); tk.innerHTML = icon(tk.dataset.tick === 'ok' ? 'check' : 'x'); } ievUpd(); return; }
     const st = e.target.closest('.ff-st'); if (st) { const n = +st.dataset.score; $$('.ff-st', st.parentElement).forEach((b) => b.classList.toggle('on', +b.dataset.score <= n)); total(); return; }
     if (e.target.closest('[data-cladd]')) { const tb = box.querySelector('.ff-cl tbody'); const tr = tb.querySelector('tr').cloneNode(true); tr.querySelector('textarea').value = ''; tr.querySelector('[data-note]').value = ''; $$('.ff-chip', tr).forEach((b) => b.classList.remove('on')); tb.appendChild(tr); $$('tr', tb).forEach((r, i) => { r.dataset.row = i; }); tr.querySelector('textarea').focus(); return; }
     const rm = e.target.closest('[data-clrm]'); if (rm) { const tb = rm.closest('tbody'); if ($$('tr', tb).length > 1) rm.closest('tr').remove(); return; }
@@ -299,6 +373,7 @@ function openForm(kind, rec, key, { onDone, ro = false, evalIdx = null } = {}) {
     secs.forEach((s) => s.fields.forEach((f) => { d[f.k] = fReadField(box, f); if (mode === 'done' && fMissing(f, d[f.k])) miss.push(f.l || s.t); }));
     $$('.ff.invalid', box).forEach((x) => x.classList.remove('invalid'));
     if (miss.length) { secs.forEach((s) => s.fields.forEach((f) => { if (fMissing(f, d[f.k])) { const w = box.querySelector(`[data-fk="${f.k}"]`); w && w.classList.add('invalid'); } })); toast(`أكمل الحقول المطلوبة: ${miss.slice(0, 3).join('، ')}${miss.length > 3 ? '…' : ''}`, 'err'); const first = box.querySelector('.ff.invalid'); first && first.scrollIntoView({ block: 'center' }); return; }
+    if (fCrit) { d.ievScore = ievScore(d); d.recManual = box.dataset.recManual === '1'; d.ievW = fCrit.weights; }
     const rec0 = { data: d, status: mode, at: nowISO(), by: Session.userName(), byDept: Session.role() === 'dept' ? Session.dept() : D.settings.org.dept };
     let target;
     if (F.periodic) {

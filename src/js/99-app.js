@@ -360,6 +360,7 @@ function migrate() {
   if (!s.deptsV2) { applyOfficialDepartments(); s.deptsV2 = true; changed = true; }
   if (!s.lists.departments.includes(WF_DEPT_DEFAULTS.legal)) { s.lists.departments.push(WF_DEPT_DEFAULTS.legal); changed = true; }
   if (!s.lists.goals.length) { s.lists.goals = [...MUROOJ_GOALS]; changed = true; }
+  if (!s.lists.formSectors || !s.lists.formSectors.length) { s.lists.formSectors = [...SECTOR_FORM]; changed = true; }
   ['شبه حكومي', 'تعليمي'].forEach((x) => { if (!s.lists.sectors.includes(x)) { s.lists.sectors.push(x); changed = true; } });
   if (!s.demoProfiles) { applyDemoProfiles(); s.demoProfiles = true; changed = true; }
   if (!s.lists.attachmentCats.includes(WF_CAT)) { s.lists.attachmentCats.push(WF_CAT); changed = true; }

@@ -31,7 +31,7 @@ async def main():
         ok('hero CTA opens share form', (await E("location.hash")) == '#/share/new')
         ok('department preselected', await E("document.querySelector('#s_department').value") == 'الإدارة العامة للمشاريع')
         await pg.fill('#s_requesterName', 'أحمد سلام')
-        await pg.click('[data-cb="strategicGoal"] input'); await pg.keyboard.type('حماية الموارد الطبيعية في المناطق الحدودية'); await pg.keyboard.press('Enter')
+        await pg.select_option('#s_strategicGoal', index=2); await pg.wait_for_timeout(150); await pg.select_option('#s_initiative', index=1)
         await pg.click('[data-wn]')
         await pg.fill('#s_partnerName', 'جمعية عيني لإعادة تدوير النفايات'); await pg.wait_for_timeout(200)
         ok('entity match against registry shown', 'مسجلة لدى إدارة الشراكات' in (await pg.inner_text('#pmatch')))

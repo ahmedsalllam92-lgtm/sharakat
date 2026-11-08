@@ -163,7 +163,7 @@ function wfSectionHTML(kind, rec) {
       <span class="wf-dot">${done ? icon(r.decision === 'no' || r.decision === 'reject' ? 'x' : 'check') : s.n}</span>
       <div class="wf-b"><div class="wf-h"><b>${esc(s.t)}</b>${s.ref ? `<span class="wf-ref" title="رقم البند في إجراء المذكرات">البند ${s.ref}</span>` : ''}</div>
         <div class="wf-m"><span class="wf-who">${icon('users')}${esc(wfActorName(s.actor))}</span>
-          ${done ? `<span>${r.legacy ? 'مكتملة قبل اعتماد المسار في المنصة' : `${r.decision === 'no' ? (s.no || 'غير مناسبة') : r.decision === 'reject' ? s.reject : r.decision === 'yes' && s.yes ? s.yes : 'اكتملت'} ${r.at ? '— ' + fmtDT(r.at) : ''}${r.by ? ' — ' + esc(r.by) : ''}`}</span>` : cur ? `<span class="wf-now">${ret ? 'أُعيدت بملاحظات' : lock ? '' : 'الخطوة الحالية'}</span>` : lock ? '<span>بعد التحويل إلى شراكة</span>' : ''}
+          ${done ? `<span>${r.direct ? `تُجووزت بالتسجيل المباشر${r.at ? ' — ' + fmtDT(r.at) : ''}` : r.legacy ? 'مكتملة قبل اعتماد المسار في المنصة' : `${r.decision === 'no' ? (s.no || 'غير مناسبة') : r.decision === 'reject' ? s.reject : r.decision === 'yes' && s.yes ? s.yes : 'اكتملت'} ${r.at ? '— ' + fmtDT(r.at) : ''}${r.by ? ' — ' + esc(r.by) : ''}`}</span>` : cur ? `<span class="wf-now">${ret ? 'أُعيدت بملاحظات' : lock ? '' : 'الخطوة الحالية'}</span>` : lock ? '<span>بعد التحويل إلى شراكة</span>' : ''}
           ${s.kind === 'multi' && kind === 'partnership' && (cur || done) ? `<span class="wf-multi">${multi} من ${need} ${s.id === 'reports' ? 'تقارير' : 'إدارات'}</span>` : ''}</div>
         ${ret && r.note ? `<div class="wf-note">${icon('msg')}${esc(r.note)}</div>` : ''}
         ${(() => { const fs = s.docs.filter((d) => d.form && wfForm(kind, rec, d.form)); return fs.length ? `<div class="wf-docs">${fs.map((d) => { const f = wfForm(kind, rec, d.form); return `<button type="button" class="wf-doc form ${f.status}" data-wfform="${d.form}" title="${esc(FORMS[d.form].title)}">${icon(f.status === 'done' ? 'check' : 'edit')}<span>${esc(FORMS[d.form].short || FORMS[d.form].title)}</span><small>${esc(f.no || '')}${f.status === 'done' ? '' : ' — مسودة'}</small></button>`; }).join('')}</div>` : ''; })()}
@@ -176,7 +176,8 @@ function wfSectionHTML(kind, rec) {
   };
   return `<section class="dsec wf-sec" id="wf"><h2>مسار ${kind === 'proposal' ? 'الطلب' : 'المذكرة'} <span class="src">الإجراء المعتمد لشراكة جديدة</span></h2>
     <div class="wf-top"><div class="wf-bar"><i style="width:${pct}%"></i></div><div class="wf-cur ${st.closed ? 'neg' : ''}"><b>${doneN} من ${steps.length}</b><span>${esc(curTxt)}</span></div></div>
-    <div class="wf-phases">${phases.map(({ ph, steps: ss }) => `<div class="wf-ph"><h4><em>${pad(WF_PHASES.indexOf(ph) + 1)}</em>${ph.t}</h4><ol class="wf-list">${ss.map(row).join('')}</ol></div>`).join('')}</div></section>`;
+    ${wfNextHTML(kind, rec, st)}
+    <div class="wf-phases">${phases.map(({ ph, steps: ss }) => { const all = ss.length && ss.every((s) => st.S[s.id] && st.S[s.id].status === 'done'); const curP = st.cur && ss.includes(st.cur); const lockP = kind === 'proposal' && ss.every((s) => s.on === 'partnership'); return `<div class="wf-ph ${all ? 'done' : curP ? 'cur' : ''} ${lockP ? 'lockp' : ''}"><h4 class="wf-ph-h"><em>${all ? icon('check') : pad(WF_PHASES.indexOf(ph) + 1)}</em><span>${ph.t}</span><small>${ss.filter((s) => st.S[s.id] && st.S[s.id].status === 'done').length}/${ss.length}</small></h4><ol class="wf-list">${ss.map(row).join('')}</ol></div>`; }).join('')}</div></section>`;
 }
 
 /* — نافذة تنفيذ الخطوة — */
@@ -271,6 +272,30 @@ function wfStepDialog(kind, rec, sid, rerender) {
     await wfApply(kind, rec, s, act, note, fields);
     m.close(); rerender();
   });
+}
+
+/* الخطوة التالية في المقترح المقبول: التحويل إلى شراكة (حتى لا يتوقف المسار بعد التقييم المبدئي) */
+function wfNextHTML(kind, rec, st) {
+  if (kind !== 'proposal' || !can('proposal.review')) return '';
+  if (rec.status === 'accepted') return `<div class="wf-next no-print"><span class="wf-next-ic">${icon('convert')}</span><div><b>الخطوة التالية: تحويل الطلب إلى سجل شراكة</b><small>اكتمل التقييم المبدئي وقُبل الطلب. بعد التحويل تُستكمل مراحل الاجتماع والمذكرة والاعتماد من صفحة الشراكة.</small></div><button class="btn primary" type="button" data-act="convert">${icon('convert')} تحويل إلى شراكة</button></div>`;
+  if (['submitted', 'review'].includes(rec.status) && Session.role() === 'admin') return `<div class="wf-next soft no-print"><span class="wf-next-ic">${icon('flag')}</span><div><b>${st.cur ? `الخطوة الحالية: ${esc(st.cur.t)}` : 'الطلب قيد الدراسة'}</b><small>نفّذها من زر الخطوة في المسار، أو سجّل الشراكة مباشرة إن كانت موقّعة أو معتمدة مسبقًا.</small></div><button class="btn" type="button" data-act="direct">${icon('convert')} تحويل مباشر</button></div>`;
+  return '';
+}
+/* التسجيل المباشر: تُعلَّم مراحل ما قبل التوقيع «مُتجاوَزة» باسم الحساب، وتنتقل الشراكة إلى خطوة التوقيع */
+async function wfDirect(prop, p) {
+  const sign = WF_STEPS.find((s) => s.id === 'signed') || WF_STEPS.find((s) => s.ph === 'sign' && !s.kind);
+  const upto = sign ? WF_STEPS.indexOf(sign) : WF_STEPS.length;
+  const at = nowISO(), by = Session.userName();
+  WF_STEPS.slice(0, upto).forEach((s) => {
+    const own = s.on === 'proposal' && prop ? prop : p;
+    own.wf = own.wf || { steps: {} }; own.wf.steps = own.wf.steps || {};
+    const cur = own.wf.steps[s.id];
+    if (!(cur && cur.status === 'done')) own.wf.steps[s.id] = { status: 'done', direct: true, at, by, decision: s.kind === 'decision' || s.final ? 'yes' : undefined };
+  });
+  if (p.stage === 'prep') p.stage = 'sign';
+  if (prop) await Repo.save('proposals', prop);
+  await Repo.save('partnerships', p);
+  await Repo.log('workflow.direct', 'partnership', p.id, p.code, `تسجيل مباشر: تُجووزت المراحل حتى «${sign ? sign.t : 'النهاية'}»`);
 }
 
 /* — تطبيق الإجراء وآثاره على حالة الطلب أو الشراكة — */
@@ -368,6 +393,7 @@ function renderTasks(el) {
   const mineSteps = r0 === 'admin' || r0 === 'team' ? WF_STEPS.filter((s) => s.actor === 'partnerships' || s.kind === 'multi') : r0 === 'dept' ? WF_STEPS.filter((s) => (acc && acc.duties || []).includes(s.actor)) : [];
   const whenSteps = r0 === 'dept' ? WF_STEPS.filter((s) => ['requester', 'concerned'].includes(s.actor) || s.id === 'meeting') : [];
   el.innerHTML = `<div class="ph"><div><h1>مهامي</h1><p>الخطوات التي تنتظر ${esc(acc ? acc.t : 'حسابك')} في مسار الشراكات الجديدة. كل مهمة تفتح الخطوة مباشرة بمستنداتها.</p>${T.length ? `<p class="tk-sum"><b>${T.filter((t) => !t.follow).length}</b> بانتظارك${T.some((t) => t.follow) ? ` · <b>${T.filter((t) => t.follow).length}</b> للمتابعة فقط` : ''}</p>` : ''}</div></div>
+    ${canListDirect() && (D.settings.listReqs || []).length ? `<section class="panel tk-lr"><div class="panel-h"><h3>${icon('plus')} خيارات جديدة بانتظار الاعتماد</h3><span class="sub">اقترحها مستخدمون من خارج إدارة الشراكات؛ تظهر في القوائم بعد الموافقة</span></div><div class="panel-b"><ul class="lr-list">${D.settings.listReqs.map((r) => `<li><div><b>«${esc(r.v)}»</b><small>${esc(LIST_TITLES[r.list] || r.list)} · ${esc(r.by)}${r.from ? ' · من ' + esc(r.from) : ''} · ${relDays(r.at)}</small></div><button class="btn sm primary" type="button" data-lrok="${r.id}">${icon('check')} اعتماد</button><button class="btn sm ghost" type="button" data-lrno="${r.id}">${icon('x')} رفض</button></li>`).join('')}</ul></div></section>` : ''}
     ${T.length ? `<div class="tk-list">${T.map((t) => `<a class="tk ${t.returned ? 'ret' : ''} ${t.follow ? 'fol' : ''}" href="${t.href}" data-tkopen="${t.step.id}" data-tkid="${t.rec.id}" data-tkkind="${t.kind}">
         <span class="tk-n">${t.step.n}</span><span class="tk-b"><b>${esc(t.step.t)}</b><span>${esc(t.name || '')}</span><small>${esc(t.sub || '')}</small></span>
         <span class="tk-m">${t.returned ? '<em class="ret">أُعيدت بملاحظات</em>' : t.follow ? '<em>متابعة</em>' : ''}<small>${t.since ? relDays(t.since) : ''}</small></span>${icon('chevL')}</a>`).join('')}</div>`
@@ -376,7 +402,8 @@ function renderTasks(el) {
       <div class="panel-b">${mineSteps.length ? `<h4 class="m-h4" style="margin-top:0">${r0 === 'dept' ? 'يعتمد أو ينفّذ في كل شراكة' : 'خطوات إدارة الشراكات'}</h4><ol class="tk-steps">${mineSteps.map((s) => `<li><span>${s.n}</span><b>${esc(s.t)}</b><small>${esc(s.d)}</small></li>`).join('')}</ol>` : ''}
         ${whenSteps.length ? `<h4 class="m-h4">عندما تكون إدارتكم طالبة الشراكة أو معنية بها</h4><ol class="tk-steps soft">${whenSteps.map((s) => `<li><span>${s.n}</span><b>${esc(s.t)}</b><small>${esc(s.d)}</small></li>`).join('')}</ol>` : ''}
         ${!mineSteps.length && !whenSteps.length ? '<p class="muted small">لا تُسند لهذا الحساب خطوات تنفيذ؛ اطلاع فقط.</p>' : ''}</div></section>`;
-  el.onclick = (e) => {
+  el.onclick = async (e) => {
+    const lr = e.target.closest('[data-lrok],[data-lrno]'); if (lr) { await decideListReq(lr.dataset.lrok || lr.dataset.lrno, !!lr.dataset.lrok); toast(lr.dataset.lrok ? 'اعتُمد الخيار وأُضيف إلى القائمة' : 'رُفض الخيار'); return route(); }
     const a = e.target.closest('[data-tkopen]'); if (!a) return;
     e.preventDefault();
     const kind = a.dataset.tkkind, rec = (kind === 'proposal' ? D.proposals : D.partnerships).find((x) => x.id === a.dataset.tkid);

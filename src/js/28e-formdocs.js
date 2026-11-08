@@ -54,23 +54,25 @@ function initialEvalDocHTML(kind, rec) {
   const key = 'initialEval', F = FORMS[key], R = fRecInfo(kind, rec), st = formOf(rec, key) || {}, d = st.data || {};
   const fCrit = fdField(F, R, rec, 'crit') || { items: [], opts: [] }, crit = d.crit || {};
   const items = fCrit.items || [], ok = items.filter((_, i) => (crit[i] || {}).v === 'ok').length, no = items.filter((_, i) => (crit[i] || {}).v === 'no').length;
+  const W = d.ievW && d.ievW.length === items.length ? d.ievW : (fCrit.weights || items.map(() => 0));
+  const sc = d.ievScore !== undefined && d.ievScore !== null ? d.ievScore : ievScore(d), autoRes = ievResult(sc), th = ievCfg().th;
   const recOpts = fdOpts(fdField(F, R, rec, 'rec')), ri = recOpts.indexOf(d.rec);
   const tone = ri < 0 ? 'na' : ri === 0 ? 'ex' : ri === recOpts.length - 1 ? 'lo' : 'gd';
   const okLbl = (fCrit.opts || []).map(([k, l]) => [k, l]);
-  const rows = items.map((it, i) => { const c = crit[i] || {}; return `<tr><td class="fx-ix">${i + 1}</td><td><b class="fx-it">${esc(it)}</b>${c.note ? `<small class="fx-nt">${esc(c.note)}</small>` : ''}</td><td class="fx-res"><span class="fx-badge ${c.v || 'na'}">${icon(c.v === 'ok' ? 'check' : c.v === 'no' ? 'x' : 'info')}${esc((okLbl.find(([k]) => k === c.v) || [])[1] || 'لم يُقيَّم')}</span></td></tr>`; }).join('');
+  const rows = items.map((it, i) => { const c = crit[i] || {}; return `<tr><td class="fx-ix">${i + 1}</td><td><b class="fx-it">${esc(it)}</b>${c.n || c.note ? `<small class="fx-nt">${esc(c.n || c.note)}</small>` : ''}</td><td class="fx-w"><span>${W[i] || 0}%</span></td><td class="fx-res"><span class="fx-badge ${c.v || 'na'}">${icon(c.v === 'ok' ? 'check' : c.v === 'no' ? 'x' : 'info')}${esc((okLbl.find(([k]) => k === c.v) || [])[1] || 'لم يُقيَّم')}</span></td></tr>`; }).join('');
   const body = `
     ${fdSec(1, 'بيانات الجهة وتصنيفها', '', `<div class="fx-grid2">
       <div><div class="ev-lbl">نوع الجهة (القطاع)</div>${fdTags(fdOpts(fdField(F, R, rec, 'sector')), d.sector)}</div>
       <div><div class="ev-lbl">تصنيف الشراكة</div>${fdTags(fdOpts(fdField(F, R, rec, 'ptype')), d.ptype)}</div>
       <div><div class="ev-lbl">كيف بدأت العلاقة</div>${fdTags(fdOpts(fdField(F, R, rec, 'origin')), d.origin)}</div>
       <div><div class="ev-lbl">من بدأ العلاقة أو فتح الباب</div><p class="fx-val">${esc(d.originBy || '—')}</p></div></div>`)}
-    ${fdSec(2, 'معايير التقييم المبدئي', `${ok} مناسب · ${no} غير مناسب من ${items.length}`, `<div class="fx-meter"><i class="ok" style="width:${items.length ? ok / items.length * 100 : 0}%"></i><i class="no" style="width:${items.length ? no / items.length * 100 : 0}%"></i></div><table class="ev-tbl fx-tbl"><thead><tr><th>م</th><th>المعيار</th><th>النتيجة</th></tr></thead><tbody>${rows}</tbody></table>`)}
+    ${fdSec(2, 'معايير التقييم المبدئي', `${ok} مناسب · ${no} غير مناسب من ${items.length}`, `<div class="fx-meter"><i class="ok" style="width:${items.length ? ok / items.length * 100 : 0}%"></i><i class="no" style="width:${items.length ? no / items.length * 100 : 0}%"></i></div><table class="ev-tbl fx-tbl"><thead><tr><th>م</th><th>المعيار</th><th>الوزن</th><th>النتيجة</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td></td><td>الدرجة الموزونة (مجموع أوزان المعايير المناسبة)</td><td class="fx-w"><b>${sc === null ? '—' : sc + '%'}</b></td><td>${autoRes ? `<span class="fx-badge ${sc < th[0] ? 'no' : sc <= th[1] ? 'mid' : 'ok'}">${esc(autoRes)}</span>` : ''}</td></tr></tfoot></table><p class="fx-thr">أقل من ${th[0]}%: ${esc(IEV_RES[2])} · من ${th[0]}% إلى ${th[1]}%: ${esc(IEV_RES[1])} · أكثر من ${th[1]}%: ${esc(IEV_RES[0])}</p>`)}
     <div class="ev-two">
       ${fdSec(3, 'القيمة والأثر المتوقعان', '', `<div class="ev-lbl">نوع القيمة المتوقعة</div>${fdTags(fdOpts(fdField(F, R, rec, 'valueTypes')), d.valueTypes || [])}<div class="ev-lbl">الأثر المتوقع</div>${fdQ(d.impact, 'لم يُوصف الأثر المتوقع.')}`)}
-      ${fdSec(4, 'نتيجة التقييم', '', `${fdChoice(recOpts, d.rec, Object.fromEntries(recOpts.map((o, i) => [o, i === 0 ? 'check' : i === recOpts.length - 1 ? 'x' : 'alert'])))}<div class="ev-lbl">المبررات أو الشروط</div>${fdQ(d.recNote, 'لا توجد مبررات مكتوبة.')}`)}
+      ${fdSec(4, 'نتيجة التقييم', d.recManual ? 'محددة يدويًا' : 'محددة تلقائيًا من النسب', `${fdChoice(recOpts, d.rec, Object.fromEntries(recOpts.map((o, i) => [o, i === 0 ? 'check' : i === recOpts.length - 1 ? 'x' : 'alert'])))}<div class="ev-lbl">المبررات أو الشروط</div>${fdQ(d.recNote, 'لا توجد مبررات مكتوبة.')}`)}
     </div>`;
   return fdShell({ kind, rec, key, tone, st,
-    ring: { pct: items.length ? ok / items.length : 0, big: ok, small: '/' + items.length, label: 'معايير مناسبة' },
+    ring: { pct: sc === null ? 0 : sc / 100, big: sc === null ? '—' : sc, small: sc === null ? '' : '%', label: d.rec || autoRes || 'لم يكتمل' },
     facts: [['المقيِّم', esc(d.by || '—')], ['تاريخ التقييم', d.date ? fmtDate(d.date) + 'م' : '—'], ['الحالة', st.status === 'done' ? 'مكتمل ومعتمد' : 'مسودة']],
     kpis: [['مجال عمل الجهة', esc(d.domain || '—')], ['تصنيف الشراكة', esc(d.ptype || '—')], ['القيمة المالية التقديرية', d.valueSar ? sar(d.valueSar) : '—'], ['نتيجة التقييم', esc(d.rec || '—'), 'rec']],
     body });

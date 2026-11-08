@@ -17,7 +17,7 @@ async def main():
         T = await pg.evaluate("(()=>{const nd=visiblePartnerships().filter(p=>!p.isDraft); return [nd.filter(p=>['active','soon'].includes(pStatus(p))).length, new Set(nd.map(p=>p.partnerId)).size]})()")
         shown = await pg.evaluate("[...document.querySelectorAll('#shkSplash .sp-stats b')].map(b=>+b.dataset.to)")
         ok('live numbers come from the data', shown[:2] == T, (shown, T))
-        await pg.wait_for_timeout(2600)
+        await pg.wait_for_timeout(3600)
         ok('splash leaves by itself', await pg.evaluate("!document.getElementById('shkSplash')"))
         # إعادة التحميل تُظهرها مجددًا، والضغط يتخطاها
         await pg.reload(); await pg.wait_for_timeout(500)

@@ -280,6 +280,7 @@ function renderProposal(el, r) {
       rejected: [['review', 'إعادة فتح المقترح', '']],
       converted: [],
     }[x.status] || [];
+    if (Session.role() === 'admin' && ['submitted', 'review', 'accepted'].includes(x.status)) A.push(['direct', 'تحويل مباشر', '']);
     actionBox = `<div class="review-box no-print"><h3>إجراء إدارة الشراكات</h3>
       ${x.status === 'converted' && pt ? `<p class="small" style="margin-bottom:12px">أُنشئ من المقترح سجل الشراكة <a href="#/partnerships/${pt.id}"><b class="code" style="color:inherit">${esc(pt.code)}</b></a>. مرحلة الشراكة الحالية: <b>${esc(stageLabel(pt.stage))}</b>.</p>` : ''}
       ${x.status === 'info' ? `<p class="small muted" style="margin-bottom:12px">بانتظار استكمال الإدارة المقدمة منذ ${relDays(infoReq ? infoReq.at : x.updatedAt).replace('قبل ', '')}.</p>` : ''}
@@ -333,6 +334,7 @@ function renderProposal(el, r) {
     const a = e.target.closest('[data-act]'); if (!a) return;
     const k = a.dataset.act;
     if (k === 'convert') return convertDialog(x);
+    if (k === 'direct') return convertDialog(x, true);
     if (k === 'info') { const v = await inputDlg({ title: 'طلب استكمال معلومات', label: 'ما المطلوب من الإدارة المقدمة؟', hint: 'تظهر الرسالة للإدارة المقدمة مع زر «استكمال المقترح».', ok: 'إرسال الطلب' }); if (!v) return; await setPropStatus(x, 'info', v.value, 'all'); toast('أُرسل طلب الاستكمال'); return route(); }
     if (k === 'rejected') { const v = await inputDlg({ title: 'عدم قبول المقترح', label: 'سبب عدم القبول', hint: 'يظهر السبب للإدارة المقدمة.', ok: 'تأكيد عدم القبول' }); if (!v) return; await setPropStatus(x, 'rejected', v.value, 'all'); toast('سُجّل عدم قبول المقترح'); return route(); }
     if (k === 'accepted' && !wfEvalDone(x)) { const c = wfStateOf('proposal', x).cur; toast('يُقبل المقترح بعد منهجية بناء الشراكات والتقييم المبدئي للشريك.'); return c && wfStepDialog('proposal', x, c.id, () => route()); }
@@ -340,7 +342,7 @@ function renderProposal(el, r) {
     if (k === 'review') { await setPropStatus(x, 'review', '', 'all'); toast('المقترح قيد الدراسة'); return route(); }
   };
 }
-function convertDialog(x) {
+function convertDialog(x, direct = false) {
   const sim = findSimilarPartners(x.partnerName);
   const best = sim.find((s) => nameSimilarity(s.name, x.partnerName) >= 0.85);
   const m = Modal.open({
@@ -353,13 +355,15 @@ function convertDialog(x) {
       </div>
       <table class="map-tbl"><thead><tr><th>من المقترح</th><th></th><th>إلى سجل الشراكة</th></tr></thead><tbody>
         ${proposalMapping(x).map(([a, v, b]) => `<tr><td><b style="font-weight:500">${esc(a)}</b>${v ? `<div class="xs muted" style="margin-top:2px;max-height:40px;overflow:hidden">${esc(String(v).slice(0, 120))}</div>` : '<div class="xs faint">فارغ</div>'}</td><td>←</td><td>${esc(b)}</td></tr>`).join('')}</tbody></table>`,
-    foot: `<button class="btn primary" data-ok>${icon('convert')} إنشاء سجل الشراكة</button><button class="btn ghost" data-mclose>إلغاء</button>`,
+    foot: `${Session.role() === 'admin' ? `<label class="check small" style="margin-inline-end:auto"><input type="checkbox" id="cvDirect" ${direct ? 'checked' : ''}> تسجيل مباشر: تجاوز مراحل المسار حتى «${esc((WF_STEPS.find((s) => s.id === 'signed') || {}).t || 'التوقيع')}»</label>` : ''}<button class="btn primary" data-ok>${icon('convert')} إنشاء سجل الشراكة</button><button class="btn ghost" data-mclose>إلغاء</button>`,
   });
   m.el.querySelector('[data-ok]').onclick = async () => {
     const pid = (m.el.querySelector('input[name=cvp]:checked') || {}).value || '';
+    const dir = !!(m.el.querySelector('#cvDirect') || {}).checked;
     const rec = await convertProposal(x, { partnerId: pid, newPartner: { name: x.partnerName, sector: x.partnerSector } });
+    if (dir) await wfDirect(x, rec);
     m.close();
-    toast(`أُنشئ سجل الشراكة ${rec.code}`);
+    toast(dir ? `أُنشئ سجل الشراكة ${rec.code} مباشرة — الخطوة الحالية: التوقيع` : `أُنشئ سجل الشراكة ${rec.code}`);
     go('#/partnerships/' + rec.id);
   };
 }

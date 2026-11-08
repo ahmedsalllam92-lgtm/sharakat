@@ -5,6 +5,7 @@ const SET_TABS = [
   { id: 'tour', t: 'استعراض المنصة', perm: null },
   { id: 'home', t: 'محتوى الرئيسية', perm: 'manage.content' },
   { id: 'lists', t: 'القوائم', perm: 'manage.lists' },
+  { id: 'forms', t: 'إعدادات النماذج', perm: 'manage.accounts' },
   { id: 'roles', t: 'الحسابات والصلاحيات', perm: null },
   { id: 'data', t: 'البيانات والنسخ الاحتياطي', perm: 'manage.backup' },
   { id: 'audit', t: 'سجل التغييرات', perm: 'view.audit' },
@@ -16,7 +17,42 @@ function renderSettings(el, r) {
   el.innerHTML = `<div class="ph"><div><h1>الإعدادات</h1><p>إدارة التصنيفات والجهات والإدارات ومحتوى الرئيسية والبيانات، مع سجل مبسط للتغييرات.</p></div></div>
     <div class="set-wrap"><nav class="set-nav">${tabs.map((t) => `<a href="#/settings/${t.id}" class="${t.id === tab ? 'on' : ''}">${t.t}</a>`).join('')}<a href="#/partners">الجهات الشريكة</a></nav><div id="sbody"></div></div>`;
   const body = $('#sbody', el);
-  ({ general: setGeneral, design: setDesignTab, tour: setTourTab, home: setHome, lists: setLists, roles: setRoles, data: setData, audit: setAudit })[tab](body);
+  ({ general: setGeneral, design: setDesignTab, tour: setTourTab, home: setHome, lists: setLists, forms: setFormsCfg, roles: setRoles, data: setData, audit: setAudit })[tab](body);
+}
+/* إعدادات النماذج: معايير التقييم المبدئي وأوزانها وحدود النتيجة */
+function setFormsCfg(b) {
+  const c = ievCfg(); let rows = c.crit.map((x) => ({ ...x }));
+  const draw = () => {
+    const tot = rows.reduce((t, r) => t + (+r.w || 0), 0);
+    b.innerHTML = `<div class="panel" id="ievCfg"><div class="panel-h"><h3>معايير التقييم المبدئي للشريك</h3><span class="sub">الدرجة = مجموع أوزان المعايير «المناسبة» ÷ مجموع الأوزان</span></div><div class="panel-b">
+      <div class="tbl-wrap"><table class="tbl iev-tbl"><thead><tr><th>م</th><th>المعيار</th><th>الوزن (%)</th><th></th></tr></thead><tbody>
+      ${rows.map((r, i) => `<tr><td class="c">${i + 1}</td><td><input class="in" data-ievt="${i}" value="${esc(r.t)}"></td><td style="width:120px"><input class="in num" type="number" min="0" max="100" data-ievw="${i}" value="${+r.w || 0}"></td><td style="width:60px"><button class="btn sm ghost" type="button" data-ievdel="${i}" ${rows.length < 2 ? 'disabled' : ''} title="حذف">${icon('trash')}</button></td></tr>`).join('')}
+      </tbody><tfoot><tr><td></td><td><button class="btn sm" type="button" data-ievadd>${icon('plus')} إضافة معيار</button></td><td><b class="${tot === 100 ? 'ok-t' : 'warn-t'}" id="ievTot">${tot}%</b></td><td></td></tr></tfoot></table></div>
+      <p class="xs muted" style="margin:6px 0 16px">يُفضّل أن يكون مجموع الأوزان 100%، وإن لم يكن تُحسب الدرجة نسبةً من المجموع.</p>
+      <div class="grid2"><div class="field"><label>أقل من هذه النسبة: «${esc(IEV_RES[2])}»</label><input class="in num" type="number" min="1" max="99" id="ievTh0" value="${c.th[0]}"></div>
+        <div class="field"><label>أكثر من هذه النسبة: «${esc(IEV_RES[0])}» (وما بينهما «${esc(IEV_RES[1])}»)</label><input class="in num" type="number" min="1" max="99" id="ievTh1" value="${c.th[1]}"></div></div>
+      <div class="row" style="margin-top:14px;gap:8px"><button class="btn primary" type="button" data-ievsave>حفظ</button><button class="btn ghost" type="button" data-ievreset>استعادة الافتراضي</button></div>
+      <p class="xs muted" style="margin-top:10px">التعديل يسري على النماذج الجديدة وما يُعاد فتحه للتعديل؛ النماذج المكتملة تحتفظ بأوزانها وقت التقييم.</p></div></div>`;
+  };
+  draw();
+  b.oninput = (e) => {
+    if (e.target.dataset.ievt !== undefined) rows[+e.target.dataset.ievt].t = e.target.value;
+    if (e.target.dataset.ievw !== undefined) { rows[+e.target.dataset.ievw].w = Math.max(0, +e.target.value || 0); const t = $('#ievTot', b), tot = rows.reduce((a, r) => a + (+r.w || 0), 0); t.textContent = tot + '%'; t.className = tot === 100 ? 'ok-t' : 'warn-t'; }
+  };
+  b.onclick = async (e) => {
+    if (e.target.closest('[data-ievadd]')) { rows.push({ t: '', w: 0 }); return draw(); }
+    const d = e.target.closest('[data-ievdel]'); if (d) { rows.splice(+d.dataset.ievdel, 1); return draw(); }
+    if (e.target.closest('[data-ievreset]')) { rows = IEV_DEF.crit.map((x) => ({ ...x })); $('#ievTh0', b).value = IEV_DEF.th[0]; $('#ievTh1', b).value = IEV_DEF.th[1]; const th = [...IEV_DEF.th]; draw(); $('#ievTh0', b).value = th[0]; $('#ievTh1', b).value = th[1]; return; }
+    if (e.target.closest('[data-ievsave]')) {
+      const crit = rows.map((r) => ({ t: String(r.t || '').trim(), w: +r.w || 0 })).filter((r) => r.t);
+      const th = [+$('#ievTh0', b).value, +$('#ievTh1', b).value];
+      if (!crit.length) return toast('أضف معيارًا واحدًا على الأقل.', 'err');
+      if (!(th[0] > 0 && th[1] < 100 && th[0] < th[1])) return toast('الحد الأدنى يجب أن يكون أقل من الحد الأعلى، وكلاهما بين 1 و99.', 'err');
+      D.settings.ievCfg = { crit, th };
+      await saveSet('معايير التقييم المبدئي', `${crit.length} معايير — الحدود ${th[0]}% و${th[1]}%`);
+      toast('حُفظت معايير التقييم المبدئي'); rows = crit.map((x) => ({ ...x })); draw();
+    }
+  };
 }
 async function saveSet(label, details = '') { await Repo.saveSettings(); await Repo.log('settings.update', 'settings', 'main', label, details); }
 
