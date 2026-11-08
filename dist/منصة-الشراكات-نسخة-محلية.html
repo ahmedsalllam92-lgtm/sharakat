@@ -5515,6 +5515,55 @@ html.rq-in #dsw,html.rq-in .tour-top{display:none!important}
 .ok-t{color:#1F6B55}.warn-t{color:#A23A2C}
 .ff>.ff-chip.add{display:inline-flex;align-items:center;gap:5px;width:auto;justify-self:start;align-self:flex-start;margin-top:8px;padding:5px 12px}
 .wf-phases{grid-auto-columns:minmax(196px,1fr)!important}
+
+/* =====================================================================
+   مخطط الجهات: تصميم رسمي مدمج — صناديق أصغر، وخط عادي، وتباين هادئ
+   ===================================================================== */
+.pr-map{grid-template-columns:142px repeat(var(--nc),120px)!important;grid-template-rows:34px repeat(var(--nl),minmax(78px,auto))!important;width:calc(142px + var(--nc) * 120px)!important;background-image:radial-gradient(color-mix(in srgb,var(--ink) 9%,transparent) 1px,transparent 1px);background-size:14px 14px}
+.pr-phase{font-size:11.5px!important;font-weight:500!important;letter-spacing:0;color:var(--ink-2);background:var(--paper)!important;border-bottom:1px solid var(--line)!important;position:relative}
+.pr-phase::after{content:"";position:absolute;bottom:-1px;inset-inline:18%;height:2px;background:var(--gold);opacity:.7}
+.pr-phase em{font-size:10px!important}
+.pr-lane-h{padding:6px 10px!important;gap:8px!important}
+.pr-lane-h .ic{width:14px!important;height:14px!important}
+.pr-lane-h b{font-size:11.5px!important;font-weight:500!important}
+.pr-lane-h small{font-size:10px!important;line-height:1.45}
+.pr-lane-bg{background:transparent!important}
+.pr-lane-bg:nth-of-type(4n){background:color-mix(in srgb,var(--paper-2) 55%,transparent)!important}
+.pr-node{margin:8px 7px!important;padding:6px 8px 6px!important;border-width:1px!important;border-radius:6px!important;background:var(--paper)!important;box-shadow:0 1px 0 color-mix(in srgb,var(--ink) 6%,transparent),0 6px 14px -12px rgba(0,0,0,.35)!important;border-color:color-mix(in srgb,var(--lc) 35%,var(--line))!important;border-inline-start:3px solid var(--lc)!important;text-align:start}
+.pr-node:hover,.pr-node:focus-visible{transform:translateY(-1px)!important}
+.pr-t{font-size:11.2px!important;font-weight:500!important;line-height:1.45!important;gap:4px!important}
+.pr-t .ic{width:10px!important;height:10px!important}
+.pr-st{font-size:9.6px!important;line-height:1.45!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pr-num{top:-7px!important;right:auto!important;inset-inline-end:6px;font-size:9px!important;font-weight:500!important;padding:0 5px!important;line-height:14px}
+.pr-n{top:-8px!important;left:-6px!important;min-width:17px!important;height:17px!important;font-size:9.5px!important;font-weight:600!important;padding:0 5px!important}
+.pr-node.decision{background:color-mix(in srgb,var(--gold) 6%,var(--paper))!important;border-color:color-mix(in srgb,var(--gold) 45%,var(--line))!important;border-inline-start-color:var(--gold)!important;border-width:1px!important;border-inline-start-width:3px!important}
+.pr-node.decision::before{width:7px!important;height:7px!important;top:-4px!important;right:auto!important;inset-inline-start:10px}
+.pr-node.start,.pr-node.end{border-radius:999px!important;padding:6px 12px!important;border-inline-start-width:1px!important;text-align:center}
+.pr-node.start{background:color-mix(in srgb,var(--lc) 8%,var(--paper))!important}
+.pr-node.end{background:var(--ink-2)!important;color:var(--paper)}
+.pr-e{stroke-width:1!important;opacity:.6!important}
+.pr-el{font-size:9.5px!important;font-weight:400!important}
+.pr-legend{font-size:11px}
+.pr-legend .k{transform:scale(.8)}
+/* مصفوفة المسؤوليات أخف */
+.pr-mx th,.pr-mx td{font-size:11.5px;font-weight:400}
+.pr-mx thead th{font-weight:500}
+.pr-mx .rc{width:24px;height:24px;font-size:11px}
+/* بوصلة القيمة: خطوط أصغر ونقاط تتكيف مع العدد */
+.ob-pt circle{r:var(--r,9px)!important}
+.ob-pt:hover circle,.ob-pt:focus-visible circle,.ob-pt.hl circle{r:calc(var(--r,9px) + 3px)!important}
+.ob-csvg .n{font-size:9px!important;font-weight:500!important}
+.ob-csvg .ql{font-size:10px!important;font-weight:500!important}
+.ob-csvg .ax{font-size:9.5px!important}.ob-csvg .axt{font-size:10px!important}
+.ob-cl{gap:1px!important;max-height:290px!important}
+.ob-cl a{grid-template-columns:20px 1fr auto!important;gap:8px!important;padding:5px 6px!important}
+.ob-cl em{width:20px!important;height:20px!important;font-size:9.5px!important;font-weight:500!important}
+.ob-cl b{font-size:11.5px!important;font-weight:500!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ob-cl small{font-size:10px!important}
+.ob-cl strong{font-size:14px!important;font-weight:600!important}
+.ob-types button{font-size:11.5px}
+.s-add{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:12px}
+.s-add .ic{width:12px;height:12px}
 </style>
 </head>
 <body>
@@ -6916,7 +6965,7 @@ async function convertProposal(x, { partnerId, newPartner }) {
     contactName: x.contactName || '', contactEmail: x.contactEmail || '', contactPhone: x.contactPhone || '',
     startDate: '', endDate: '', owners: [], departments: x.department && L('departments').includes(x.department) ? [x.department] : [], activation: '',
     attachments: atts, stage: 'prep', isDraft: false, public: false, highlight: null, coverFileId: null,
-    proposalId: x.id, requesterDept: x.department || '', strategicGoal: x.strategicGoal || '', initiative: x.initiative || '', wf: { steps: {} }, forms: clone(x.forms || {}), ptype: (x.profile || {}).ptype || '', origin: (x.profile || {}).origin || '', originBy: (x.profile || {}).originBy || '', valueTypes: (x.profile || {}).valueTypes || [], importNotes: [], importRaw: null, createdAt: nowISO(), createdBy: Session.userName(), demo: !!x.demo,
+    proposalId: x.id, requesterDept: x.department || '', strategicGoal: x.strategicGoal || '', initiative: x.initiative || '', wf: { steps: {} }, forms: clone(x.forms || {}), ptype: (x.profile || {}).ptype || x.ptype || '', origin: (x.profile || {}).origin || '', originBy: (x.profile || {}).originBy || '', valueTypes: (x.profile || {}).valueTypes || [], importNotes: [], importRaw: null, createdAt: nowISO(), createdBy: Session.userName(), demo: !!x.demo,
   };
   if ((x.profile || {}).domain) { const pr = partnerById(pid); if (pr && !pr.domain) { pr.domain = x.profile.domain; await Repo.save('partners', pr); } }
   await Repo.save('partnerships', rec);
@@ -9163,7 +9212,8 @@ function obCompass(V) {
   const qx = x(75), qy = y(med);
   const grid = [40, 55, 70, 85, 100].map((s) => `<line x1="${x(s)}" x2="${x(s)}" y1="${T_}" y2="${H - B_}" class="g"/><text x="${x(s)}" y="${H - B_ + 16}" text-anchor="middle" class="ax">${s}</text>`).join('');
   const yt = [0, 1].map((f) => { const v = vmax * f; return `<text x="${L_ - 6}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end" class="ax">${v ? sarShort(v) : '0'}</text>`; }).join('');
-  const dots = pts.map((d, i) => `<g class="ob-pt" data-href="#/partnerships/${d.p.id}" data-pti="${i}" tabindex="0" role="link" aria-label="${esc(partnerName(d.p))}: تقييم ${d.s}" ${tipAttr(`<b>${esc(partnerName(d.p))}</b><br>التقييم ${d.s} (${evalGrade(d.s)})<br>القيمة ${sar(d.v)}`)}><circle cx="${x(d.s).toFixed(1)}" cy="${y(d.v).toFixed(1)}" r="11" fill="${col(d.p)}"/><text x="${x(d.s).toFixed(1)}" y="${(y(d.v) + 4).toFixed(1)}" text-anchor="middle" class="n">${i + 1}</text></g>`).join('');
+  const PR_ = pts.length <= 12 ? 9 : pts.length <= 30 ? 7 : pts.length <= 80 ? 5 : 3.6, NUM_ = pts.length <= 30; // كثرة الشراكات: نقاط أصغر بلا أرقام، والاسم في التلميح
+  const dots = pts.map((d, i) => `<g class="ob-pt" data-href="#/partnerships/${d.p.id}" data-pti="${i}" tabindex="0" role="link" aria-label="${esc(partnerName(d.p))}: تقييم ${d.s}" ${tipAttr(`<b>${esc(partnerName(d.p))}</b><br>التقييم ${d.s} (${evalGrade(d.s)})<br>القيمة ${sar(d.v)}`)}><circle cx="${x(d.s).toFixed(1)}" cy="${y(d.v).toFixed(1)}" style="--r:${PR_}px" fill="${col(d.p)}"/>${NUM_ ? `<text x="${x(d.s).toFixed(1)}" y="${(y(d.v) + 3.5).toFixed(1)}" text-anchor="middle" class="n">${i + 1}</text>` : ''}</g>`).join('');
   const types = V.types.filter((t) => t.k !== 'غير محدد');
   return `<section class="ob-card ob-compass" id="obCompass">
     <header class="ob-sh"><div><h2>${icon('star')} بوصلة القيمة</h2><p>كل شراكة مُقيّمة بين جودة الأداء (أفقيًا) وحجم القيمة (رأسيًا).</p></div>
@@ -10478,11 +10528,13 @@ const S_STEPS = [
    kind: dept | goal | partner | sector | text | area | sep (عنوان فرعي). req: إلزامي. demo: قيمة مثال للاستعراض. */
 const SHARE_FIELDS = [
   { k: 'department', step: 'req', l: 'اسم الإدارة الطالبة', kind: 'dept', req: true, msg: 'اختر الإدارة الطالبة.' },
+  { k: 'reqType', step: 'req', l: 'نوع الطلب', kind: 'select', options: () => REQ_TYPES, req: true, msg: 'اختر نوع الطلب.', hint: 'الشراكة القائمة أو الموقّعة تُسجَّل مباشرة بعد تحقق إدارة الشراكات من مستنداتها، دون المرور بكل مراحل المسار.' },
   { k: 'requesterName', step: 'req', l: 'اسم مقدم الطلب', kind: 'text', demo: 'سارة العتيبي' },
   { k: 'requesterEmail', step: 'req', l: 'البريد الإلكتروني لمقدم الطلب', kind: 'text', type: 'email', ltr: true, add: true, ph: 'name@example.org', hint: 'للتواصل بشأن المقترح عند الحاجة.', demo: 'sara@example.org' },
   { k: 'strategicGoal', step: 'req', l: 'الهدف الاستراتيجي', kind: 'goal' },
   { k: 'initiative', step: 'req', l: 'المبادرة الاستراتيجية', kind: 'init', hint: 'تظهر مبادرات الهدف المختار.' },
   { k: 'partnerName', step: 'entity', l: 'اسم الجهة المستهدفة', kind: 'partner', req: true, msg: 'اكتب اسم الجهة المستهدفة.', demo: 'جمعية الواحة البيئية' },
+  { k: 'ptype', step: 'entity', l: 'تصنيف الشراكة المقترح', kind: 'select', list: 'partnerTypes', hint: 'استراتيجية، إعلامية، خدمات… تُدار القائمة من «القوائم».' },
   { k: 'partnerSector', step: 'entity', l: 'قطاع الجهة', kind: 'sector', add: true, hint: 'يسهّل نقل البيانات عند تحويل المقترح إلى شراكة.' },
   { k: '_contact', step: 'entity', l: 'بيانات مسؤول التواصل من الجهة', kind: 'sep' },
   { k: 'contactName', step: 'entity', l: 'الاسم', kind: 'text', demo: 'خالد الشمري' },
@@ -10492,6 +10544,8 @@ const SHARE_FIELDS = [
   { k: 'reasons', step: 'idea', l: 'أسباب طلب الشراكة من الجهة', kind: 'area', demo: 'خبرة الجهة في التشجير ووجود متطوعين مدربين.' },
   { k: 'addedValue', step: 'idea', l: 'القيمة المضافة', kind: 'area', hint: 'ما الذي تضيفه الشراكة للمؤسسة ولإدارتكم؟', demo: 'توسيع الغطاء النباتي وإشراك المجتمع.' },
 ];
+const REQ_TYPES = ['مقترح شراكة جديدة', 'تسجيل شراكة قائمة أو موقّعة'];
+const isExistingReq = (x) => x && x.reqType === REQ_TYPES[1];
 const shareFields = (step) => SHARE_FIELDS.filter((x) => x.kind !== 'sep' && (!step || x.step === step));
 const shareReq = () => shareFields().filter((x) => x.req);
 function renderShareForm(el, r) {
@@ -10501,7 +10555,8 @@ function renderShareForm(el, r) {
     el.innerHTML = emptyHTML({ ic: 'lock', title: 'لا يمكن تعديل هذا المقترح', text: 'يمكن تعديل المقترح وهو مسودة، أو عند طلب إدارة الشراكات استكماله.', actions: editing ? `<a class="btn" href="#/proposals/${editing.id}">فتح المقترح</a>` : '' });
     return;
   }
-  const s = editing ? clone(editing) : { ...Object.fromEntries(shareFields().map((x) => [x.k, ''])), department: Session.role() === 'dept' ? Session.dept() : '', attachments: [], status: 'draft' };
+  const s = editing ? clone(editing) : { ...Object.fromEntries(shareFields().map((x) => [x.k, ''])), department: Session.role() === 'dept' ? Session.dept() : '', reqType: REQ_TYPES[0], attachments: [], status: 'draft' };
+  if (!s.reqType) s.reqType = REQ_TYPES[0];
   shareFields().forEach((x) => { if (s[x.k] == null) s[x.k] = ''; });
   const fs = { step: 'req', errors: {}, reply: '' };
   App.dirty = false;
@@ -10533,7 +10588,7 @@ function renderShareForm(el, r) {
         if (x.kind === 'partner') return `${field('partnerName', x.l, `<input class="in" id="s_partnerName" data-k="partnerName" value="${esc(s.partnerName)}"><div id="pmatch">${matchBox()}</div>`, { full: true })}`;
         if (x.kind === 'sector') return `${field('partnerSector', x.l, `<select class="in" id="s_partnerSector" data-k="partnerSector"><option value="">غير محدد</option>${L('sectors').map((o) => `<option ${o === s.partnerSector ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`, { add: true, hint: 'يسهّل نقل البيانات إلى سجل الشراكة عند قبول المقترح.' })}`;
         if (x.kind === 'area') return ta(x.k, x.l, { hint: x.hint || '', add: x.add });
-        if (x.kind === 'select') return field(x.k, x.l, `<select class="in" id="s_${x.k}" data-k="${x.k}"><option value="">اختر</option>${(x.options ? (typeof x.options === 'function' ? x.options() : x.options) : L(x.list || '')).map((o) => `<option ${o === s[x.k] ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`, { hint: x.hint || '', add: x.add, full: x.full });
+        if (x.kind === 'select') return field(x.k, x.l, `<select class="in" id="s_${x.k}" data-k="${x.k}">${x.options ? '' : '<option value="">اختر</option>'}${(x.options ? (typeof x.options === 'function' ? x.options() : x.options) : L(x.list || '')).map((o) => `<option ${o === s[x.k] ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>${x.list ? `<button type="button" class="linkbtn s-add" data-sadd="${x.list}" data-sk="${x.k}">${icon('plus')} ${canListDirect() ? 'إضافة خيار' : 'اقتراح خيار جديد'}</button>` : ''}`, { hint: x.hint || '', add: x.add, full: x.full });
         return inp(x.k, x.l, { ltr: x.ltr, type: x.type, ph: x.ph, hint: x.hint || '', add: x.add, full: x.full });
       };
       body = `<div class="grid2">${SHARE_FIELDS.filter((x) => x.step === fs.step).map(rend).join('')}</div>`;
@@ -10590,7 +10645,7 @@ function renderShareForm(el, r) {
       await propEvent(rec, { type: 'submitted' });
       await Repo.save('proposals', rec); await Repo.saveSettings();
       await Repo.log('proposal.submit', 'proposal', rec.id, rec.ref, `${rec.department} — ${rec.partnerName}`);
-      await notify([{ grp: 'partnerships' }], { t: `طلب شراكة جديد ${rec.ref}`, b: `${rec.department} — ${rec.partnerName}`, href: '#/proposals/' + rec.id, ic: 'send' });
+      await notify([{ grp: 'partnerships' }], { t: `${isExistingReq(rec) ? 'طلب تسجيل شراكة قائمة' : 'طلب شراكة جديد'} ${rec.ref}`, b: `${rec.department} — ${rec.partnerName}`, href: '#/proposals/' + rec.id, ic: 'send' });
     }
     if (!editing) D.proposals.includes(rec) || D.proposals.push(rec);
     App.dirty = false;
@@ -10598,6 +10653,14 @@ function renderShareForm(el, r) {
   };
   drawStep();
   el.addEventListener('click', async (e) => {
+    const sa = e.target.closest('[data-sadd]'); if (sa) {
+      const res = await inputDlg({ title: canListDirect() ? 'إضافة خيار' : 'اقتراح خيار جديد', label: LIST_TITLES[sa.dataset.sadd] || 'الخيار', hint: canListDirect() ? 'يُضاف إلى القائمة فورًا.' : 'يُرسل إلى إدارة الشراكات للاعتماد، ويظهر في القائمة بعد الموافقة.', ok: canListDirect() ? 'إضافة' : 'إرسال للاعتماد', multiline: false });
+      const v = res && typeof res === 'object' ? res.value : res; if (!v) return;
+      const r = await requestListValue(sa.dataset.sadd, v, 'خدمة «شارك»');
+      if (r === 'added') { s[sa.dataset.sk] = v.trim(); dirty(); drawStep(); toast(`أُضيف «${v.trim()}»`); }
+      else if (r === 'requested') toast('أُرسل الخيار إلى إدارة الشراكات للاعتماد');
+      return;
+    }
     const ws = e.target.closest('[data-ws]'); if (ws) { fs.step = ws.dataset.ws; drawStep(); window.scrollTo({ top: 0 }); return; }
     if (e.target.closest('[data-wn]')) { fs.step = S_STEPS[S_STEPS.findIndex((x) => x.id === fs.step) + 1].id; drawStep(); window.scrollTo({ top: 0 }); return; }
     if (e.target.closest('[data-wp]')) { fs.step = S_STEPS[S_STEPS.findIndex((x) => x.id === fs.step) - 1].id; drawStep(); window.scrollTo({ top: 0 }); return; }
@@ -10725,7 +10788,7 @@ function renderProposal(el, r) {
       rejected: [['review', 'إعادة فتح المقترح', '']],
       converted: [],
     }[x.status] || [];
-    if (Session.role() === 'admin' && ['submitted', 'review', 'accepted'].includes(x.status)) A.push(['direct', 'تحويل مباشر', '']);
+    if (['admin', 'team'].includes(Session.role()) && ['submitted', 'review', 'accepted'].includes(x.status)) A.push(['direct', isExistingReq(x) ? 'تسجيل الشراكة القائمة مباشرة' : 'تحويل مباشر', isExistingReq(x) ? 'primary' : '']);
     actionBox = `<div class="review-box no-print"><h3>إجراء إدارة الشراكات</h3>
       ${x.status === 'converted' && pt ? `<p class="small" style="margin-bottom:12px">أُنشئ من المقترح سجل الشراكة <a href="#/partnerships/${pt.id}"><b class="code" style="color:inherit">${esc(pt.code)}</b></a>. مرحلة الشراكة الحالية: <b>${esc(stageLabel(pt.stage))}</b>.</p>` : ''}
       ${x.status === 'info' ? `<p class="small muted" style="margin-bottom:12px">بانتظار استكمال الإدارة المقدمة منذ ${relDays(infoReq ? infoReq.at : x.updatedAt).replace('قبل ', '')}.</p>` : ''}
@@ -10749,7 +10812,7 @@ function renderProposal(el, r) {
     ${propTrack(x)}
     ${['draft'].includes(x.status) ? '' : `<div class="wf-wrap">${wfSectionHTML('proposal', x)}</div>`}
     <div class="dbody" style="padding:0;max-width:none"><div>
-      <section class="dsec"><h2>الإدارة ومقدم الطلب <span class="src">من خانة «شارك»</span></h2><dl class="kv">${kv('اسم الإدارة الطالبة', esc(x.department))}${kv('اسم مقدم الطلب', esc(x.requesterName))}${x.requesterEmail ? kv('البريد الإلكتروني لمقدم الطلب', `<a href="mailto:${esc(x.requesterEmail)}" dir="ltr">${esc(x.requesterEmail)}</a>`) : ''}${kv('الهدف الاستراتيجي', esc(x.strategicGoal), true)}${kv('المبادرة الاستراتيجية', esc(x.initiative || ''), true)}</dl></section>
+      <section class="dsec"><h2>الإدارة ومقدم الطلب <span class="src">من خانة «شارك»</span></h2><dl class="kv">${kv('اسم الإدارة الطالبة', esc(x.department))}${kv('اسم مقدم الطلب', esc(x.requesterName))}${x.requesterEmail ? kv('البريد الإلكتروني لمقدم الطلب', `<a href="mailto:${esc(x.requesterEmail)}" dir="ltr">${esc(x.requesterEmail)}</a>`) : ''}${kv('نوع الطلب', esc(x.reqType || REQ_TYPES[0]))}${kv('تصنيف الشراكة المقترح', esc(x.ptype || ''))}${kv('الهدف الاستراتيجي', esc(x.strategicGoal), true)}${kv('المبادرة الاستراتيجية', esc(x.initiative || ''), true)}</dl></section>
       <section class="dsec"><h2>الجهة المستهدفة <span class="src">من خانة «شارك»</span></h2>
         ${review && sim.length ? `<div class="note" style="margin-bottom:12px">${icon('building')}<span>الجهة مسجلة في سجل الجهات: ${sim.slice(0, 3).map((s) => `<a href="#/partners/${s.id}">${esc(s.name)}</a>`).join('، ')}</span></div>` : ''}
         <dl class="kv">${kv('اسم الجهة المستهدفة', esc(x.partnerName))}${kv('قطاع الجهة', esc(x.partnerSector))}${kv('مسؤول التواصل من الجهة', esc(x.contactName))}${kv('الرقم', x.contactPhone ? `<span class="num">${esc(x.contactPhone)}</span>` : '')}${kv('البريد الإلكتروني', x.contactEmail ? `<a href="mailto:${esc(x.contactEmail)}" dir="ltr">${esc(x.contactEmail)}</a>` : '', true)}</dl></section>
@@ -10800,7 +10863,7 @@ function convertDialog(x, direct = false) {
       </div>
       <table class="map-tbl"><thead><tr><th>من المقترح</th><th></th><th>إلى سجل الشراكة</th></tr></thead><tbody>
         ${proposalMapping(x).map(([a, v, b]) => `<tr><td><b style="font-weight:500">${esc(a)}</b>${v ? `<div class="xs muted" style="margin-top:2px;max-height:40px;overflow:hidden">${esc(String(v).slice(0, 120))}</div>` : '<div class="xs faint">فارغ</div>'}</td><td>←</td><td>${esc(b)}</td></tr>`).join('')}</tbody></table>`,
-    foot: `${Session.role() === 'admin' ? `<label class="check small" style="margin-inline-end:auto"><input type="checkbox" id="cvDirect" ${direct ? 'checked' : ''}> تسجيل مباشر: تجاوز مراحل المسار حتى «${esc((WF_STEPS.find((s) => s.id === 'signed') || {}).t || 'التوقيع')}»</label>` : ''}<button class="btn primary" data-ok>${icon('convert')} إنشاء سجل الشراكة</button><button class="btn ghost" data-mclose>إلغاء</button>`,
+    foot: `${['admin', 'team'].includes(Session.role()) ? `<label class="check small" style="margin-inline-end:auto"><input type="checkbox" id="cvDirect" ${direct ? 'checked' : ''}> تسجيل مباشر: تجاوز مراحل المسار حتى «${esc((WF_STEPS.find((s) => s.id === 'signed') || {}).t || 'التوقيع')}»</label>` : ''}<button class="btn primary" data-ok>${icon('convert')} إنشاء سجل الشراكة</button><button class="btn ghost" data-mclose>إلغاء</button>`,
   });
   m.el.querySelector('[data-ok]').onclick = async () => {
     const pid = (m.el.querySelector('input[name=cvp]:checked') || {}).value || '';
@@ -14457,7 +14520,8 @@ function wfStepDialog(kind, rec, sid, rerender) {
 function wfNextHTML(kind, rec, st) {
   if (kind !== 'proposal' || !can('proposal.review')) return '';
   if (rec.status === 'accepted') return `<div class="wf-next no-print"><span class="wf-next-ic">${icon('convert')}</span><div><b>الخطوة التالية: تحويل الطلب إلى سجل شراكة</b><small>اكتمل التقييم المبدئي وقُبل الطلب. بعد التحويل تُستكمل مراحل الاجتماع والمذكرة والاعتماد من صفحة الشراكة.</small></div><button class="btn primary" type="button" data-act="convert">${icon('convert')} تحويل إلى شراكة</button></div>`;
-  if (['submitted', 'review'].includes(rec.status) && Session.role() === 'admin') return `<div class="wf-next soft no-print"><span class="wf-next-ic">${icon('flag')}</span><div><b>${st.cur ? `الخطوة الحالية: ${esc(st.cur.t)}` : 'الطلب قيد الدراسة'}</b><small>نفّذها من زر الخطوة في المسار، أو سجّل الشراكة مباشرة إن كانت موقّعة أو معتمدة مسبقًا.</small></div><button class="btn" type="button" data-act="direct">${icon('convert')} تحويل مباشر</button></div>`;
+  if (['submitted', 'review'].includes(rec.status) && ['admin', 'team'].includes(Session.role()) && isExistingReq(rec)) return `<div class="wf-next no-print"><span class="wf-next-ic">${icon('file')}</span><div><b>طلب تسجيل شراكة قائمة أو موقّعة</b><small>قدّمته ${esc(rec.department || 'الإدارة')} كشراكة قائمة. تحقّق من المذكرة الموقّعة في المرفقات، ثم سجّلها مباشرة دون المرور بكل مراحل المسار.</small></div><button class="btn primary" type="button" data-act="direct">${icon('convert')} تسجيل الشراكة مباشرة</button></div>`;
+  if (['submitted', 'review'].includes(rec.status) && ['admin', 'team'].includes(Session.role())) return `<div class="wf-next soft no-print"><span class="wf-next-ic">${icon('flag')}</span><div><b>${st.cur ? `الخطوة الحالية: ${esc(st.cur.t)}` : 'الطلب قيد الدراسة'}</b><small>نفّذها من زر الخطوة في المسار، أو سجّل الشراكة مباشرة إن كانت موقّعة أو معتمدة مسبقًا.</small></div><button class="btn" type="button" data-act="direct">${icon('convert')} تحويل مباشر</button></div>`;
   return '';
 }
 /* التسجيل المباشر: تُعلَّم مراحل ما قبل التوقيع «مُتجاوَزة» باسم الحساب، وتنتقل الشراكة إلى خطوة التوقيع */
@@ -15416,7 +15480,7 @@ const PR_LANES = [
   { id: 'concerned', t: 'الإدارات المعنية', s: 'ملاحظات وتقارير تفعيل', ic: 'building' },
   { id: 'strategy', t: 'الإدارة الاستراتيجية', s: 'المواءمة الاستراتيجية', ic: 'chart' },
   { id: 'legal', t: 'الإدارة القانونية', s: 'مراجعة الخطابات', ic: 'file' },
-  { id: 'excellency', t: 'مكتب المعالي', s: 'الموافقة', ic: 'check' },
+  { id: 'excellency', t: 'مكتب المعالي', s: 'الموافقة بخطاب — خارج المنصة', ic: 'mail' },
   { id: 'bizdev', t: 'إدارة تطوير الأعمال', s: 'خطة التفعيل', ic: 'leaf' },
 ];
 const PR_PHASES = WF_PHASES.map((ph) => { const ns = WF_STEPS.filter((s) => s.ph === ph.id).map((s) => s.n - 1); return { t: ph.t, from: Math.min(...ns), to: Math.max(...ns) }; });
@@ -15431,7 +15495,7 @@ function prAt(id) {
 }
 const PR_STEPS = [
   ...WF_STEPS.map((s) => ({ id: s.id, lane: s.actor, col: s.n - 1, kind: s.id === 'request' ? 'start' : s.kind === 'decision' || s.kind === 'review' ? 'decision' : '', t: s.t, st: s.ref ? `البند ${s.ref} — ${s.docs.map((d) => d.l).join('، ') || ''}` : s.docs.map((d) => d.l).join('، ') || 'من خدمة «شارك»', wf: s, n: () => prAt(s.id).length, href: s.on === 'proposal' ? '#/proposals' : '#/partnerships' })),
-  { id: 'direct', lane: 'partnerships', col: 0, kind: 'start', t: 'تسجيل شراكة مباشرة', st: 'دون مقترح، من ملف الحصر أو بتوجيه', n: null },
+  { id: 'direct', lane: 'partnerships', col: 0, kind: 'start', t: 'تسجيل شراكة مباشرة', st: 'شراكة قائمة أو موقّعة: من ملف الحصر أو بطلب من إدارة', n: null },
   { id: 'closed', lane: 'requester', col: 2, kind: 'end', t: 'إغلاق الطلب', st: 'الجهة غير مناسبة', n: () => prP().filter((x) => x.status === 'rejected').length, href: '#/proposals?status=rejected' },
   { id: 'active', lane: 'requester', col: 12, kind: 'end', t: 'مذكرة مفعّلة', st: 'تتابع في السجل حتى الاستحقاق', n: () => visiblePartnerships().filter((p) => p.activation === 'مفعّلة' && ['active', 'soon'].includes(pStatus(p))).length, href: '#/partnerships?activation=مفعّلة' },
 ];
@@ -15442,7 +15506,7 @@ const PR_EDGES = [
 ];
 /* مصفوفة المسؤوليات مستخرجة من المسار المطبق */
 const PR_ROLES = [
-  { k: 'admin', t: 'مدير المنصة' }, { k: 'partnerships', t: 'إدارة الشراكات' }, { k: 'requester', t: 'الإدارة الطالبة' }, { k: 'concerned', t: 'الإدارات المعنية' },
+  { k: 'partnerships', t: 'إدارة الشراكات' }, { k: 'requester', t: 'الإدارة الطالبة' }, { k: 'concerned', t: 'الإدارات المعنية' },
   { k: 'strategy', t: 'الإدارة الاستراتيجية' }, { k: 'legal', t: 'الإدارة القانونية' }, { k: 'excellency', t: 'مكتب المعالي' }, { k: 'bizdev', t: 'إدارة تطوير الأعمال' }, { k: 'leader', t: 'القيادة' },
 ];
 const RACI = { R: { t: 'ينفّذ', c: 'r' }, A: { t: 'يعتمد', c: 'a' }, C: { t: 'يُستشار', c: 'c' }, I: { t: 'يطّلع', c: 'i' } };
@@ -15525,7 +15589,7 @@ function renderProcess(el) {
         ${PR_PHASES.map((ph, pi) => `<tr class="pr-mx-ph"><td colspan="${PR_ROLES.length + 2}"><em>${pad(pi + 1)}</em>${ph.t}</td></tr>` + WF_STEPS.filter((s) => s.n - 1 >= ph.from && s.n - 1 <= ph.to).map((s) => `<tr><th><button class="linkbtn" type="button" data-step="${s.id}">${s.n}. ${esc(s.t)}</button>${s.ref ? `<small>البند ${s.ref} في إجراء المذكرات</small>` : ''}</th>
           ${PR_ROLES.map((r) => { const v = (M[s.id] || {})[r.k] || ''; return `<td><span class="rc ${v ? RACI[v].c : 'none'}" title="${v ? RACI[v].t : 'لا دور'}">${v || '·'}</span></td>`; }).join('')}
           <td class="pr-perm">${s.docs.length ? s.docs.map((d) => `<span class="chip ${d.req ? '' : 'plain'}">${esc(d.l)}</span>`).join('') : '<span class="faint">—</span>'}</td></tr>`).join('')).join('')}
-        </tbody><tfoot><tr><th>مجموع الأدوار</th>${PR_ROLES.map((r) => { const c = { R: 0, A: 0, C: 0, I: 0 }; WF_STEPS.forEach((x) => { const v = (M[x.id] || {})[r.k]; if (v) c[v]++; }); return `<td><div class="pr-sum">${['A', 'R', 'C', 'I'].filter((k) => c[k]).map((k) => `<span class="rc ${RACI[k].c}">${c[k]}</span>`).join('') || '<span class="faint">—</span>'}</div></td>`; }).join('')}<td></td></tr></tfoot></table></div></div></section>
+        </tbody></table></div></div></section>
 
     <div class="pr-cols" id="prAcc">
       <section class="panel"><div class="panel-h"><h3>الحسابات ومهامها في المسار</h3><span class="sub">حساب لكل إدارة</span></div>
@@ -16093,6 +16157,7 @@ function migrate() {
   if (!s.deptsV2) { applyOfficialDepartments(); s.deptsV2 = true; changed = true; }
   if (!s.lists.departments.includes(WF_DEPT_DEFAULTS.legal)) { s.lists.departments.push(WF_DEPT_DEFAULTS.legal); changed = true; }
   if (!s.lists.goals.length) { s.lists.goals = [...MUROOJ_GOALS]; changed = true; }
+  if (!s.ptypesV2) { s.ptypesV2 = true; if (!(s.lists.partnerTypes || []).includes('شريك إعلامي')) { s.lists.partnerTypes = [...(s.lists.partnerTypes || []), 'شريك إعلامي']; } changed = true; }
   if (!s.lists.formSectors || !s.lists.formSectors.length) { s.lists.formSectors = [...SECTOR_FORM]; changed = true; }
   ['شبه حكومي', 'تعليمي'].forEach((x) => { if (!s.lists.sectors.includes(x)) { s.lists.sectors.push(x); changed = true; } });
   if (!s.demoProfiles) { applyDemoProfiles(); s.demoProfiles = true; changed = true; }

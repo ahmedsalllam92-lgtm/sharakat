@@ -261,7 +261,8 @@ function obCompass(V) {
   const qx = x(75), qy = y(med);
   const grid = [40, 55, 70, 85, 100].map((s) => `<line x1="${x(s)}" x2="${x(s)}" y1="${T_}" y2="${H - B_}" class="g"/><text x="${x(s)}" y="${H - B_ + 16}" text-anchor="middle" class="ax">${s}</text>`).join('');
   const yt = [0, 1].map((f) => { const v = vmax * f; return `<text x="${L_ - 6}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end" class="ax">${v ? sarShort(v) : '0'}</text>`; }).join('');
-  const dots = pts.map((d, i) => `<g class="ob-pt" data-href="#/partnerships/${d.p.id}" data-pti="${i}" tabindex="0" role="link" aria-label="${esc(partnerName(d.p))}: تقييم ${d.s}" ${tipAttr(`<b>${esc(partnerName(d.p))}</b><br>التقييم ${d.s} (${evalGrade(d.s)})<br>القيمة ${sar(d.v)}`)}><circle cx="${x(d.s).toFixed(1)}" cy="${y(d.v).toFixed(1)}" r="11" fill="${col(d.p)}"/><text x="${x(d.s).toFixed(1)}" y="${(y(d.v) + 4).toFixed(1)}" text-anchor="middle" class="n">${i + 1}</text></g>`).join('');
+  const PR_ = pts.length <= 12 ? 9 : pts.length <= 30 ? 7 : pts.length <= 80 ? 5 : 3.6, NUM_ = pts.length <= 30; // كثرة الشراكات: نقاط أصغر بلا أرقام، والاسم في التلميح
+  const dots = pts.map((d, i) => `<g class="ob-pt" data-href="#/partnerships/${d.p.id}" data-pti="${i}" tabindex="0" role="link" aria-label="${esc(partnerName(d.p))}: تقييم ${d.s}" ${tipAttr(`<b>${esc(partnerName(d.p))}</b><br>التقييم ${d.s} (${evalGrade(d.s)})<br>القيمة ${sar(d.v)}`)}><circle cx="${x(d.s).toFixed(1)}" cy="${y(d.v).toFixed(1)}" style="--r:${PR_}px" fill="${col(d.p)}"/>${NUM_ ? `<text x="${x(d.s).toFixed(1)}" y="${(y(d.v) + 3.5).toFixed(1)}" text-anchor="middle" class="n">${i + 1}</text>` : ''}</g>`).join('');
   const types = V.types.filter((t) => t.k !== 'غير محدد');
   return `<section class="ob-card ob-compass" id="obCompass">
     <header class="ob-sh"><div><h2>${icon('star')} بوصلة القيمة</h2><p>كل شراكة مُقيّمة بين جودة الأداء (أفقيًا) وحجم القيمة (رأسيًا).</p></div>

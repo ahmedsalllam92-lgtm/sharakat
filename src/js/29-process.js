@@ -9,7 +9,7 @@ const PR_LANES = [
   { id: 'concerned', t: 'الإدارات المعنية', s: 'ملاحظات وتقارير تفعيل', ic: 'building' },
   { id: 'strategy', t: 'الإدارة الاستراتيجية', s: 'المواءمة الاستراتيجية', ic: 'chart' },
   { id: 'legal', t: 'الإدارة القانونية', s: 'مراجعة الخطابات', ic: 'file' },
-  { id: 'excellency', t: 'مكتب المعالي', s: 'الموافقة', ic: 'check' },
+  { id: 'excellency', t: 'مكتب المعالي', s: 'الموافقة بخطاب — خارج المنصة', ic: 'mail' },
   { id: 'bizdev', t: 'إدارة تطوير الأعمال', s: 'خطة التفعيل', ic: 'leaf' },
 ];
 const PR_PHASES = WF_PHASES.map((ph) => { const ns = WF_STEPS.filter((s) => s.ph === ph.id).map((s) => s.n - 1); return { t: ph.t, from: Math.min(...ns), to: Math.max(...ns) }; });
@@ -24,7 +24,7 @@ function prAt(id) {
 }
 const PR_STEPS = [
   ...WF_STEPS.map((s) => ({ id: s.id, lane: s.actor, col: s.n - 1, kind: s.id === 'request' ? 'start' : s.kind === 'decision' || s.kind === 'review' ? 'decision' : '', t: s.t, st: s.ref ? `البند ${s.ref} — ${s.docs.map((d) => d.l).join('، ') || ''}` : s.docs.map((d) => d.l).join('، ') || 'من خدمة «شارك»', wf: s, n: () => prAt(s.id).length, href: s.on === 'proposal' ? '#/proposals' : '#/partnerships' })),
-  { id: 'direct', lane: 'partnerships', col: 0, kind: 'start', t: 'تسجيل شراكة مباشرة', st: 'دون مقترح، من ملف الحصر أو بتوجيه', n: null },
+  { id: 'direct', lane: 'partnerships', col: 0, kind: 'start', t: 'تسجيل شراكة مباشرة', st: 'شراكة قائمة أو موقّعة: من ملف الحصر أو بطلب من إدارة', n: null },
   { id: 'closed', lane: 'requester', col: 2, kind: 'end', t: 'إغلاق الطلب', st: 'الجهة غير مناسبة', n: () => prP().filter((x) => x.status === 'rejected').length, href: '#/proposals?status=rejected' },
   { id: 'active', lane: 'requester', col: 12, kind: 'end', t: 'مذكرة مفعّلة', st: 'تتابع في السجل حتى الاستحقاق', n: () => visiblePartnerships().filter((p) => p.activation === 'مفعّلة' && ['active', 'soon'].includes(pStatus(p))).length, href: '#/partnerships?activation=مفعّلة' },
 ];
@@ -35,7 +35,7 @@ const PR_EDGES = [
 ];
 /* مصفوفة المسؤوليات مستخرجة من المسار المطبق */
 const PR_ROLES = [
-  { k: 'admin', t: 'مدير المنصة' }, { k: 'partnerships', t: 'إدارة الشراكات' }, { k: 'requester', t: 'الإدارة الطالبة' }, { k: 'concerned', t: 'الإدارات المعنية' },
+  { k: 'partnerships', t: 'إدارة الشراكات' }, { k: 'requester', t: 'الإدارة الطالبة' }, { k: 'concerned', t: 'الإدارات المعنية' },
   { k: 'strategy', t: 'الإدارة الاستراتيجية' }, { k: 'legal', t: 'الإدارة القانونية' }, { k: 'excellency', t: 'مكتب المعالي' }, { k: 'bizdev', t: 'إدارة تطوير الأعمال' }, { k: 'leader', t: 'القيادة' },
 ];
 const RACI = { R: { t: 'ينفّذ', c: 'r' }, A: { t: 'يعتمد', c: 'a' }, C: { t: 'يُستشار', c: 'c' }, I: { t: 'يطّلع', c: 'i' } };
@@ -118,7 +118,7 @@ function renderProcess(el) {
         ${PR_PHASES.map((ph, pi) => `<tr class="pr-mx-ph"><td colspan="${PR_ROLES.length + 2}"><em>${pad(pi + 1)}</em>${ph.t}</td></tr>` + WF_STEPS.filter((s) => s.n - 1 >= ph.from && s.n - 1 <= ph.to).map((s) => `<tr><th><button class="linkbtn" type="button" data-step="${s.id}">${s.n}. ${esc(s.t)}</button>${s.ref ? `<small>البند ${s.ref} في إجراء المذكرات</small>` : ''}</th>
           ${PR_ROLES.map((r) => { const v = (M[s.id] || {})[r.k] || ''; return `<td><span class="rc ${v ? RACI[v].c : 'none'}" title="${v ? RACI[v].t : 'لا دور'}">${v || '·'}</span></td>`; }).join('')}
           <td class="pr-perm">${s.docs.length ? s.docs.map((d) => `<span class="chip ${d.req ? '' : 'plain'}">${esc(d.l)}</span>`).join('') : '<span class="faint">—</span>'}</td></tr>`).join('')).join('')}
-        </tbody><tfoot><tr><th>مجموع الأدوار</th>${PR_ROLES.map((r) => { const c = { R: 0, A: 0, C: 0, I: 0 }; WF_STEPS.forEach((x) => { const v = (M[x.id] || {})[r.k]; if (v) c[v]++; }); return `<td><div class="pr-sum">${['A', 'R', 'C', 'I'].filter((k) => c[k]).map((k) => `<span class="rc ${RACI[k].c}">${c[k]}</span>`).join('') || '<span class="faint">—</span>'}</div></td>`; }).join('')}<td></td></tr></tfoot></table></div></div></section>
+        </tbody></table></div></div></section>
 
     <div class="pr-cols" id="prAcc">
       <section class="panel"><div class="panel-h"><h3>الحسابات ومهامها في المسار</h3><span class="sub">حساب لكل إدارة</span></div>

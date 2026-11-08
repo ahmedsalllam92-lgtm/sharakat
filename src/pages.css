@@ -2057,3 +2057,52 @@ html.rq-in #dsw,html.rq-in .tour-top{display:none!important}
 .ok-t{color:#1F6B55}.warn-t{color:#A23A2C}
 .ff>.ff-chip.add{display:inline-flex;align-items:center;gap:5px;width:auto;justify-self:start;align-self:flex-start;margin-top:8px;padding:5px 12px}
 .wf-phases{grid-auto-columns:minmax(196px,1fr)!important}
+
+/* =====================================================================
+   مخطط الجهات: تصميم رسمي مدمج — صناديق أصغر، وخط عادي، وتباين هادئ
+   ===================================================================== */
+.pr-map{grid-template-columns:142px repeat(var(--nc),120px)!important;grid-template-rows:34px repeat(var(--nl),minmax(78px,auto))!important;width:calc(142px + var(--nc) * 120px)!important;background-image:radial-gradient(color-mix(in srgb,var(--ink) 9%,transparent) 1px,transparent 1px);background-size:14px 14px}
+.pr-phase{font-size:11.5px!important;font-weight:500!important;letter-spacing:0;color:var(--ink-2);background:var(--paper)!important;border-bottom:1px solid var(--line)!important;position:relative}
+.pr-phase::after{content:"";position:absolute;bottom:-1px;inset-inline:18%;height:2px;background:var(--gold);opacity:.7}
+.pr-phase em{font-size:10px!important}
+.pr-lane-h{padding:6px 10px!important;gap:8px!important}
+.pr-lane-h .ic{width:14px!important;height:14px!important}
+.pr-lane-h b{font-size:11.5px!important;font-weight:500!important}
+.pr-lane-h small{font-size:10px!important;line-height:1.45}
+.pr-lane-bg{background:transparent!important}
+.pr-lane-bg:nth-of-type(4n){background:color-mix(in srgb,var(--paper-2) 55%,transparent)!important}
+.pr-node{margin:8px 7px!important;padding:6px 8px 6px!important;border-width:1px!important;border-radius:6px!important;background:var(--paper)!important;box-shadow:0 1px 0 color-mix(in srgb,var(--ink) 6%,transparent),0 6px 14px -12px rgba(0,0,0,.35)!important;border-color:color-mix(in srgb,var(--lc) 35%,var(--line))!important;border-inline-start:3px solid var(--lc)!important;text-align:start}
+.pr-node:hover,.pr-node:focus-visible{transform:translateY(-1px)!important}
+.pr-t{font-size:11.2px!important;font-weight:500!important;line-height:1.45!important;gap:4px!important}
+.pr-t .ic{width:10px!important;height:10px!important}
+.pr-st{font-size:9.6px!important;line-height:1.45!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pr-num{top:-7px!important;right:auto!important;inset-inline-end:6px;font-size:9px!important;font-weight:500!important;padding:0 5px!important;line-height:14px}
+.pr-n{top:-8px!important;left:-6px!important;min-width:17px!important;height:17px!important;font-size:9.5px!important;font-weight:600!important;padding:0 5px!important}
+.pr-node.decision{background:color-mix(in srgb,var(--gold) 6%,var(--paper))!important;border-color:color-mix(in srgb,var(--gold) 45%,var(--line))!important;border-inline-start-color:var(--gold)!important;border-width:1px!important;border-inline-start-width:3px!important}
+.pr-node.decision::before{width:7px!important;height:7px!important;top:-4px!important;right:auto!important;inset-inline-start:10px}
+.pr-node.start,.pr-node.end{border-radius:999px!important;padding:6px 12px!important;border-inline-start-width:1px!important;text-align:center}
+.pr-node.start{background:color-mix(in srgb,var(--lc) 8%,var(--paper))!important}
+.pr-node.end{background:var(--ink-2)!important;color:var(--paper)}
+.pr-e{stroke-width:1!important;opacity:.6!important}
+.pr-el{font-size:9.5px!important;font-weight:400!important}
+.pr-legend{font-size:11px}
+.pr-legend .k{transform:scale(.8)}
+/* مصفوفة المسؤوليات أخف */
+.pr-mx th,.pr-mx td{font-size:11.5px;font-weight:400}
+.pr-mx thead th{font-weight:500}
+.pr-mx .rc{width:24px;height:24px;font-size:11px}
+/* بوصلة القيمة: خطوط أصغر ونقاط تتكيف مع العدد */
+.ob-pt circle{r:var(--r,9px)!important}
+.ob-pt:hover circle,.ob-pt:focus-visible circle,.ob-pt.hl circle{r:calc(var(--r,9px) + 3px)!important}
+.ob-csvg .n{font-size:9px!important;font-weight:500!important}
+.ob-csvg .ql{font-size:10px!important;font-weight:500!important}
+.ob-csvg .ax{font-size:9.5px!important}.ob-csvg .axt{font-size:10px!important}
+.ob-cl{gap:1px!important;max-height:290px!important}
+.ob-cl a{grid-template-columns:20px 1fr auto!important;gap:8px!important;padding:5px 6px!important}
+.ob-cl em{width:20px!important;height:20px!important;font-size:9.5px!important;font-weight:500!important}
+.ob-cl b{font-size:11.5px!important;font-weight:500!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ob-cl small{font-size:10px!important}
+.ob-cl strong{font-size:14px!important;font-weight:600!important}
+.ob-types button{font-size:11.5px}
+.s-add{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:12px}
+.s-add .ic{width:12px;height:12px}

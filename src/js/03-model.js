@@ -301,7 +301,7 @@ async function convertProposal(x, { partnerId, newPartner }) {
     contactName: x.contactName || '', contactEmail: x.contactEmail || '', contactPhone: x.contactPhone || '',
     startDate: '', endDate: '', owners: [], departments: x.department && L('departments').includes(x.department) ? [x.department] : [], activation: '',
     attachments: atts, stage: 'prep', isDraft: false, public: false, highlight: null, coverFileId: null,
-    proposalId: x.id, requesterDept: x.department || '', strategicGoal: x.strategicGoal || '', initiative: x.initiative || '', wf: { steps: {} }, forms: clone(x.forms || {}), ptype: (x.profile || {}).ptype || '', origin: (x.profile || {}).origin || '', originBy: (x.profile || {}).originBy || '', valueTypes: (x.profile || {}).valueTypes || [], importNotes: [], importRaw: null, createdAt: nowISO(), createdBy: Session.userName(), demo: !!x.demo,
+    proposalId: x.id, requesterDept: x.department || '', strategicGoal: x.strategicGoal || '', initiative: x.initiative || '', wf: { steps: {} }, forms: clone(x.forms || {}), ptype: (x.profile || {}).ptype || x.ptype || '', origin: (x.profile || {}).origin || '', originBy: (x.profile || {}).originBy || '', valueTypes: (x.profile || {}).valueTypes || [], importNotes: [], importRaw: null, createdAt: nowISO(), createdBy: Session.userName(), demo: !!x.demo,
   };
   if ((x.profile || {}).domain) { const pr = partnerById(pid); if (pr && !pr.domain) { pr.domain = x.profile.domain; await Repo.save('partners', pr); } }
   await Repo.save('partnerships', rec);

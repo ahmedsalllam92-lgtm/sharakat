@@ -33,11 +33,13 @@ const S_STEPS = [
    kind: dept | goal | partner | sector | text | area | sep (عنوان فرعي). req: إلزامي. demo: قيمة مثال للاستعراض. */
 const SHARE_FIELDS = [
   { k: 'department', step: 'req', l: 'اسم الإدارة الطالبة', kind: 'dept', req: true, msg: 'اختر الإدارة الطالبة.' },
+  { k: 'reqType', step: 'req', l: 'نوع الطلب', kind: 'select', options: () => REQ_TYPES, req: true, msg: 'اختر نوع الطلب.', hint: 'الشراكة القائمة أو الموقّعة تُسجَّل مباشرة بعد تحقق إدارة الشراكات من مستنداتها، دون المرور بكل مراحل المسار.' },
   { k: 'requesterName', step: 'req', l: 'اسم مقدم الطلب', kind: 'text', demo: 'سارة العتيبي' },
   { k: 'requesterEmail', step: 'req', l: 'البريد الإلكتروني لمقدم الطلب', kind: 'text', type: 'email', ltr: true, add: true, ph: 'name@example.org', hint: 'للتواصل بشأن المقترح عند الحاجة.', demo: 'sara@example.org' },
   { k: 'strategicGoal', step: 'req', l: 'الهدف الاستراتيجي', kind: 'goal' },
   { k: 'initiative', step: 'req', l: 'المبادرة الاستراتيجية', kind: 'init', hint: 'تظهر مبادرات الهدف المختار.' },
   { k: 'partnerName', step: 'entity', l: 'اسم الجهة المستهدفة', kind: 'partner', req: true, msg: 'اكتب اسم الجهة المستهدفة.', demo: 'جمعية الواحة البيئية' },
+  { k: 'ptype', step: 'entity', l: 'تصنيف الشراكة المقترح', kind: 'select', list: 'partnerTypes', hint: 'استراتيجية، إعلامية، خدمات… تُدار القائمة من «القوائم».' },
   { k: 'partnerSector', step: 'entity', l: 'قطاع الجهة', kind: 'sector', add: true, hint: 'يسهّل نقل البيانات عند تحويل المقترح إلى شراكة.' },
   { k: '_contact', step: 'entity', l: 'بيانات مسؤول التواصل من الجهة', kind: 'sep' },
   { k: 'contactName', step: 'entity', l: 'الاسم', kind: 'text', demo: 'خالد الشمري' },
@@ -47,6 +49,8 @@ const SHARE_FIELDS = [
   { k: 'reasons', step: 'idea', l: 'أسباب طلب الشراكة من الجهة', kind: 'area', demo: 'خبرة الجهة في التشجير ووجود متطوعين مدربين.' },
   { k: 'addedValue', step: 'idea', l: 'القيمة المضافة', kind: 'area', hint: 'ما الذي تضيفه الشراكة للمؤسسة ولإدارتكم؟', demo: 'توسيع الغطاء النباتي وإشراك المجتمع.' },
 ];
+const REQ_TYPES = ['مقترح شراكة جديدة', 'تسجيل شراكة قائمة أو موقّعة'];
+const isExistingReq = (x) => x && x.reqType === REQ_TYPES[1];
 const shareFields = (step) => SHARE_FIELDS.filter((x) => x.kind !== 'sep' && (!step || x.step === step));
 const shareReq = () => shareFields().filter((x) => x.req);
 function renderShareForm(el, r) {
@@ -56,7 +60,8 @@ function renderShareForm(el, r) {
     el.innerHTML = emptyHTML({ ic: 'lock', title: 'لا يمكن تعديل هذا المقترح', text: 'يمكن تعديل المقترح وهو مسودة، أو عند طلب إدارة الشراكات استكماله.', actions: editing ? `<a class="btn" href="#/proposals/${editing.id}">فتح المقترح</a>` : '' });
     return;
   }
-  const s = editing ? clone(editing) : { ...Object.fromEntries(shareFields().map((x) => [x.k, ''])), department: Session.role() === 'dept' ? Session.dept() : '', attachments: [], status: 'draft' };
+  const s = editing ? clone(editing) : { ...Object.fromEntries(shareFields().map((x) => [x.k, ''])), department: Session.role() === 'dept' ? Session.dept() : '', reqType: REQ_TYPES[0], attachments: [], status: 'draft' };
+  if (!s.reqType) s.reqType = REQ_TYPES[0];
   shareFields().forEach((x) => { if (s[x.k] == null) s[x.k] = ''; });
   const fs = { step: 'req', errors: {}, reply: '' };
   App.dirty = false;
@@ -88,7 +93,7 @@ function renderShareForm(el, r) {
         if (x.kind === 'partner') return `${field('partnerName', x.l, `<input class="in" id="s_partnerName" data-k="partnerName" value="${esc(s.partnerName)}"><div id="pmatch">${matchBox()}</div>`, { full: true })}`;
         if (x.kind === 'sector') return `${field('partnerSector', x.l, `<select class="in" id="s_partnerSector" data-k="partnerSector"><option value="">غير محدد</option>${L('sectors').map((o) => `<option ${o === s.partnerSector ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`, { add: true, hint: 'يسهّل نقل البيانات إلى سجل الشراكة عند قبول المقترح.' })}`;
         if (x.kind === 'area') return ta(x.k, x.l, { hint: x.hint || '', add: x.add });
-        if (x.kind === 'select') return field(x.k, x.l, `<select class="in" id="s_${x.k}" data-k="${x.k}"><option value="">اختر</option>${(x.options ? (typeof x.options === 'function' ? x.options() : x.options) : L(x.list || '')).map((o) => `<option ${o === s[x.k] ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`, { hint: x.hint || '', add: x.add, full: x.full });
+        if (x.kind === 'select') return field(x.k, x.l, `<select class="in" id="s_${x.k}" data-k="${x.k}">${x.options ? '' : '<option value="">اختر</option>'}${(x.options ? (typeof x.options === 'function' ? x.options() : x.options) : L(x.list || '')).map((o) => `<option ${o === s[x.k] ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>${x.list ? `<button type="button" class="linkbtn s-add" data-sadd="${x.list}" data-sk="${x.k}">${icon('plus')} ${canListDirect() ? 'إضافة خيار' : 'اقتراح خيار جديد'}</button>` : ''}`, { hint: x.hint || '', add: x.add, full: x.full });
         return inp(x.k, x.l, { ltr: x.ltr, type: x.type, ph: x.ph, hint: x.hint || '', add: x.add, full: x.full });
       };
       body = `<div class="grid2">${SHARE_FIELDS.filter((x) => x.step === fs.step).map(rend).join('')}</div>`;
@@ -145,7 +150,7 @@ function renderShareForm(el, r) {
       await propEvent(rec, { type: 'submitted' });
       await Repo.save('proposals', rec); await Repo.saveSettings();
       await Repo.log('proposal.submit', 'proposal', rec.id, rec.ref, `${rec.department} — ${rec.partnerName}`);
-      await notify([{ grp: 'partnerships' }], { t: `طلب شراكة جديد ${rec.ref}`, b: `${rec.department} — ${rec.partnerName}`, href: '#/proposals/' + rec.id, ic: 'send' });
+      await notify([{ grp: 'partnerships' }], { t: `${isExistingReq(rec) ? 'طلب تسجيل شراكة قائمة' : 'طلب شراكة جديد'} ${rec.ref}`, b: `${rec.department} — ${rec.partnerName}`, href: '#/proposals/' + rec.id, ic: 'send' });
     }
     if (!editing) D.proposals.includes(rec) || D.proposals.push(rec);
     App.dirty = false;
@@ -153,6 +158,14 @@ function renderShareForm(el, r) {
   };
   drawStep();
   el.addEventListener('click', async (e) => {
+    const sa = e.target.closest('[data-sadd]'); if (sa) {
+      const res = await inputDlg({ title: canListDirect() ? 'إضافة خيار' : 'اقتراح خيار جديد', label: LIST_TITLES[sa.dataset.sadd] || 'الخيار', hint: canListDirect() ? 'يُضاف إلى القائمة فورًا.' : 'يُرسل إلى إدارة الشراكات للاعتماد، ويظهر في القائمة بعد الموافقة.', ok: canListDirect() ? 'إضافة' : 'إرسال للاعتماد', multiline: false });
+      const v = res && typeof res === 'object' ? res.value : res; if (!v) return;
+      const r = await requestListValue(sa.dataset.sadd, v, 'خدمة «شارك»');
+      if (r === 'added') { s[sa.dataset.sk] = v.trim(); dirty(); drawStep(); toast(`أُضيف «${v.trim()}»`); }
+      else if (r === 'requested') toast('أُرسل الخيار إلى إدارة الشراكات للاعتماد');
+      return;
+    }
     const ws = e.target.closest('[data-ws]'); if (ws) { fs.step = ws.dataset.ws; drawStep(); window.scrollTo({ top: 0 }); return; }
     if (e.target.closest('[data-wn]')) { fs.step = S_STEPS[S_STEPS.findIndex((x) => x.id === fs.step) + 1].id; drawStep(); window.scrollTo({ top: 0 }); return; }
     if (e.target.closest('[data-wp]')) { fs.step = S_STEPS[S_STEPS.findIndex((x) => x.id === fs.step) - 1].id; drawStep(); window.scrollTo({ top: 0 }); return; }
@@ -280,7 +293,7 @@ function renderProposal(el, r) {
       rejected: [['review', 'إعادة فتح المقترح', '']],
       converted: [],
     }[x.status] || [];
-    if (Session.role() === 'admin' && ['submitted', 'review', 'accepted'].includes(x.status)) A.push(['direct', 'تحويل مباشر', '']);
+    if (['admin', 'team'].includes(Session.role()) && ['submitted', 'review', 'accepted'].includes(x.status)) A.push(['direct', isExistingReq(x) ? 'تسجيل الشراكة القائمة مباشرة' : 'تحويل مباشر', isExistingReq(x) ? 'primary' : '']);
     actionBox = `<div class="review-box no-print"><h3>إجراء إدارة الشراكات</h3>
       ${x.status === 'converted' && pt ? `<p class="small" style="margin-bottom:12px">أُنشئ من المقترح سجل الشراكة <a href="#/partnerships/${pt.id}"><b class="code" style="color:inherit">${esc(pt.code)}</b></a>. مرحلة الشراكة الحالية: <b>${esc(stageLabel(pt.stage))}</b>.</p>` : ''}
       ${x.status === 'info' ? `<p class="small muted" style="margin-bottom:12px">بانتظار استكمال الإدارة المقدمة منذ ${relDays(infoReq ? infoReq.at : x.updatedAt).replace('قبل ', '')}.</p>` : ''}
@@ -304,7 +317,7 @@ function renderProposal(el, r) {
     ${propTrack(x)}
     ${['draft'].includes(x.status) ? '' : `<div class="wf-wrap">${wfSectionHTML('proposal', x)}</div>`}
     <div class="dbody" style="padding:0;max-width:none"><div>
-      <section class="dsec"><h2>الإدارة ومقدم الطلب <span class="src">من خانة «شارك»</span></h2><dl class="kv">${kv('اسم الإدارة الطالبة', esc(x.department))}${kv('اسم مقدم الطلب', esc(x.requesterName))}${x.requesterEmail ? kv('البريد الإلكتروني لمقدم الطلب', `<a href="mailto:${esc(x.requesterEmail)}" dir="ltr">${esc(x.requesterEmail)}</a>`) : ''}${kv('الهدف الاستراتيجي', esc(x.strategicGoal), true)}${kv('المبادرة الاستراتيجية', esc(x.initiative || ''), true)}</dl></section>
+      <section class="dsec"><h2>الإدارة ومقدم الطلب <span class="src">من خانة «شارك»</span></h2><dl class="kv">${kv('اسم الإدارة الطالبة', esc(x.department))}${kv('اسم مقدم الطلب', esc(x.requesterName))}${x.requesterEmail ? kv('البريد الإلكتروني لمقدم الطلب', `<a href="mailto:${esc(x.requesterEmail)}" dir="ltr">${esc(x.requesterEmail)}</a>`) : ''}${kv('نوع الطلب', esc(x.reqType || REQ_TYPES[0]))}${kv('تصنيف الشراكة المقترح', esc(x.ptype || ''))}${kv('الهدف الاستراتيجي', esc(x.strategicGoal), true)}${kv('المبادرة الاستراتيجية', esc(x.initiative || ''), true)}</dl></section>
       <section class="dsec"><h2>الجهة المستهدفة <span class="src">من خانة «شارك»</span></h2>
         ${review && sim.length ? `<div class="note" style="margin-bottom:12px">${icon('building')}<span>الجهة مسجلة في سجل الجهات: ${sim.slice(0, 3).map((s) => `<a href="#/partners/${s.id}">${esc(s.name)}</a>`).join('، ')}</span></div>` : ''}
         <dl class="kv">${kv('اسم الجهة المستهدفة', esc(x.partnerName))}${kv('قطاع الجهة', esc(x.partnerSector))}${kv('مسؤول التواصل من الجهة', esc(x.contactName))}${kv('الرقم', x.contactPhone ? `<span class="num">${esc(x.contactPhone)}</span>` : '')}${kv('البريد الإلكتروني', x.contactEmail ? `<a href="mailto:${esc(x.contactEmail)}" dir="ltr">${esc(x.contactEmail)}</a>` : '', true)}</dl></section>
@@ -355,7 +368,7 @@ function convertDialog(x, direct = false) {
       </div>
       <table class="map-tbl"><thead><tr><th>من المقترح</th><th></th><th>إلى سجل الشراكة</th></tr></thead><tbody>
         ${proposalMapping(x).map(([a, v, b]) => `<tr><td><b style="font-weight:500">${esc(a)}</b>${v ? `<div class="xs muted" style="margin-top:2px;max-height:40px;overflow:hidden">${esc(String(v).slice(0, 120))}</div>` : '<div class="xs faint">فارغ</div>'}</td><td>←</td><td>${esc(b)}</td></tr>`).join('')}</tbody></table>`,
-    foot: `${Session.role() === 'admin' ? `<label class="check small" style="margin-inline-end:auto"><input type="checkbox" id="cvDirect" ${direct ? 'checked' : ''}> تسجيل مباشر: تجاوز مراحل المسار حتى «${esc((WF_STEPS.find((s) => s.id === 'signed') || {}).t || 'التوقيع')}»</label>` : ''}<button class="btn primary" data-ok>${icon('convert')} إنشاء سجل الشراكة</button><button class="btn ghost" data-mclose>إلغاء</button>`,
+    foot: `${['admin', 'team'].includes(Session.role()) ? `<label class="check small" style="margin-inline-end:auto"><input type="checkbox" id="cvDirect" ${direct ? 'checked' : ''}> تسجيل مباشر: تجاوز مراحل المسار حتى «${esc((WF_STEPS.find((s) => s.id === 'signed') || {}).t || 'التوقيع')}»</label>` : ''}<button class="btn primary" data-ok>${icon('convert')} إنشاء سجل الشراكة</button><button class="btn ghost" data-mclose>إلغاء</button>`,
   });
   m.el.querySelector('[data-ok]').onclick = async () => {
     const pid = (m.el.querySelector('input[name=cvp]:checked') || {}).value || '';
