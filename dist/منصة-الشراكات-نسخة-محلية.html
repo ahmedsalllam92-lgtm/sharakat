@@ -6321,6 +6321,25 @@ body:has(#shkLogin) .modal-bg{z-index:99995}
 .pm-n.start,.pm-n.end{padding-top:6px}
 .pm-n.start .pr-t,.pm-n.end .pr-t{-webkit-line-clamp:2!important;font-size:11.5px;line-height:1.35}
 .pm.narrow .pm-n.start .pr-st,.pm.narrow .pm-n.end .pr-st{display:none}
+
+/* رأس الجهات الثابت */
+.pm-wrap.fit{overflow:visible}
+.pm-wrap.fit .pm-head{border-radius:16px 16px 0 0}
+.pm-head{top:var(--top,60px);transition:height .22s ease,margin .22s ease,box-shadow .22s ease}
+.pm-lh,.pm-rail-h{transition:height .22s ease,padding .22s ease}
+.pm-lic{transition:width .22s,height .22s}
+.pm-lh small{transition:opacity .15s}
+.pm.stuck .pm-head{height:42px;margin-bottom:22px;border-radius:0 0 12px 12px;box-shadow:0 10px 22px -16px rgba(15,40,34,.45);background:color-mix(in srgb,var(--paper) 94%,transparent);backdrop-filter:blur(8px)}
+.pm.stuck .pm-lh,.pm.stuck .pm-rail-h{height:42px}
+.pm.stuck .pm-lh{gap:7px}
+.pm.stuck .pm-lic{width:24px;height:24px;border-radius:7px}
+.pm.stuck .pm-lic .ic{width:13px;height:13px}
+.pm.stuck .pm-lh b{font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pm.stuck .pm-lh small{display:none}
+@media print{.pm-head{position:relative!important;top:0!important}.pm.stuck .pm-head{height:64px;margin-bottom:0}}
+/* أثناء تثبيت رأس الجهات يختفي شريط أقسام الصفحة حتى لا يتراكبا */
+.js-nav{transition:opacity .2s ease,transform .2s ease}
+body:has(.pm.stuck) .js-nav{opacity:0;pointer-events:none;transform:translateY(-10px)}
 </style>
 </head>
 <body>
@@ -17372,6 +17391,14 @@ function renderProcess(el) {
   if (window.__prPr) { window.removeEventListener('beforeprint', window.__prPr[0]); window.removeEventListener('afterprint', window.__prPr[1]); }
   window.__prPr = [() => el.isConnected && drawPrEdges(el, 1040), () => el.isConnected && setTimeout(() => drawPrEdges(el), 50)];
   window.addEventListener('beforeprint', window.__prPr[0]); window.addEventListener('afterprint', window.__prPr[1]);
+  /* رأس الجهات يثبت أعلى الشاشة عند النزول، ويصغر ارتفاعه ليبقى ظاهرًا دون أن يحجب المخطط */
+  if (window.__prStick) window.removeEventListener('scroll', window.__prStick);
+  window.__prStick = () => {
+    const map = $('#prMap', el); if (!map || !el.isConnected) return window.removeEventListener('scroll', window.__prStick);
+    const top = parseFloat(getComputedStyle(map.querySelector('.pm-head')).top) || 0, r = map.getBoundingClientRect();
+    map.classList.toggle('stuck', r.top < top - 2 && r.bottom > top + 120);
+  };
+  window.addEventListener('scroll', window.__prStick, { passive: true }); window.__prStick();
   el.onclick = (e) => {
     const js = e.target.closest('[data-jstep]'); if (js) return prStepPanel(js.dataset.jstep);
     const jg = e.target.closest('[data-jgo]'); if (jg) { e.preventDefault(); const t = $('#' + jg.dataset.jgo, el); if (t) window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' }); return; }
@@ -17413,6 +17440,7 @@ function drawPrEdges(el, forceW) {
   map.classList.toggle('narrow', LW < 176);
   const H = ROWS * PITCH + 18;
   map.style.width = W + 'px'; body.style.height = H + 'px';
+  wrap.classList.toggle('fit', W <= wrap.clientWidth + 1);
   map.style.setProperty('--lw', LW + 'px'); map.style.setProperty('--rail', RAIL + 'px'); map.style.setProperty('--gut', GUT + 'px');
   const laneIdx = (id) => Math.max(0, PR_LANES.findIndex((l) => l.id === id));
   const laneR = (i) => W - RAIL - i * LW, laneL = (i) => laneR(i) - LW; // من اليمين

@@ -149,6 +149,14 @@ function renderProcess(el) {
   if (window.__prPr) { window.removeEventListener('beforeprint', window.__prPr[0]); window.removeEventListener('afterprint', window.__prPr[1]); }
   window.__prPr = [() => el.isConnected && drawPrEdges(el, 1040), () => el.isConnected && setTimeout(() => drawPrEdges(el), 50)];
   window.addEventListener('beforeprint', window.__prPr[0]); window.addEventListener('afterprint', window.__prPr[1]);
+  /* رأس الجهات يثبت أعلى الشاشة عند النزول، ويصغر ارتفاعه ليبقى ظاهرًا دون أن يحجب المخطط */
+  if (window.__prStick) window.removeEventListener('scroll', window.__prStick);
+  window.__prStick = () => {
+    const map = $('#prMap', el); if (!map || !el.isConnected) return window.removeEventListener('scroll', window.__prStick);
+    const top = parseFloat(getComputedStyle(map.querySelector('.pm-head')).top) || 0, r = map.getBoundingClientRect();
+    map.classList.toggle('stuck', r.top < top - 2 && r.bottom > top + 120);
+  };
+  window.addEventListener('scroll', window.__prStick, { passive: true }); window.__prStick();
   el.onclick = (e) => {
     const js = e.target.closest('[data-jstep]'); if (js) return prStepPanel(js.dataset.jstep);
     const jg = e.target.closest('[data-jgo]'); if (jg) { e.preventDefault(); const t = $('#' + jg.dataset.jgo, el); if (t) window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 80, behavior: 'smooth' }); return; }
@@ -190,6 +198,7 @@ function drawPrEdges(el, forceW) {
   map.classList.toggle('narrow', LW < 176);
   const H = ROWS * PITCH + 18;
   map.style.width = W + 'px'; body.style.height = H + 'px';
+  wrap.classList.toggle('fit', W <= wrap.clientWidth + 1);
   map.style.setProperty('--lw', LW + 'px'); map.style.setProperty('--rail', RAIL + 'px'); map.style.setProperty('--gut', GUT + 'px');
   const laneIdx = (id) => Math.max(0, PR_LANES.findIndex((l) => l.id === id));
   const laneR = (i) => W - RAIL - i * LW, laneL = (i) => laneR(i) - LW; // من اليمين
