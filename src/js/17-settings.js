@@ -37,13 +37,13 @@ function setGeneral(b) {
       <label class="row" style="justify-content:space-between;grid-column:1/-1"><span>إظهار الشاشة الافتتاحية</span><span class="switch"><input type="checkbox" id="gspl_on" ${D.settings.splash.on !== false ? 'checked' : ''}><i></i></span></label>
       <div class="field" style="grid-column:1/-1"><label>الجملة الرئيسية</label><input class="in" id="gspl_t" maxlength="90" value="${esc(D.settings.splash.text || '')}" placeholder="${esc(SPLASH_DEF.text)}"><span class="hint">تظهر كلمة كلمة بحركة متتابعة.</span></div>
       <div class="field" style="grid-column:1/-1"><label>السطر الفرعي</label><input class="in" id="gspl_s" maxlength="120" value="${esc(D.settings.splash.sub || '')}" placeholder="اتركه فارغًا لإخفائه"></div>
-      <div class="field"><label>صورة الخلفية</label><select class="in" id="gspl_bg">${SPLASH_BGS.filter(([k]) => ASSET_IMG[k]).map(([k, l]) => `<option value="${k}" ${D.settings.splash.bg === k ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></div>
+      <div class="field"><label>صورة الخلفية</label><select class="in" id="gspl_bg">${SPLASH_BGS.filter(([k]) => k === 'signings' || ASSET_IMG[k]).map(([k, l]) => `<option value="${k}" ${D.settings.splash.bg === k ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></div>
       <div class="field"><label>مدة الظهور (ثوانٍ)</label><input type="number" min="2" max="8" class="in" id="gspl_d" value="${D.settings.splash.dur || 3}"></div>
       <label class="row" style="justify-content:space-between;grid-column:1/-1"><span>إظهار الأرقام الحية (السارية، الجهات، القطاعات)</span><span class="switch"><input type="checkbox" id="gspl_n" ${D.settings.splash.stats !== false ? 'checked' : ''}><i></i></span></label>
     </div></div></div>
     <div class="row" style="margin-top:18px"><button class="btn primary" id="gsave">حفظ الإعدادات</button></div>`;
   hydrateFiles(b);
-  const readSpl = () => ({ on: $('#gspl_on', b).checked, text: $('#gspl_t', b).value.trim() || SPLASH_DEF.text, sub: $('#gspl_s', b).value.trim(), bg: $('#gspl_bg', b).value, stats: $('#gspl_n', b).checked, dur: Math.max(2, Math.min(8, +$('#gspl_d', b).value || 3)) });
+  const readSpl = () => ({ on: $('#gspl_on', b).checked, text: $('#gspl_t', b).value.trim() || SPLASH_DEF.text, sub: $('#gspl_s', b).value.trim(), bg: $('#gspl_bg', b).value, stats: $('#gspl_n', b).checked, dur: Math.max(2, Math.min(8, +$('#gspl_d', b).value || 3)), bgV2: true });
   $('#gsplprev', b).onclick = () => { const keep = localStorage.getItem('shk_splash'); D.settings.splash = { ...D.settings.splash }; const tmp = readSpl(); try { localStorage.setItem('shk_splash', JSON.stringify({ ...JSON.parse(keep || '{}'), ...tmp })); } catch (e) { /* */ } splashShow(true); try { if (keep) localStorage.setItem('shk_splash', keep); } catch (e) { /* */ } };
   $('#glogo', b).onchange = async (e) => { try { const f = await saveUpload(e.target.files[0]); o.logoFileId = f.id; await saveSet('شعار الجهة'); renderShell(); route(); } catch (er) { toast(er.message, 'err'); } };
   const gx = $('#glogox', b); if (gx) gx.onclick = async () => { o.logoFileId = null; await saveSet('إزالة الشعار'); renderShell(); route(); };
@@ -57,7 +57,7 @@ function setGeneral(b) {
   };
 }
 
-const SEC_NAMES = { hero: 'الواجهة الافتتاحية', kpis: 'الأرقام الرئيسية', featured: 'الشراكات المختارة', gallery: 'من الميدان (معرض الصور)', stories: 'الإنجازات وقصص النجاح', logos: 'شعارات الشركاء', news: 'آخر المستجدات', share: 'دعوة الإدارات للمشاركة' };
+const SEC_NAMES = { hero: 'الواجهة الافتتاحية', kpis: 'الأرقام الرئيسية', golden: 'الشراكات الذهبية', featured: 'الشراكات المختارة', gallery: 'من الميدان (معرض الصور)', stories: 'الإنجازات وقصص النجاح', logos: 'شعارات الشركاء', news: 'آخر المستجدات', share: 'دعوة الإدارات للمشاركة' };
 function setHome(b) {
   const h = D.settings.home;
   const eligibleP = publicPartnerships();

@@ -42,6 +42,7 @@ function renderHome(el) {
     switch (s.id) {
       case 'hero': return homeHero();
       case 'kpis': return homeKpis(prev && prev.id === 'hero');
+      case 'golden': return goldSectionHTML(false);
       case 'featured': return homeFeatured();
       case 'gallery': return homeGallery();
       case 'stories': return homeStories();

@@ -4,8 +4,8 @@
    وجملة تُعدَّل من الإعدادات، وأرقام حية من آخر جلسة تُحدَّث فور تحميل البيانات.
    ملف مستقل لا يعتمد على بقية الشيفرة لأنه يعمل قبل تحميل البيانات.
    ===================================================================== */
-const SPLASH_DEF = { on: true, text: 'نبني شراكات… تصنع أثرًا يبقى', sub: 'منظومة الشراكات — مؤسسة مروج الأهلية', bg: 'splash-aerial', stats: true, dur: 3 };
-const SPLASH_BGS = [['splash-aerial', 'صورة جوية للغطاء النباتي'], ['splash-forest', 'غابة ومسطحات خضراء'], ['border-guard-signing', 'صورة توقيع مذكرة'], ['waqf-saitah-signing', 'صورة توقيع شراكة']];
+const SPLASH_DEF = { on: true, text: 'نبني شراكات… تصنع أثرًا يبقى', sub: 'منظومة الشراكات — مؤسسة مروج الأهلية', bg: 'signings', stats: true, dur: 3.4 };
+const SPLASH_BGS = [['signings', 'لحظات توقيع الشراكات (صور متتابعة)'], ['splash-aerial', 'صورة جوية للغطاء النباتي'], ['splash-forest', 'غابة ومسطحات خضراء'], ['border-guard-signing', 'صورة توقيع مذكرة'], ['waqf-saitah-signing', 'صورة توقيع شراكة']];
 function splashCfg() { let c = {}; try { c = JSON.parse(localStorage.getItem('shk_splash') || '{}') || {}; } catch (e) { c = {}; } return { ...SPLASH_DEF, ...c }; }
 function splashShow(force) {
   if (window.__SBX) return null;
@@ -24,10 +24,13 @@ function splashShow(force) {
   const words = String(cfg.text || SPLASH_DEF.text).split(/\s+/).filter(Boolean);
   const S = cfg.statsVals;
   const stats = cfg.stats && S ? [[S.act, 'شراكة سارية'], [S.partners, 'جهة شريكة'], [S.sectors, 'قطاعات']].filter((x) => x[0] != null) : [];
-  el.innerHTML = `<div class="sp-bg" style="background-image:url('${img(cfg.bg) || img('splash-aerial')}')"></div><div class="sp-veil"></div>
+  /* «لحظات التوقيع»: صور توقيع الشراكات الحقيقية تتعاقب ببطء، وفوقها حلقتان ذهبيتان تقتربان حتى تتشابكا (رمز الشراكة) */
+  const SIGN = ['waqf-saitah-signing', 'border-guard-signing'].map(img).filter(Boolean);
+  const bgs = cfg.bg === 'signings' && SIGN.length ? SIGN : [img(cfg.bg) || img('splash-aerial')];
+  el.innerHTML = `${bgs.map((u, i) => `<div class="sp-bg ${bgs.length > 1 ? 'xf' : ''}" style="background-image:url('${u}');--k:${i};--n:${bgs.length}"></div>`).join('')}<div class="sp-veil ${bgs.length > 1 ? 'warm' : ''}"></div>
     <svg class="sp-geo" viewBox="-300 -300 600 600" aria-hidden="true">
       ${[110, 165, 220, 275].map((r, i) => `<circle r="${r}" class="ring" style="--i:${i}"/>`).join('')}
-      <g class="star"><rect x="-150" y="-150" width="300" height="300" pathLength="1"/><rect x="-150" y="-150" width="300" height="300" transform="rotate(45)" pathLength="1"/><circle r="56" pathLength="1"/></g>
+      <g class="bond"><circle class="b1" r="118"/><circle class="b2" r="118"/><circle class="knot" cy="-100" r="6"/><circle class="knot" cy="100" r="6"/></g>
       ${Array.from({ length: 12 }, (_, i) => { const a = i / 12 * Math.PI * 2; return `<circle class="dot" r="3" cx="${(Math.cos(a) * 220).toFixed(1)}" cy="${(Math.sin(a) * 220).toFixed(1)}" style="--i:${i}"/>`; }).join('')}
     </svg>
     <div class="sp-in">

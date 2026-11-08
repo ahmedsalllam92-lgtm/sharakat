@@ -36,6 +36,7 @@ const SHARE_FIELDS = [
   { k: 'requesterName', step: 'req', l: 'اسم مقدم الطلب', kind: 'text', demo: 'سارة العتيبي' },
   { k: 'requesterEmail', step: 'req', l: 'البريد الإلكتروني لمقدم الطلب', kind: 'text', type: 'email', ltr: true, add: true, ph: 'name@example.org', hint: 'للتواصل بشأن المقترح عند الحاجة.', demo: 'sara@example.org' },
   { k: 'strategicGoal', step: 'req', l: 'الهدف الاستراتيجي', kind: 'goal' },
+  { k: 'initiative', step: 'req', l: 'المبادرة الاستراتيجية', kind: 'init', hint: 'تظهر مبادرات الهدف المختار.' },
   { k: 'partnerName', step: 'entity', l: 'اسم الجهة المستهدفة', kind: 'partner', req: true, msg: 'اكتب اسم الجهة المستهدفة.', demo: 'جمعية الواحة البيئية' },
   { k: 'partnerSector', step: 'entity', l: 'قطاع الجهة', kind: 'sector', add: true, hint: 'يسهّل نقل البيانات عند تحويل المقترح إلى شراكة.' },
   { k: '_contact', step: 'entity', l: 'بيانات مسؤول التواصل من الجهة', kind: 'sep' },
@@ -75,13 +76,15 @@ function renderShareForm(el, r) {
     if (!sim.length) return `<div class="note" style="margin-top:6px">${icon('info')}<span>لا توجد جهة بهذا الاسم في سجل الجهات حاليًا.</span></div>`;
     return `<div class="note" style="margin-top:6px">${icon('building')}<span>جهة مسجلة لدى إدارة الشراكات: ${sim.slice(0, 3).map((x) => { const n = D.partnerships.filter((p) => p.partnerId === x.id && !p.isDraft).length; return `<b>${esc(x.name)}</b>${n ? ` (${plural(n, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')})` : ''}`; }).join('، ')}. سيُراعى ذلك عند دراسة المقترح.</span></div>`;
   };
+  const initOpts = () => { const L_ = goalInits(s.strategicGoal); return `<option value="">${s.strategicGoal ? 'اختر المبادرة' : '—'}</option>${L_.map((x) => `<option value="${esc(x.t)}" ${x.t === s.initiative ? 'selected' : ''}>${esc(x.c)} — ${esc(x.t)}</option>`).join('')}`; };
   const drawStep = () => {
     let body = '';
     if (fs.step !== 'review') {
       const rend = (x) => {
         if (x.kind === 'sep') return `<div></div><div class="span2 flabel" style="margin-top:6px">${esc(x.l)}</div>`;
         if (x.kind === 'dept') return `${field('department', x.l, `<select class="in" id="s_department" data-k="department"><option value="">اختر الإدارة</option>${L('departments').filter((d) => d !== D.settings.org.dept).map((d) => `<option ${d === s.department ? 'selected' : ''}>${esc(d)}</option>`).join('')}</select>`, { hint: Session.role() === 'dept' ? 'إدارتك في المحاكاة الحالية.' : '' })}`;
-        if (x.kind === 'goal') return `${field('strategicGoal', x.l, comboHTML('strategicGoal', { options: [...new Set([...L('goals'), ...D.proposals.map((x) => x.strategicGoal).filter(Boolean)])], value: s.strategicGoal, allowAdd: true, addLabel: 'استخدام' }), { hint: L('goals').length ? 'اختر من أهداف المؤسسة الاستراتيجية.' : 'اكتب الهدف الاستراتيجي الذي تخدمه الشراكة. يمكن لمدير المنصة إضافة قائمة الأهداف المعتمدة من الإعدادات.' })}`;
+        if (x.kind === 'goal') return field('strategicGoal', x.l, `<select class="in" id="s_strategicGoal" data-k="strategicGoal"><option value="">اختر الهدف الاستراتيجي</option>${[...new Set([...L('goals'), s.strategicGoal].filter(Boolean))].map((o) => `<option value="${esc(o)}" ${o === s.strategicGoal ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`, { full: true });
+        if (x.kind === 'init') return field('initiative', x.l, `<select class="in" id="s_initiative" data-k="initiative" ${s.strategicGoal ? '' : 'disabled'}>${initOpts()}</select>`, { full: true, hint: s.strategicGoal ? x.hint : 'اختر الهدف أولًا.' });
         if (x.kind === 'partner') return `${field('partnerName', x.l, `<input class="in" id="s_partnerName" data-k="partnerName" value="${esc(s.partnerName)}"><div id="pmatch">${matchBox()}</div>`, { full: true })}`;
         if (x.kind === 'sector') return `${field('partnerSector', x.l, `<select class="in" id="s_partnerSector" data-k="partnerSector"><option value="">غير محدد</option>${L('sectors').map((o) => `<option ${o === s.partnerSector ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`, { add: true, hint: 'يسهّل نقل البيانات إلى سجل الشراكة عند قبول المقترح.' })}`;
         if (x.kind === 'area') return ta(x.k, x.l, { hint: x.hint || '', add: x.add });
@@ -173,7 +176,14 @@ function renderShareForm(el, r) {
     if (fs.errors[k]) { delete fs.errors[k]; e.target.closest('.field').classList.remove('invalid'); }
     if (k === 'partnerName') { const pm = $('#pmatch', el); pm && (pm.innerHTML = matchBox()); }
   });
-  el.addEventListener('change', (e) => { const k = e.target.dataset.k; if (k && e.target.tagName === 'SELECT') { s[k] = e.target.value; dirty(); } });
+  el.addEventListener('change', (e) => {
+    const k = e.target.dataset.k; if (!(k && e.target.tagName === 'SELECT')) return;
+    s[k] = e.target.value; dirty();
+    if (k === 'strategicGoal') { // المبادرات تتبع الهدف المختار
+      if (!goalInits(s.strategicGoal).some((x) => x.t === s.initiative)) s.initiative = '';
+      const sel = $('#s_initiative', el); if (sel) { sel.innerHTML = initOpts(); sel.disabled = !s.strategicGoal; const h = sel.closest('.field').querySelector('.hint'); if (h) h.textContent = s.strategicGoal ? 'تظهر مبادرات الهدف المختار.' : 'اختر الهدف أولًا.'; }
+    }
+  });
   el.addEventListener('cbchange', (e) => { s[e.target.dataset.cb] = e.detail; dirty(); });
 }
 function renderShareDone(el, r) {
@@ -293,7 +303,7 @@ function renderProposal(el, r) {
     ${propTrack(x)}
     ${['draft'].includes(x.status) ? '' : `<div class="wf-wrap">${wfSectionHTML('proposal', x)}</div>`}
     <div class="dbody" style="padding:0;max-width:none"><div>
-      <section class="dsec"><h2>الإدارة ومقدم الطلب <span class="src">من خانة «شارك»</span></h2><dl class="kv">${kv('اسم الإدارة الطالبة', esc(x.department))}${kv('اسم مقدم الطلب', esc(x.requesterName))}${x.requesterEmail ? kv('البريد الإلكتروني لمقدم الطلب', `<a href="mailto:${esc(x.requesterEmail)}" dir="ltr">${esc(x.requesterEmail)}</a>`) : ''}${kv('الهدف الاستراتيجي', esc(x.strategicGoal), true)}</dl></section>
+      <section class="dsec"><h2>الإدارة ومقدم الطلب <span class="src">من خانة «شارك»</span></h2><dl class="kv">${kv('اسم الإدارة الطالبة', esc(x.department))}${kv('اسم مقدم الطلب', esc(x.requesterName))}${x.requesterEmail ? kv('البريد الإلكتروني لمقدم الطلب', `<a href="mailto:${esc(x.requesterEmail)}" dir="ltr">${esc(x.requesterEmail)}</a>`) : ''}${kv('الهدف الاستراتيجي', esc(x.strategicGoal), true)}${kv('المبادرة الاستراتيجية', esc(x.initiative || ''), true)}</dl></section>
       <section class="dsec"><h2>الجهة المستهدفة <span class="src">من خانة «شارك»</span></h2>
         ${review && sim.length ? `<div class="note" style="margin-bottom:12px">${icon('building')}<span>الجهة مسجلة في سجل الجهات: ${sim.slice(0, 3).map((s) => `<a href="#/partners/${s.id}">${esc(s.name)}</a>`).join('، ')}</span></div>` : ''}
         <dl class="kv">${kv('اسم الجهة المستهدفة', esc(x.partnerName))}${kv('قطاع الجهة', esc(x.partnerSector))}${kv('مسؤول التواصل من الجهة', esc(x.contactName))}${kv('الرقم', x.contactPhone ? `<span class="num">${esc(x.contactPhone)}</span>` : '')}${kv('البريد الإلكتروني', x.contactEmail ? `<a href="mailto:${esc(x.contactEmail)}" dir="ltr">${esc(x.contactEmail)}</a>` : '', true)}</dl></section>

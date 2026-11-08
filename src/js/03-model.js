@@ -31,6 +31,23 @@ const PERM_LABELS = {
   'manage.partners': 'إدارة الجهات الشريكة', 'proposal.create': 'تقديم مقترح', 'proposal.review': 'مراجعة المقترحات واتخاذ الإجراء',
   'manage.content': 'محتوى الرئيسية والإنجازات', 'manage.lists': 'التصنيفات والقوائم', 'manage.backup': 'النسخ الاحتياطي والاستعادة', 'view.audit': 'سجل التغييرات', 'manage.accounts': 'الحسابات وكلمات المرور', 'export': 'التصدير والطباعة',
 };
+/* ===== المبادرات الاستراتيجية لكل هدف (من ميثاق المشروع MRJ-NM-105 كما في منصة مروج) =====
+   تُخزَّن في الإعدادات (goalInits) فتُعدَّل من «القوائم»، وتُربط بالهدف عبر رمزه (SO1…EO) */
+const GOAL_INITS_DEF = {
+  SO1: ['تعزيز مشاركة الجهات غير الربحية وأفراد المجتمع', 'برامج بناء القدرات البيئية للقطاع غير الربحي', 'زيادة الوعي والمشاركة البيئية', 'منهجية تعظيم الأثر الاقتصادي والاجتماعي'],
+  SO2: ['تنمية الغطاء النباتي وإعادة تأهيل الأراضي', 'الحفاظ على الأنواع الفطرية والنباتية', 'إصدار شهادات أرصدة الكربون', 'الجاهزية لأسواق التنوع البيولوجي', 'تعزيز الاقتصاد الدائري', 'التوسع في حلول المياه المستدامة'],
+  SO3: ['الشراكة الاستراتيجية مع القطاع العام', 'الشراكة الاستراتيجية مع القطاع الخاص', 'الشراكة الاستراتيجية مع القطاع غير الربحي', 'إطار تقييم وتتبع قيمة الشراكات'],
+  SO4: ['المنتجات المعرفية والبحثية لدعم القرار', 'برامج نشر المعرفة البيئية عبر القطاعات', 'توسيع نطاق الخدمات الاستشارية', 'تنفيذ خطة الابتكار البيئي'],
+  EO: ['الاستدامة والحوكمة والتحول المؤسسي', 'الاعتماد المؤسسي والانتسابات الرسمية', 'تنفيذ خطة التحول الرقمي', 'إدارة رأس المال البشري', 'تحديث ممارسات إدارة المشاريع', 'الاتصال المؤسسي والإعلام', 'تنفيذ خطة الاستدامة المالية'],
+};
+function goalInits(goal) {
+  if (!goal) return [];
+  const code = (String(goal).match(/^([A-Z]{1,3}\d?)\s*[:：]/) || [])[1] || '';
+  const list = ((D.settings && D.settings.goalInits) || {})[code] || GOAL_INITS_DEF[code] || [];
+  return list.map((t, i) => ({ c: `${code}.I${i + 1}`, t }));
+}
+const initLabel = (v) => v || '';
+
 /* أدوات نسخة الاستعراض المعزولة (iframe): تبادل البيانات بين النسختين وتبديل الحساب، دون أي حفظ */
 function sbxExport() { return JSON.stringify(D); }
 function sbxImport(json) { const keep = D.settings && D.settings.session; const x = JSON.parse(json); Object.keys(D).forEach((k) => { if (!(k in x)) delete D[k]; }); Object.assign(D, x); if (keep && D.settings) D.settings.session = keep; }
@@ -284,7 +301,7 @@ async function convertProposal(x, { partnerId, newPartner }) {
     contactName: x.contactName || '', contactEmail: x.contactEmail || '', contactPhone: x.contactPhone || '',
     startDate: '', endDate: '', owners: [], departments: x.department && L('departments').includes(x.department) ? [x.department] : [], activation: '',
     attachments: atts, stage: 'prep', isDraft: false, public: false, highlight: null, coverFileId: null,
-    proposalId: x.id, requesterDept: x.department || '', wf: { steps: {} }, forms: clone(x.forms || {}), ptype: (x.profile || {}).ptype || '', origin: (x.profile || {}).origin || '', originBy: (x.profile || {}).originBy || '', valueTypes: (x.profile || {}).valueTypes || [], importNotes: [], importRaw: null, createdAt: nowISO(), createdBy: Session.userName(), demo: !!x.demo,
+    proposalId: x.id, requesterDept: x.department || '', strategicGoal: x.strategicGoal || '', initiative: x.initiative || '', wf: { steps: {} }, forms: clone(x.forms || {}), ptype: (x.profile || {}).ptype || '', origin: (x.profile || {}).origin || '', originBy: (x.profile || {}).originBy || '', valueTypes: (x.profile || {}).valueTypes || [], importNotes: [], importRaw: null, createdAt: nowISO(), createdBy: Session.userName(), demo: !!x.demo,
   };
   if ((x.profile || {}).domain) { const pr = partnerById(pid); if (pr && !pr.domain) { pr.domain = x.profile.domain; await Repo.save('partners', pr); } }
   await Repo.save('partnerships', rec);

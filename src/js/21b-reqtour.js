@@ -51,8 +51,7 @@ function rqAct(s, side) {
 function rqDemo(f, doc) {
   if (f.demo) return f.demo.replace(/\\n/g, '\n');
   if (f.type === 'email') return 'demo@example.org';
-  if (['dept', 'sector', 'select'].includes(f.kind)) { const o = [...doc.querySelectorAll(`#s_${f.k} option`)].map((x) => x.value).filter(Boolean); return o[0] || ''; }
-  if (f.kind === 'goal') return L('goals')[0] || 'هدف استراتيجي';
+  if (['dept', 'sector', 'select', 'goal', 'init'].includes(f.kind)) { const o = [...doc.querySelectorAll(`#s_${f.k} option`)].map((x) => x.value).filter(Boolean); return o[0] || ''; }
   return 'بيانات تجريبية للاستعراض';
 }
 
@@ -375,18 +374,12 @@ async function rqShare() {
   const d = rqDoc(sd);
   const req = shareReq();
   await rqPoint(sd, '.wiz-wrap', { step: 'الجهة الطالبة', t: 'نموذج «شارك»', b: `<p>تبدأ الإدارة طلبها من خدمة «شارك». الحقول الإلزامية: ${req.map((f) => `<b>${esc(f.l)}</b>`).join('، ')}.</p>` }, 2600);
-  const fields = shareFields().filter((f) => f.req || f.demo);
+  const fields = shareFields().filter((f) => f.req || f.demo || ['goal', 'init'].includes(f.kind));
   for (const st of S_STEPS.filter((x) => x.id !== 'review')) {
     const fl = fields.filter((f) => f.step === st.id); if (!fl.length) continue;
     const tab = d.querySelector(`[data-ws="${st.id}"]`); if (tab && !tab.classList.contains('on')) { tab.click(); await rqSleep(350); }
     for (const f of fl) {
       RQ.cardStep = 'الجهة الطالبة · ' + st.t; RQ.cardT = f.l + (f.req ? ' (إلزامي)' : ''); RQ.cardB = `<p>${f.req ? 'حقل إلزامي لا يُرسل الطلب بدونه.' : 'حقل اختياري يساعد إدارة الشراكات في الدراسة.'}</p>`;
-      if (f.kind === 'goal') {
-        const v = rqDemo(f, d), host = d.querySelector(`[data-f="${f.k}"]`), inp = host && host.querySelector('input');
-        if (inp) await rqType(sd, inp, v);
-        const cb = d.querySelector(`[data-cb="${f.k}"]`) || host; cb && cb.dispatchEvent(new (rqW(sd).CustomEvent)('cbchange', { detail: v, bubbles: true }));
-        continue;
-      }
       const el = d.getElementById('s_' + f.k);
       if (el && el.tagName === 'SELECT' && el.value && f.kind === 'dept') { await rqPoint(sd, el, { step: RQ.cardStep, t: RQ.cardT, b: '<p>محددة تلقائيًا من حساب الإدارة.</p>' }, 1500); continue; }
       await rqType(sd, el, rqDemo(f, d));

@@ -340,6 +340,7 @@ function migrate() {
   let changed = false;
   if ((s.schema || 1) < 3) {
     if (!s.home.heroImageFileId) s.home.heroImageFileId = 'lib:dunes';
+    if (!s.home.sections.some((x) => x.id === 'golden')) { const i = s.home.sections.findIndex((x) => x.id === 'kpis'); s.home.sections.splice(i + 1, 0, { id: 'golden', on: true }); changed = true; }
     if (!s.home.sections.some((x) => x.id === 'gallery')) { const i = s.home.sections.findIndex((x) => x.id === 'featured'); s.home.sections.splice(i + 1, 0, { id: 'gallery', on: true }); }
     applyImageDefaults();
     s.schema = 3; changed = true;
@@ -353,6 +354,7 @@ function migrate() {
     applyRealPhotos();
     s.schema = 4; changed = true;
   }
+  if (s.splash && s.splash.bg === 'splash-aerial' && !s.splash.bgV2) { s.splash.bg = 'signings'; s.splash.bgV2 = true; changed = true; }
   if (!s.splash) { s.splash = { on: true, text: SPLASH_DEF.text, sub: SPLASH_DEF.sub, bg: SPLASH_DEF.bg, stats: true, dur: SPLASH_DEF.dur }; changed = true; }
   if (s.design && !['classic', 'board'].includes(s.design)) { s.design = ['show', 'brand'].includes(s.design) ? 'board' : 'classic'; changed = true; }
   if (!s.deptsV2) { applyOfficialDepartments(); s.deptsV2 = true; changed = true; }

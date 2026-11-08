@@ -30,7 +30,7 @@ function defaultSettings() {
     alertDays: 30,
     infoAgeDays: 7,
     home: {
-      sections: [{ id: 'hero', on: true }, { id: 'kpis', on: true }, { id: 'featured', on: true }, { id: 'gallery', on: true }, { id: 'stories', on: true }, { id: 'logos', on: true }, { id: 'news', on: true }, { id: 'share', on: true }],
+      sections: [{ id: 'hero', on: true }, { id: 'kpis', on: true }, { id: 'golden', on: true }, { id: 'featured', on: true }, { id: 'gallery', on: true }, { id: 'stories', on: true }, { id: 'logos', on: true }, { id: 'news', on: true }, { id: 'share', on: true }],
       heroTitle: 'نربط المؤسسة بشركاء يوسّعون أثرها البيئي',
       heroText: 'تبني إدارة الشراكات علاقات تعاون مع الجهات الحكومية والخاصة وغير الربحية، وتتابع كل شراكة من توقيع المذكرة حتى تحقق مخرجاتها على أرض الواقع.',
       heroImageFileId: 'lib:dunes',

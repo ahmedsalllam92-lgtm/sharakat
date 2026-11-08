@@ -21,7 +21,7 @@ function renderPartnership(el, r) {
   <div class="dhead" data-tour="detail-head">${coverHTML(p.id + (pr ? pr.name : ''), p.coverFileId, { W: 1600, H: 420, levels: 18, cols: 90 })}<div class="shade"></div>
     <a class="back no-print" href="#/partnerships">${icon('arrowR')} سجل الشراكات</a>
     <div class="dhead-in">${plateEditHTML(pr, 120, canEdit && can('manage.partners'))}
-      <div class="grow"><h1>${esc(pr ? pr.name : p.title)} ${demoTag(p)}</h1>
+      <div class="grow"><h1>${esc(pr ? pr.name : p.title)} ${demoTag(p)}${goldStarHTML(p)}</h1>
         <div class="sub"><span class="code" style="color:inherit">${esc(p.code || '')}</span>${p.title && pr && p.title !== pr.name ? `<span>${esc(p.title)}</span>` : ''}<span>${esc(p.classification || 'تصنيف غير محدد')}</span>${pSector(p) ? `<span>القطاع ${esc(pSector(p))}</span>` : ''}</div>
         <div class="tagline">${statusChip(p)}${p.ptype ? `<span class="chip plain cat">${esc(p.ptype)}</span>` : ''}${pr && pr.domain ? `<span class="chip plain cat">${esc(pr.domain)}</span>` : ''}${(p.categories || []).map((c) => `<span class="chip plain cat">${esc(c)}</span>`).join('')}${p.activation ? `<span class="chip plain">${esc(p.activation)}</span>` : ''}${p.public && !p.isDraft ? '<span class="chip plain">منشورة في الواجهة</span>' : ''}${featured ? '<span class="chip gold plain">مميزة في الرئيسية</span>' : ''}</div></div>
       ${photos.length ? `<div class="dh-photos no-print" aria-label="صور الشراكة">${photos.slice(0, 4).map((ph, k) => `<button data-dgal="${k}" title="${esc(ph.sub || '')}"><img data-file="${esc(ph.fileId)}" alt="">${k === 3 && photos.length > 4 ? `<span class="more">+${photos.length - 4}</span>` : ''}</button>`).join('')}<span class="dh-pl">${plural(photos.length, 'صورة واحدة', 'صورتان', 'صور', 'صورة')}</span></div>` : ''}</div></div>
@@ -70,7 +70,7 @@ function renderPartnership(el, r) {
     ${stories.length ? `<section class="dsec" id="stories"><h2>الإنجازات المرتبطة</h2><div class="story-list">${stories.map((a) => `<a class="story-item" href="#" data-story="${a.id}"><div class="th">${coverHTML('story' + a.id, a.coverFileId, { W: 400, H: 300, levels: 9, cols: 32, tone: toneFor(pr) })}</div><div><h4>${esc(a.title)}</h4>${a.metricValue ? `<div class="mv">${esc(a.metricValue)} ${esc(a.metricLabel || '')}</div>` : ''}<div class="m">${fmtDate(a.date)} ${a.public ? '' : '— غير منشور'} ${demoTag(a)}</div></div></a>`).join('')}</div></section>` : ''}
     ${prop ? `<section class="dsec" id="proposal"><h2>المقترح الأصلي</h2>
       <div class="row wrap" style="justify-content:space-between;margin-bottom:12px"><div class="row"><span class="code" style="font-size:14px">${esc(prop.ref)}</span>${propChip(prop.status)}</div><a class="btn sm" href="#/proposals/${prop.id}">فتح المقترح</a></div>
-      <dl class="kv">${kv('الإدارة الطالبة', esc(prop.department))}${kv('مقدم الطلب', esc(prop.requesterName))}${kv('الهدف الاستراتيجي', esc(prop.strategicGoal), true)}<div class="full"><dt>أسباب طلب الشراكة من الجهة</dt><dd>${richHTML(prop.reasons)}</dd></div></dl>
+      <dl class="kv">${kv('الإدارة الطالبة', esc(prop.department))}${kv('مقدم الطلب', esc(prop.requesterName))}${kv('الهدف الاستراتيجي', esc(prop.strategicGoal), true)}${kv('المبادرة الاستراتيجية', esc(prop.initiative || ''), true)}<div class="full"><dt>أسباب طلب الشراكة من الجهة</dt><dd>${richHTML(prop.reasons)}</dd></div></dl>
       <p class="xs muted" style="margin-top:10px">قبول المقترح لا يعني توقيع الشراكة؛ تُتابَع مرحلة الشراكة في هذا السجل.</p></section>` : ''}
     ${internal ? `<section class="dsec" id="admin"><h2>بيانات إدارية <span class="adm">حقول إدارية مقترحة</span></h2>
       <dl class="kv">${kv('مرحلة الشراكة', esc(stageLabel(p.stage)) + (p.isDraft ? ' — مسودة' : ''))}${kv('الحالة المحسوبة', statusChip(p))}
@@ -105,6 +105,7 @@ function renderPartnership(el, r) {
   const obs = new IntersectionObserver((ents) => { if (el.classList.contains('tabbed')) return; ents.forEach((en) => { if (en.isIntersecting) anchors.forEach((a) => a.classList.toggle('on', a.dataset.anchor === en.target.id)); }); }, { rootMargin: '-140px 0px -60% 0px' });
   $$('.dsec', el).forEach((s) => s.id && obs.observe(s));
   el.onclick = async (e) => {
+    const gs = e.target.closest('[data-gstar]'); if (gs) { e.preventDefault(); return toggleGolden(p, gs); }
     const fx = e.target.closest('[data-anchor-to]');
     if (fx) { e.preventDefault(); const t = $('#' + fx.dataset.anchorTo, el); if (t) window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 124, behavior: 'smooth' }); return; }
     const an = e.target.closest('[data-anchor]');
@@ -225,7 +226,7 @@ async function uploadToPartnership(p, cat, files) {
 const rerenderKeep = () => { const y = scrollY; route(); window.scrollTo(0, y); };
 const AUDIT_LABELS = {
   'partnership.create': 'إنشاء سجل الشراكة', 'partnership.update': 'تعديل البيانات', 'partnership.delete': 'حذف سجل الشراكة', 'partnership.confirm': 'تأكيد قيمة مستوردة', 'partnership.publish': 'تغيير الظهور في الواجهة',
-  'home.featured': 'تغيير العرض المميز', 'partnership.files': 'تحديث ملفات الشراكة', 'list.add': 'إضافة قيمة إلى قائمة', 'proposal.create': 'إنشاء مقترح', 'proposal.submit': 'تقديم مقترح', 'proposal.status': 'تغيير حالة مقترح', 'proposal.note': 'ملاحظة على مقترح', 'proposal.update': 'تحديث مقترح',
+  'home.featured': 'تغيير العرض المميز', 'partnership.golden': 'الشراكات الذهبية', 'partnership.files': 'تحديث ملفات الشراكة', 'list.add': 'إضافة قيمة إلى قائمة', 'proposal.create': 'إنشاء مقترح', 'proposal.submit': 'تقديم مقترح', 'proposal.status': 'تغيير حالة مقترح', 'proposal.note': 'ملاحظة على مقترح', 'proposal.update': 'تحديث مقترح',
   'partner.create': 'إضافة جهة', 'partner.update': 'تعديل جهة', 'partner.merge': 'دمج جهتين', 'partner.delete': 'حذف جهة', 'settings.update': 'تعديل الإعدادات', 'content.save': 'حفظ محتوى', 'content.delete': 'حذف محتوى',
   'partnership.dossier': 'تجهيز الملف الشامل', seed: 'تهيئة المنصة', backup: 'نسخة احتياطية', restore: 'استعادة نسخة احتياطية', 'demo.toggle': 'إظهار/إخفاء البيانات التجريبية', 'role.switch': 'معاينة بحساب آخر', 'auth.login': 'تسجيل دخول', 'notify.read': 'قراءة الإشعارات', 'auth.logout': 'تسجيل خروج', 'auth.password': 'تغيير كلمة مرور',
 };
