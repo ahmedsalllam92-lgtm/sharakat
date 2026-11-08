@@ -162,7 +162,7 @@ function setLists(b) {
 function wfSettingsHTML() {
   const admin = can('manage.accounts');
   const A = wfAccounts();
-  const depts = [...new Set([...L('departments'), wfDept('excellency')])];
+  const depts = [...new Set(L('departments'))];
   const docs = WF_STEPS.flatMap((st) => st.docs.map((d) => ({ ...d, st })));
   return `<div class="panel" id="setAccounts"><div class="panel-h"><h3>حسابات الإدارات</h3><span class="sub">حساب لكل إدارة في قائمة «الإدارات»، يُضاف تلقائيًا عند إضافة إدارة من صفحة القوائم</span></div><div class="panel-b">
       <div class="tbl-wrap"><table class="tbl acc-tbl"><thead><tr><th>الحساب</th><th>الدور في المنصة</th><th>مهامه في مسار الشراكة</th><th></th></tr></thead><tbody>
@@ -172,7 +172,7 @@ function wfSettingsHTML() {
       <p class="xs muted" style="margin-top:10px">خطوات «الإدارة الطالبة» و«الإدارات المعنية» تظهر لأي إدارة عندما تكون طالبة الشراكة أو ضمن الإدارات المتقاطعة معها.</p></div></div>
     <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>جهات المراجعة والاعتماد في المسار</h3><span class="sub">${admin ? 'حدد الحساب المسؤول عن كل خطوة اعتماد' : 'تحددها إدارة الشراكات'}</span></div><div class="panel-b"><div class="grid2">
       ${Object.keys(WF_DEPT_DEFAULTS).map((k) => `<div class="field"><label>${esc(WF_KEYS[k])} <small class="faint">— الخطوة ${WF_STEPS.filter((st) => st.actor === k).map((st) => st.n).join('، ')}</small></label>${k === 'excellency' ? `<input class="in" data-wfdept="${k}" value="${esc(wfDept(k))}" ${admin ? '' : 'disabled'}>` : `<select class="in" data-wfdept="${k}" ${admin ? '' : 'disabled'}>${depts.map((d) => `<option ${d === wfDept(k) ? 'selected' : ''}>${esc(d)}</option>`).join('')}</select>`}</div>`).join('')}</div></div></div>
-    <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>بيانات خطاب طلب موافقة المعالي</h3><span class="sub">تُستخدم افتراضيًا عند توليد الخطاب في الخطوة 9</span></div><div class="panel-b"><div class="grid2">
+    <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>بيانات خطاب طلب موافقة المعالي</h3><span class="sub">تُستخدم افتراضيًا عند توليد الخطاب في الخطوة ${(wfStep('legal') || {}).n || ''}</span></div><div class="panel-b"><div class="grid2">
       ${[['to1', 'المخاطَب'], ['to2', 'الصفة'], ['signTitle', 'صفة الموقِّع'], ['signName', 'اسم الموقِّع']].map(([k, l]) => `<div class="field"><label>${l}</label><input class="in" data-letter="${k}" value="${esc((D.settings.letter || {})[k] || '')}" ${admin ? '' : 'disabled'}></div>`).join('')}</div></div></div>
     <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>نماذج المسار</h3><span class="sub">النماذج الفارغة المعتمدة؛ تظهر للتنزيل داخل كل خطوة</span></div><div class="panel-b"><div class="tpl-list">
       ${docs.map((d) => { const f = (D.settings.wfTemplates || {})[d.k]; return `<div class="tpl ${f ? 'ok' : ''}">${icon(f ? 'check' : 'file')}<span class="grow"><b>${esc(d.l)}</b><small>الخطوة ${d.st.n}: ${esc(d.st.t)}</small></span>${f ? `<button class="btn sm ghost" type="button" data-tpldl="${esc(f)}">${icon('download')}</button>` : ''}${admin ? `<label class="btn sm">${icon('upload')} ${f ? 'استبدال' : 'رفع النموذج'}<input type="file" hidden data-tplup="${d.k}"></label>` : ''}</div>`; }).join('')}</div></div></div>`;

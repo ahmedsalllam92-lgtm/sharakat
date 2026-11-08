@@ -109,7 +109,7 @@ async def main():
         ok('migration assigns covers + galleries', await E("D.partnerships.filter(p=>p.coverFileId).length >= 10 && D.partnerships.some(p=>p.attachments.some(a=>a.fileId.startsWith('lib:')))"))
         # print
         await go('#/dashboard?v=alt'); await pg.wait_for_timeout(1300)
-        await E("window.print=()=>{}; 0"); await pg.click('.dz3 [data-print]'); await pg.wait_for_timeout(900)
+        await E("window.print=()=>{}; 0"); await pg.click('.dashpage [data-print]'); await pg.wait_for_timeout(900)
         await pg.emulate_media(media='print')
         ok('print: dedicated sheet with title, date, scope and filters; app chrome hidden', await E("!!document.querySelector('#printSheet .ps-head h1') && document.querySelector('#printSheet .ps-meta').innerText.includes('النطاق') && document.querySelector('#printSheet .ps-meta').innerText.includes('آخر تحديث') && getComputedStyle(document.querySelector('#app')).display==='none'"))
         ok('print uses the same dashboard design (horizon, strip, panels)', await E("!!document.querySelector('#printSheet .dz3-hero .hz') && document.querySelectorAll('#printSheet .dz3-ledger .dz3-cell').length===5 && !!document.querySelector('#printSheet .dz3-comp') && !document.querySelector('#printSheet .ps-donut, #printSheet .ps-gauge')"))

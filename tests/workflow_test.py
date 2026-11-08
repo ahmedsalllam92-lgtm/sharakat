@@ -24,7 +24,7 @@ async def main():
         depts = await E("L('departments').filter(d=>d!==D.settings.org.dept)")
         ok('an account for every department', all(('dept:'+d) in A for d in depts), len(A))
         ok('legal affairs added as a department', 'الإدارة القانونية' in depts)
-        ok('excellency office account', 'dept:مكتب المعالي' in A)
+        ok('no account for the excellency office (approval comes by letter)', 'dept:مكتب المعالي' not in A)
         ok('one account per partnerships team member + admin + leadership', 'admin' in A and 'viewer' in A and sum(1 for a in A if a.startswith('team:')) == await E("L('team').length"))
         await pg.click('#topbar [data-role]'); await pg.wait_for_selector('.modal [data-acc]')
         ok('account switcher lists accounts grouped', await E("document.querySelectorAll('.modal .acc-g').length") >= 3 and await E("document.querySelectorAll('.modal [data-acc]').length") == len(A))
@@ -93,7 +93,8 @@ async def main():
         ok('legal approves the letter', await cur() == 'excellency')
         # — المعالي —
         await acc('team:وعد'); await go(f'#/partnerships/{ptid}'); await open_step('excellency'); await upload('transaction', 'المعاملة.pdf'); await pg.keyboard.press('Escape'); await pg.wait_for_timeout(300)
-        await acc('dept:مكتب المعالي'); await go(f'#/partnerships/{ptid}'); await open_step('excellency'); await do('yes')
+        await go(f'#/partnerships/{ptid}'); await open_step('excellency'); await upload('approvalLetter', 'خطاب-موافقة-المعالي.pdf'); await pg.keyboard.press('Escape'); await pg.wait_for_timeout(300)
+        await go(f'#/partnerships/{ptid}'); await open_step('excellency'); await do('yes')
         ok('excellency approval recorded', await cur() == 'signed')
         # — التوقيع —
         await acc('team:وعد'); await go(f'#/partnerships/{ptid}'); await open_step('signed'); await upload('signedMoU', 'موقعة.pdf')

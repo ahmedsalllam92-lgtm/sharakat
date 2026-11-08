@@ -11,6 +11,9 @@ const WF_KEYS = {
   excellency: 'مكتب المعالي',
   bizdev: 'إدارة تطوير الأعمال',
 };
+/* جهات خارج المنصة: لا حساب لها، والتواصل معها بخطاب، وتسجّل إدارة الشراكات ردها بإرفاق الخطاب */
+const WF_EXTERNAL = ['excellency'];
+const wfExternal = (a) => WF_EXTERNAL.includes(a);
 const WF_DEPT_DEFAULTS = { strategy: 'الإدارة العامة للاستراتيجية', legal: 'الإدارة القانونية', excellency: 'مكتب المعالي', bizdev: 'إدارة تطوير الأعمال' };
 const wfDept = (k) => (k === 'partnerships' ? D.settings.org.dept : ((D.settings.wfDepts || {})[k] || WF_DEPT_DEFAULTS[k]));
 const WF_CAT = 'مستندات مسار المذكرة';
@@ -34,7 +37,7 @@ const WF_STEPS = [
   { id: 'strategy', n: 7, ref: 5, ph: 'rev', on: 'partnership', actor: 'strategy', kind: 'review', back: 'draft', backLabel: 'إعادة بملاحظات', t: 'المواءمة الاستراتيجية', d: 'تراجع الإدارة الاستراتيجية المذكرة وتعبئ نموذج المواءمة: ربط كل بند بالأهداف الاستراتيجية (SO1–SO4، EO)، ثم تعتمدها أو تعيدها بملاحظات.', docs: [{ k: 'alignment', l: 'نموذج المواءمة الاستراتيجية', req: true, form: 'alignment' }] },
   { id: 'partner', n: 8, ref: 6, ph: 'rev', on: 'partnership', actor: 'partnerships', t: 'مشاركة المذكرة مع الشريك', d: 'ترسل إدارة الشراكات المذكرة للجهة الشريكة، وترفع النسخة بعد ملاحظات الشريك.', docs: [{ k: 'partnerVersion', l: 'المذكرة بعد ملاحظات الشريك', req: true }] },
   { id: 'legal', n: 9, ref: 7, ph: 'sign', on: 'partnership', actor: 'legal', kind: 'review', t: 'اعتماد القانونية وخطاب طلب موافقة المعالي', d: 'تعد إدارة الشراكات خطاب طلب موافقة معالي رئيس مجلس الأمناء (يُولَّد من بيانات الشراكة)، وتراجعه الإدارة القانونية بنموذج مراجعة الخطابات وتعتمده.', docs: [{ k: 'letter', l: 'خطاب طلب موافقة المعالي', req: true, by: 'partnerships', form: 'letter' }, { k: 'legalReview', l: 'نموذج مراجعة الخطابات', req: true, form: 'letterReview' }] },
-  { id: 'excellency', n: 10, ref: 8, ph: 'sign', on: 'partnership', actor: 'excellency', kind: 'review', t: 'رفع المعاملة للمعالي', d: 'ترفع إدارة الشراكات المعاملة كاملة، ويسجل مكتب المعالي الموافقة أو الإعادة بملاحظات.', docs: [{ k: 'transaction', l: 'المعاملة كاملة', req: true, by: 'partnerships' }], yes: 'موافقة المعالي', yesShort: 'موافقة', no: 'إعادة المعاملة', back: 'legal', final: true, reject: 'رفض المعاملة' },
+  { id: 'excellency', n: 10, ref: 8, ph: 'sign', on: 'partnership', actor: 'excellency', kind: 'review', t: 'رفع المعاملة للمعالي', d: 'ترفع إدارة الشراكات المعاملة كاملة إلى مكتب المعالي بخطاب، ثم تسجّل رد المعالي بإرفاق خطاب الرد: موافقة، أو إعادة بملاحظات، أو رفض. لا يوجد حساب لمكتب المعالي في المنصة.', via: 'letter', docs: [{ k: 'transaction', l: 'المعاملة كاملة', req: true, by: 'partnerships' }, { k: 'approvalLetter', l: 'خطاب رد المعالي', req: true, by: 'partnerships' }], yes: 'موافقة المعالي', yesShort: 'موافقة', no: 'إعادة المعاملة', back: 'legal', final: true, reject: 'رفض المعاملة' },
   { id: 'signed', n: 11, ref: 9, ph: 'sign', on: 'partnership', actor: 'partnerships', t: 'توقيع المذكرة بين الطرفين', d: 'رفع المذكرة الموقعة وتسجيل تاريخي البدء والانتهاء؛ فتصبح الشراكة «موقّعة» ويبدأ حساب سريانها.', docs: [{ k: 'signedMoU', l: 'المذكرة الموقعة بين الطرفين', req: true }], fields: ['dates'] },
   { id: 'bizdev', n: 12, ref: 10, ph: 'act', on: 'partnership', actor: 'bizdev', t: 'خطة تفعيل المذكرة مع إدارة تطوير الأعمال', d: 'تعمل إدارة تطوير الأعمال مع إدارة الشراكات على المبادرات المقترحة أو خطة تفعيل المذكرة.', docs: [{ k: 'activationPlan', l: 'نموذج المبادرات المقترحة أو خطة تفعيل المذكرة', req: true }] },
   { id: 'reports', n: 13, ref: 11, ph: 'act', on: 'partnership', actor: 'concerned', kind: 'multi', ongoing: true, t: 'تقارير تفعيل المذكرة من الإدارات', d: 'ترفع كل إدارة مفعّلة للمذكرة تقرير التفعيل من حسابها. أول تقرير يجعل حالة التفعيل «مفعّلة».', docs: [{ k: 'activationReport', l: 'تقرير تفعيل المذكرة', req: true }] },
@@ -106,7 +109,7 @@ function wfCan(step, kind, rec, actorOverride) {
   const { role, dept } = wfWho();
   const a = actorOverride || step.actor;
   if (role === 'viewer') return false;
-  if (a === 'partnerships') return ['admin', 'team'].includes(role);
+  if (a === 'partnerships' || wfExternal(a)) return ['admin', 'team'].includes(role); // الجهات الخارجية: تسجّل إدارة الشراكات ردها
   if (role === 'admin') return true; // مدير المنصة ينفّذ نيابة عن أي جهة، ويُسجل ذلك
   if (role !== 'dept') return false;
   if (a === 'requester') return kind === 'proposal' ? rec.department === dept : wfReqDept(rec) === dept;
@@ -117,7 +120,7 @@ function wfCan(step, kind, rec, actorOverride) {
 function wfInvolved(p) {
   const { role, dept } = wfWho();
   if (['admin', 'team', 'viewer'].includes(role)) return true;
-  return wfConcerned(p).includes(dept) || ['strategy', 'legal', 'excellency', 'bizdev'].some((k) => wfDept(k) === dept);
+  return wfConcerned(p).includes(dept) || ['strategy', 'legal', 'bizdev'].some((k) => wfDept(k) === dept);
 }
 
 /* — المهام: ما ينتظر الحساب الحالي — */
@@ -220,11 +223,11 @@ function wfStepDialog(kind, rec, sid, rerender) {
     else acts.push(`<button class="btn primary" data-wfdo="done" type="button">${icon('check')} إتمام الخطوة</button>`);
   }
   if (!canAct && s.kind === 'multi' && isCur && teamUp) acts.push(`<button class="btn primary" data-wfdo="close" type="button">${icon('check')} ${s.id === 'reports' ? 'إغلاق المسار' : 'اعتماد الملاحظات والانتقال'}</button>`);
-  const onBehalf = canAct && role === 'admin' && !['partnerships', 'requester'].includes(s.actor);
+  const onBehalf = canAct && role === 'admin' && !['partnerships', 'requester'].includes(s.actor) && !wfExternal(s.actor);
   const m = Modal.open({
     title: `الخطوة ${s.n}: ${s.t}`, size: 'lg', cls: 'wf-modal',
     body: `<p class="wf-md">${esc(wfDesc(s))}</p>
-      <div class="wf-mi"><span>${icon('users')} المسؤول: <b>${esc(wfActorName(s.actor))}</b></span>${s.ref ? `<span>البند ${s.ref} في إجراء المذكرات</span>` : ''}${onBehalf ? `<span class="wf-ob">${icon('alert')} تنفّذ بصفتك مدير المنصة نيابة عن ${esc(wfActorName(s.actor))}</span>` : ''}</div>
+      <div class="wf-mi"><span>${icon('users')} المسؤول: <b>${esc(wfActorName(s.actor))}</b></span>${s.ref ? `<span>البند ${s.ref} في إجراء المذكرات</span>` : ''}${wfExternal(s.actor) ? `<span class="wf-ob">${icon('mail')} جهة خارج المنصة: يُسجَّل ردها بإرفاق الخطاب من حساب ${esc(wfActorName('partnerships'))}</span>` : ''}${onBehalf ? `<span class="wf-ob">${icon('alert')} تنفّذ بصفتك مدير المنصة نيابة عن ${esc(wfActorName(s.actor))}</span>` : ''}</div>
       ${r.status === 'returned' && r.note ? `<div class="note warn">${icon('msg')}<span><b>أُعيدت بملاحظات:</b> ${esc(r.note)}</span></div>` : ''}
       ${multiRows ? `<h4 class="m-h4">${s.id === 'reports' ? 'تقارير الإدارات' : 'ملاحظات الإدارات المعنية'}</h4><ul class="wf-ml">${multiRows}</ul>` : ''}
       ${s.docs.length ? `<h4 class="m-h4">المستندات</h4><div class="wf-drs">${s.docs.map(docRow).join('')}</div>` : ''}
@@ -334,7 +337,7 @@ function wfAccounts() {
   const duty = (d) => Object.keys(WF_DEPT_DEFAULTS).filter((k) => wfDept(k) === d);
   const A = [{ id: 'admin', t: 'إدارة الشراكات', s: 'كامل الصلاحيات — ' + own, role: 'admin', dept: own, g: 'إدارة الشراكات' }];
   L('team').forEach((m) => A.push({ id: 'team:' + m, t: m, s: 'فريق ' + own, role: 'team', dept: own, member: m, g: 'إدارة الشراكات' }));
-  const depts = [...new Set([...L('departments').filter((d) => d !== own), ...['legal', 'excellency'].map(wfDept)])];
+  const depts = [...new Set([...L('departments').filter((d) => d !== own), ...['legal'].map(wfDept)].filter((d) => !WF_EXTERNAL.map(wfDept).includes(d)))];
   depts.forEach((d) => { const du = duty(d); const st = WF_STEPS.filter((x) => du.includes(x.actor)); A.push({ id: 'dept:' + d, t: d, s: st.length ? st.map((x) => `${x.n}. ${x.t}`).join('، ') : 'تطلب الشراكات وتتقاطع معها وترفع تقارير التفعيل', role: 'dept', dept: d, duties: du, g: du.length ? 'جهات المراجعة والاعتماد' : 'الإدارات' }); });
   A.push({ id: 'viewer', t: 'القيادة ومجلس الإدارة', s: 'اطلاع على المؤشرات والتقارير', role: 'viewer', dept: '', g: 'الاطلاع' });
   return A;

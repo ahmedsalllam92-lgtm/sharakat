@@ -380,6 +380,7 @@ function evalDocHTML(rec, evalIdx) {
 }
 function formDocHTML(kind, rec, key, evalIdx = null, forWord = false) {
   if (key === 'partnershipEval' && kind === 'partnership' && !forWord && evalIdx !== null) return evalDocHTML(rec, evalIdx);
+  if (!forWord && typeof FORM_DOCS !== 'undefined' && FORM_DOCS[key]) return FORM_DOCS[key](kind, rec);
   const F = FORMS[key]; const R = fRecInfo(kind, rec);
   const st = F.periodic ? (rec.evals || [])[evalIdx] : formOf(rec, key);
   const d = (st && st.data) || {};

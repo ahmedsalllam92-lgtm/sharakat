@@ -8,7 +8,7 @@ const NOTIF_MAX = 300;
 function notifStore() { D.settings.notifs = D.settings.notifs || []; return D.settings.notifs; }
 /* المستلمون لخطوة حسب الجهة المسؤولة عنها في تعريف المسار */
 function wfTargets(actor, kind, rec) {
-  if (actor === 'partnerships') return [{ grp: 'partnerships' }];
+  if (actor === 'partnerships' || wfExternal(actor)) return [{ grp: 'partnerships' }];
   if (actor === 'requester') return [{ dept: kind === 'proposal' ? rec.department : wfReqDept(rec) }];
   if (actor === 'concerned') return kind === 'partnership' ? wfConcerned(rec).map((d) => ({ dept: d })) : [];
   const d = wfDept(actor); return d ? [{ dept: d }] : [];

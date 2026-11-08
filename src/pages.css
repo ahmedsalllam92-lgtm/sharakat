@@ -1854,3 +1854,70 @@ html.rq-in #dsw,html.rq-in .tour-top{display:none!important}
 .tour-menu .tm-t b{font-size:13.5px;font-weight:700}.tour-menu .tm-t small{font-size:11.5px;color:var(--muted);line-height:1.5}
 .tour-menu kbd{font-size:10.5px;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
 @media print{.tour-menu{display:none!important}}
+@media print{.evdoc .ev-tbl td{padding:4px 10px}.evdoc .ev-hero{padding:12px 16px}.evdoc .ev-ring{width:122px;height:122px}.evdoc .ev-q{max-height:64px;overflow:hidden}.evdoc .ev-two .ev-sec{padding:9px 12px}.evdoc .ev-key{margin-top:4px}}
+.fd-sigs,.fd-sigs>div{break-inside:avoid;page-break-inside:avoid}.fdoc tr{break-inside:avoid}.fd-sec h3{break-after:avoid}
+
+/* =====================================================================
+   مستندات نماذج المسار المصممة (منهجية، تقييم مبدئي، مواءمة)
+   ===================================================================== */
+.fxdoc .fx-empty{color:#A3AAA5;font-style:normal}
+.fxdoc .fx-prog{display:flex;gap:4px;margin:0 0 10px}
+.fxdoc .fx-prog i{flex:1;height:5px;border-radius:3px;background:#E7E2D6}.fxdoc .fx-prog i.on{background:var(--ev)}
+.fxdoc .fx-steps{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fxdoc .fx-step{display:flex;gap:10px;padding:10px 12px;border:1px solid #E3DDD0;border-radius:10px;background:#fff;break-inside:avoid}
+.fxdoc .fx-step.ok{background:#FBFAF6}
+.fxdoc .fx-n{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:#EEE9DE;color:#7C857F;font-variant-numeric:tabular-nums}
+.fxdoc .fx-step.ok .fx-n{background:var(--ev);color:#fff}
+.fxdoc .fx-step b{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;font-weight:700;color:#0F4433;line-height:1.5}
+.fxdoc .fx-step p{margin:3px 0 0;font-size:11px;color:#2A3530;line-height:1.7}
+.fxdoc .fx-step p.fx-empty{font-size:10.5px}
+.fxdoc .fx-req{font-style:normal;font-size:9.5px;font-weight:600;padding:0 6px;border-radius:8px;background:#F6EEDC;color:#8A6A2A}
+.fxdoc .fx-grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px}
+.fxdoc .fx-tags{display:flex;flex-wrap:wrap;gap:4px}
+.fxdoc .fx-tags span{font-size:10.5px;padding:3px 9px;border-radius:12px;background:#F4F1E8;color:#9AA29D}
+.fxdoc .fx-tags span.on{background:var(--ev);color:#fff;font-weight:700}
+.fxdoc .fx-val{margin:0;font-size:12px;font-weight:600;color:#14201B}
+.fxdoc .fx-meter{display:flex;height:7px;border-radius:4px;background:#EEE9DE;overflow:hidden;margin:0 0 8px}
+.fxdoc .fx-meter i.ok{background:#1F6B55}.fxdoc .fx-meter i.no{background:#A23A2C}
+.fxdoc .fx-tbl td{padding:6px 10px}
+.fxdoc .fx-ix{width:34px;text-align:center;color:#8A928D;font-variant-numeric:tabular-nums}
+.fxdoc .fx-it{font-size:11.5px;font-weight:600}
+.fxdoc .fx-nt{display:block;font-size:10px;color:#8A6A2A}
+.fxdoc .fx-res{width:130px}
+.fxdoc .fx-badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;padding:2px 10px;border-radius:12px}
+.fxdoc .fx-badge .ic{width:12px;height:12px}
+.fxdoc .fx-badge.ok{background:#E4F0EA;color:#1F6B55}.fxdoc .fx-badge.no{background:#F6E3DF;color:#A23A2C}.fxdoc .fx-badge.na{background:#EEF0EE;color:#7A8580}
+.fxdoc .fx-choice{display:flex;flex-direction:column;gap:5px;margin-bottom:4px}
+.fxdoc .fx-choice span{display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:8px;border:1px dashed #D8D1C1;color:#9AA29D;font-size:11px}
+.fxdoc .fx-choice span .ic{width:13px;height:13px}
+.fxdoc .fx-choice span.on{border:1px solid var(--ev);background:var(--ev-s);color:var(--ev);font-weight:700}
+.fxdoc .fx-op{align-items:start}
+.fxdoc .fx-mx th.g,.fxdoc .fx-mx td.g{width:42px;text-align:center;padding-inline:2px}
+.fxdoc .fx-mx th.g{font-variant-numeric:tabular-nums}
+.fxdoc .fx-cl{font-size:11px;line-height:1.65}
+.fxdoc .fx-nt2{font-size:10px;color:#55605A;width:120px}
+.fxdoc .fx-dot{display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--ev);box-shadow:0 0 0 3px var(--ev-s)}
+.fxdoc .fx-mx tfoot td{background:var(--ev-s);font-weight:700;font-size:10.5px}
+.fxdoc .fx-mx tfoot td.g b{color:var(--ev);font-size:12px}
+.fxdoc .fx-goals{display:grid;grid-template-columns:1fr;gap:4px;margin-top:8px}
+.fxdoc .fx-goals div{display:grid;grid-template-columns:38px 1fr 90px 18px;align-items:center;gap:8px;font-size:10.5px;color:#9AA29D}
+.fxdoc .fx-goals div.on{color:#2A3530}
+.fxdoc .fx-goals em{font-style:normal;font-weight:700;color:#0F4433;font-variant-numeric:tabular-nums}
+.fxdoc .fx-goals i{height:5px;border-radius:3px;background:#EEE9DE;overflow:hidden}.fxdoc .fx-goals i b{display:block;height:100%;background:var(--ev)}
+.fxdoc .fx-goals small{text-align:center;font-weight:700;color:#14201B}
+@media print{.fxdoc .fx-step{padding:8px 10px}.fxdoc .fx-step p{line-height:1.6}}
+@media screen and (max-width:720px){.fxdoc .fx-steps,.fxdoc .fx-grid2{grid-template-columns:1fr}.fxdoc .fx-goals div{grid-template-columns:38px 1fr 60px 18px}}
+.fxdoc .fx-choice{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:5px}
+.fxdoc .fx-choice span{justify-content:center;text-align:center;padding:6px 6px}
+@media print{.fxdoc .fx-tbl td{padding:3px 10px}.fxdoc .fx-grid2{gap:2px 18px}.fxdoc .ev-lbl{margin:5px 0 3px}.fxdoc .fx-tags span{padding:2px 8px}.fxdoc .ev-sec{margin-bottom:7px}.fxdoc .ev-sec h3{margin-bottom:5px}.fxdoc .ev-kpis{margin-bottom:8px}}
+.fxdoc .fx-choice span{white-space:nowrap;font-size:10.5px}
+@media print{.fxdoc .ev-hero{padding:10px 16px;margin:10px 0 8px}.fxdoc .ev-ring{width:112px;height:112px}.fxdoc .ev-rv b{font-size:30px}.fxdoc .ev-pn h1{font-size:19px}.fxdoc .ev-facts{margin-top:10px;padding-top:7px}}
+@media print{.fxdoc .ev-sigs b.ln{height:18px}.fxdoc .fd-foot{margin-top:4px;padding-top:4px}.fxdoc .ev-top{padding-bottom:8px}.fxdoc .ev-brand img{height:40px}.fxdoc .ev-two .ev-sec{padding:8px 12px}.fxdoc .ev-q{padding:5px 10px;line-height:1.6}}
+
+/* شريط اللوحة الموحّد */
+.dv-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 16px}
+.dv-bar .dv-acts{display:flex;gap:8px;flex-wrap:wrap}
+.dv-bar .dv-acts .btn .ic{width:16px;height:16px}
+.app.present .dv-bar{display:none}
+.ob-head{grid-template-columns:1fr!important}
+@media (max-width:720px){.dv-bar .dv-acts{width:100%}.dv-bar .dv-acts .btn{flex:1;justify-content:center}.dv-bar .dv-acts .btn span{display:none}}

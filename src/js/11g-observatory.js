@@ -10,9 +10,20 @@ function obViewSwitch(cur) {
   const k = OB_ALT();
   return `<div class="ob-views" role="tablist" aria-label="طريقة عرض اللوحة"><a href="#/dashboard?v=obs" role="tab" class="${cur === 'obs' ? 'on' : ''}" data-dview="obs">${icon('leaf')}<span>مختصر</span></a><a href="#/dashboard?v=${k}" role="tab" class="${cur !== 'obs' ? 'on' : ''}" data-dview="${k}">${icon(k === 'brief' ? 'flag' : 'grid')}<span>مفصّل</span></a></div>`;
 }
+/* شريط ثابت أعلى اللوحة في كل العروض: «مختصر / مفصّل» يمينًا، وExcel والطباعة وملء الشاشة يسارًا.
+   أزرار كل عرض تُنقل إليه بأحداثها (التفويض على الصفحة نفسها) فتبقى الوظائف كما هي */
 function dashViewBar(el, cur) {
   const old = el.querySelector(':scope > .dv-bar'); if (old) old.remove();
-  el.insertAdjacentHTML('afterbegin', `<div class="dv-bar no-print">${obViewSwitch(cur)}</div>`);
+  el.insertAdjacentHTML('afterbegin', `<div class="dv-bar no-print">${obViewSwitch(cur)}<div class="dv-acts"></div></div>`);
+  const acts = el.querySelector(':scope > .dv-bar .dv-acts');
+  const LBL = [['[data-xls]', 'download', 'Excel'], ['[data-print]', 'print', 'طباعة'], ['[data-present],[data-bopresent]', 'expand', 'ملء الشاشة']];
+  LBL.forEach(([sel, ic, t]) => {
+    const b = [...el.querySelectorAll(sel)].find((x) => !x.closest('.dv-bar') && x.closest('.ob-tools,.dz-tools,.bo-cover-tools'));
+    if (!b) return;
+    b.className = 'btn'; b.innerHTML = `${icon(ic)}<span>${t}</span>`; b.title = t;
+    acts.appendChild(b);
+  });
+  el.querySelectorAll('.ob-tools,.dz-tools,.bo-cover-tools').forEach((t) => { if (!t.querySelector('button,a')) t.remove(); });
 }
 function dashView(r) {
   const q = r && r.query && r.query.v;

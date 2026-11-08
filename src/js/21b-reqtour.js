@@ -35,7 +35,7 @@ function rqRequesterDept() {
   return opts.find((d) => !duty.includes(d)) || opts[0] || 'الإدارة الطالبة';
 }
 function rqSess(actor, req) {
-  if (actor === 'partnerships') return { role: 'admin', dept: D.settings.org.dept, member: L('team')[0] || '', accountId: 'admin' };
+  if (actor === 'partnerships' || wfExternal(actor)) return { role: 'admin', dept: D.settings.org.dept, member: L('team')[0] || '', accountId: 'admin' };
   if (actor === 'requester' || actor === 'concerned') return { role: 'dept', dept: req, member: '', accountId: 'dept:' + req };
   const d = wfDept(actor); return { role: 'dept', dept: d, member: '', accountId: 'dept:' + d };
 }
@@ -356,7 +356,7 @@ const rqRecOf = (sd) => { const D_ = rqW(sd).sbxD(); return (RQ.kind === 'propos
 const rqHref = () => (RQ.kind === 'proposal' ? '#/proposals/' + RQ.rec.id : '#/partnerships/' + RQ.rec.id);
 const rqSig = (sd) => JSON.stringify((rqRecOf(sd).wf || {}).steps || {});
 const rqStepLbl = (s) => `المرحلة ${s.n} من ${WF_STEPS.length}`;
-function rqAccLabel(actor) { return actor === 'partnerships' ? wfActorName('partnerships') : actor === 'requester' || actor === 'concerned' ? RQ.req : wfActorName(actor); }
+function rqAccLabel(actor) { return wfExternal(actor) ? `${wfActorName('partnerships')} — تسجيل خطاب ${wfActorName(actor)}` : actor === 'partnerships' ? wfActorName('partnerships') : actor === 'requester' || actor === 'concerned' ? RQ.req : wfActorName(actor); }
 
 /* — المشاهد — */
 async function rqIntro() {
@@ -523,7 +523,7 @@ async function rqFinal(sc) {
   await rqOpenStep(sd, s);
   rqActive(sd);
   const c = $('#rqTour .rq-card');
-  rqCard({ step: rqStepLbl(s) + ' · الاعتماد النهائي', t: 'القرار النهائي', side: sd, b: `<p>${esc(wfActorName(s.actor))} هي جهة الاعتماد النهائي في المسار. اختر النهاية التي تريد مشاهدتها:</p>` });
+  rqCard({ step: rqStepLbl(s) + ' · الاعتماد النهائي', t: 'القرار النهائي', side: sd, b: `<p>${esc(wfActorName(s.actor))} هي جهة الاعتماد النهائي${wfExternal(s.actor) ? `، ويصل ردها بخطاب تسجّله ${esc(wfActorName('partnerships'))} بإرفاقه` : ''}. اختر النهاية التي تريد مشاهدتها:</p>` });
   const ch = $('.rq-choice', c); ch.hidden = false;
   ch.innerHTML = `<button class="btn primary" type="button" data-rqchoice="yes">${icon('check')} ${esc(s.yes || 'اعتماد')}</button>${s.reject ? `<button class="btn danger" type="button" data-rqchoice="reject">${icon('x')} ${esc(s.reject)}</button>` : ''}`;
   rqPlace();
