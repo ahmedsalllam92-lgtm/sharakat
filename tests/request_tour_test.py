@@ -52,6 +52,9 @@ async def main():
         await E("location.hash='#/settings/tour'"); await pg.wait_for_timeout(600)
         ok('listed as a separate tour in the tours list', await E("!!document.querySelector('[data-rqtour-start]') && !!document.querySelector('[data-tour-start]')"))
         ok('tour list built from the path definition', await E("document.querySelectorAll('.rq-set .tour-list li').length === WF_STEPS.indexOf(wfFinal())+1"))
+        await pg.click('.topbar [data-tourmenu]'); await pg.wait_for_timeout(300)
+        ok('top «استعراض المنصة» button offers both tours as separate choices', await E("!!document.querySelector('#tourMenu [data-tour-start]') && !!document.querySelector('#tourMenu [data-rqtour-start]')"))
+        await pg.keyboard.press('Escape'); await pg.wait_for_timeout(200)
         before = await E(SNAP)
         # — مسار الاعتماد —
         seen, stages = await run_tour(pg, 'yes', SHOTS, 'yes_')

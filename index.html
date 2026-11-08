@@ -5299,6 +5299,19 @@ html.rq-in #dsw,html.rq-in .tour-top{display:none!important}
 @media print{.evdoc{-webkit-print-color-adjust:exact;print-color-adjust:exact}.evdoc .ev-hero{break-inside:avoid}}
 @media screen and (max-width:720px){.ev-hero{grid-template-columns:1fr}.ev-kpis{grid-template-columns:1fr 1fr}.ev-two{grid-template-columns:1fr}.ev-nt{display:none}}
 @media print{.evdoc .ev-hero{margin:12px 0 10px;padding:14px 18px}.evdoc .ev-ring{width:132px;height:132px}.evdoc .ev-rv b{font-size:34px}.evdoc .ev-tbl td{padding:5px 10px}.evdoc .ev-cn small{line-height:1.4}.evdoc .ev-kpis{margin-bottom:10px}.evdoc .ev-kpis div{padding:7px 12px}.evdoc .ev-two .ev-sec{padding:10px 12px}.evdoc .ev-sec{margin-bottom:9px}.evdoc .ev-q{padding:6px 10px}.evdoc .ev-sigs{margin-top:2px}.evdoc .fd-foot{margin-top:8px}}
+
+/* قائمة الاستعراضات في الشريط العلوي */
+.tour-menu{position:fixed;z-index:9000;width:320px;max-width:calc(100vw - 24px);background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 24px 60px -20px rgba(0,0,0,.35);padding:8px;animation:spUp .2s ease-out}
+[data-design="board"] .tour-menu{border-radius:4px}
+.tour-menu .tm-h{font-size:11.5px;color:var(--muted);padding:4px 8px 8px}
+.tour-menu button{display:flex;align-items:center;gap:10px;width:100%;padding:10px;border:0;background:none;border-radius:10px;text-align:start;cursor:pointer;color:var(--ink);font:inherit}
+.tour-menu button:hover,.tour-menu button:focus-visible{background:var(--paper-2)}
+.tour-menu .tm-ic{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--petrol);color:#fff}
+.tour-menu .tm-ic .ic{width:16px;height:16px}
+.tour-menu .tm-t{flex:1;display:flex;flex-direction:column;gap:2px}
+.tour-menu .tm-t b{font-size:13.5px;font-weight:700}.tour-menu .tm-t small{font-size:11.5px;color:var(--muted);line-height:1.5}
+.tour-menu kbd{font-size:10.5px;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+@media print{.tour-menu{display:none!important}}
 </style>
 </head>
 <body>
@@ -11494,6 +11507,26 @@ function setTourTab(b) {
 const RQ = { token: 0 };
 const RQ_W = 1280; // العرض المنطقي لكل نسخة قبل تصغيرها داخل نصف الشاشة
 
+/* قائمة زر «استعراض المنصة» في الشريط العلوي: استعراضان منفصلان */
+function toggleTourMenu() {
+  let m = $('#tourMenu'); if (m) { m.remove(); return null; }
+  const fin = wfFinal();
+  m = document.createElement('div'); m.id = 'tourMenu'; m.className = 'tour-menu'; m.setAttribute('role', 'menu');
+  m.innerHTML = `<div class="tm-h">اختر الاستعراض</div>
+    <button type="button" role="menuitem" data-tour-start><span class="tm-ic">${icon('play')}</span><span class="tm-t"><b>استعراض المنصة</b><small>جولة على صفحات المنصة ومميزاتها</small></span><kbd>Alt+T</kbd></button>
+    <button type="button" role="menuitem" data-rqtour-start><span class="tm-ic">${icon('convert')}</span><span class="tm-t"><b>مسار طلب الشراكة</b><small>من «شارك» حتى الاعتماد أو الرفض — ${WF_STEPS.indexOf(fin) + 1} مراحل، في شاشة مقسومة</small></span></button>`;
+  document.body.appendChild(m);
+  const b = $('#topbar [data-tourmenu]');
+  if (b) { const r = b.getBoundingClientRect(); m.style.top = Math.round(r.bottom + 8) + 'px'; m.style.left = Math.max(12, Math.min(innerWidth - 332, Math.round(r.left + r.width / 2 - 160))) + 'px'; }
+  m.onclick = (e) => {
+    if (e.target.closest('[data-tour-start]')) { m.remove(); return startTour(); }
+    if (e.target.closest('[data-rqtour-start]')) { m.remove(); return startReqTour(); }
+  };
+  return m;
+}
+document.addEventListener('mousedown', (e) => { const m = $('#tourMenu'); if (m && !e.target.closest('#tourMenu') && !e.target.closest('[data-tourmenu]')) m.remove(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { const m = $('#tourMenu'); m && m.remove(); } });
+
 /* — الجهات والحسابات المشتقة من المسار — */
 function rqRequesterDept() {
   const own = D.settings.org.dept, duty = Object.keys(WF_DEPT_DEFAULTS).map(wfDept);
@@ -15158,7 +15191,7 @@ function renderShell() {
     <div class="side-foot"><div class="side-org">${esc(o.dept)}</div>
       ${dz === 'classic' ? `<button class="side-btn icon-only collapse-btn" data-collapse type="button" title="${App.ui.sideMin ? 'توسيع القائمة' : 'طي القائمة'}" aria-label="${App.ui.sideMin ? 'توسيع القائمة' : 'طي القائمة'}">${icon('sidebar')}</button>` : ''}</div>`;
   const roleBox = bellHTML() + `<button class="rolebox" data-role title="حسابي"><span class="rl">${esc(accountLabel())}</span><span class="av">${esc(initials(r === 'team' ? Session.member() : r === 'dept' ? Session.dept().replace(/^(إدارة|الإدارة العامة لل|الإدارة العامة|الإدارة|مكتب|الشؤون)\s*/, '') : isSysAdmin() ? 'م ن' : ROLES[r].label))}</span></button>`;
-  const tourBtn = `<button class="tour-top" data-tour-start type="button" title="استعراض المنصة (Alt+T)">${icon('play')}<span>استعراض المنصة</span></button>`;
+  const tourBtn = `<button class="tour-top" data-tourmenu type="button" aria-haspopup="menu" title="الاستعراضات">${icon('play')}<span>استعراض المنصة</span></button>`;
   const themeBtn = `<button class="icon-btn theme-btn" data-themetoggle title="${D.settings.theme === 'dark' ? 'الوضع النهاري' : 'الوضع الليلي'}" aria-label="تبديل الوضع النهاري والليلي">${icon(D.settings.theme === 'dark' ? 'sun' : 'moon')}</button>`;
   const demo = showDemo() ? `<button class="demo-ribbon" data-demo title="البيانات التجريبية">${icon('info')}<span class="dr-t">يتضمن بيانات تجريبية</span></button>` : '';
   const search = (ph) => `<div class="gsearch"><input id="gq" type="search" placeholder="${ph}" aria-label="بحث عام" autocomplete="off">${icon('search')}</div>`;
@@ -15250,7 +15283,7 @@ function bindShell(app) {
     if (e.target.closest('[data-bell]')) return toggleBell();
     if (e.target.closest('[data-demo]')) return demoDialog();
     if (e.target.closest('[data-present-exit]')) return togglePresent();
-    if (e.target.closest('.topbar [data-tour-start]')) return startTour();
+    if (e.target.closest('.topbar [data-tourmenu]')) return toggleTourMenu();
   });
   document.addEventListener('mousedown', (e) => { if (app.classList.contains('nav-open') && !e.target.closest('.side') && !e.target.closest('[data-menu]')) app.classList.remove('nav-open'); if (!e.target.closest('.st-dd, .cm-dd')) $$('.st-dd.open, .cm-dd.open').forEach((x) => x.classList.remove('open')); });
   // البحث العام

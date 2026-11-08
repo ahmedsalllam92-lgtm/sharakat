@@ -8,6 +8,26 @@
 const RQ = { token: 0 };
 const RQ_W = 1280; // العرض المنطقي لكل نسخة قبل تصغيرها داخل نصف الشاشة
 
+/* قائمة زر «استعراض المنصة» في الشريط العلوي: استعراضان منفصلان */
+function toggleTourMenu() {
+  let m = $('#tourMenu'); if (m) { m.remove(); return null; }
+  const fin = wfFinal();
+  m = document.createElement('div'); m.id = 'tourMenu'; m.className = 'tour-menu'; m.setAttribute('role', 'menu');
+  m.innerHTML = `<div class="tm-h">اختر الاستعراض</div>
+    <button type="button" role="menuitem" data-tour-start><span class="tm-ic">${icon('play')}</span><span class="tm-t"><b>استعراض المنصة</b><small>جولة على صفحات المنصة ومميزاتها</small></span><kbd>Alt+T</kbd></button>
+    <button type="button" role="menuitem" data-rqtour-start><span class="tm-ic">${icon('convert')}</span><span class="tm-t"><b>مسار طلب الشراكة</b><small>من «شارك» حتى الاعتماد أو الرفض — ${WF_STEPS.indexOf(fin) + 1} مراحل، في شاشة مقسومة</small></span></button>`;
+  document.body.appendChild(m);
+  const b = $('#topbar [data-tourmenu]');
+  if (b) { const r = b.getBoundingClientRect(); m.style.top = Math.round(r.bottom + 8) + 'px'; m.style.left = Math.max(12, Math.min(innerWidth - 332, Math.round(r.left + r.width / 2 - 160))) + 'px'; }
+  m.onclick = (e) => {
+    if (e.target.closest('[data-tour-start]')) { m.remove(); return startTour(); }
+    if (e.target.closest('[data-rqtour-start]')) { m.remove(); return startReqTour(); }
+  };
+  return m;
+}
+document.addEventListener('mousedown', (e) => { const m = $('#tourMenu'); if (m && !e.target.closest('#tourMenu') && !e.target.closest('[data-tourmenu]')) m.remove(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { const m = $('#tourMenu'); m && m.remove(); } });
+
 /* — الجهات والحسابات المشتقة من المسار — */
 function rqRequesterDept() {
   const own = D.settings.org.dept, duty = Object.keys(WF_DEPT_DEFAULTS).map(wfDept);

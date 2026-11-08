@@ -167,7 +167,7 @@ async def main():
         await go('#/reports', 900)
         ok('report header band is a fixed graphic (no partnership photo)', await E("[...document.querySelectorAll('.rs2:not([data-st=cover]):not([data-st=pcover]):not([data-st=end]):not([data-st=story]):not([data-st=hero])')].every(s=>{const i=s.querySelector('img.rs2-i'); return i && i.src.startsWith('data:image/svg') && i.getBoundingClientRect().height>0})"))
         ok('band height identical on all slides', len(set(await E("[...document.querySelectorAll('.rs2:not([data-st=cover]):not([data-st=pcover]):not([data-st=end]) img.rs2-i')].filter(i=>i.src.startsWith('data:image/svg')).map(i=>i.style.height)"))) == 1)
-        await pg.click('.topbar [data-tour-start]'); await pg.wait_for_timeout(900)
+        await pg.click('.topbar [data-tourmenu]'); await pg.wait_for_timeout(300); await pg.click('#tourMenu [data-tour-start]'); await pg.wait_for_timeout(900)
         ok('tour button in top bar starts the tour', await E("App.tour === true"))
         await E("endTour()"); await pg.wait_for_timeout(600)
         ok('plain design names', await E("Object.keys(DESIGNS).map(k=>DESIGNS[k].name).join('|')") == 'المؤسسي|المجلس')

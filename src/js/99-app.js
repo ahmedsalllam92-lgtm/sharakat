@@ -37,7 +37,7 @@ function renderShell() {
     <div class="side-foot"><div class="side-org">${esc(o.dept)}</div>
       ${dz === 'classic' ? `<button class="side-btn icon-only collapse-btn" data-collapse type="button" title="${App.ui.sideMin ? 'توسيع القائمة' : 'طي القائمة'}" aria-label="${App.ui.sideMin ? 'توسيع القائمة' : 'طي القائمة'}">${icon('sidebar')}</button>` : ''}</div>`;
   const roleBox = bellHTML() + `<button class="rolebox" data-role title="حسابي"><span class="rl">${esc(accountLabel())}</span><span class="av">${esc(initials(r === 'team' ? Session.member() : r === 'dept' ? Session.dept().replace(/^(إدارة|الإدارة العامة لل|الإدارة العامة|الإدارة|مكتب|الشؤون)\s*/, '') : isSysAdmin() ? 'م ن' : ROLES[r].label))}</span></button>`;
-  const tourBtn = `<button class="tour-top" data-tour-start type="button" title="استعراض المنصة (Alt+T)">${icon('play')}<span>استعراض المنصة</span></button>`;
+  const tourBtn = `<button class="tour-top" data-tourmenu type="button" aria-haspopup="menu" title="الاستعراضات">${icon('play')}<span>استعراض المنصة</span></button>`;
   const themeBtn = `<button class="icon-btn theme-btn" data-themetoggle title="${D.settings.theme === 'dark' ? 'الوضع النهاري' : 'الوضع الليلي'}" aria-label="تبديل الوضع النهاري والليلي">${icon(D.settings.theme === 'dark' ? 'sun' : 'moon')}</button>`;
   const demo = showDemo() ? `<button class="demo-ribbon" data-demo title="البيانات التجريبية">${icon('info')}<span class="dr-t">يتضمن بيانات تجريبية</span></button>` : '';
   const search = (ph) => `<div class="gsearch"><input id="gq" type="search" placeholder="${ph}" aria-label="بحث عام" autocomplete="off">${icon('search')}</div>`;
@@ -129,7 +129,7 @@ function bindShell(app) {
     if (e.target.closest('[data-bell]')) return toggleBell();
     if (e.target.closest('[data-demo]')) return demoDialog();
     if (e.target.closest('[data-present-exit]')) return togglePresent();
-    if (e.target.closest('.topbar [data-tour-start]')) return startTour();
+    if (e.target.closest('.topbar [data-tourmenu]')) return toggleTourMenu();
   });
   document.addEventListener('mousedown', (e) => { if (app.classList.contains('nav-open') && !e.target.closest('.side') && !e.target.closest('[data-menu]')) app.classList.remove('nav-open'); if (!e.target.closest('.st-dd, .cm-dd')) $$('.st-dd.open, .cm-dd.open').forEach((x) => x.classList.remove('open')); });
   // البحث العام
