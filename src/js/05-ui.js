@@ -220,7 +220,7 @@ function attachEditorHTML(id, { cats, defaultCat }) {
   return `<div class="att-editor" id="${id}">
     <div class="row wrap" style="margin-bottom:10px"><label class="flabel" style="margin:0">التصنيف</label>
       <select class="in" data-attcat style="width:auto;min-width:200px">${cats.map((c) => `<option ${c === defaultCat ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select></div>
-    <label class="drop" data-drop><input type="file" multiple hidden>${icon('upload')}<div>اسحب الملفات هنا أو <b>اختر من جهازك</b></div><div class="xs faint">حتى 15 ميجابايت للملف — تُحفظ في هذا المتصفح</div></label>
+    <label class="drop" data-drop><input type="file" multiple hidden>${icon('upload')}<div>اسحب الملفات هنا أو <b>اختر من جهازك</b></div><div class="xs faint">حتى 50 ميجابايت للملف — والصور تُضغط تلقائيًا</div></label>
     <div class="att-out" style="margin-top:14px"></div></div>`;
 }
 function bindAttachEditor(root, getList, setList, { onChange } = {}) {

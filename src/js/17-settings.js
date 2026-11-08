@@ -254,12 +254,19 @@ function setData(b) {
         <label class="btn">${icon('upload')} استعادة من نسخة<input type="file" accept=".json,application/json" hidden id="dImp"></label></div>
       <div id="dStat" class="small muted" style="margin-top:12px"></div></div></div>
     ${Cloud.on ? `<div class="panel" style="margin-top:18px" id="dCloud"><div class="panel-h"><h3>المنصة المشتركة</h3><span class="sub">كل الحسابات تعمل على نفس البيانات من أي جهاز</span></div><div class="panel-b">
-      <p class="small" style="margin-bottom:12px"><span class="cloud-pill" data-st="${Cloud.state}"></span> ${esc(cloudStateText())}</p>
+      <p class="small" style="margin-bottom:8px"><span class="cloud-pill" data-st="${Cloud.state}"></span> ${esc(cloudStateText())}</p>
+      <div class="cl-usage" id="dUsage"></div>
+      ${Cloud.needUpdate ? `<p class="small" style="color:var(--danger,#b4462f);margin-bottom:10px">${Cloud.fout.length} ملف أكبر من 15 ميجا ينتظر تحديث الخادم (ملف «supabase-update-files.sql»)، وسيُرفع تلقائيًا بعد التحديث.</p>` : ''}
       <div class="row wrap"><button class="btn" id="dSync">${icon('history')} مزامنة الآن</button>
         ${['sys', 'admin'].includes(Cloud.grp) ? `<button class="btn ghost" id="dMergeOld">${icon('upload')} دمج بيانات قديمة من هذا المتصفح</button>` : ''}</div>
       <p class="xs muted" style="margin-top:10px">«دمج البيانات القديمة» يرفع ما كان محفوظًا في هذا المتصفح قبل الربط بالمنصة المشتركة (ما ليس موجودًا على المنصة أو الأحدث منه فقط). إعادة التهيئة الكاملة غير متاحة من الواجهة حمايةً لبيانات كل الحسابات.</p></div></div>` : `<div class="panel" style="margin-top:18px"><div class="panel-h"><h3>إعادة التهيئة</h3></div><div class="panel-b">
       <p class="small muted" style="margin-bottom:12px">يحذف كل البيانات والمرفقات في هذا المتصفح ويعيد المنصة إلى حالتها الأولى (السجلات المستوردة من ملف الحصر + البيانات التجريبية).</p>
       <button class="btn danger" id="dReset">إعادة تهيئة المنصة</button></div></div>`}`;
+  if (Cloud.on && Cloud.token()) Cloud.rpc('shk_usage', { p_token: Cloud.token() }).then((u) => {
+    const el = $('#dUsage', b); if (!el || !u) return;
+    const lim = 500 * 1024 * 1024, pct = Math.min(100, Math.round((u.db / lim) * 100));
+    el.innerHTML = `<div class="cl-bar ${pct >= 80 ? 'warn' : ''}"><i style="width:${pct}%"></i></div><span class="xs muted">المساحة المستخدمة ${fmtSize(u.db)} من 500 ميجا (الخطة المجانية) — ${u.files} مرفق${pct >= 80 ? ' · اقتربت المساحة من الامتلاء: احذف المرفقات غير المهمة أو انتقل للخطة المدفوعة' : ''}</span>`;
+  }).catch(() => {});
   Store.allFiles().then((fs) => { const tot = fs.reduce((a, f) => a + (f.size || 0), 0); $('#dStat', b) && ($('#dStat', b).textContent = `المرفقات المحفوظة: ${fs.length} ملف (${fmtSize(tot)}).`); });
   b.onchange = async (e) => {
     if (e.target.id === 'dDemo') { await setDemo(e.target.checked); setData(b); }

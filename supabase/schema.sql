@@ -269,7 +269,56 @@ begin
   return coalesce((select jsonb_agg(id) from shk_files), '[]'::jsonb);
 end $$;
 
+-- ===== الملفات الكبيرة (حتى 50 ميجا): تُرفع على أجزاء ثم تُسجَّل بياناتها الوصفية =====
+create table if not exists public.shk_file_chunks (
+  id   text not null,
+  n    int  not null,
+  data text not null,
+  primary key (id, n)
+);
+alter table public.shk_file_chunks enable row level security;
+revoke all on table public.shk_file_chunks from public, anon, authenticated;
+
+create or replace function public.shk_file_chunk_put(p_token text, p_id text, p_n int, p_data text) returns void
+language plpgsql security definer set search_path = public as $$
+declare me record;
+begin
+  select * into me from shk_auth(p_token);
+  if me.grp = 'viewer' then raise exception 'forbidden' using errcode = 'P0001'; end if;
+  if coalesce(p_id, '') = '' or p_n is null or p_n < 0 or p_n > 40 or p_data is null or length(p_data) > 6000000 then raise exception 'bad_file' using errcode = 'P0001'; end if;
+  insert into shk_file_chunks (id, n, data) values (p_id, p_n, p_data)
+    on conflict (id, n) do update set data = excluded.data;
+end $$;
+
+create or replace function public.shk_file_chunk_get(p_token text, p_id text, p_n int) returns text
+language plpgsql security definer set search_path = public as $$
+declare me record;
+begin
+  select * into me from shk_auth(p_token);
+  return (select data from shk_file_chunks where id = p_id and n = p_n);
+end $$;
+
+-- حذف مرفق لم يعد مستخدمًا (لتوفير المساحة)
+create or replace function public.shk_file_del(p_token text, p_id text) returns void
+language plpgsql security definer set search_path = public as $$
+declare me record;
+begin
+  select * into me from shk_auth(p_token);
+  if me.grp = 'viewer' then raise exception 'forbidden' using errcode = 'P0001'; end if;
+  delete from shk_files where id = p_id;
+  delete from shk_file_chunks where id = p_id;
+end $$;
+
+-- المساحة المستخدمة (لعرضها في الإعدادات)
+create or replace function public.shk_usage(p_token text) returns jsonb
+language plpgsql security definer set search_path = public as $$
+declare me record;
+begin
+  select * into me from shk_auth(p_token);
+  return jsonb_build_object('db', pg_database_size(current_database()), 'files', (select count(*) from shk_files));
+end $$;
+
 -- الصلاحيات: الدوال الداخلية مغلقة، ودوال الواجهة متاحة للمفتاح العام
 revoke execute on function public.shk_grp(text), public.shk_hash_token(text), public.shk_auth(text), public.shk_check_pw(text, text), public.shk_account_known(text) from public, anon, authenticated;
-revoke execute on function public.shk_public(), public.shk_login(text, text), public.shk_logout(text), public.shk_set_password(text, text, text, text), public.shk_pw_status(text), public.shk_pull(text, bigint), public.shk_push(text, jsonb), public.shk_file_put(text, text, jsonb, text), public.shk_file_get(text, text), public.shk_file_ids(text) from public;
-grant execute on function public.shk_public(), public.shk_login(text, text), public.shk_logout(text), public.shk_set_password(text, text, text, text), public.shk_pw_status(text), public.shk_pull(text, bigint), public.shk_push(text, jsonb), public.shk_file_put(text, text, jsonb, text), public.shk_file_get(text, text), public.shk_file_ids(text) to anon, authenticated;
+revoke execute on function public.shk_public(), public.shk_login(text, text), public.shk_logout(text), public.shk_set_password(text, text, text, text), public.shk_pw_status(text), public.shk_pull(text, bigint), public.shk_push(text, jsonb), public.shk_file_put(text, text, jsonb, text), public.shk_file_get(text, text), public.shk_file_ids(text), public.shk_file_chunk_put(text, text, int, text), public.shk_file_chunk_get(text, text, int), public.shk_file_del(text, text), public.shk_usage(text) from public;
+grant execute on function public.shk_public(), public.shk_login(text, text), public.shk_logout(text), public.shk_set_password(text, text, text, text), public.shk_pw_status(text), public.shk_pull(text, bigint), public.shk_push(text, jsonb), public.shk_file_put(text, text, jsonb, text), public.shk_file_get(text, text), public.shk_file_ids(text), public.shk_file_chunk_put(text, text, int, text), public.shk_file_chunk_get(text, text, int), public.shk_file_del(text, text), public.shk_usage(text) to anon, authenticated;

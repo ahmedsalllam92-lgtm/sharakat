@@ -449,7 +449,7 @@ function bindCombos(root, onChange) {
 }
 
 /* ===== حدود الحجم ونوع الملف ===== */
-const MAX_FILE = 15 * 1024 * 1024;
+const MAX_FILE = 50 * 1024 * 1024;
 function fileKind(type, name) {
   if (/^image\//.test(type)) return 'image';
   if (/pdf/.test(type) || /\.pdf$/i.test(name)) return 'pdf';

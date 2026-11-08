@@ -2739,3 +2739,7 @@ html.galv-on body{overflow:hidden}
 .lg-go.busy{opacity:.8;cursor:progress}
 /* نافذة تأكيد تظهر أثناء شاشة الدخول (تهيئة المنصة المشتركة) تكون فوقها */
 body:has(#shkLogin) .modal-bg{z-index:99995}
+.cl-usage{margin:0 0 12px}
+.cl-bar{height:7px;border-radius:9px;background:var(--line,#e3e8e6);overflow:hidden;margin-bottom:5px;max-width:420px}
+.cl-bar i{display:block;height:100%;background:linear-gradient(90deg,#2e9e6a,#5fbf8f);border-radius:9px}
+.cl-bar.warn i{background:linear-gradient(90deg,#d99a2b,#c0563f)}

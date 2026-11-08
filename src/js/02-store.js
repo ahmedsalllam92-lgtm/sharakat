@@ -78,9 +78,34 @@ async function hydrateFiles(root = document) {
     else if (el.tagName === 'IMG') { el.style.display = 'none'; }
   }));
 }
+/* ضغط الصور عند الرفع: أطول ضلع 2560 بكسل وجودة 85% — يكفي للعرض والطباعة ويوفر غالبًا 70–90% من الحجم.
+   الصور الشفافة (PNG بخلفية شفافة كالشعارات) تُحفظ WebP لتبقى شفافة. لا يُستبدل الأصل إلا إذا وفّر الضغط 10% على الأقل.
+   المستندات (PDF والعقود…) لا تُعدَّل أبدًا: تبقى مطابقة للأصل حرفيًا. */
+async function compressImage(file) {
+  if (!/^image\/(jpeg|png|webp)$/.test(file.type) || file.size < 400 * 1024 || typeof createImageBitmap !== 'function') return file;
+  try {
+    const bmp = await createImageBitmap(file);
+    const k = Math.min(1, 2560 / Math.max(bmp.width, bmp.height)), w = Math.max(1, Math.round(bmp.width * k)), h = Math.max(1, Math.round(bmp.height * k));
+    const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d');
+    let type = 'image/jpeg';
+    if (file.type !== 'image/jpeg') {
+      x.drawImage(bmp, 0, 0, w, h);
+      const px = x.getImageData(0, 0, w, h).data; let alpha = false;
+      for (let i = 3; i < px.length; i += 4 * 7) if (px[i] < 250) { alpha = true; break; }
+      if (alpha) type = 'image/webp'; else x.clearRect(0, 0, w, h);
+    }
+    if (type === 'image/jpeg') { x.fillStyle = '#fff'; x.fillRect(0, 0, w, h); x.drawImage(bmp, 0, 0, w, h); }
+    if (bmp.close) bmp.close();
+    const blob = await new Promise((r) => c.toBlob(r, type, 0.85));
+    if (!blob || blob.type !== type || blob.size > file.size * 0.9) return file;
+    return new File([blob], file.name.replace(/\.[^.]+$/, '') + (type === 'image/jpeg' ? '.jpg' : '.webp'), { type });
+  } catch (_) { return file; }
+}
 async function saveUpload(file) {
-  if (file.size > MAX_FILE) throw new Error(`حجم الملف «${file.name}» يتجاوز 15 ميجابايت.`);
-  const rec = { id: uid('f'), name: file.name, type: file.type || 'application/octet-stream', size: file.size, blob: file, at: nowISO() };
+  const orig = file.size;
+  if (/^image\//.test(file.type)) file = await compressImage(file);
+  if (file.size > MAX_FILE) throw new Error(`حجم الملف «${file.name}» يتجاوز 50 ميجابايت.`);
+  const rec = { id: uid('f'), name: file.name, type: file.type || 'application/octet-stream', size: file.size, blob: file, at: nowISO(), ...(file.size < orig ? { orig } : {}) };
   await Store.putFile(rec);
   return rec;
 }
@@ -118,6 +143,10 @@ const Repo = {
 function blobToDataURL(blob) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(blob); }); }
 async function dataURLToBlob(u) { return (await fetch(u)).blob(); }
 async function exportBackup() {
+  /* المنصة المشتركة: تُجلب المرفقات غير المحمّلة على هذا الجهاز أولًا حتى تكون النسخة كاملة */
+  if (typeof Cloud !== 'undefined' && Cloud.on && Cloud.token()) {
+    try { const have = new Set((await Store.allFiles()).map((f) => f.id)); const ids = (await Cloud.rpc('shk_file_ids', { p_token: Cloud.token() })) || []; const miss = ids.filter((id) => !have.has(id)); if (miss.length) toast(`جارٍ تحميل ${miss.length} مرفق من المنصة لإكمال النسخة…`); for (const id of miss) await Store.getFile(id); } catch (_) { toast('تعذّر تحميل بعض المرفقات من المنصة — ستضم النسخة المرفقات المحفوظة على هذا الجهاز فقط', 'err'); }
+  }
   const files = await Store.allFiles();
   const fileData = [];
   for (const f of files) fileData.push({ id: f.id, name: f.name, type: f.type, size: f.size, at: f.at, data: await blobToDataURL(f.blob) });

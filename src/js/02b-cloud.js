@@ -15,7 +15,16 @@ const Cloud = {
   rev: 0, sRev: 0, sBase: null, out: {}, fout: [], grp: null, state: 'idle', pwSet: null, pendingUI: false, expiredShown: false,
   kickT: null, pollT: null,
 };
-const CLOUD_RAW = { put: Store.put, putMany: Store.putMany, del: Store.del, clear: Store.clear, putFile: Store.putFile, getFile: Store.getFile };
+const CLOUD_RAW = { put: Store.put, putMany: Store.putMany, del: Store.del, clear: Store.clear, putFile: Store.putFile, getFile: Store.getFile, delFile: Store.delFile };
+const CLOUD_CHUNK = 4 * 1024 * 1024; // كل جزء ≈ 5.6 ميجا بعد base64
+/* ضغط بلا فقد للمستندات أثناء النقل والتخزين (gzip): الملف يعود مطابقًا للأصل بايتًا ببايت */
+async function cloudGzip(blob, type) {
+  if (typeof CompressionStream === 'undefined' || /^(image|video|audio)\/|zip|compressed|officedocument|opendocument|rar|7z/.test(type || '')) return null;
+  try { const z = await new Response(blob.stream().pipeThrough(new CompressionStream('gzip'))).blob(); return z.size < blob.size * 0.95 ? z : null; } catch (_) { return null; }
+}
+async function cloudGunzip(blob) { return new Response(blob.stream().pipeThrough(new DecompressionStream('gzip'))).blob(); }
+const cloudB64 = async (blob) => String(await blobToDataURL(blob)).replace(/^data:[^,]*,/, '');
+const cloudFromB64 = async (b64, type) => (await fetch(`data:${type || 'application/octet-stream'};base64,${b64}`)).blob();
 const cloudRaw = (m, ...a) => CLOUD_RAW[m].apply(Store, a);
 
 function cloudInit() {
@@ -90,14 +99,26 @@ Store.put = async function (c, o) { await cloudRaw('put', c, o); Cloud.mark(c, o
 Store.putMany = async function (c, arr) { await cloudRaw('putMany', c, arr); (arr || []).forEach((o) => Cloud.mark(c, o && o.id)); };
 Store.del = async function (c, id) { await cloudRaw('del', c, id); Cloud.mark(c, id, true); };
 Store.putFile = async function (rec) { await cloudRaw('putFile', rec); Cloud.markFile(rec && rec.id); };
+Store.delFile = async function (id) {
+  await cloudRaw('delFile', id);
+  if (!Cloud.on || !Cloud.ready || !id || /^(lib|asset|sbx):/.test(id)) return;
+  Cloud.fout = Cloud.fout.filter((x) => x !== id); Cloud.save();
+  if (Cloud.token() && Cloud.grp !== 'viewer') Cloud.rpc('shk_file_del', { p_token: Cloud.token(), p_id: id }).catch(() => {}); // توفير المساحة؛ إن فشل يبقى الملف دون ضرر
+};
 /* مرفق غير موجود على هذا الجهاز: يُجلب من الخادم مرة واحدة ثم يُحفظ محليًا */
 Store.getFile = async function (id) {
   const r = await cloudRaw('getFile', id);
   if (r || !Cloud.on || !Cloud.token() || !id || /^(lib|asset|sbx):/.test(id)) return r;
   try {
     const f = await Cloud.rpc('shk_file_get', { p_token: Cloud.token(), p_id: id });
-    if (!f || !f.data) return null;
-    const m = f.meta || {}, blob = await (await fetch(`data:${m.type || 'application/octet-stream'};base64,${f.data}`)).blob();
+    if (!f) return null;
+    const m = f.meta || {};
+    let blob;
+    if (m.chunks) { const parts = []; for (let n = 0; n < m.chunks; n++) { const d = await Cloud.rpc('shk_file_chunk_get', { p_token: Cloud.token(), p_id: id, p_n: n }); if (d == null) return null; parts.push(await cloudFromB64(d)); } blob = new Blob(parts); }
+    else if (f.data) blob = await cloudFromB64(f.data);
+    else return null;
+    if (m.gz) blob = await cloudGunzip(blob);
+    blob = new Blob([blob], { type: m.type || 'application/octet-stream' });
     const rec = { id, name: m.name || id, type: m.type || blob.type, size: m.size || blob.size, at: m.at, blob };
     await cloudRaw('putFile', rec);
     return rec;
@@ -171,18 +192,36 @@ Cloud.flush = async function () {
     for (const id of [...this.fout]) {
       const f = await cloudRaw('getFile', id);
       if (f && f.blob) {
-        const b64 = String(await blobToDataURL(f.blob)).replace(/^data:[^,]*,/, '');
-        await this.rpc('shk_file_put', { p_token: this.token(), p_id: id, p_meta: { name: f.name, type: f.type, size: f.size, at: f.at }, p_data: b64 });
+        try { await cloudUploadFile(f); }
+        catch (e) { if (e.offline || e.code === 'invalid_token') throw e; if (this.needUpdate) continue; throw e; } // ملف كبير ينتظر تحديث الخادم: لا يعطّل بقية الملفات
       }
       this.fout = this.fout.filter((x) => x !== id); this.save();
     }
-    this.setState(this.pending() ? 'sync' : 'ok');
+    this.setState(Object.keys(this.out).length || (this.fout.length && !this.needUpdate) ? 'sync' : 'ok');
   } catch (e) {
     this.setState(e.offline ? 'off' : e.code === 'invalid_token' ? 'idle' : 'off');
     if (!e.offline && e.code !== 'invalid_token') console.warn('cloud push', e);
   } finally { this.busy = false; }
-  if (this.pending() && this.state === 'sync') this.kick();
+  if (this.state === 'sync' && (Object.keys(this.out).length || (this.fout.length && !this.needUpdate))) this.kick();
 };
+
+/* رفع مرفق: يُضغط بلا فقد إن أمكن، ثم يُرفع على أجزاء، وتُسجَّل بياناته الوصفية في النهاية (فوجودها يعني اكتمال الملف) */
+async function cloudUploadFile(f) {
+  const meta = { name: f.name, type: f.type, size: f.size, at: f.at };
+  let body = f.blob;
+  const z = await cloudGzip(body, f.type); if (z) { body = z; meta.gz = true; }
+  try {
+    const n = Math.max(1, Math.ceil(body.size / CLOUD_CHUNK));
+    for (let i = 0; i < n; i++) await Cloud.rpc('shk_file_chunk_put', { p_token: Cloud.token(), p_id: f.id, p_n: i, p_data: await cloudB64(body.slice(i * CLOUD_CHUNK, (i + 1) * CLOUD_CHUNK)) });
+    meta.chunks = n;
+    await Cloud.rpc('shk_file_put', { p_token: Cloud.token(), p_id: f.id, p_meta: meta, p_data: '' });
+  } catch (e) {
+    /* خادم لم يُحدَّث بعد (لا توجد دوال الأجزاء): نرفع الملفات الصغيرة بالطريقة القديمة */
+    if (e.status !== 404 || body.size > 15 * 1024 * 1024) { if (e.status === 404) { Cloud.needUpdate = true; Cloud.nuAt = Date.now(); } throw e; }
+    delete meta.chunks;
+    await Cloud.rpc('shk_file_put', { p_token: Cloud.token(), p_id: f.id, p_meta: meta, p_data: await cloudB64(body) });
+  }
+}
 
 /* ===== السحب ===== */
 Cloud.pull = async function () {
@@ -229,6 +268,7 @@ Cloud.pull = async function () {
 /* ===== دورة المزامنة أثناء العمل ===== */
 async function cloudTick() {
   if (!Cloud.on || !Cloud.ready || !Cloud.token() || document.visibilityState === 'hidden') return;
+  if (Cloud.needUpdate && Date.now() - (Cloud.nuAt || 0) > 120000) Cloud.needUpdate = false; // نعيد المحاولة كل دقيقتين: ربما حُدّث الخادم
   try {
     if (Cloud.pending()) await Cloud.flush();
     const r = await Cloud.pull();

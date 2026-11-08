@@ -154,7 +154,7 @@ function mediaUploadDlg(pid = '') {
       body: `<div class="field"><label>الشراكة</label><select class="in" id="muP"><option value="">اختر الشراكة…</option>${ps.map((p) => `<option value="${p.id}" ${p.id === pid ? 'selected' : ''}>${esc(partnerName(p))}${p.code ? ' — ' + esc(p.code) : ''}</option>`).join('')}</select><span class="err">اختر الشراكة التي تتبعها الصور.</span></div>
         <div class="field"><label>التصنيف</label><select class="in" id="muC">${cats.map((c) => `<option ${c === 'صور الشراكة' ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select><span class="hint">«صور الشراكة» تظهر في الواجهة إذا كانت الشراكة منشورة، وبقية التصنيفات داخلية.</span></div>
         <div class="field"><label>وصف موحّد (اختياري)</label><input class="in" id="muT" placeholder="مثال: زيارة ميدانية لموقع التشجير — مارس 2026"></div>
-        <label class="drop" id="muDrop"><input type="file" accept="image/*" multiple hidden>${icon('upload')}<div>اسحب الصور هنا أو <b>اختر من جهازك</b></div><div class="xs faint">صور فقط، حتى 15 ميجابايت للصورة — تُحفظ في هذا المتصفح</div></label>
+        <label class="drop" id="muDrop"><input type="file" accept="image/*" multiple hidden>${icon('upload')}<div>اسحب الصور هنا أو <b>اختر من جهازك</b></div><div class="xs faint">صور فقط، حتى 50 ميجابايت — تُضغط تلقائيًا مع الحفاظ على جودتها</div></label>
         <div class="m-prev" id="muPrev"></div>`,
       foot: `<button class="btn primary" data-ok type="button">${icon('upload')} حفظ الصور</button><button class="btn ghost" data-mclose type="button">إلغاء</button>`,
       onClose: (v) => res(!!v),

@@ -6197,6 +6197,10 @@ html.galv-on body{overflow:hidden}
 .lg-go.busy{opacity:.8;cursor:progress}
 /* نافذة تأكيد تظهر أثناء شاشة الدخول (تهيئة المنصة المشتركة) تكون فوقها */
 body:has(#shkLogin) .modal-bg{z-index:99995}
+.cl-usage{margin:0 0 12px}
+.cl-bar{height:7px;border-radius:9px;background:var(--line,#e3e8e6);overflow:hidden;margin-bottom:5px;max-width:420px}
+.cl-bar i{display:block;height:100%;background:linear-gradient(90deg,#2e9e6a,#5fbf8f);border-radius:9px}
+.cl-bar.warn i{background:linear-gradient(90deg,#d99a2b,#c0563f)}
 </style>
 </head>
 <body>
@@ -7137,7 +7141,7 @@ function bindCombos(root, onChange) {
 }
 
 /* ===== حدود الحجم ونوع الملف ===== */
-const MAX_FILE = 15 * 1024 * 1024;
+const MAX_FILE = 50 * 1024 * 1024;
 function fileKind(type, name) {
   if (/^image\//.test(type)) return 'image';
   if (/pdf/.test(type) || /\.pdf$/i.test(name)) return 'pdf';
@@ -7231,9 +7235,34 @@ async function hydrateFiles(root = document) {
     else if (el.tagName === 'IMG') { el.style.display = 'none'; }
   }));
 }
+/* ضغط الصور عند الرفع: أطول ضلع 2560 بكسل وجودة 85% — يكفي للعرض والطباعة ويوفر غالبًا 70–90% من الحجم.
+   الصور الشفافة (PNG بخلفية شفافة كالشعارات) تُحفظ WebP لتبقى شفافة. لا يُستبدل الأصل إلا إذا وفّر الضغط 10% على الأقل.
+   المستندات (PDF والعقود…) لا تُعدَّل أبدًا: تبقى مطابقة للأصل حرفيًا. */
+async function compressImage(file) {
+  if (!/^image\/(jpeg|png|webp)$/.test(file.type) || file.size < 400 * 1024 || typeof createImageBitmap !== 'function') return file;
+  try {
+    const bmp = await createImageBitmap(file);
+    const k = Math.min(1, 2560 / Math.max(bmp.width, bmp.height)), w = Math.max(1, Math.round(bmp.width * k)), h = Math.max(1, Math.round(bmp.height * k));
+    const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d');
+    let type = 'image/jpeg';
+    if (file.type !== 'image/jpeg') {
+      x.drawImage(bmp, 0, 0, w, h);
+      const px = x.getImageData(0, 0, w, h).data; let alpha = false;
+      for (let i = 3; i < px.length; i += 4 * 7) if (px[i] < 250) { alpha = true; break; }
+      if (alpha) type = 'image/webp'; else x.clearRect(0, 0, w, h);
+    }
+    if (type === 'image/jpeg') { x.fillStyle = '#fff'; x.fillRect(0, 0, w, h); x.drawImage(bmp, 0, 0, w, h); }
+    if (bmp.close) bmp.close();
+    const blob = await new Promise((r) => c.toBlob(r, type, 0.85));
+    if (!blob || blob.type !== type || blob.size > file.size * 0.9) return file;
+    return new File([blob], file.name.replace(/\.[^.]+$/, '') + (type === 'image/jpeg' ? '.jpg' : '.webp'), { type });
+  } catch (_) { return file; }
+}
 async function saveUpload(file) {
-  if (file.size > MAX_FILE) throw new Error(`حجم الملف «${file.name}» يتجاوز 15 ميجابايت.`);
-  const rec = { id: uid('f'), name: file.name, type: file.type || 'application/octet-stream', size: file.size, blob: file, at: nowISO() };
+  const orig = file.size;
+  if (/^image\//.test(file.type)) file = await compressImage(file);
+  if (file.size > MAX_FILE) throw new Error(`حجم الملف «${file.name}» يتجاوز 50 ميجابايت.`);
+  const rec = { id: uid('f'), name: file.name, type: file.type || 'application/octet-stream', size: file.size, blob: file, at: nowISO(), ...(file.size < orig ? { orig } : {}) };
   await Store.putFile(rec);
   return rec;
 }
@@ -7271,6 +7300,10 @@ const Repo = {
 function blobToDataURL(blob) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(blob); }); }
 async function dataURLToBlob(u) { return (await fetch(u)).blob(); }
 async function exportBackup() {
+  /* المنصة المشتركة: تُجلب المرفقات غير المحمّلة على هذا الجهاز أولًا حتى تكون النسخة كاملة */
+  if (typeof Cloud !== 'undefined' && Cloud.on && Cloud.token()) {
+    try { const have = new Set((await Store.allFiles()).map((f) => f.id)); const ids = (await Cloud.rpc('shk_file_ids', { p_token: Cloud.token() })) || []; const miss = ids.filter((id) => !have.has(id)); if (miss.length) toast(`جارٍ تحميل ${miss.length} مرفق من المنصة لإكمال النسخة…`); for (const id of miss) await Store.getFile(id); } catch (_) { toast('تعذّر تحميل بعض المرفقات من المنصة — ستضم النسخة المرفقات المحفوظة على هذا الجهاز فقط', 'err'); }
+  }
   const files = await Store.allFiles();
   const fileData = [];
   for (const f of files) fileData.push({ id: f.id, name: f.name, type: f.type, size: f.size, at: f.at, data: await blobToDataURL(f.blob) });
@@ -7312,7 +7345,16 @@ const Cloud = {
   rev: 0, sRev: 0, sBase: null, out: {}, fout: [], grp: null, state: 'idle', pwSet: null, pendingUI: false, expiredShown: false,
   kickT: null, pollT: null,
 };
-const CLOUD_RAW = { put: Store.put, putMany: Store.putMany, del: Store.del, clear: Store.clear, putFile: Store.putFile, getFile: Store.getFile };
+const CLOUD_RAW = { put: Store.put, putMany: Store.putMany, del: Store.del, clear: Store.clear, putFile: Store.putFile, getFile: Store.getFile, delFile: Store.delFile };
+const CLOUD_CHUNK = 4 * 1024 * 1024; // كل جزء ≈ 5.6 ميجا بعد base64
+/* ضغط بلا فقد للمستندات أثناء النقل والتخزين (gzip): الملف يعود مطابقًا للأصل بايتًا ببايت */
+async function cloudGzip(blob, type) {
+  if (typeof CompressionStream === 'undefined' || /^(image|video|audio)\/|zip|compressed|officedocument|opendocument|rar|7z/.test(type || '')) return null;
+  try { const z = await new Response(blob.stream().pipeThrough(new CompressionStream('gzip'))).blob(); return z.size < blob.size * 0.95 ? z : null; } catch (_) { return null; }
+}
+async function cloudGunzip(blob) { return new Response(blob.stream().pipeThrough(new DecompressionStream('gzip'))).blob(); }
+const cloudB64 = async (blob) => String(await blobToDataURL(blob)).replace(/^data:[^,]*,/, '');
+const cloudFromB64 = async (b64, type) => (await fetch(`data:${type || 'application/octet-stream'};base64,${b64}`)).blob();
 const cloudRaw = (m, ...a) => CLOUD_RAW[m].apply(Store, a);
 
 function cloudInit() {
@@ -7387,14 +7429,26 @@ Store.put = async function (c, o) { await cloudRaw('put', c, o); Cloud.mark(c, o
 Store.putMany = async function (c, arr) { await cloudRaw('putMany', c, arr); (arr || []).forEach((o) => Cloud.mark(c, o && o.id)); };
 Store.del = async function (c, id) { await cloudRaw('del', c, id); Cloud.mark(c, id, true); };
 Store.putFile = async function (rec) { await cloudRaw('putFile', rec); Cloud.markFile(rec && rec.id); };
+Store.delFile = async function (id) {
+  await cloudRaw('delFile', id);
+  if (!Cloud.on || !Cloud.ready || !id || /^(lib|asset|sbx):/.test(id)) return;
+  Cloud.fout = Cloud.fout.filter((x) => x !== id); Cloud.save();
+  if (Cloud.token() && Cloud.grp !== 'viewer') Cloud.rpc('shk_file_del', { p_token: Cloud.token(), p_id: id }).catch(() => {}); // توفير المساحة؛ إن فشل يبقى الملف دون ضرر
+};
 /* مرفق غير موجود على هذا الجهاز: يُجلب من الخادم مرة واحدة ثم يُحفظ محليًا */
 Store.getFile = async function (id) {
   const r = await cloudRaw('getFile', id);
   if (r || !Cloud.on || !Cloud.token() || !id || /^(lib|asset|sbx):/.test(id)) return r;
   try {
     const f = await Cloud.rpc('shk_file_get', { p_token: Cloud.token(), p_id: id });
-    if (!f || !f.data) return null;
-    const m = f.meta || {}, blob = await (await fetch(`data:${m.type || 'application/octet-stream'};base64,${f.data}`)).blob();
+    if (!f) return null;
+    const m = f.meta || {};
+    let blob;
+    if (m.chunks) { const parts = []; for (let n = 0; n < m.chunks; n++) { const d = await Cloud.rpc('shk_file_chunk_get', { p_token: Cloud.token(), p_id: id, p_n: n }); if (d == null) return null; parts.push(await cloudFromB64(d)); } blob = new Blob(parts); }
+    else if (f.data) blob = await cloudFromB64(f.data);
+    else return null;
+    if (m.gz) blob = await cloudGunzip(blob);
+    blob = new Blob([blob], { type: m.type || 'application/octet-stream' });
     const rec = { id, name: m.name || id, type: m.type || blob.type, size: m.size || blob.size, at: m.at, blob };
     await cloudRaw('putFile', rec);
     return rec;
@@ -7468,18 +7522,36 @@ Cloud.flush = async function () {
     for (const id of [...this.fout]) {
       const f = await cloudRaw('getFile', id);
       if (f && f.blob) {
-        const b64 = String(await blobToDataURL(f.blob)).replace(/^data:[^,]*,/, '');
-        await this.rpc('shk_file_put', { p_token: this.token(), p_id: id, p_meta: { name: f.name, type: f.type, size: f.size, at: f.at }, p_data: b64 });
+        try { await cloudUploadFile(f); }
+        catch (e) { if (e.offline || e.code === 'invalid_token') throw e; if (this.needUpdate) continue; throw e; } // ملف كبير ينتظر تحديث الخادم: لا يعطّل بقية الملفات
       }
       this.fout = this.fout.filter((x) => x !== id); this.save();
     }
-    this.setState(this.pending() ? 'sync' : 'ok');
+    this.setState(Object.keys(this.out).length || (this.fout.length && !this.needUpdate) ? 'sync' : 'ok');
   } catch (e) {
     this.setState(e.offline ? 'off' : e.code === 'invalid_token' ? 'idle' : 'off');
     if (!e.offline && e.code !== 'invalid_token') console.warn('cloud push', e);
   } finally { this.busy = false; }
-  if (this.pending() && this.state === 'sync') this.kick();
+  if (this.state === 'sync' && (Object.keys(this.out).length || (this.fout.length && !this.needUpdate))) this.kick();
 };
+
+/* رفع مرفق: يُضغط بلا فقد إن أمكن، ثم يُرفع على أجزاء، وتُسجَّل بياناته الوصفية في النهاية (فوجودها يعني اكتمال الملف) */
+async function cloudUploadFile(f) {
+  const meta = { name: f.name, type: f.type, size: f.size, at: f.at };
+  let body = f.blob;
+  const z = await cloudGzip(body, f.type); if (z) { body = z; meta.gz = true; }
+  try {
+    const n = Math.max(1, Math.ceil(body.size / CLOUD_CHUNK));
+    for (let i = 0; i < n; i++) await Cloud.rpc('shk_file_chunk_put', { p_token: Cloud.token(), p_id: f.id, p_n: i, p_data: await cloudB64(body.slice(i * CLOUD_CHUNK, (i + 1) * CLOUD_CHUNK)) });
+    meta.chunks = n;
+    await Cloud.rpc('shk_file_put', { p_token: Cloud.token(), p_id: f.id, p_meta: meta, p_data: '' });
+  } catch (e) {
+    /* خادم لم يُحدَّث بعد (لا توجد دوال الأجزاء): نرفع الملفات الصغيرة بالطريقة القديمة */
+    if (e.status !== 404 || body.size > 15 * 1024 * 1024) { if (e.status === 404) { Cloud.needUpdate = true; Cloud.nuAt = Date.now(); } throw e; }
+    delete meta.chunks;
+    await Cloud.rpc('shk_file_put', { p_token: Cloud.token(), p_id: f.id, p_meta: meta, p_data: await cloudB64(body) });
+  }
+}
 
 /* ===== السحب ===== */
 Cloud.pull = async function () {
@@ -7526,6 +7598,7 @@ Cloud.pull = async function () {
 /* ===== دورة المزامنة أثناء العمل ===== */
 async function cloudTick() {
   if (!Cloud.on || !Cloud.ready || !Cloud.token() || document.visibilityState === 'hidden') return;
+  if (Cloud.needUpdate && Date.now() - (Cloud.nuAt || 0) > 120000) Cloud.needUpdate = false; // نعيد المحاولة كل دقيقتين: ربما حُدّث الخادم
   try {
     if (Cloud.pending()) await Cloud.flush();
     const r = await Cloud.pull();
@@ -8723,7 +8796,7 @@ function attachEditorHTML(id, { cats, defaultCat }) {
   return `<div class="att-editor" id="${id}">
     <div class="row wrap" style="margin-bottom:10px"><label class="flabel" style="margin:0">التصنيف</label>
       <select class="in" data-attcat style="width:auto;min-width:200px">${cats.map((c) => `<option ${c === defaultCat ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select></div>
-    <label class="drop" data-drop><input type="file" multiple hidden>${icon('upload')}<div>اسحب الملفات هنا أو <b>اختر من جهازك</b></div><div class="xs faint">حتى 15 ميجابايت للملف — تُحفظ في هذا المتصفح</div></label>
+    <label class="drop" data-drop><input type="file" multiple hidden>${icon('upload')}<div>اسحب الملفات هنا أو <b>اختر من جهازك</b></div><div class="xs faint">حتى 50 ميجابايت للملف — والصور تُضغط تلقائيًا</div></label>
     <div class="att-out" style="margin-top:14px"></div></div>`;
 }
 function bindAttachEditor(root, getList, setList, { onChange } = {}) {
@@ -12491,12 +12564,19 @@ function setData(b) {
         <label class="btn">${icon('upload')} استعادة من نسخة<input type="file" accept=".json,application/json" hidden id="dImp"></label></div>
       <div id="dStat" class="small muted" style="margin-top:12px"></div></div></div>
     ${Cloud.on ? `<div class="panel" style="margin-top:18px" id="dCloud"><div class="panel-h"><h3>المنصة المشتركة</h3><span class="sub">كل الحسابات تعمل على نفس البيانات من أي جهاز</span></div><div class="panel-b">
-      <p class="small" style="margin-bottom:12px"><span class="cloud-pill" data-st="${Cloud.state}"></span> ${esc(cloudStateText())}</p>
+      <p class="small" style="margin-bottom:8px"><span class="cloud-pill" data-st="${Cloud.state}"></span> ${esc(cloudStateText())}</p>
+      <div class="cl-usage" id="dUsage"></div>
+      ${Cloud.needUpdate ? `<p class="small" style="color:var(--danger,#b4462f);margin-bottom:10px">${Cloud.fout.length} ملف أكبر من 15 ميجا ينتظر تحديث الخادم (ملف «supabase-update-files.sql»)، وسيُرفع تلقائيًا بعد التحديث.</p>` : ''}
       <div class="row wrap"><button class="btn" id="dSync">${icon('history')} مزامنة الآن</button>
         ${['sys', 'admin'].includes(Cloud.grp) ? `<button class="btn ghost" id="dMergeOld">${icon('upload')} دمج بيانات قديمة من هذا المتصفح</button>` : ''}</div>
       <p class="xs muted" style="margin-top:10px">«دمج البيانات القديمة» يرفع ما كان محفوظًا في هذا المتصفح قبل الربط بالمنصة المشتركة (ما ليس موجودًا على المنصة أو الأحدث منه فقط). إعادة التهيئة الكاملة غير متاحة من الواجهة حمايةً لبيانات كل الحسابات.</p></div></div>` : `<div class="panel" style="margin-top:18px"><div class="panel-h"><h3>إعادة التهيئة</h3></div><div class="panel-b">
       <p class="small muted" style="margin-bottom:12px">يحذف كل البيانات والمرفقات في هذا المتصفح ويعيد المنصة إلى حالتها الأولى (السجلات المستوردة من ملف الحصر + البيانات التجريبية).</p>
       <button class="btn danger" id="dReset">إعادة تهيئة المنصة</button></div></div>`}`;
+  if (Cloud.on && Cloud.token()) Cloud.rpc('shk_usage', { p_token: Cloud.token() }).then((u) => {
+    const el = $('#dUsage', b); if (!el || !u) return;
+    const lim = 500 * 1024 * 1024, pct = Math.min(100, Math.round((u.db / lim) * 100));
+    el.innerHTML = `<div class="cl-bar ${pct >= 80 ? 'warn' : ''}"><i style="width:${pct}%"></i></div><span class="xs muted">المساحة المستخدمة ${fmtSize(u.db)} من 500 ميجا (الخطة المجانية) — ${u.files} مرفق${pct >= 80 ? ' · اقتربت المساحة من الامتلاء: احذف المرفقات غير المهمة أو انتقل للخطة المدفوعة' : ''}</span>`;
+  }).catch(() => {});
   Store.allFiles().then((fs) => { const tot = fs.reduce((a, f) => a + (f.size || 0), 0); $('#dStat', b) && ($('#dStat', b).textContent = `المرفقات المحفوظة: ${fs.length} ملف (${fmtSize(tot)}).`); });
   b.onchange = async (e) => {
     if (e.target.id === 'dDemo') { await setDemo(e.target.checked); setData(b); }
@@ -15724,7 +15804,7 @@ function mediaUploadDlg(pid = '') {
       body: `<div class="field"><label>الشراكة</label><select class="in" id="muP"><option value="">اختر الشراكة…</option>${ps.map((p) => `<option value="${p.id}" ${p.id === pid ? 'selected' : ''}>${esc(partnerName(p))}${p.code ? ' — ' + esc(p.code) : ''}</option>`).join('')}</select><span class="err">اختر الشراكة التي تتبعها الصور.</span></div>
         <div class="field"><label>التصنيف</label><select class="in" id="muC">${cats.map((c) => `<option ${c === 'صور الشراكة' ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select><span class="hint">«صور الشراكة» تظهر في الواجهة إذا كانت الشراكة منشورة، وبقية التصنيفات داخلية.</span></div>
         <div class="field"><label>وصف موحّد (اختياري)</label><input class="in" id="muT" placeholder="مثال: زيارة ميدانية لموقع التشجير — مارس 2026"></div>
-        <label class="drop" id="muDrop"><input type="file" accept="image/*" multiple hidden>${icon('upload')}<div>اسحب الصور هنا أو <b>اختر من جهازك</b></div><div class="xs faint">صور فقط، حتى 15 ميجابايت للصورة — تُحفظ في هذا المتصفح</div></label>
+        <label class="drop" id="muDrop"><input type="file" accept="image/*" multiple hidden>${icon('upload')}<div>اسحب الصور هنا أو <b>اختر من جهازك</b></div><div class="xs faint">صور فقط، حتى 50 ميجابايت — تُضغط تلقائيًا مع الحفاظ على جودتها</div></label>
         <div class="m-prev" id="muPrev"></div>`,
       foot: `<button class="btn primary" data-ok type="button">${icon('upload')} حفظ الصور</button><button class="btn ghost" data-mclose type="button">إلغاء</button>`,
       onClose: (v) => res(!!v),
