@@ -6460,6 +6460,9 @@ body:has(.pm.stuck) .js-nav{opacity:0;pointer-events:none;transform:translateY(-
 .chip.pk-t{background:color-mix(in srgb,var(--gold) 16%,var(--paper));color:var(--gold-ink,#7a5c1e);border-color:transparent;font-size:11px;padding:1px 8px;vertical-align:middle}
 
 @media print{.js-map-sec{break-before:page}.pm.compact .pm-n{padding:6px 8px;gap:6px}.pm.compact .pm-n .pr-t{font-size:11px;-webkit-line-clamp:2}.pm.compact .pr-st{display:none}.pm.compact .pm-tag{bottom:-7px;font-size:9px;line-height:14px}}
+/* أثناء الشاشة الافتتاحية: بلا شريط تمرير */
+html.sp-lock,html.sp-lock body{overflow:hidden!important;scrollbar-width:none}
+html.sp-lock::-webkit-scrollbar,html.sp-lock body::-webkit-scrollbar{display:none}
 </style>
 </head>
 <body>
@@ -13533,12 +13536,13 @@ function splashShow(force) {
     </div>
     <div class="sp-bar"><i></i></div><small class="sp-skip">اضغط للمتابعة</small>`;
   const put = () => {
+    document.documentElement.classList.add('sp-lock'); // لا شريط تمرير ولا تمرير خلف الشاشة الافتتاحية
     document.body.appendChild(el);
     const count = () => el.querySelectorAll('.sp-stats b').forEach((b) => { const to = +b.dataset.to || 0, t0 = performance.now(), d = reduce ? 1 : 900; const step = (t) => { const k = Math.min(1, (t - t0) / d); b.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); }; setTimeout(() => requestAnimationFrame(step), reduce ? 0 : 1100); });
     count(); el._count = count;
     el._t = setTimeout(close, dur * 1000);
   };
-  const close = () => { if (el.classList.contains('out')) return; clearTimeout(el._t); el.classList.add('out'); setTimeout(() => el.remove(), 700); document.removeEventListener('keydown', key); };
+  const close = () => { if (el.classList.contains('out')) return; clearTimeout(el._t); el.classList.add('out'); setTimeout(() => { el.remove(); if (!document.getElementById('shkSplash')) document.documentElement.classList.remove('sp-lock'); }, 700); document.removeEventListener('keydown', key); };
   const key = () => close();
   el.addEventListener('click', close);
   document.addEventListener('keydown', key);

@@ -3002,3 +3002,6 @@ body:has(.pm.stuck) .js-nav{opacity:0;pointer-events:none;transform:translateY(-
 .chip.pk-t{background:color-mix(in srgb,var(--gold) 16%,var(--paper));color:var(--gold-ink,#7a5c1e);border-color:transparent;font-size:11px;padding:1px 8px;vertical-align:middle}
 
 @media print{.js-map-sec{break-before:page}.pm.compact .pm-n{padding:6px 8px;gap:6px}.pm.compact .pm-n .pr-t{font-size:11px;-webkit-line-clamp:2}.pm.compact .pr-st{display:none}.pm.compact .pm-tag{bottom:-7px;font-size:9px;line-height:14px}}
+/* أثناء الشاشة الافتتاحية: بلا شريط تمرير */
+html.sp-lock,html.sp-lock body{overflow:hidden!important;scrollbar-width:none}
+html.sp-lock::-webkit-scrollbar,html.sp-lock body::-webkit-scrollbar{display:none}

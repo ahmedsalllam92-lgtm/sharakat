@@ -42,12 +42,13 @@ function splashShow(force) {
     </div>
     <div class="sp-bar"><i></i></div><small class="sp-skip">اضغط للمتابعة</small>`;
   const put = () => {
+    document.documentElement.classList.add('sp-lock'); // لا شريط تمرير ولا تمرير خلف الشاشة الافتتاحية
     document.body.appendChild(el);
     const count = () => el.querySelectorAll('.sp-stats b').forEach((b) => { const to = +b.dataset.to || 0, t0 = performance.now(), d = reduce ? 1 : 900; const step = (t) => { const k = Math.min(1, (t - t0) / d); b.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); }; setTimeout(() => requestAnimationFrame(step), reduce ? 0 : 1100); });
     count(); el._count = count;
     el._t = setTimeout(close, dur * 1000);
   };
-  const close = () => { if (el.classList.contains('out')) return; clearTimeout(el._t); el.classList.add('out'); setTimeout(() => el.remove(), 700); document.removeEventListener('keydown', key); };
+  const close = () => { if (el.classList.contains('out')) return; clearTimeout(el._t); el.classList.add('out'); setTimeout(() => { el.remove(); if (!document.getElementById('shkSplash')) document.documentElement.classList.remove('sp-lock'); }, 700); document.removeEventListener('keydown', key); };
   const key = () => close();
   el.addEventListener('click', close);
   document.addEventListener('keydown', key);
