@@ -458,6 +458,7 @@ function renderReports(el, r) {
         <p>حوّل بيانات الشراكات إلى عرض يُقنع ويُلهم: اختر القصة، وحدد الشراكات، وعدّل أي نص مباشرة على الشريحة، ثم اعرضه بملء الشاشة أو نزّله PowerPoint وPDF. الأرقام تُقرأ من السجلات لحظة العرض.</p></div>
       <div class="rx-fan" aria-hidden="true"><span class="f1"><b></b><i></i><i></i><i></i></span><span class="f2"><b></b><em></em><i></i><i></i></span><span class="f3"><strong>”</strong><i></i><i></i><i></i></span></div>
     </section>
+    <a class="mk-entry" href="#/reports/marketing"><span class="mk-entry-art" aria-hidden="true">${MK_RINGS}<b>${nf(liveCounts().partners)}</b></span><span class="mk-entry-b"><em>جديد</em><b>التقرير التسويقي «أثرٌ يُروى»</b><small>قصة أعمالكم وإنجازاتكم وأثركم في مجلة شرائح مبهرة تُبنى من البيانات — للعملاء والقيادات</small></span><span class="btn gold">${icon('play')} افتح التقرير</span></a>
     <section class="rx-pick">
       <div class="rx-step"><span>1</span><div><b>اختر القصة</b><small>قالب جاهز يحدد مكونات التقرير، ويمكنك تعديلها بعد ذلك</small></div></div>
       <div class="rx-presets" id="rxPresets"></div>
@@ -558,10 +559,10 @@ function renderReports(el, r) {
 const rptFileName = () => { const ps = RPT.ids.map((id) => D.partnerships.find((p) => p.id === id)).filter(Boolean); return (ps.length === 1 ? `تقرير شراكة ${partnerName(ps[0])}` : `تقرير الشراكات (${ps.length})`) + ` — ${isoDate(new Date())}`; };
 
 /* — PDF: نسخ شرائح المعاينة نفسها (بنفس الخط والتنسيق) إلى صفحات 16:9 — */
-function prepareReportPrint() {
+function prepareReportPrint(nodes, title) {
   let host = $('#rptPrint'); if (host) host.remove();
   host = document.createElement('div'); host.id = 'rptPrint'; host.dir = 'rtl';
-  const src = $$('#rpSlides .rs2');
+  const src = nodes && nodes.length ? nodes : $$('#rpSlides .rs2');
   host.innerHTML = src.length ? src.map((n) => n.outerHTML).join('') : rptSlides().map(specHTML).join('');
   $$('[contenteditable]', host).forEach((x) => x.removeAttribute('contenteditable')); $$('.rs2-t.ed', host).forEach((x) => x.classList.remove('ed'));
   document.body.appendChild(host);
@@ -569,7 +570,7 @@ function prepareReportPrint() {
   let st = $('#printPageSize'); if (!st) { st = document.createElement('style'); st.id = 'printPageSize'; document.head.appendChild(st); }
   st.textContent = '@page{size:1280px 720px;margin:0}';
   document.documentElement.classList.add('printing-report');
-  const prevTitle = document.title; document.title = rptFileName();
+  const prevTitle = document.title; document.title = title || rptFileName();
   const done = () => { document.documentElement.classList.remove('printing-report'); st.textContent = ''; host.remove(); document.title = prevTitle; window.removeEventListener('afterprint', done); };
   window.addEventListener('afterprint', done);
 }
@@ -624,8 +625,8 @@ async function exportReportPptx() {
 }
 
 /* — عرض التقرير بملء الشاشة داخل المنصة — */
-function openReportShow(start = 0) {
-  const src = $$('#rpSlides .rs2'); if (!src.length) return;
+function openReportShow(start = 0, nodes) {
+  const src = nodes && nodes.length ? nodes : $$('#rpSlides .rs2'); if (!src.length) return;
   const ov = document.createElement('div'); ov.id = 'rptShow'; ov.className = 'rshow'; ov.dir = 'rtl';
   ov.innerHTML = `<div class="rshow-stage"><div class="rshow-track">${src.map((n, k) => `<div class="rshow-slide" data-i="${k}">${n.outerHTML}</div>`).join('')}</div></div>
     <div class="rshow-thumbs" hidden>${src.map((n, k) => `<button type="button" class="rshow-th" data-j="${k}"><span class="rshow-thf">${n.outerHTML}</span><b>${k + 1}</b></button>`).join('')}</div>

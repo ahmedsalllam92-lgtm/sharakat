@@ -5564,6 +5564,213 @@ html.rq-in #dsw,html.rq-in .tour-top{display:none!important}
 .ob-types button{font-size:11.5px}
 .s-add{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:12px}
 .s-add .ic{width:12px;height:12px}
+
+/* =====================================================================
+   التقرير التسويقي «أثرٌ يُروى» — مجلة أثر بشرائح 1280×720
+   ===================================================================== */
+.mk-entry{display:flex;align-items:center;gap:22px;margin:0 0 18px;padding:18px 22px;border-radius:20px;background:radial-gradient(120% 160% at 90% 0%,#174B42,#0B2F2A 60%,#0A2622);color:#fff;text-decoration:none!important;position:relative;overflow:hidden;isolation:isolate;box-shadow:0 18px 40px -26px rgba(0,0,0,.6)}
+.mk-entry::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(135deg,rgba(230,199,134,.75),rgba(230,199,134,.06) 45%,rgba(230,199,134,.4));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.mk-entry-art{position:relative;flex:none;width:118px;height:78px;display:grid;place-items:center}
+.mk-entry-art .mk-bond{position:absolute;inset:0;width:100%;height:100%}
+.mk-entry-art b{position:relative;font-size:26px;color:#F6E3B4;font-family:var(--display,var(--font))}
+.mk-entry-b{flex:1;display:flex;flex-direction:column;gap:3px}
+.mk-entry-b em{align-self:flex-start;font-style:normal;font-size:11px;padding:1px 9px;border-radius:10px;background:#E6C786;color:#14201B;font-weight:600}
+.mk-entry-b b{font-size:18px;color:#F6E3B4}.mk-entry-b small{font-size:13px;color:#B9CFC6}
+.mk-entry:hover{transform:translateY(-2px);transition:transform .25s}
+[data-design="board"] .mk-entry{border-radius:4px}
+.mk-bond{overflow:visible}
+.mk-bond circle{fill:none;stroke:#E6C786;stroke-width:1.6;opacity:.55}
+.mk-bond circle.k{fill:#F0D9A0;stroke:none;opacity:.95}
+
+/* الصفحة */
+.mkpage .mk-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:16px}
+.mk-head-t h1{margin:6px 0 4px;font-size:40px;color:var(--petrol)}
+.mk-head-t p{margin:0;max-width:70ch;color:var(--muted);line-height:1.8}
+.mk-head-t .back{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-bottom:6px}
+.mk-head-a{display:flex;gap:8px}
+.mk-scope{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.mk-scope button[data-mkscope]{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:20px;border:1px solid var(--line);background:var(--paper);font:inherit;font-size:13px;cursor:pointer;color:var(--ink)}
+.mk-scope button[data-mkscope] b{font-size:11.5px;color:var(--muted);font-weight:500}
+.mk-scope button.on{background:var(--petrol);border-color:var(--petrol);color:#fff}.mk-scope button.on b{color:#D6E5DF}
+.mk-scope button:disabled{opacity:.45;cursor:default}
+.mk-scope .sp{flex:1}
+.mk-deck{display:flex;flex-direction:column;gap:22px}
+.mk-fr{position:relative;width:100%;border-radius:14px;overflow:hidden;box-shadow:0 22px 50px -30px rgba(0,0,0,.55);background:#0B2F2A}
+.mk-fr>.rs2{position:absolute;top:0;right:0;transform-origin:top right}
+[data-design="board"] .mk-fr{border-radius:3px}
+
+/* الشريحة: الأساس */
+.rs2.mk{--mk-p:#0E3B35;--mk-p2:#0A2A26;--mk-g:#E6C786;--mk-g2:#B08A3E;--mk-ink:#14201B;--mk-mut:#5E6B65;--mk-paper:#F6F2E8;font-family:'Expo Arabic','IBM Plex Sans Arabic',Tahoma,sans-serif;color:var(--mk-ink);background:var(--mk-paper)}
+.rs2.mk.mk-dark{background:radial-gradient(120% 120% at 85% 0%,#174B42 0%,#0C3530 48%,#081F1C 100%);color:#fff}
+.rs2.mk.mk-paper{background:linear-gradient(180deg,#F8F5EC,#F1ECDF);}
+.rs2.mk.mk-paper::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(14,59,53,.08) 1px,transparent 1px);background-size:22px 22px;pointer-events:none}
+.rs2.mk .mk-top{position:absolute;top:34px;inset-inline:56px;display:flex;justify-content:space-between;align-items:center;z-index:5;font-size:13px}
+.mk-kick{display:inline-flex;align-items:center;gap:10px;color:var(--mk-g2);font-weight:600;letter-spacing:.2px}
+.mk-dark .mk-kick,.mk-split .mk-kick{color:var(--mk-g)}
+.mk-kick em{font-style:normal;font-size:12px;padding:2px 9px;border:1px solid currentColor;border-radius:20px;font-variant-numeric:tabular-nums}
+.mk-pg{font-size:12px;color:var(--mk-mut);font-variant-numeric:tabular-nums}.mk-dark .mk-pg,.mk-split .mk-pg{color:rgba(255,255,255,.55)}
+.rs2.mk .mk-foot{position:absolute;bottom:26px;inset-inline:56px;display:flex;align-items:center;gap:14px;font-size:11.5px;color:var(--mk-mut);z-index:5}
+.mk-foot i{flex:1;height:1px;background:currentColor;opacity:.25}
+.mk-dark .mk-foot,.mk-split .mk-foot{color:rgba(255,255,255,.55)}
+.mk-h{position:absolute;top:84px;inset-inline-start:56px;margin:0;font-size:46px;font-weight:700;line-height:1.25;color:var(--mk-p);max-width:900px;z-index:2}
+.mk-dark .mk-h{color:#fff}.mk-h.gold{color:#F6E3B4}
+.mk-sub{position:absolute;top:150px;inset-inline-start:56px;margin:0;font-size:17px;color:var(--mk-mut);max-width:820px;line-height:1.7;z-index:2}
+.mk-ed{outline:none;border-radius:4px;transition:box-shadow .2s}
+.mk-fr .mk-ed:hover{box-shadow:0 0 0 2px rgba(230,199,134,.55)}
+.mk-fr .mk-ed:focus{box-shadow:0 0 0 2px #E6C786;background:rgba(230,199,134,.08)}
+.mk-bg{position:absolute;inset:0;overflow:hidden}
+.mk-photo,.mk-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.mk-veil{position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,28,25,.15),rgba(6,28,25,.55) 45%,rgba(6,28,25,.92)),linear-gradient(0deg,rgba(6,28,25,.75),transparent 55%)}
+
+/* 1. الغلاف */
+.mks-cover .mk-bond{position:absolute;width:560px;height:364px;left:70px;top:178px;opacity:.9}
+.mk-cv{position:absolute;inset-inline-start:72px;bottom:96px;max-width:700px;z-index:3}
+.mk-mast{display:inline-block;font-size:14px;color:var(--mk-g);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid rgba(230,199,134,.5)}
+.mk-cv h1{margin:0 0 16px;font-size:64px;line-height:1.2;font-weight:700;color:#fff;text-shadow:0 6px 30px rgba(0,0,0,.35)}
+.mk-cv p{margin:0 0 26px;font-size:19px;color:#DCE8E3;line-height:1.7}
+.mk-cv-n{display:flex;gap:12px}
+.mk-cv-n span{display:flex;flex-direction:column;padding:12px 18px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(230,199,134,.35);backdrop-filter:blur(8px);font-size:13px;color:#D6E5DF;min-width:120px}
+.mk-cv-n b{font-size:34px;line-height:1.1;color:#F6E3B4;font-family:var(--display,inherit);font-variant-numeric:tabular-nums}
+
+/* 2. القصة في سطر */
+.mk-man{position:absolute;top:120px;inset-inline-start:56px;width:820px;z-index:2}
+.mk-q{position:absolute;top:-70px;inset-inline-start:-14px;font-size:240px;line-height:1;color:var(--mk-g);opacity:.35;font-family:Georgia,serif}
+.mk-man-t{margin:0;font-size:44px;line-height:1.55;font-weight:500;color:var(--mk-p)}
+.mk-man-sig{display:flex;align-items:center;gap:12px;margin-top:30px;font-size:15px;color:var(--mk-g2)}
+.mk-man-sig i{width:60px;height:2px;background:var(--mk-g2)}
+.mk-man-side{position:absolute;top:150px;bottom:110px;inset-inline-end:56px;width:250px;display:flex;flex-direction:column;justify-content:space-between;padding-inline-start:30px;border-inline-start:1px solid rgba(14,59,53,.2);z-index:2}
+.mk-man-side b{display:block;font-size:58px;line-height:1;color:var(--mk-p);font-family:var(--display,inherit);font-variant-numeric:tabular-nums}
+.mk-man-side span{font-size:14px;color:var(--mk-mut)}
+
+/* 3. بالأرقام */
+.mk-bento{position:absolute;top:170px;bottom:80px;inset-inline:56px;display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:14px}
+.mk-bento .b3{grid-column:span 2}
+.mk-bento>div{position:relative;border-radius:18px;padding:22px 24px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.mk-bento>div>span{font-size:14px;color:#B9CFC6}
+.mk-bento b{font-size:64px;line-height:1;font-weight:700;color:#fff;font-family:var(--display,inherit);font-variant-numeric:tabular-nums}
+.mk-bento b small{font-size:22px;color:var(--mk-g);margin-inline-start:4px}
+.mk-bento>div>small{font-size:13px;color:#9FB8AF}
+.mk-bento .b1{grid-row:1/3;background:linear-gradient(160deg,rgba(230,199,134,.22),rgba(230,199,134,.04));border-color:rgba(230,199,134,.4)}
+.mk-bento .b1 b{font-size:128px;color:#F6E3B4}
+.mk-bento .b3 b{color:#F6E3B4}
+.mk-spark{position:absolute;inset-inline:0;bottom:0;height:60px;width:100%;opacity:.6}
+.mk-spark polyline{fill:none;stroke:var(--mk-g);stroke-width:2;vector-effect:non-scaling-stroke}
+.mk-ring{position:relative;width:96px;height:96px;align-self:flex-start}
+.mk-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.mk-ring circle{fill:none;stroke-width:8}.mk-ring .t{stroke:rgba(255,255,255,.1)}.mk-ring .v{stroke:var(--mk-g);stroke-linecap:round}
+.mk-ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:28px!important}
+.mk-ring b small{font-size:13px}
+
+/* 4. رحلة النمو */
+.mk-grow{position:absolute;inset-inline:70px;bottom:150px;top:230px;display:flex;align-items:flex-end;gap:18px}
+.mk-grow>div{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px}
+.mk-grow i{display:block;width:100%;max-width:70px;height:var(--h);border-radius:10px 10px 3px 3px;background:linear-gradient(180deg,#2E6F60,#0E3B35);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.mk-grow .pk i{background:linear-gradient(180deg,#F0D9A0,#B08A3E)}
+.mk-grow .v{font-size:22px;font-weight:700;color:var(--mk-p);font-variant-numeric:tabular-nums}
+.mk-grow b{font-size:15px;color:var(--mk-ink);font-weight:500;font-variant-numeric:tabular-nums}
+.mk-grow small{font-size:12px;color:var(--mk-g2);min-height:16px}
+.mk-miles{position:absolute;bottom:72px;inset-inline:70px;display:flex;gap:16px}
+.mk-miles div{display:flex;align-items:baseline;gap:10px;padding:8px 14px;border-radius:10px;background:rgba(14,59,53,.06);font-size:13px}
+.mk-miles em{font-style:normal;color:var(--mk-g2);font-weight:600}.mk-miles b{color:var(--mk-p)}.mk-miles span{color:var(--mk-mut)}
+
+/* 5. شركاء النجاح */
+.mk-wall{position:absolute;top:220px;bottom:80px;inset-inline:56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:16px}
+.mk-wcol{background:rgba(255,255,255,.7);border:1px solid rgba(14,59,53,.12);border-radius:16px;padding:16px 16px 12px;display:flex;flex-direction:column;gap:12px;overflow:hidden}
+.mk-wcol h4{display:flex;justify-content:space-between;align-items:center;margin:0;font-size:15px;color:var(--mk-p)}
+.mk-wcol h4 em{font-style:normal;font-size:12px;padding:1px 9px;border-radius:10px;background:var(--mk-p);color:#fff}
+.mk-logos{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mk-logos span{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.mk-logos i{width:64px;height:64px;border-radius:16px;background:#fff;display:grid;place-items:center;box-shadow:0 4px 14px -8px rgba(0,0,0,.25);overflow:hidden;padding:6px}
+.mk-logos i img{max-width:100%;max-height:100%;object-fit:contain}.mk-logos i .emb{width:44px;height:44px}
+.mk-logos small{font-size:10.5px;color:var(--mk-mut);line-height:1.35;max-width:96px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mk-logos .more i{font-size:18px;color:var(--mk-p);font-style:normal;font-weight:700;background:rgba(14,59,53,.08)}
+
+/* 6. النجوم */
+.mk-stgrid{position:absolute;top:170px;bottom:76px;inset-inline:56px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.mk-stgrid.n1{grid-template-columns:minmax(0,640px);justify-content:center}.mk-stgrid.n2{grid-template-columns:repeat(2,1fr)}
+.mk-stgrid article{border-radius:18px;overflow:hidden;background:rgba(255,255,255,.06);border:1px solid rgba(230,199,134,.3);display:flex;flex-direction:column}
+.mk-st-ph{position:relative;height:190px;flex:none;background:#0A2622;overflow:hidden}
+.mk-st-ph img{width:100%;height:100%;object-fit:cover}
+.mk-st-ph::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(8,31,28,.85),transparent 60%)}
+.mk-st-art{position:absolute;inset:0;display:grid;place-items:center}.mk-st-art .mk-bond{width:70%}
+.mk-st-logo{position:absolute;bottom:-1px;inset-inline-start:18px;z-index:2;width:64px;height:64px;border-radius:14px;background:#fff;display:grid;place-items:center;overflow:hidden;padding:6px;transform:translateY(30%);box-shadow:0 0 0 3px rgba(230,199,134,.6)}
+.mk-st-logo img{max-width:100%;max-height:100%;object-fit:contain}.mk-st-logo .emb{width:44px;height:44px}
+.mk-st-star{position:absolute;top:12px;inset-inline-end:12px;z-index:2;width:26px;height:26px}.mk-st-star svg{width:100%;height:100%;fill:#E6C786;filter:drop-shadow(0 0 6px rgba(230,199,134,.7))}
+.mk-st-b{padding:30px 18px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.mk-st-b h3{margin:0;font-size:19px;color:#fff;line-height:1.4}
+.mk-st-b small{font-size:12px;color:#9FB8AF}
+.mk-st-b p{margin:4px 0 0;font-size:13.5px;line-height:1.75;color:#D5E3DD;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.mk-st-f{margin-top:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)}
+.mk-st-f span{font-size:11px;color:#9FB8AF;display:flex;flex-direction:column}.mk-st-f b{font-size:18px;color:#F6E3B4}
+
+/* 7. القصة */
+.rs2.mk.mk-split{background:#0A2622;color:#fff}
+.mk-story-ph{position:absolute;inset-block:0;inset-inline-end:0;width:54%;overflow:hidden}
+.mk-story-ph img{width:100%;height:100%;object-fit:cover}
+.mk-story-ph .mk-veil{background:linear-gradient(270deg,rgba(10,38,34,0) 40%,#0A2622 100%)}
+[dir="rtl"] .mk-story-ph .mk-veil,.mk-story-ph .mk-veil{background:linear-gradient(90deg,rgba(10,38,34,0) 40%,#0A2622 100%)}
+.mk-story-b{position:absolute;inset-inline-start:56px;top:120px;bottom:80px;width:560px;display:flex;flex-direction:column;justify-content:center;gap:16px;z-index:2}
+.mk-tag{align-self:flex-start;font-size:12.5px;color:#14201B;background:var(--mk-g);padding:3px 12px;border-radius:14px;font-weight:600}
+.mk-story-b h2{margin:0;font-size:40px;line-height:1.3;color:#fff}
+.mk-story-b blockquote{margin:0;padding-inline-start:18px;border-inline-start:3px solid var(--mk-g);font-size:17px;line-height:1.85;color:#D5E3DD}
+.mk-story-m span{display:inline-flex;align-items:baseline;gap:10px;font-size:15px;color:#B9CFC6}
+.mk-story-m b{font-size:56px;line-height:1;color:#F6E3B4;font-family:var(--display,inherit);font-variant-numeric:tabular-nums}
+.mk-date{color:rgba(255,255,255,.5);font-size:12px}
+
+/* 8. الأثر */
+.mk-imp{position:absolute;top:170px;bottom:80px;inset-inline:56px;display:grid;grid-template-columns:1.15fr 1fr;gap:30px}
+.mk-imp-l{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.mk-imp-l li{display:flex;gap:16px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.75);border:1px solid rgba(14,59,53,.1)}
+.mk-imp-l em{font-style:normal;font-size:26px;font-weight:700;color:var(--mk-g2);line-height:1;font-variant-numeric:tabular-nums}
+.mk-imp-l p{margin:0;font-size:15px;line-height:1.7;color:var(--mk-ink)}.mk-imp-l small{font-size:12px;color:var(--mk-mut)}
+.mk-goals{background:var(--mk-p);border-radius:18px;padding:22px 24px;color:#fff;display:flex;flex-direction:column;gap:12px}
+.mk-goals h4{margin:0 0 6px;font-size:16px;color:#F6E3B4}
+.mk-goals>div{display:grid;grid-template-columns:44px 1fr 90px 22px;align-items:center;gap:10px;font-size:12.5px;color:rgba(255,255,255,.55)}
+.mk-goals>div.on{color:#E3EFEA}
+.mk-goals em{font-style:normal;font-weight:700;color:var(--mk-g);font-variant-numeric:tabular-nums}
+.mk-goals i{height:6px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden}.mk-goals i b{display:block;height:100%;background:var(--mk-g)}
+.mk-goals strong{text-align:center;color:#fff}
+
+/* 9. القيمة */
+.mk-val{position:absolute;top:120px;bottom:80px;inset-inline:56px;display:grid;grid-template-columns:1.1fr 300px 1fr;gap:34px;align-items:center}
+.mk-val-big span{display:block;font-size:15px;color:#B9CFC6;margin-bottom:6px}
+.mk-val-big b{display:block;font-size:96px;line-height:1;color:#F6E3B4;font-family:var(--display,inherit);font-weight:700}
+.mk-val-big small{font-size:16px;color:#9FB8AF}
+.mk-val-big p{margin:22px 0 0;font-size:17px;line-height:1.8;color:#D5E3DD}
+.mk-donut{position:relative;width:300px;height:300px}
+.mk-donut svg{width:100%;height:100%;transform:rotate(-90deg)}
+.mk-donut circle{fill:none;stroke-width:26}.mk-donut .t{stroke:rgba(255,255,255,.08)}
+.mk-donut .a{stroke:#E6C786}.mk-donut .b{stroke:#4F9C86}.mk-donut .c{stroke:#9FC4B8}
+.mk-donut-c{position:absolute;inset:0;display:grid;place-content:center;text-align:center}.mk-donut-c b{font-size:44px;color:#fff}.mk-donut-c span{font-size:13px;color:#9FB8AF}
+.mk-val-l{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.mk-val-l li{display:grid;grid-template-columns:14px 1fr auto auto;gap:10px;align-items:center;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.06);font-size:14px;color:#D5E3DD}
+.mk-val-l li i{width:12px;height:12px;border-radius:50%}
+.mk-val-l li.a i{background:#E6C786}.mk-val-l li.b i{background:#4F9C86}.mk-val-l li.c i{background:#9FC4B8}
+.mk-val-l li b{color:#fff;font-size:17px}.mk-val-l li small{color:#9FB8AF}
+.mk-val-l li.vt{grid-template-columns:1fr;gap:8px}.mk-val-l li.vt div{display:flex;flex-wrap:wrap;gap:6px}
+.mk-val-l li.vt em{font-style:normal;font-size:12px;padding:2px 10px;border-radius:12px;background:rgba(230,199,134,.15);color:#F6E3B4}
+
+/* 10. ما القادم */
+.mk-nx{position:absolute;top:240px;bottom:90px;inset-inline:56px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.mk-nx>div{position:relative;border-radius:18px;padding:26px 24px;background:#fff;border:1px solid rgba(14,59,53,.12);box-shadow:0 18px 30px -26px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:8px;overflow:hidden}
+.mk-nx>div::before{content:"";position:absolute;inset-block-start:0;inset-inline:0;height:4px;background:linear-gradient(90deg,var(--mk-g),var(--mk-p))}
+.mk-nx-ic{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:rgba(14,59,53,.08);color:var(--mk-p)}.mk-nx-ic .ic{width:22px;height:22px}
+.mk-nx b{font-size:72px;line-height:1;color:var(--mk-p);font-family:var(--display,inherit);font-variant-numeric:tabular-nums}
+.mk-nx h4{margin:0;font-size:18px;color:var(--mk-ink)}.mk-nx p{margin:0;font-size:14px;color:var(--mk-mut);line-height:1.7}
+
+/* 11. الختام */
+.mks-close .mk-bond{position:absolute;width:640px;height:416px;left:50%;top:50%;transform:translate(-50%,-56%);opacity:.75}
+.mk-end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px;z-index:3;padding:0 120px}
+.mk-logo{height:84px;margin-bottom:10px;filter:drop-shadow(0 6px 18px rgba(0,0,0,.35))}
+.mk-end h2{margin:0;font-size:62px;line-height:1.25;color:#fff;text-shadow:0 6px 30px rgba(0,0,0,.4)}
+.mk-end p{margin:0;font-size:19px;color:#DCE8E3}
+.mks-close .mk-veil{background:radial-gradient(ellipse at 50% 50%,rgba(6,28,25,.55),rgba(6,28,25,.92) 75%)}
+
+@media (max-width:720px){.mk-head-t h1{font-size:30px}.mk-head-a{width:100%}.mk-head-a .btn{flex:1;justify-content:center}}
+.mk-goals.sec>div{grid-template-columns:110px 1fr 26px}.mk-goals-n{margin:auto 0 0;font-size:13px;color:#B9CFC6;line-height:1.7}
+.mk-ring b{direction:ltr}
+.mk-nx{bottom:170px!important}
+.mk-nx>div{justify-content:flex-start}
 </style>
 </head>
 <body>
@@ -13027,6 +13234,7 @@ function renderReports(el, r) {
         <p>حوّل بيانات الشراكات إلى عرض يُقنع ويُلهم: اختر القصة، وحدد الشراكات، وعدّل أي نص مباشرة على الشريحة، ثم اعرضه بملء الشاشة أو نزّله PowerPoint وPDF. الأرقام تُقرأ من السجلات لحظة العرض.</p></div>
       <div class="rx-fan" aria-hidden="true"><span class="f1"><b></b><i></i><i></i><i></i></span><span class="f2"><b></b><em></em><i></i><i></i></span><span class="f3"><strong>”</strong><i></i><i></i><i></i></span></div>
     </section>
+    <a class="mk-entry" href="#/reports/marketing"><span class="mk-entry-art" aria-hidden="true">${MK_RINGS}<b>${nf(liveCounts().partners)}</b></span><span class="mk-entry-b"><em>جديد</em><b>التقرير التسويقي «أثرٌ يُروى»</b><small>قصة أعمالكم وإنجازاتكم وأثركم في مجلة شرائح مبهرة تُبنى من البيانات — للعملاء والقيادات</small></span><span class="btn gold">${icon('play')} افتح التقرير</span></a>
     <section class="rx-pick">
       <div class="rx-step"><span>1</span><div><b>اختر القصة</b><small>قالب جاهز يحدد مكونات التقرير، ويمكنك تعديلها بعد ذلك</small></div></div>
       <div class="rx-presets" id="rxPresets"></div>
@@ -13127,10 +13335,10 @@ function renderReports(el, r) {
 const rptFileName = () => { const ps = RPT.ids.map((id) => D.partnerships.find((p) => p.id === id)).filter(Boolean); return (ps.length === 1 ? `تقرير شراكة ${partnerName(ps[0])}` : `تقرير الشراكات (${ps.length})`) + ` — ${isoDate(new Date())}`; };
 
 /* — PDF: نسخ شرائح المعاينة نفسها (بنفس الخط والتنسيق) إلى صفحات 16:9 — */
-function prepareReportPrint() {
+function prepareReportPrint(nodes, title) {
   let host = $('#rptPrint'); if (host) host.remove();
   host = document.createElement('div'); host.id = 'rptPrint'; host.dir = 'rtl';
-  const src = $$('#rpSlides .rs2');
+  const src = nodes && nodes.length ? nodes : $$('#rpSlides .rs2');
   host.innerHTML = src.length ? src.map((n) => n.outerHTML).join('') : rptSlides().map(specHTML).join('');
   $$('[contenteditable]', host).forEach((x) => x.removeAttribute('contenteditable')); $$('.rs2-t.ed', host).forEach((x) => x.classList.remove('ed'));
   document.body.appendChild(host);
@@ -13138,7 +13346,7 @@ function prepareReportPrint() {
   let st = $('#printPageSize'); if (!st) { st = document.createElement('style'); st.id = 'printPageSize'; document.head.appendChild(st); }
   st.textContent = '@page{size:1280px 720px;margin:0}';
   document.documentElement.classList.add('printing-report');
-  const prevTitle = document.title; document.title = rptFileName();
+  const prevTitle = document.title; document.title = title || rptFileName();
   const done = () => { document.documentElement.classList.remove('printing-report'); st.textContent = ''; host.remove(); document.title = prevTitle; window.removeEventListener('afterprint', done); };
   window.addEventListener('afterprint', done);
 }
@@ -13193,8 +13401,8 @@ async function exportReportPptx() {
 }
 
 /* — عرض التقرير بملء الشاشة داخل المنصة — */
-function openReportShow(start = 0) {
-  const src = $$('#rpSlides .rs2'); if (!src.length) return;
+function openReportShow(start = 0, nodes) {
+  const src = nodes && nodes.length ? nodes : $$('#rpSlides .rs2'); if (!src.length) return;
   const ov = document.createElement('div'); ov.id = 'rptShow'; ov.className = 'rshow'; ov.dir = 'rtl';
   ov.innerHTML = `<div class="rshow-stage"><div class="rshow-track">${src.map((n, k) => `<div class="rshow-slide" data-i="${k}">${n.outerHTML}</div>`).join('')}</div></div>
     <div class="rshow-thumbs" hidden>${src.map((n, k) => `<button type="button" class="rshow-th" data-j="${k}"><span class="rshow-thf">${n.outerHTML}</span><b>${k + 1}</b></button>`).join('')}</div>
@@ -13230,6 +13438,232 @@ function openReportShow(start = 0) {
   fit(); show(i);
   if (ov.requestFullscreen) ov.requestFullscreen().catch(() => {});
 }
+
+/* —— 23b-marketing.js —— */
+/* =====================================================================
+   التقرير التسويقي «أثرٌ يُروى»
+   مجلة أثر في شرائح 16:9 تُبنى من البيانات لحظة العرض: الأعمال والإنجازات والأثر والقيمة
+   تُروى كقصة لها بداية وذروة ودعوة. كل شريحة بلا بيانات كافية تُحذف تلقائيًا.
+   العناوين قابلة للتعديل مباشرة قبل العرض، ويُعرض بملء الشاشة أو يُطبع PDF.
+   ===================================================================== */
+const MK = (() => { App.ui.mk = App.ui.mk || { scope: 'all' }; return App.ui.mk; })();
+const MK_SCOPES = [
+  ['all', 'المحفظة كاملة', () => true],
+  ['active', 'الشراكات السارية', (p) => ['active', 'soon'].includes(pStatus(p))],
+  ['golden', 'الشراكات الذهبية', (p) => !!p.golden],
+  ['picked', 'المحددة في الاستوديو', (p) => (RPT.ids || []).includes(p.id)],
+];
+const mkNum = (n) => nf(Math.round(n || 0));
+const mkE = (key, def, tag = 'span', cls = '') => { const v = rptVal('mk.' + key, def); return `<${tag} class="mk-ed ${cls}" data-ek="mk.${key}" data-base="${esc(String(def == null ? '' : def))}" contenteditable="true" spellcheck="false">${esc(v)}</${tag}>`; };
+const MK_RINGS = `<svg class="mk-bond" viewBox="-200 -130 400 260" aria-hidden="true"><circle cx="-58" r="112"/><circle cx="58" r="112"/><circle class="k" cy="-94" r="5"/><circle class="k" cy="94" r="5"/></svg>`;
+const mkImg = (id, cls = '') => {
+  if (!id) return '';
+  if (id.startsWith('asset:')) return `<img class="${cls}" src="${(ASSET_IMG[id.slice(6)] || {}).src || ''}" alt="">`;
+  if (id.startsWith('lib:')) return `<img class="${cls}" src="${(IMG_LIB[id.slice(4)] || {}).src || ''}" alt="">`;
+  return `<img class="${cls}" data-file="${esc(id)}" alt="">`;
+};
+
+/* — البيانات: كل الأرقام تُحسب من السجلات المحددة — */
+function mkData() {
+  const sc = MK_SCOPES.find((s) => s[0] === MK.scope) || MK_SCOPES[0];
+  const L_ = visiblePartnerships().filter((p) => !p.isDraft && (showDemo() || !p.demo)).filter(sc[2]);
+  const signed = L_.filter((p) => p.stage === 'signed');
+  const act = L_.filter((p) => ['active', 'soon'].includes(pStatus(p)));
+  const partners = [...new Set(L_.map((p) => p.partnerId))].map(partnerById).filter(Boolean);
+  const secCount = {}; L_.forEach((p) => { const s = pSector(p) || 'غير محدد'; secCount[s] = (secCount[s] || 0) + 1; });
+  const sectors = Object.entries(secCount).filter(([k]) => k !== 'غير محدد').sort((a, b) => b[1] - a[1]);
+  const years = {}; L_.forEach((p) => { const d = parseDate(p.startDate); if (d) years[d.getFullYear()] = (years[d.getFullYear()] || 0) + 1; });
+  const yKeys = Object.keys(years).map(Number).sort((a, b) => a - b);
+  const prof = L_.map((p) => ({ p, P: pProfile(p) }));
+  const value = prof.reduce((t, x) => t + (x.P.total || 0), 0);
+  const fin = prof.reduce((o, { P }) => { o.partner += +P.fin.partnerSar || 0; o.muroj += +P.fin.murojSar || 0; o.inkind += +P.fin.inkindSar || 0; return o; }, { partner: 0, muroj: 0, inkind: 0 });
+  const outputs = L_.flatMap((p) => richItems(p.outputs).map((x) => ({ p, t: trimP((x.title ? x.title + ': ' : '') + x.text) }))).filter((x) => x.t);
+  const impacts = L_.map((p) => ({ p, t: trimP(firstItem(p.expectedImpact) || '') })).filter((x) => x.t);
+  const evs = prof.filter((x) => x.P.ev && x.P.ev.score !== null).map((x) => ({ p: x.p, s: x.P.ev.score }));
+  const avgEv = evs.length ? Math.round(evs.reduce((t, x) => t + x.s, 0) / evs.length) : null;
+  const depts = new Set(L_.flatMap((p) => p.departments || []));
+  const goals = goalCodes().map((g) => ({ ...g, n: L_.filter((p) => (p.goalsLinked || []).includes(g.k)).length }));
+  const vTypes = {}; prof.forEach(({ P }) => (P.valueTypes || []).forEach((v) => { vTypes[v] = (vTypes[v] || 0) + 1; }));
+  const activated = act.filter((p) => p.activation === 'مفعّلة').length;
+  const stars = (L_.filter((p) => p.golden).length ? L_.filter((p) => p.golden) : [...L_].sort((a, b) => ((pProfile(b).ev || {}).score || 0) - ((pProfile(a).ev || {}).score || 0) || (pProfile(b).total - pProfile(a).total))).slice(0, 3);
+  const ids = new Set(L_.map((p) => p.id));
+  const stories = D.achievements.filter((a) => (showDemo() || !a.demo) && (MK.scope === 'all' || !a.partnershipId || ids.has(a.partnershipId))).sort((a, b) => ((b.date || '') > (a.date || '') ? 1 : -1));
+  const photos = [];
+  const seen = new Set(); const add = (id, cap) => { if (id && !seen.has(id)) { seen.add(id); photos.push({ id, cap }); } };
+  L_.forEach((p) => { add(p.coverFileId, partnerName(p)); (p.attachments || []).filter((a) => isImg(a)).forEach((a) => add(a.fileId, partnerName(p))); });
+  stories.forEach((s) => (s.gallery || []).forEach((g) => add(g, s.title)));
+  ['asset:waqf-saitah-signing', 'asset:border-guard-signing'].forEach((a) => add(a, 'توقيع شراكة'));
+  const props = visibleProposals().filter((x) => ['submitted', 'review', 'info', 'accepted'].includes(x.status) && (showDemo() || !x.demo));
+  const pipe = visiblePartnerships().filter((p) => !p.isDraft && ['prep', 'sign'].includes(p.stage) && (showDemo() || !p.demo));
+  const soon = act.filter((p) => pStatus(p) === 'soon');
+  const first = [...signed].filter((p) => p.startDate).sort((a, b) => (a.startDate < b.startDate ? -1 : 1))[0];
+  const latest = [...signed].filter((p) => p.startDate).sort((a, b) => (a.startDate > b.startDate ? -1 : 1))[0];
+  return { sc, L: L_, signed, act, partners, sectors, years, yKeys, value, fin, outputs, impacts, evs, avgEv, depts, goals, vTypes, activated, stars, stories, photos, props, pipe, soon, first, latest, org: D.settings.org };
+}
+
+/* — الإطار المشترك لكل شريحة — */
+function mkFrame(k, tone, n, N, kicker, inner, extra = '') {
+  return `<section class="rs2 mk mks-${k} mk-${tone}" data-mk="${k}" ${extra}>
+    ${inner}
+    <header class="mk-top"><span class="mk-kick"><em>${String(n).padStart(2, '0')}</em>${esc(kicker)}</span><span class="mk-pg">${n} / ${N}</span></header>
+    <footer class="mk-foot"><span>${esc(D.settings.org.name)}</span><i></i><span>${esc(D.settings.org.platform)} · تقرير الأثر والشراكات</span></footer>
+  </section>`;
+}
+function mkSlides() {
+  const X = mkData(), org = X.org;
+  if (!X.L.length) return [];
+  const yr = new Date().getFullYear();
+  const yrs = X.yKeys.length ? (X.yKeys[0] === X.yKeys[X.yKeys.length - 1] ? `${X.yKeys[0]}` : `${X.yKeys[0]}–${X.yKeys[X.yKeys.length - 1]}`) : `${yr}`;
+  const S = [];
+  const cover = X.photos[0];
+  /* 1. الغلاف */
+  S.push(['cover', 'dark', 'تقرير الأثر', `
+    <div class="mk-bg">${cover ? mkImg(cover.id, 'mk-photo') : ''}<span class="mk-veil"></span></div>
+    ${MK_RINGS}
+    <div class="mk-cv">
+      <span class="mk-mast">${esc(org.name)} · ${esc(org.dept)}</span>
+      <h1>${mkE('cover.t', D.settings.splash && D.settings.splash.text ? D.settings.splash.text : 'نبني شراكات… تصنع أثرًا يبقى')}</h1>
+      <p>${mkE('cover.s', `تقرير الأثر والشراكات ${yr} — قصة ${plural(X.partners.length, 'جهة واحدة', 'جهتين', 'جهات', 'جهة')} اختارت أن تصنع الفرق معنا`)}</p>
+      <div class="mk-cv-n">${[[X.act.length, 'شراكة سارية'], [X.partners.length, 'جهة شريكة'], [X.sectors.length, plural(X.sectors.length, 'قطاع', 'قطاعان', 'قطاعات', 'قطاعًا').replace(/^\d+\s*/, '')]].map(([v, l]) => `<span><b>${mkNum(v)}</b>${esc(l)}</span>`).join('')}</div>
+    </div>`]);
+  /* 2. القصة في سطر */
+  const secTxt = X.sectors.slice(0, 3).map((s) => s[0]).join(' و');
+  S.push(['manifesto', 'paper', 'القصة في سطر', `
+    <div class="mk-man">
+      <span class="mk-q" aria-hidden="true">“</span>
+      <p class="mk-man-t">${mkE('man.t', `خلال ${yrs} بنينا ${X.signed.length} شراكة مع ${X.partners.length} جهة${secTxt ? ` من ${secTxt}` : ''}${X.value ? `، بقيمة تتجاوز ${sarShort(X.value)} ريال` : ''}، لنحوّل الأهداف البيئية إلى أثر يُرى ويُقاس.`, 'span', 'mk-man-s')}</p>
+      <div class="mk-man-sig"><i></i><span>${esc(org.dept)}</span></div>
+    </div>
+    <div class="mk-man-side">${[[X.signed.length, 'شراكة موقّعة'], [X.depts.size, 'إدارة داخلية شريكة'], [X.outputs.length, 'مخرج موثّق']].map(([v, l]) => `<div><b>${mkNum(v)}</b><span>${l}</span></div>`).join('')}</div>`]);
+  /* 3. بالأرقام */
+  const actPct = X.act.length ? Math.round(X.activated / X.act.length * 100) : 0;
+  const yMax = Math.max(1, ...Object.values(X.years));
+  const spark = X.yKeys.length > 1 ? `<svg viewBox="0 0 200 60" class="mk-spark" preserveAspectRatio="none"><polyline points="${X.yKeys.map((y, i) => `${(i / (X.yKeys.length - 1) * 200).toFixed(1)},${(56 - X.years[y] / yMax * 50).toFixed(1)}`).join(' ')}"/></svg>` : '';
+  S.push(['numbers', 'dark', 'بالأرقام', `
+    <h2 class="mk-h">${mkE('num.h', 'أرقام تحكي القصة')}</h2>
+    <div class="mk-bento">
+      <div class="b1"><span>جهة شريكة</span><b>${mkNum(X.partners.length)}</b><small>${X.sectors.map((s) => esc(s[0])).slice(0, 3).join(' · ')}</small></div>
+      <div class="b2"><span>شراكة سارية الآن</span><b>${mkNum(X.act.length)}</b><small>من ${X.signed.length} موقّعة</small>${spark}</div>
+      <div class="b3"><span>القيمة التقديرية</span><b>${X.value ? sarShort(X.value) : '—'}</b><small>ريال سعودي</small></div>
+      <div class="b4"><span>نسبة التفعيل</span><div class="mk-ring"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" class="t"/><circle cx="40" cy="40" r="32" class="v" stroke-dasharray="${(actPct / 100 * 201).toFixed(1)} 201"/></svg><b>${actPct}<small>%</small></b></div><small>من الشراكات السارية مفعّلة فعليًا</small></div>
+      <div class="b5"><span>مخرجات موثّقة</span><b>${mkNum(X.outputs.length)}</b><small>في سجلات الشراكات</small></div>
+      <div class="b6"><span>متوسط تقييم الأداء</span><b>${X.avgEv === null ? '—' : X.avgEv}<small>${X.avgEv === null ? '' : '/100'}</small></b><small>${X.avgEv === null ? 'لم تُقيَّم بعد' : evalGrade(X.avgEv)}</small></div>
+    </div>`]);
+  /* 4. رحلة النمو */
+  if (X.yKeys.length >= 2) {
+    const all = []; for (let y = X.yKeys[0]; y <= X.yKeys[X.yKeys.length - 1]; y++) all.push(y);
+    let cum = 0; const cumS = all.map((y) => (cum += X.years[y] || 0));
+    const peak = all.reduce((b, y) => ((X.years[y] || 0) > (X.years[b] || 0) ? y : b), all[0]);
+    S.push(['growth', 'paper', 'رحلة النمو', `
+      <h2 class="mk-h">${mkE('gr.h', 'من شراكة واحدة إلى منظومة')}</h2>
+      <p class="mk-sub">${mkE('gr.s', `${cum} شراكة بدأت خلال ${all.length} سنوات، وذروة العام ${peak} بـ${X.years[peak]} شراكات جديدة.`)}</p>
+      <div class="mk-grow">${all.map((y, i) => `<div class="${y === peak ? 'pk' : ''}" style="--h:${(cumS[i] / cum * 100).toFixed(1)}%;--i:${i}"><span class="v">${cumS[i]}</span><i></i><b>${y}</b><small>${X.years[y] ? '+' + X.years[y] : ''}</small></div>`).join('')}</div>
+      <div class="mk-miles">${X.first ? `<div><em>البداية</em><b>${esc(partnerName(X.first))}</b><span>${fmtDate(X.first.startDate)}</span></div>` : ''}${X.latest && X.latest !== X.first ? `<div><em>الأحدث</em><b>${esc(partnerName(X.latest))}</b><span>${fmtDate(X.latest.startDate)}</span></div>` : ''}</div>`]);
+  }
+  /* 5. شركاء النجاح */
+  const bySec = X.sectors.length ? X.sectors.map(([s]) => [s, X.partners.filter((pr) => X.L.some((p) => p.partnerId === pr.id && pSector(p) === s))]) : [['', X.partners]];
+  S.push(['partners', 'paper', 'شركاء النجاح', `
+    <h2 class="mk-h">${mkE('pa.h', 'شركاء يصنعون الفرق')}</h2>
+    <p class="mk-sub">${mkE('pa.s', `${X.partners.length} جهة حكومية وخاصة وغير ربحية تتكامل معنا في رحلة واحدة.`)}</p>
+    <div class="mk-wall">${bySec.slice(0, 4).map(([s, prs]) => `<div class="mk-wcol"><h4>${esc(s || 'الشركاء')}<em>${prs.length}</em></h4><div class="mk-logos">${prs.slice(0, 9).map((pr) => `<span title="${esc(pr.name)}"><i>${logoOrMono(pr, pr.name)}</i><small>${esc(pr.name)}</small></span>`).join('')}${prs.length > 9 ? `<span class="more"><i>+${prs.length - 9}</i></span>` : ''}</div></div>`).join('')}</div>`]);
+  /* 6. نجوم المحفظة */
+  if (X.stars.length) {
+    S.push(['stars', 'dark', X.L.some((p) => p.golden) ? 'الشراكات الذهبية' : 'نجوم المحفظة', `
+      <h2 class="mk-h gold">${mkE('st.h', X.L.some((p) => p.golden) ? 'الشراكات الذهبية' : 'شراكات صنعت الفارق')}</h2>
+      <div class="mk-stgrid n${X.stars.length}">${X.stars.map((p, i) => { const pr = partnerById(p.partnerId) || {}; const P = pProfile(p); const ph = p.coverFileId || ((p.attachments || []).find((a) => isImg(a)) || {}).fileId; return `<article style="--i:${i}">
+        <div class="mk-st-ph">${ph ? mkImg(ph) : `<span class="mk-st-art">${MK_RINGS}</span>`}<span class="mk-st-logo">${logoOrMono(pr, partnerName(p))}</span>${p.golden ? `<span class="mk-st-star">${typeof STAR_SVG !== 'undefined' ? STAR_SVG : '★'}</span>` : ''}</div>
+        <div class="mk-st-b"><h3>${esc(partnerName(p))}</h3><small>${[p.classification, pSector(p)].filter(Boolean).map(esc).join(' · ')}</small>
+          ${p.showcaseGoal || firstItem(p.cooperationAreas) ? `<p>${esc(trimP(p.showcaseGoal || firstItem(p.cooperationAreas)).slice(0, 150))}</p>` : ''}
+          <div class="mk-st-f"><span><b>${richItems(p.outputs).length || '—'}</b>مخرجات</span><span><b>${P.ev && P.ev.score !== null ? P.ev.score : '—'}</b>تقييم</span><span><b>${P.total ? sarShort(P.total) : '—'}</b>قيمة</span></div></div></article>`; }).join('')}</div>`]);
+  }
+  /* 7. قصص من الميدان */
+  X.stories.slice(0, 2).forEach((s, i) => {
+    const ph = (s.gallery || [])[0] || s.coverFileId || (X.photos[i + 1] || {}).id;
+    const pr = typeof storyPartner === 'function' ? storyPartner(s) : null;
+    S.push(['story', 'split', 'قصص من الميدان', `
+      <div class="mk-story-ph">${ph ? mkImg(ph) : ''}<span class="mk-veil"></span></div>
+      <div class="mk-story-b">
+        <span class="mk-tag">${esc(s.type || 'قصة نجاح')}${pr ? ` · ${esc(pr.name)}` : ''}</span>
+        <h2>${mkE(`sto.${i}.t`, s.title)}</h2>
+        <blockquote>${mkE(`sto.${i}.q`, trimP(s.summary || s.text || s.body || '').slice(0, 260), 'span')}</blockquote>
+        ${s.metricValue ? `<div class="mk-story-m"><span><b>${esc(s.metricValue)}</b>${esc(s.metricLabel || '')}</span></div>` : ''}
+        ${s.date ? `<small class="mk-date">${fmtDate(s.date)}</small>` : ''}
+      </div>`]);
+  });
+  /* 8. مرآة الأثر */
+  const gMax = Math.max(1, ...X.goals.map((g) => g.n));
+  const pts = (X.impacts.length ? X.impacts : X.outputs).slice(0, 4);
+  S.push(['impact', 'paper', 'مرآة الأثر', `
+    <h2 class="mk-h">${mkE('im.h', 'أثر يتجاوز الأرقام')}</h2>
+    <div class="mk-imp">
+      <ol class="mk-imp-l">${pts.map((x, i) => `<li style="--i:${i}"><em>${String(i + 1).padStart(2, '0')}</em><div><p>${esc(x.t.slice(0, 160))}</p><small>${esc(partnerName(x.p))}</small></div></li>`).join('') || '<li><div><p>تُوثَّق المخرجات والأثر في سجلات الشراكات فتظهر هنا.</p></div></li>'}</ol>
+      ${X.goals.some((g) => g.n) ? `<div class="mk-goals"><h4>${mkE('im.g', 'مساهمة الشراكات في الأهداف الاستراتيجية')}</h4>${X.goals.map((g) => `<div class="${g.n ? 'on' : ''}"><em>${esc(g.k)}</em><span>${esc(g.t.replace(/^[A-Z]{1,3}\d?\s*[:：]\s*/, '').slice(0, 58))}</span><i><b style="width:${(g.n / gMax * 100).toFixed(0)}%"></b></i><strong>${g.n}</strong></div>`).join('')}</div>`
+        : `<div class="mk-goals sec"><h4>${mkE('im.sc', 'أثر يمتد عبر القطاعات')}</h4>${X.sectors.map(([k, n]) => `<div class="on"><span>${esc(k)}</span><i><b style="width:${(n / Math.max(1, X.sectors[0][1]) * 100).toFixed(0)}%"></b></i><strong>${n}</strong></div>`).join('')}<p class="mk-goals-n">${X.depts.size} ${X.depts.size === 1 ? 'إدارة داخلية تشارك' : 'إدارات داخلية تشارك'} في تنفيذ هذه الشراكات.</p></div>`}
+    </div>`]);
+  /* 9. القيمة */
+  if (X.value) {
+    const parts = [[X.fin.partner, 'مساهمات الشركاء', 'a'], [X.fin.muroj, 'مساهمة المؤسسة', 'b'], [X.fin.inkind, 'قيمة عينية ومعرفية', 'c']].filter((x) => x[0]);
+    let acc = 0; const C = 2 * Math.PI * 90;
+    const arcs = parts.map(([v, , c]) => { const f = v / X.value, s = `<circle r="90" class="${c}" stroke-dasharray="${(f * C).toFixed(1)} ${C.toFixed(1)}" stroke-dashoffset="${(-acc * C).toFixed(1)}"/>`; acc += f; return s; }).join('');
+    const vt = Object.entries(X.vTypes).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    S.push(['value', 'dark', 'القيمة', `
+      <div class="mk-val">
+        <div class="mk-val-big"><span>${mkE('va.k', 'القيمة التقديرية للشراكات')}</span><b>${sarShort(X.value)}</b><small>ريال سعودي</small>
+          <p>${mkE('va.s', `كل ريال تضعه المؤسسة يلتقي بمساهمات الشركاء وخبراتهم ليتضاعف الأثر.`)}</p></div>
+        <div class="mk-donut"><svg viewBox="-110 -110 220 220"><circle r="90" class="t"/>${arcs}</svg><div class="mk-donut-c"><b>${parts.length}</b><span>مصادر قيمة</span></div></div>
+        <ul class="mk-val-l">${parts.map(([v, l, c]) => `<li class="${c}"><i></i><span>${l}</span><b>${sarShort(v)}</b><small>${Math.round(v / X.value * 100)}%</small></li>`).join('')}
+          ${vt.length ? `<li class="vt"><span>أنواع القيمة</span><div>${vt.map(([k, n]) => `<em>${esc(k)} <b>${n}</b></em>`).join('')}</div></li>` : ''}</ul>
+      </div>`]);
+  }
+  /* 10. ما القادم */
+  S.push(['next', 'paper', 'ما القادم', `
+    <h2 class="mk-h">${mkE('nx.h', 'الأفضل لم يأتِ بعد')}</h2>
+    <p class="mk-sub">${mkE('nx.s', 'فرص تتشكل الآن، وشراكات تقترب من التوقيع، وأخرى تستعد للتجديد والتوسع.')}</p>
+    <div class="mk-nx">${[[X.props.length, 'مقترح شراكة قيد الدراسة', 'من إدارات المؤسسة عبر خدمة «شارك»', 'send'], [X.pipe.length, 'شراكة في الإعداد والتوقيع', 'تمر بمسار الاعتماد المؤسسي', 'convert'], [X.soon.length, 'فرصة تجديد قريبة', 'شراكات ناجحة تقترب من نهاية مدتها', 'history']].map(([v, l, d, ic], i) => `<div style="--i:${i}"><span class="mk-nx-ic">${icon(ic)}</span><b>${mkNum(v)}</b><h4>${l}</h4><p>${d}</p></div>`).join('')}</div>`]);
+  /* 11. الختام */
+  const endPh = X.photos[1] || X.photos[0];
+  S.push(['close', 'dark', 'دعوة', `
+    <div class="mk-bg">${endPh ? mkImg(endPh.id, 'mk-photo') : ''}<span class="mk-veil"></span></div>
+    ${MK_RINGS}
+    <div class="mk-end">
+      ${(ASSET_IMG['murooj-logo-white'] || {}).src ? `<img class="mk-logo" src="${ASSET_IMG['murooj-logo-white'].src}" alt="">` : ''}
+      <h2>${mkE('end.t', 'شريكنا القادم… قد تكون أنت')}</h2>
+      <p>${mkE('end.s', `${org.dept} — ${org.name}. لنصنع معًا أثرًا يبقى.`)}</p>
+    </div>`]);
+  const N = S.length;
+  return S.map(([k, tone, kick, inner], i) => mkFrame(k, tone, i + 1, N, kick, inner));
+}
+
+/* — الصفحة — */
+function renderMarketingReport(el) {
+  if (!can('view.reports')) { el.innerHTML = noAccessHTML(); return; }
+  el.classList.add('mkpage');
+  const draw = () => {
+    const S = mkSlides();
+    el.innerHTML = `<section class="mk-head">
+        <div class="mk-head-t"><a class="back" href="#/reports">${icon('arrowR')} استوديو التقارير</a><span class="rx-eye"><i></i>التقرير التسويقي</span><h1>أثرٌ يُروى</h1>
+          <p>قصة أعمالكم وإنجازاتكم وأثركم في ${S.length} شرائح مبنية من البيانات لحظة العرض، بإخراج يليق بالعملاء والقيادات. اضغط أي عنوان لتعديله قبل العرض.</p></div>
+        <div class="mk-head-a"><button class="btn gold lg" type="button" data-mkshow ${S.length ? '' : 'disabled'}>${icon('play')} عرض بملء الشاشة</button><button class="btn lg" type="button" data-mkpdf ${S.length ? '' : 'disabled'}>${icon('print')} PDF</button></div>
+      </section>
+      <div class="mk-scope" role="tablist" aria-label="نطاق التقرير">${MK_SCOPES.map(([k, l, f]) => { const n = visiblePartnerships().filter((p) => !p.isDraft && (showDemo() || !p.demo)).filter(f).length; return `<button type="button" class="${MK.scope === k ? 'on' : ''}" data-mkscope="${k}" ${n ? '' : 'disabled'}>${esc(l)}<b>${n}</b></button>`; }).join('')}<span class="sp"></span><button type="button" class="linkbtn" data-mkreset>${icon('history')} استعادة النصوص الأصلية</button></div>
+      <div class="mk-deck" id="mkDeck">${S.length ? S.map((s, i) => `<div class="mk-fr" data-i="${i}">${s}</div>`).join('') : `<div class="panel">${emptyHTML({ ic: 'file', title: 'لا توجد شراكات في هذا النطاق', text: 'اختر نطاقًا آخر.' })}</div>`}</div>`;
+    hydrateFiles(el);
+    fit();
+  };
+  const fit = () => { const w = ($('#mkDeck', el) || {}).clientWidth || 1000; const k = Math.min(1, w / 1280); $$('.mk-fr', el).forEach((f) => { f.style.height = 720 * k + 'px'; const s = f.firstElementChild; if (s) s.style.transform = `scale(${k})`; }); };
+  draw();
+  App.mkFit = fit; window.removeEventListener('resize', App.mkFitL || (() => {})); App.mkFitL = () => fit(); window.addEventListener('resize', App.mkFitL);
+  el.addEventListener('input', (e) => { const t = e.target.closest('[data-ek]'); if (t) RPT.ov[t.dataset.ek] = { v: t.innerText.replace(/ /g, ' ').trim(), base: t.dataset.base }; });
+  el.addEventListener('keydown', (e) => { const t = e.target.closest && e.target.closest('[data-ek]'); if (t && e.key === 'Enter') { e.preventDefault(); t.blur(); } });
+  el.addEventListener('click', (e) => {
+    const sc = e.target.closest('[data-mkscope]'); if (sc) { MK.scope = sc.dataset.mkscope; return draw(); }
+    if (e.target.closest('[data-mkreset]')) { Object.keys(RPT.ov).filter((k) => k.startsWith('mk.')).forEach((k) => delete RPT.ov[k]); toast('استُعيدت النصوص الأصلية'); return draw(); }
+    if (e.target.closest('[data-mkshow]')) return openReportShow(0, $$('#mkDeck .rs2', el));
+    if (e.target.closest('[data-mkpdf]')) { prepareReportPrint($$('#mkDeck .rs2', el), 'التقرير-التسويقي-' + isoDate(today())); setTimeout(() => window.print(), 300); }
+  });
+}
+
+window.addEventListener('beforeprint', () => { if (App.route && App.route.name === 'reportsMk' && !document.documentElement.classList.contains('printing-report')) { const n = $$('#mkDeck .rs2'); if (n.length) prepareReportPrint(n, 'التقرير-التسويقي-' + isoDate(today())); } });
 
 /* —— 24-reveal.js —— */
 /* ===== ظهور المحتوى أثناء التمرير: لكل نوع محتوى حركته الخاصة ===== */
@@ -15804,7 +16238,7 @@ function navGroups() {
   const newCount = can('proposal.review') ? props.filter((x) => x.status === 'submitted').length : dept ? props.filter((x) => x.department === Session.dept() && x.status === 'info').length : 0;
   return [
     { id: 'view', t: 'العرض', ic: 'eye', items: [{ h: '#/', ic: 'home', l: 'الرئيسية', m: ['home'] }, Session.role() !== 'viewer' && { h: '#/tasks', ic: 'flag', l: 'مهامي', m: ['tasks'], cnt: (() => { try { return wfTasks().filter((t) => !t.follow).length; } catch (_) { return 0; } })() }, can('view.dashboard') && { h: '#/dashboard', ic: 'chart', l: 'لوحة المؤشرات', m: ['dashboard'] }] },
-    { id: 'pt', t: 'الشراكات', ic: 'leaf', items: [{ h: '#/partnerships', ic: 'layers', l: 'سجل الشراكات', m: ['partnerships', 'partnership', 'pform'] }, can('view.reports') && { h: '#/reports', ic: 'file', l: 'التقارير', m: ['reports'] }, can('view.partners') && { h: '#/partners', ic: 'building', l: 'الجهات الشريكة', m: ['partners', 'partner'] }, { h: '#/stories', ic: 'award', l: 'الإنجازات', m: ['stories'] }, { h: '#/media', ic: 'image', l: 'مركز الصور', m: ['media'] }, { h: '#/process', ic: 'convert', l: 'مسار الشراكة', m: ['process'] }, can('manage.content') && { h: '#/content', ic: 'news', l: 'إدارة المحتوى', m: ['content'] }] },
+    { id: 'pt', t: 'الشراكات', ic: 'leaf', items: [{ h: '#/partnerships', ic: 'layers', l: 'سجل الشراكات', m: ['partnerships', 'partnership', 'pform'] }, can('view.reports') && { h: '#/reports', ic: 'file', l: 'التقارير', m: ['reports', 'reportsMk'] }, can('view.partners') && { h: '#/partners', ic: 'building', l: 'الجهات الشريكة', m: ['partners', 'partner'] }, { h: '#/stories', ic: 'award', l: 'الإنجازات', m: ['stories'] }, { h: '#/media', ic: 'image', l: 'مركز الصور', m: ['media'] }, { h: '#/process', ic: 'convert', l: 'مسار الشراكة', m: ['process'] }, can('manage.content') && { h: '#/content', ic: 'news', l: 'إدارة المحتوى', m: ['content'] }] },
     { id: 'share', t: 'شارك', ic: 'msg', items: [{ h: '#/share', ic: 'send', l: 'شارك بمقترح', m: ['share', 'shareForm', 'shareDone'] }, (can('proposal.review') || dept) && { h: '#/proposals', ic: 'inbox', l: dept ? 'مقترحاتي' : 'المقترحات الواردة', m: ['proposals', 'proposal'], cnt: newCount }] },
     { id: 'adm', t: 'الإدارة', ic: 'lock', items: [can('manage.lists') && { h: '#/settings/lists', ic: 'list', l: 'القوائم', m: ['settings'], only: 'lists' }, (can('manage.lists') || can('manage.content')) && { h: '#/settings', ic: 'settings', l: 'الإعدادات', m: ['settings'], not: 'audit,lists' }, can('view.audit') && { h: '#/settings/audit', ic: 'history', l: 'سجل التغييرات', m: ['settings'], only: 'audit' }] },
   ].map((g) => ({ ...g, items: g.items.filter(Boolean) })).filter((g) => g.items.length);
@@ -16010,6 +16444,7 @@ const ROUTES = [
   { re: /^\/partners$/, name: 'partners', fn: renderPartners },
   { re: /^\/partners\/([^/]+)$/, name: 'partner', fn: renderPartner, keys: ['id'] },
   { re: /^\/reports$/, name: 'reports', fn: renderReports },
+  { re: /^\/reports\/marketing$/, name: 'reportsMk', fn: renderMarketingReport },
   { re: /^\/stories$/, name: 'stories', fn: renderStories },
   { re: /^\/media$/, name: 'media', fn: renderMedia },
   { re: /^\/tasks$/, name: 'tasks', fn: renderTasks },

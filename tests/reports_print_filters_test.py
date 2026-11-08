@@ -42,7 +42,7 @@ async def main():
         await pg.locator('#rpList [data-rid]').first.uncheck(); await pg.wait_for_timeout(500)
         ok('partial selection → indeterminate', await E("document.querySelector('[data-rall]').indeterminate && App.ui.rpt.ids.length") == shown - 1)
         await pg.locator('#rpList [data-rid]').first.check(); await pg.wait_for_timeout(700)
-        await pg.mouse.click(700, 120); await pg.wait_for_timeout(200)
+        await pg.keyboard.press('Escape'); await E("document.querySelectorAll('.rp-ddm').forEach(m=>m.closest('.rp-dd') && m.closest('.rp-dd').classList.remove('open'))"); await pg.wait_for_timeout(200)
         kinds2 = await E("[...document.querySelectorAll('.rs2')].map(s=>s.dataset.st)")
         ok('multi-partnership report has contents, portfolio charts, exec summaries, closing', all(k in kinds2 for k in ['toc','portfolio','exec','end']) and kinds2.count('exec') == shown, sorted(set(kinds2)))
         toc_ok = await E("(()=>{const t=[...document.querySelectorAll('.rs2[data-st=toc] .rs2-t')].map(x=>x.innerText).filter(x=>x.startsWith('صفحة')); return t.length>0 && t.every(x=>{const n=+x.replace(/\\D/g,''); const f=document.querySelector(`.rs-frame[data-si=\"${n-1}\"] .rs2`); return f && f.dataset.st==='pcover'});})()")
