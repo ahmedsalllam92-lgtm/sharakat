@@ -56,13 +56,14 @@ function renderDesignSwitcher() {
       if (e.target.closest('[data-dsw-toggle]')) { el.classList.toggle('open'); return; }
       const o = e.target.closest('[data-dsw]'); if (o) { el.classList.remove('open'); applyDesign(o.dataset.dsw); return; }
       if (e.target.closest('[data-tour-start]')) { el.classList.remove('open'); startTour(); }
+      if (e.target.closest('[data-rqtour-start]')) { el.classList.remove('open'); startReqTour(); }
     });
     document.addEventListener('mousedown', (e) => { if (!e.target.closest('#dsw')) el.classList.remove('open'); });
   }
   el.innerHTML = `<button class="dsw-fab" data-dsw-toggle type="button" title="اتجاه التصميم — Alt+1 / Alt+2" aria-label="تبديل اتجاه التصميم">${icon('palette')}<span>${DESIGNS[design()].short}</span></button>
     <div class="dsw-pop" role="menu" aria-label="اتجاهات التصميم"><div class="dsw-h">اتجاه تصميم المنصة</div>
       ${Object.entries(DESIGNS).map(([k, d], i) => `<button class="dsw-o ${k === design() ? 'on' : ''}" data-dsw="${k}" type="button" role="menuitemradio" aria-checked="${k === design()}"><span class="dsw-sw dsw-${k}"></span><span class="grow"><b>${d.name}</b><small>${d.tag}</small></span><kbd>Alt+${i + 1}</kbd></button>`).join('')}
-      <div class="dsw-sep"></div><button class="dsw-o" data-tour-start type="button"><span class="dsw-sw dsw-tour">${icon('play')}</span><span class="grow"><b>استعراض المنصة</b><small>جولة تعريفية في الاتجاه الحالي</small></span><kbd>Alt+T</kbd></button></div>`;
+      <div class="dsw-sep"></div><button class="dsw-o" data-tour-start type="button"><span class="dsw-sw dsw-tour">${icon('play')}</span><span class="grow"><b>استعراض المنصة</b><small>جولة تعريفية في الاتجاه الحالي</small></span><kbd>Alt+T</kbd></button><button class="dsw-o" data-rqtour-start type="button"><span class="dsw-sw dsw-tour">${icon('convert')}</span><span class="grow"><b>مسار طلب الشراكة</b><small>من «شارك» حتى القرار</small></span></button></div>`;
 }
 document.addEventListener('keydown', (e) => {
   if (!e.altKey || e.ctrlKey || e.metaKey) return;

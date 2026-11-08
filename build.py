@@ -89,6 +89,7 @@ html = f"""<!DOCTYPE html>
 {pdfjs}
 <script>
 'use strict';
+window.__APP_SRC = window.__APP_SRC || document.documentElement.outerHTML;
 {js}
 </script>
 </body>

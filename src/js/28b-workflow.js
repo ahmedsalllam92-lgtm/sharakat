@@ -27,19 +27,36 @@ const WF_PHASES = [
 const WF_STEPS = [
   { id: 'request', n: 1, ph: 'req', on: 'proposal', actor: 'requester', t: 'استلام طلب الشراكة أو المقترح', d: 'تقدّم الإدارة الطالبة المقترح عبر خدمة «شارك»، فيصل إلى إدارة الشراكات برقم مرجعي.', docs: [], auto: true },
   { id: 'method', n: 2, ref: 1, ph: 'req', on: 'proposal', actor: 'partnerships', t: 'منهجية بناء الشراكات', d: 'تطبيق منهجية بناء الشراكات على الطلب وتوثيقها.', docs: [{ k: 'methodology', l: 'نموذج منهجية بناء الشراكات', req: true, form: 'methodology' }] },
-  { id: 'eval', n: 3, ref: 2, ph: 'req', on: 'proposal', actor: 'partnerships', kind: 'decision', t: 'التقييم المبدئي للشريك', d: 'تدرس إدارة الشراكات الجهة وتقرر إن كانت مناسبة. الجهة غير المناسبة يُغلق طلبها مع ذكر السبب.', docs: [{ k: 'evaluation', l: 'نموذج التقييم المبدئي للشريك', req: true, form: 'initialEval' }], yes: 'الجهة مناسبة', no: 'الجهة غير مناسبة' },
+  { id: 'eval', n: 3, ref: 2, ph: 'req', on: 'proposal', actor: 'partnerships', kind: 'decision', t: 'التقييم المبدئي للشريك', d: 'تدرس إدارة الشراكات الجهة وتقرر إن كانت مناسبة. الجهة غير المناسبة يُغلق طلبها مع ذكر السبب.', docs: [{ k: 'evaluation', l: 'نموذج التقييم المبدئي للشريك', req: true, form: 'initialEval' }], yes: 'الجهة مناسبة', yesShort: 'مناسبة', no: 'الجهة غير مناسبة' },
   { id: 'meeting', n: 4, ph: 'build', on: 'partnership', actor: 'partnerships', t: 'الاجتماع المبدئي التعريفي', d: 'اجتماع تعريفي بين الطرفين بحضور الإدارة الطالبة والإدارات المساندة، ويُحدَّد فيه التقاطع الاستراتيجي.', docs: [{ k: 'minutes', l: 'محضر الاجتماع', req: false }], fields: ['date', 'attendees', 'intersection'] },
   { id: 'draft', n: 5, ref: 3, ph: 'build', on: 'partnership', actor: 'partnerships', t: 'تحديد سبل التعاون وبناء مسودة المذكرة', d: 'تحديد سبل التعاون بين الطرفين، وبناء مسودة مذكرة التعاون على النموذج المعتمد.', docs: [{ k: 'draft', l: 'مسودة مذكرة التعاون المعتمدة', req: true }], fields: ['coop'] },
   { id: 'depts', n: 6, ref: 4, ph: 'rev', on: 'partnership', actor: 'concerned', kind: 'multi', t: 'مشاركة المذكرة مع الإدارات المعنية', d: 'ترسل إدارة الشراكات المسودة للإدارات المعنية، وتسجل كل إدارة ملاحظاتها من حسابها. تُغلق الخطوة عند ورود الملاحظات أو باعتماد إدارة الشراكات.', docs: [{ k: 'deptNotes', l: 'ملاحظات الإدارة', req: false }] },
-  { id: 'strategy', n: 7, ref: 5, ph: 'rev', on: 'partnership', actor: 'strategy', kind: 'review', t: 'المواءمة الاستراتيجية', d: 'تراجع الإدارة الاستراتيجية المذكرة وتعبئ نموذج المواءمة: ربط كل بند بالأهداف الاستراتيجية (SO1–SO4، EO)، ثم تعتمدها أو تعيدها بملاحظات.', docs: [{ k: 'alignment', l: 'نموذج المواءمة الاستراتيجية', req: true, form: 'alignment' }] },
+  { id: 'strategy', n: 7, ref: 5, ph: 'rev', on: 'partnership', actor: 'strategy', kind: 'review', back: 'draft', backLabel: 'إعادة بملاحظات', t: 'المواءمة الاستراتيجية', d: 'تراجع الإدارة الاستراتيجية المذكرة وتعبئ نموذج المواءمة: ربط كل بند بالأهداف الاستراتيجية (SO1–SO4، EO)، ثم تعتمدها أو تعيدها بملاحظات.', docs: [{ k: 'alignment', l: 'نموذج المواءمة الاستراتيجية', req: true, form: 'alignment' }] },
   { id: 'partner', n: 8, ref: 6, ph: 'rev', on: 'partnership', actor: 'partnerships', t: 'مشاركة المذكرة مع الشريك', d: 'ترسل إدارة الشراكات المذكرة للجهة الشريكة، وترفع النسخة بعد ملاحظات الشريك.', docs: [{ k: 'partnerVersion', l: 'المذكرة بعد ملاحظات الشريك', req: true }] },
   { id: 'legal', n: 9, ref: 7, ph: 'sign', on: 'partnership', actor: 'legal', kind: 'review', t: 'اعتماد القانونية وخطاب طلب موافقة المعالي', d: 'تعد إدارة الشراكات خطاب طلب موافقة معالي رئيس مجلس الأمناء (يُولَّد من بيانات الشراكة)، وتراجعه الإدارة القانونية بنموذج مراجعة الخطابات وتعتمده.', docs: [{ k: 'letter', l: 'خطاب طلب موافقة المعالي', req: true, by: 'partnerships', form: 'letter' }, { k: 'legalReview', l: 'نموذج مراجعة الخطابات', req: true, form: 'letterReview' }] },
-  { id: 'excellency', n: 10, ref: 8, ph: 'sign', on: 'partnership', actor: 'excellency', kind: 'review', t: 'رفع المعاملة للمعالي', d: 'ترفع إدارة الشراكات المعاملة كاملة، ويسجل مكتب المعالي الموافقة أو الإعادة بملاحظات.', docs: [{ k: 'transaction', l: 'المعاملة كاملة', req: true, by: 'partnerships' }], yes: 'موافقة المعالي', no: 'إعادة المعاملة' },
+  { id: 'excellency', n: 10, ref: 8, ph: 'sign', on: 'partnership', actor: 'excellency', kind: 'review', t: 'رفع المعاملة للمعالي', d: 'ترفع إدارة الشراكات المعاملة كاملة، ويسجل مكتب المعالي الموافقة أو الإعادة بملاحظات.', docs: [{ k: 'transaction', l: 'المعاملة كاملة', req: true, by: 'partnerships' }], yes: 'موافقة المعالي', yesShort: 'موافقة', no: 'إعادة المعاملة', back: 'legal', final: true, reject: 'رفض المعاملة' },
   { id: 'signed', n: 11, ref: 9, ph: 'sign', on: 'partnership', actor: 'partnerships', t: 'توقيع المذكرة بين الطرفين', d: 'رفع المذكرة الموقعة وتسجيل تاريخي البدء والانتهاء؛ فتصبح الشراكة «موقّعة» ويبدأ حساب سريانها.', docs: [{ k: 'signedMoU', l: 'المذكرة الموقعة بين الطرفين', req: true }], fields: ['dates'] },
   { id: 'bizdev', n: 12, ref: 10, ph: 'act', on: 'partnership', actor: 'bizdev', t: 'خطة تفعيل المذكرة مع إدارة تطوير الأعمال', d: 'تعمل إدارة تطوير الأعمال مع إدارة الشراكات على المبادرات المقترحة أو خطة تفعيل المذكرة.', docs: [{ k: 'activationPlan', l: 'نموذج المبادرات المقترحة أو خطة تفعيل المذكرة', req: true }] },
   { id: 'reports', n: 13, ref: 11, ph: 'act', on: 'partnership', actor: 'concerned', kind: 'multi', ongoing: true, t: 'تقارير تفعيل المذكرة من الإدارات', d: 'ترفع كل إدارة مفعّلة للمذكرة تقرير التفعيل من حسابها. أول تقرير يجعل حالة التفعيل «مفعّلة».', docs: [{ k: 'activationReport', l: 'تقرير تفعيل المذكرة', req: true }] },
 ];
+/* الترقيم يُحسب من الترتيب: إضافة خطوة أو حذفها يعيد ترقيم المسار في كل الشاشات */
+WF_STEPS.forEach((s, i) => { s.n = i + 1; });
 const wfStep = (id) => WF_STEPS.find((s) => s.id === id);
+/* وصف الخطوة: من الإعدادات إن وُجد، وإلا من تعريف المسار */
+const wfDesc = (s) => ((D.settings && D.settings.wfText) || {})[s.id] || s.d;
+const wfFinal = () => WF_STEPS.find((s) => s.final) || [...WF_STEPS].reverse().find((s) => s.kind === 'review') || null;
+const wfPhaseIdx = (s) => WF_PHASES.findIndex((p) => p.id === s.ph);
+/* المسارات البديلة المستخرجة من التعريف: الإغلاق عند القرار السلبي، والإعادة، والرفض النهائي */
+function wfBranches() {
+  const out = [];
+  WF_STEPS.forEach((s) => {
+    if (s.kind === 'decision') out.push({ from: s.id, to: 'closed', label: s.no || 'غير مناسبة', type: 'close' });
+    if (s.back && wfStep(s.back)) out.push({ from: s.id, to: s.back, label: s.backLabel || s.no || 'إعادة بملاحظات', type: 'back' });
+    if (s.reject) out.push({ from: s.id, to: 'closed', label: s.reject, type: 'reject' });
+  });
+  return out;
+}
+const wfIsClosed = (S, list) => (list || WF_STEPS).some((s) => S[s.id] && S[s.id].status === 'done' && ((s.kind === 'decision' && S[s.id].decision === 'no') || S[s.id].decision === 'reject'));
 const WF_ACTOR_LABEL = { requester: 'الإدارة الطالبة', partnerships: 'إدارة الشراكات', concerned: 'الإدارات المعنية', strategy: 'الإدارة الاستراتيجية', legal: 'الإدارة القانونية', excellency: 'مكتب المعالي', bizdev: 'إدارة تطوير الأعمال' };
 const wfActorName = (a) => (['requester', 'concerned'].includes(a) ? WF_ACTOR_LABEL[a] : wfDept(a) || WF_ACTOR_LABEL[a]);
 
@@ -67,7 +84,7 @@ function wfStateOf(kind, rec) {
     Object.assign(S, clone(saved));
   }
   const list = WF_STEPS.filter((s) => (kind === 'proposal' ? s.on === 'proposal' : true));
-  const closed = S.eval && S.eval.decision === 'no';
+  const closed = wfIsClosed(S, list);
   const cur = closed ? null : list.find((s) => !(S[s.id] && S[s.id].status === 'done'));
   return { S, cur: cur || null, closed, list };
 }
@@ -130,7 +147,7 @@ function wfSectionHTML(kind, rec) {
   const steps = WF_STEPS;
   const doneN = steps.filter((s) => st.S[s.id] && st.S[s.id].status === 'done').length;
   const pct = Math.round(doneN / steps.length * 100);
-  const curTxt = st.closed ? 'أُغلق الطلب: الجهة غير مناسبة' : st.cur ? `الخطوة ${st.cur.n}: ${st.cur.t} — لدى ${wfActorName(st.cur.actor)}` : 'اكتمل المسار';
+  const curTxt = st.closed ? (Object.values(st.S).some((x) => x && x.decision === 'reject') ? 'أُغلقت المعاملة: رُفضت في الاعتماد النهائي' : 'أُغلق الطلب: الجهة غير مناسبة') : st.cur ? `الخطوة ${st.cur.n}: ${st.cur.t} — لدى ${wfActorName(st.cur.actor)}` : 'اكتمل المسار';
   const phases = WF_PHASES.map((ph) => ({ ph, steps: steps.filter((s) => s.ph === ph.id) }));
   const row = (s) => {
     const r = st.S[s.id] || {}, done = r.status === 'done', cur = st.cur && st.cur.id === s.id, ret = r.status === 'returned';
@@ -139,11 +156,11 @@ function wfSectionHTML(kind, rec) {
     const can = cur && !lock && wfCan(s, kind, rec);
     const multi = s.kind === 'multi' && r.depts ? Object.keys(r.depts).length : 0;
     const need = s.kind === 'multi' && kind === 'partnership' ? wfConcerned(rec).length : 0;
-    return `<li class="wf-s ${done ? 'done' : ''} ${cur ? 'cur' : ''} ${ret ? 'ret' : ''} ${lock ? 'lock' : ''} ${r.decision === 'no' ? 'neg' : ''}" data-wfs="${s.id}">
-      <span class="wf-dot">${done ? icon(r.decision === 'no' ? 'x' : 'check') : s.n}</span>
+    return `<li class="wf-s ${done ? 'done' : ''} ${cur ? 'cur' : ''} ${ret ? 'ret' : ''} ${lock ? 'lock' : ''} ${r.decision === 'no' || r.decision === 'reject' ? 'neg' : ''}" data-wfs="${s.id}">
+      <span class="wf-dot">${done ? icon(r.decision === 'no' || r.decision === 'reject' ? 'x' : 'check') : s.n}</span>
       <div class="wf-b"><div class="wf-h"><b>${esc(s.t)}</b>${s.ref ? `<span class="wf-ref" title="رقم البند في إجراء المذكرات">البند ${s.ref}</span>` : ''}</div>
         <div class="wf-m"><span class="wf-who">${icon('users')}${esc(wfActorName(s.actor))}</span>
-          ${done ? `<span>${r.legacy ? 'مكتملة قبل اعتماد المسار في المنصة' : `${r.decision === 'no' ? (s.no || 'غير مناسبة') : r.decision === 'yes' && s.yes ? s.yes : 'اكتملت'} ${r.at ? '— ' + fmtDT(r.at) : ''}${r.by ? ' — ' + esc(r.by) : ''}`}</span>` : cur ? `<span class="wf-now">${ret ? 'أُعيدت بملاحظات' : lock ? '' : 'الخطوة الحالية'}</span>` : lock ? '<span>بعد التحويل إلى شراكة</span>' : ''}
+          ${done ? `<span>${r.legacy ? 'مكتملة قبل اعتماد المسار في المنصة' : `${r.decision === 'no' ? (s.no || 'غير مناسبة') : r.decision === 'reject' ? s.reject : r.decision === 'yes' && s.yes ? s.yes : 'اكتملت'} ${r.at ? '— ' + fmtDT(r.at) : ''}${r.by ? ' — ' + esc(r.by) : ''}`}</span>` : cur ? `<span class="wf-now">${ret ? 'أُعيدت بملاحظات' : lock ? '' : 'الخطوة الحالية'}</span>` : lock ? '<span>بعد التحويل إلى شراكة</span>' : ''}
           ${s.kind === 'multi' && kind === 'partnership' && (cur || done) ? `<span class="wf-multi">${multi} من ${need} ${s.id === 'reports' ? 'تقارير' : 'إدارات'}</span>` : ''}</div>
         ${ret && r.note ? `<div class="wf-note">${icon('msg')}${esc(r.note)}</div>` : ''}
         ${(() => { const fs = s.docs.filter((d) => d.form && wfForm(kind, rec, d.form)); return fs.length ? `<div class="wf-docs">${fs.map((d) => { const f = wfForm(kind, rec, d.form); return `<button type="button" class="wf-doc form ${f.status}" data-wfform="${d.form}" title="${esc(FORMS[d.form].title)}">${icon(f.status === 'done' ? 'check' : 'edit')}<span>${esc(FORMS[d.form].short || FORMS[d.form].title)}</span><small>${esc(f.no || '')}${f.status === 'done' ? '' : ' — مسودة'}</small></button>`; }).join('')}</div>` : ''; })()}
@@ -196,7 +213,7 @@ function wfStepDialog(kind, rec, sid, rerender) {
   };
   const acts = [];
   if (canAct) {
-    if (s.kind === 'decision' || (s.kind === 'review' && s.yes)) acts.push(`<button class="btn primary" data-wfdo="yes" type="button">${icon('check')} ${esc(s.yes || 'اعتماد')}</button>`, `<button class="btn ${s.kind === 'decision' ? 'danger' : ''}" data-wfdo="no" type="button">${esc(s.no || 'إعادة بملاحظات')}</button>`);
+    if (s.kind === 'decision' || (s.kind === 'review' && s.yes)) { acts.push(`<button class="btn primary" data-wfdo="yes" type="button">${icon('check')} ${esc(s.yes || 'اعتماد')}</button>`, `<button class="btn ${s.kind === 'decision' ? 'danger' : ''}" data-wfdo="no" type="button">${esc(s.no || 'إعادة بملاحظات')}</button>`); if (s.reject && s.kind === 'review') acts.push(`<button class="btn danger" data-wfdo="reject" type="button">${esc(s.reject)}</button>`); }
     else if (s.kind === 'review') acts.push(`<button class="btn primary" data-wfdo="yes" type="button">${icon('check')} اعتماد</button>`, `<button class="btn" data-wfdo="return" type="button">إعادة بملاحظات</button>`);
     else if (s.kind === 'multi' && role === 'dept') acts.push(`<button class="btn primary" data-wfdo="dept" type="button">${icon('send')} ${s.id === 'reports' ? 'إرسال تقرير التفعيل' : 'إرسال ملاحظات الإدارة'}</button>`);
     else if (s.kind === 'multi') acts.push(`<button class="btn primary" data-wfdo="close" type="button">${icon('check')} ${s.id === 'reports' ? 'إغلاق المسار' : 'اعتماد الملاحظات والانتقال'}</button>`);
@@ -206,7 +223,7 @@ function wfStepDialog(kind, rec, sid, rerender) {
   const onBehalf = canAct && role === 'admin' && !['partnerships', 'requester'].includes(s.actor);
   const m = Modal.open({
     title: `الخطوة ${s.n}: ${s.t}`, size: 'lg', cls: 'wf-modal',
-    body: `<p class="wf-md">${esc(s.d)}</p>
+    body: `<p class="wf-md">${esc(wfDesc(s))}</p>
       <div class="wf-mi"><span>${icon('users')} المسؤول: <b>${esc(wfActorName(s.actor))}</b></span>${s.ref ? `<span>البند ${s.ref} في إجراء المذكرات</span>` : ''}${onBehalf ? `<span class="wf-ob">${icon('alert')} تنفّذ بصفتك مدير المنصة نيابة عن ${esc(wfActorName(s.actor))}</span>` : ''}</div>
       ${r.status === 'returned' && r.note ? `<div class="note warn">${icon('msg')}<span><b>أُعيدت بملاحظات:</b> ${esc(r.note)}</span></div>` : ''}
       ${multiRows ? `<h4 class="m-h4">${s.id === 'reports' ? 'تقارير الإدارات' : 'ملاحظات الإدارات المعنية'}</h4><ul class="wf-ml">${multiRows}</ul>` : ''}
@@ -241,7 +258,7 @@ function wfStepDialog(kind, rec, sid, rerender) {
     const act = b.dataset.wfdo, note = ($('#wfNote', box) || {}).value ? $('#wfNote', box).value.trim() : '';
     const missing = s.docs.filter((d) => d.req && !(d.form && (wfForm(kind, rec, d.form) || {}).status === 'done') && !docs.some((a) => a.doc === d.k && (s.kind !== 'multi' || act !== 'dept' || a.byDept === myDept)));
     if (['yes', 'done', 'dept'].includes(act) && missing.length && !(act === 'dept' && s.id === 'depts')) { toast(`ارفع أولًا: ${missing.map((d) => d.l).join('، ')}`, 'err'); return; }
-    if (['no', 'return'].includes(act) && !note) { toast('اكتب الملاحظة أو السبب أولًا.', 'err'); $('#wfNote', box).focus(); return; }
+    if (['no', 'return', 'reject'].includes(act) && !note) { toast('اكتب الملاحظة أو السبب أولًا.', 'err'); $('#wfNote', box).focus(); return; }
     const fields = {};
     if ((s.fields || []).includes('date')) { fields.date = $('#wfDate', box).value; if (!fields.date) return toast('حدد تاريخ الاجتماع.', 'err'); }
     if ((s.fields || []).includes('attendees')) fields.attendees = $$('input[name=wfAtt]:checked', box).map((i) => i.value);
@@ -269,6 +286,9 @@ async function wfApply(kind, rec, s, act, note, fields) {
   } else if (act === 'no' && s.kind === 'decision') {
     Object.assign(cur, { status: 'done', decision: 'no', at, by, note });
     msg = `${s.no}: ${note}`;
+  } else if (act === 'reject' && s.reject) {
+    Object.assign(cur, { status: 'done', decision: 'reject', at, by, note, byDept: dept });
+    msg = `${s.reject}: ${note}`;
   } else if (act === 'no' || act === 'return') {
     Object.assign(cur, { status: 'returned', at, by, note, byDept: dept });
     msg = `أُعيدت بملاحظات: ${note}`;
@@ -278,20 +298,22 @@ async function wfApply(kind, rec, s, act, note, fields) {
   }
   rec.wf.steps[s.id] = cur;
   // الآثار على حالة السجل
-  if (kind === 'proposal' && s.id === 'eval') {
+  if (kind === 'proposal' && s.kind === 'decision') {
     if (cur.decision === 'yes') await setPropStatus(rec, 'accepted', note || 'الجهة مناسبة وفق التقييم المبدئي.', 'all');
     if (cur.decision === 'no') await setPropStatus(rec, 'rejected', note, 'all');
-  } else if (kind === 'proposal' && s.id === 'method' && rec.status === 'submitted') await setPropStatus(rec, 'review', '', 'all');
+  } else if (kind === 'proposal' && s.actor === 'partnerships' && rec.status === 'submitted') await setPropStatus(rec, 'review', '', 'all');
   if (kind === 'partnership') {
     if (s.id === 'draft' && fields.coop) rec.cooperationAreas = fields.coop;
     if (s.id === 'meeting' && fields.attendees) rec.departments = [...new Set([...(rec.departments || []), ...fields.attendees.filter((d) => d !== D.settings.org.dept)])];
     const st = wfStateOf('partnership', rec);
-    if (cur.status === 'done' && st.cur && st.cur.n >= 9 && rec.stage === 'prep') rec.stage = 'sign';
+    if (cur.status === 'done' && st.cur && wfPhaseIdx(st.cur) >= WF_PHASES.findIndex((p) => p.id === 'sign') && rec.stage === 'prep') rec.stage = 'sign';
+    if (cur.decision === 'reject') { rec.stage = 'cancel'; rec.closedReason = note; }
     if (s.id === 'signed' && cur.status === 'done') { rec.stage = 'signed'; rec.startDate = fields.start; rec.endDate = fields.end; }
     if (s.id === 'bizdev' && cur.status === 'done' && !rec.activation || (s.id === 'bizdev' && cur.status === 'done' && rec.activation === 'غير مفعّلة')) rec.activation = 'قيد التفعيل';
   }
   await Repo.save(kind === 'proposal' ? 'proposals' : 'partnerships', rec);
   await Repo.log('workflow.step', kind, rec.id, kind === 'proposal' ? rec.ref : rec.code, `الخطوة ${s.n} «${s.t}»: ${msg}`);
+  await wfNotifyStep(kind, rec, s, cur, note);
   toast(cur.status === 'returned' ? 'أُعيدت الخطوة بملاحظات' : act === 'dept' ? 'أُرسلت' : `الخطوة ${s.n}: ${msg}`);
 }
 
@@ -310,7 +332,7 @@ function bindWf(el, kind, rec) {
 function wfAccounts() {
   const own = D.settings.org.dept;
   const duty = (d) => Object.keys(WF_DEPT_DEFAULTS).filter((k) => wfDept(k) === d);
-  const A = [{ id: 'admin', t: 'مدير المنصة', s: own, role: 'admin', dept: own, g: 'إدارة الشراكات' }];
+  const A = [{ id: 'admin', t: 'إدارة الشراكات', s: 'كامل الصلاحيات — ' + own, role: 'admin', dept: own, g: 'إدارة الشراكات' }];
   L('team').forEach((m) => A.push({ id: 'team:' + m, t: m, s: 'فريق ' + own, role: 'team', dept: own, member: m, g: 'إدارة الشراكات' }));
   const depts = [...new Set([...L('departments').filter((d) => d !== own), ...['legal', 'excellency'].map(wfDept)])];
   depts.forEach((d) => { const du = duty(d); const st = WF_STEPS.filter((x) => du.includes(x.actor)); A.push({ id: 'dept:' + d, t: d, s: st.length ? st.map((x) => `${x.n}. ${x.t}`).join('، ') : 'تطلب الشراكات وتتقاطع معها وترفع تقارير التفعيل', role: 'dept', dept: d, duties: du, g: du.length ? 'جهات المراجعة والاعتماد' : 'الإدارات' }); });
@@ -319,12 +341,14 @@ function wfAccounts() {
 }
 function currentAccountId() {
   const s = D.settings.session || {}, r = Session.role();
+  if (s.accountId === 'sysadmin') return 'sysadmin';
   if (s.accountId && wfAccounts().some((a) => a.id === s.accountId)) { const a = wfAccounts().find((x) => x.id === s.accountId); if (a.role === r && (r !== 'dept' || a.dept === Session.dept()) && (r !== 'team' || a.member === Session.member())) return a.id; }
   return r === 'dept' ? 'dept:' + Session.dept() : r === 'team' ? 'team:' + Session.member() : r;
 }
-function accountLabel() { const a = wfAccounts().find((x) => x.id === currentAccountId()); return a ? a.t : ROLES[Session.role()].label; }
+function accountLabel() { const a = authAccounts().find((x) => x.id === currentAccountId()); return a ? a.t : ROLES[Session.role()].label; }
 async function switchAccount(id) {
   const a = wfAccounts().find((x) => x.id === id); if (!a) return;
+  if (!AUTH.dev && !(currentLogin() || {}).sys) return toast('الدخول بحساب آخر متاح لمدير النظام فقط. سجّل الخروج ثم ادخل بالحساب المطلوب.', 'err');
   D.settings.session = { role: a.role, dept: a.role === 'dept' ? a.dept : Session.dept(), member: a.member || Session.member(), accountId: a.id };
   await Repo.saveSettings();
   await Repo.log('role.switch', 'system', 'session', a.t, ROLES[a.role].label);

@@ -36,7 +36,7 @@ function renderShell() {
       <div class="nav-items"><div class="nav-in">${g.items.map(navItem).join('')}</div></div></div>`).join('')}</nav>
     <div class="side-foot"><div class="side-org">${esc(o.dept)}</div>
       ${dz === 'classic' ? `<button class="side-btn icon-only collapse-btn" data-collapse type="button" title="${App.ui.sideMin ? 'توسيع القائمة' : 'طي القائمة'}" aria-label="${App.ui.sideMin ? 'توسيع القائمة' : 'طي القائمة'}">${icon('sidebar')}</button>` : ''}</div>`;
-  const roleBox = `<button class="rolebox" data-role title="تبديل الدور (محاكاة)"><span class="tag-sim">محاكاة</span><span class="rl">${esc(accountLabel())}</span><span class="av">${esc(initials(r === 'team' ? Session.member() : r === 'dept' ? Session.dept().replace(/^(إدارة|الإدارة العامة لل|الإدارة العامة|الإدارة|مكتب|الشؤون)\s*/, '') : ROLES[r].label))}</span></button>`;
+  const roleBox = bellHTML() + `<button class="rolebox" data-role title="حسابي"><span class="rl">${esc(accountLabel())}</span><span class="av">${esc(initials(r === 'team' ? Session.member() : r === 'dept' ? Session.dept().replace(/^(إدارة|الإدارة العامة لل|الإدارة العامة|الإدارة|مكتب|الشؤون)\s*/, '') : isSysAdmin() ? 'م ن' : ROLES[r].label))}</span></button>`;
   const tourBtn = `<button class="tour-top" data-tour-start type="button" title="استعراض المنصة (Alt+T)">${icon('play')}<span>استعراض المنصة</span></button>`;
   const themeBtn = `<button class="icon-btn theme-btn" data-themetoggle title="${D.settings.theme === 'dark' ? 'الوضع النهاري' : 'الوضع الليلي'}" aria-label="تبديل الوضع النهاري والليلي">${icon(D.settings.theme === 'dark' ? 'sun' : 'moon')}</button>`;
   const demo = showDemo() ? `<button class="demo-ribbon" data-demo title="البيانات التجريبية">${icon('info')}<span class="dr-t">يتضمن بيانات تجريبية</span></button>` : '';
@@ -125,7 +125,8 @@ function bindShell(app) {
     if (e.target.closest('[data-palette]')) { openPalette(); return; }
     if (e.target.closest('[data-menu]')) { app.classList.toggle('nav-open'); return; }
     if (e.target.closest('.nav-a')) app.classList.remove('nav-open');
-    if (e.target.closest('[data-role]') && e.target.closest('#topbar')) return roleDialog();
+    if (e.target.closest('[data-role]') && e.target.closest('#topbar')) return accountMenu();
+    if (e.target.closest('[data-bell]')) return toggleBell();
     if (e.target.closest('[data-demo]')) return demoDialog();
     if (e.target.closest('[data-present-exit]')) return togglePresent();
     if (e.target.closest('.topbar [data-tour-start]')) return startTour();
@@ -169,12 +170,12 @@ function roleDialog() {
   const groups = [...new Set(A.map((a) => a.g))];
   const taskN = (a) => { const keep = D.settings.session; D.settings.session = { role: a.role, dept: a.role === 'dept' ? a.dept : Session.dept(), member: a.member || Session.member(), accountId: a.id }; let n = 0; try { n = wfTasks().filter((t) => !t.follow).length; } catch (_) {} D.settings.session = keep; return n; };
   const m = Modal.open({
-    title: 'تبديل الحساب — محاكاة', size: 'lg', cls: 'acc-modal',
+    title: 'الدخول بحساب آخر للمعاينة', size: 'lg', cls: 'acc-modal',
     body: `<p class="small muted" style="margin-bottom:12px">لكل إدارة حساب. يحدد الحساب ما يراه المستخدم والخطوات التي ينفّذها في مسار الشراكة الجديدة.</p>
       ${groups.map((g) => `<h4 class="acc-g">${esc(g)}</h4><div class="acc-grid">${A.filter((a) => a.g === g).map((a) => { const n = taskN(a); return `<div class="role-c acc-c ${a.id === cur ? 'on' : ''}" data-acc="${esc(a.id)}" data-rc="${a.role}" tabindex="0"><b>${esc(a.t)}</b><p>${esc(a.s || ROLES[a.role].label)}</p><span class="acc-r">${esc(ROLES[a.role].label)}</span>${n ? `<span class="acc-n">${n} ${n === 1 ? 'مهمة' : 'مهام'}</span>` : ''}</div>`; }).join('')}</div>`).join('')}
       <div class="grid2" style="margin-top:14px"><div class="field"><label>أو اختر الإدارة (لحساب ممثل إدارة)</label><select class="in" id="rdD">${L('departments').filter((d) => d !== D.settings.org.dept).map((d) => `<option ${d === Session.dept() ? 'selected' : ''}>${esc(d)}</option>`).join('')}</select></div>
         <div class="field"><label>عضو الفريق (لفريق الشراكات)</label><select class="in" id="rdM">${L('team').map((d) => `<option ${d === Session.member() ? 'selected' : ''}>${esc(d)}</option>`).join('')}</select></div></div>
-      <div class="sim-note">هذه محاكاة للتجربة وليست حماية أمنية؛ تسجيل الدخول الفعلي وتطبيق الصلاحيات يكونان على الخادم.</div>`,
+      <div class="sim-note">معاينة المنصة كما يراها كل حساب، متاحة لمدير النظام فقط. للعودة افتح «حسابي» ← «العودة إلى مدير النظام».</div>`,
     foot: `<button class="btn primary" data-ok>تطبيق</button><button class="btn ghost" data-mclose>إلغاء</button>`,
   });
   let sel = cur, touchedD = false;
@@ -233,6 +234,7 @@ function parseHash() {
   return { path: path || '/', query };
 }
 function route() {
+  if (!AUTH.dev && !currentLogin()) { if (!$('#shkLogin')) showLogin(); return; }
   const { path, query } = parseHash();
   let def = null, m = null;
   for (const d of ROUTES) { m = d.re.exec(path); if (m) { def = d; break; } }
@@ -376,6 +378,7 @@ async function boot() {
     if (!D.settings) await seedAll();
     if (migrate()) { await Repo.saveSettings(); for (const c of ['partnerships', 'achievements']) await Store.putMany(c, D[c]); }
     applyTheme();
+    if (!authBoot()) { showLogin(); splashSync(); return; }
     renderShell();
     App.lastHash = location.hash;
     route();

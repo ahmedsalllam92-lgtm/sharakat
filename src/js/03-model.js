@@ -1,6 +1,6 @@
-/* ===== الأدوار (محاكاة محلية — ليست حماية فعلية) ===== */
+/* ===== الأدوار والصلاحيات (الدخول بكلمة مرور في 04b-auth.js) ===== */
 const ROLES = {
-  admin: { label: 'مدير المنصة', desc: 'جميع الصفحات والإجراءات، والإعدادات والتصنيفات والنسخ الاحتياطي.' },
+  admin: { label: 'إدارة الشراكات', desc: 'كامل الصلاحيات: جميع الصفحات والإجراءات، والإعدادات والتصنيفات والنسخ الاحتياطي، وإدارة الحسابات وكلمات المرور.' },
   team: { label: 'فريق إدارة الشراكات', desc: 'إدارة سجلات الشراكات والجهات، ومراجعة مقترحات الإدارات، وتحديث محتوى الرئيسية.' },
   dept: { label: 'ممثل إدارة أخرى', desc: 'تقديم مقترحات الشراكة ومتابعة حالتها، والاطلاع على الشراكات دون بيانات التواصل والمستندات الداخلية.' },
   viewer: { label: 'مستخدم للاطلاع', desc: 'الاطلاع على الرئيسية ولوحة المؤشرات والسجل دون أي تعديل.' },
@@ -23,20 +23,27 @@ const PERMS = {
   'manage.backup': ['admin'],
   'view.audit': ['admin', 'team'],
   'export': ['admin', 'team', 'viewer'],
+  'manage.accounts': ['admin'],
 };
 const PERM_LABELS = {
   'view.dashboard': 'لوحة المؤشرات', 'view.register': 'سجل الشراكات', 'view.drafts': 'رؤية المسودات', 'view.contacts': 'بيانات التواصل',
   'view.internal': 'المرفقات والملاحظات الداخلية', 'edit.partnership': 'إضافة الشراكات وتعديلها', 'delete.partnership': 'حذف الشراكات',
   'manage.partners': 'إدارة الجهات الشريكة', 'proposal.create': 'تقديم مقترح', 'proposal.review': 'مراجعة المقترحات واتخاذ الإجراء',
-  'manage.content': 'محتوى الرئيسية والإنجازات', 'manage.lists': 'التصنيفات والقوائم', 'manage.backup': 'النسخ الاحتياطي والاستعادة', 'view.audit': 'سجل التغييرات', 'export': 'التصدير والطباعة',
+  'manage.content': 'محتوى الرئيسية والإنجازات', 'manage.lists': 'التصنيفات والقوائم', 'manage.backup': 'النسخ الاحتياطي والاستعادة', 'view.audit': 'سجل التغييرات', 'manage.accounts': 'الحسابات وكلمات المرور', 'export': 'التصدير والطباعة',
 };
+/* أدوات نسخة الاستعراض المعزولة (iframe): تبادل البيانات بين النسختين وتبديل الحساب، دون أي حفظ */
+function sbxExport() { return JSON.stringify(D); }
+function sbxImport(json) { const keep = D.settings && D.settings.session; const x = JSON.parse(json); Object.keys(D).forEach((k) => { if (!(k in x)) delete D[k]; }); Object.assign(D, x); if (keep && D.settings) D.settings.session = keep; }
+function sbxD() { return D; }
+function sbxSession() { return { role: Session.role(), dept: Session.dept() }; }
+function sbxAs(sess) { D.settings.session = sess; App.dirty = false; renderShell(); route(); }
 const Session = {
   role: () => (D.settings && D.settings.session && D.settings.session.role) || 'admin',
   dept: () => (D.settings && D.settings.session && D.settings.session.dept) || 'إدارة المشاريع',
   member: () => (D.settings && D.settings.session && D.settings.session.member) || (L('team')[0] || 'عضو الفريق'),
   userName() {
     const r = this.role();
-    if (r === 'admin') return 'مدير المنصة';
+    if (r === 'admin') return (D.settings && D.settings.session && D.settings.session.accountId === 'sysadmin') ? 'مدير النظام' : 'إدارة الشراكات';
     if (r === 'team') return this.member() + ' (فريق الشراكات)';
     if (r === 'dept') return 'ممثل ' + this.dept();
     return 'مستخدم للاطلاع';
@@ -244,6 +251,7 @@ async function setPropStatus(x, to, message = '', vis = 'all') {
   await propEvent(x, { type: 'status', from, to, message, vis });
   await Repo.save('proposals', x);
   await Repo.log('proposal.status', 'proposal', x.id, x.ref, `${propStatusLabel(from)} ← ${propStatusLabel(to)}${message ? ' — ' + message.slice(0, 80) : ''}`);
+  if (['info', 'converted'].includes(to) && typeof notify === 'function') await notify([{ dept: x.department }], { t: to === 'info' ? `طلب استكمال للمقترح ${x.ref}` : `تحوّل مقترحكم ${x.ref} إلى سجل شراكة`, b: message ? message.slice(0, 140) : propStatusLabel(to), href: '#/proposals/' + x.id, ic: to === 'info' ? 'msg' : 'convert' });
 }
 /* تحويل المقترح المقبول إلى سجل شراكة مع نقل البيانات والمرفقات */
 function proposalMapping(x) {

@@ -361,8 +361,14 @@ function setTourTab(b) {
         <div class="row wrap" style="margin-top:16px;gap:10px"><button class="btn primary lg" data-tour-start type="button">${icon('play')} بدء الاستعراض</button>
           <label class="row small"><span class="muted">السرعة</span><select class="in" id="tourSpeed" style="width:auto;min-height:38px"><option value="0.75">بطيء</option><option value="1">عادي</option><option value="1.5">سريع</option></select></label></div></div>
         <ol class="tour-list">${steps.map((s, i) => `<li><span>${i + 1}</span>${esc(s.title)}</li>`).join('')}</ol></div>
+      </div></div>
+    <div class="panel rq-set" style="margin-top:18px" data-tour="settings-rqtour"><div class="panel-h"><h3>مسار طلب الشراكة</h3><span class="sub">استعراض مستقل: من «شارك» حتى الاعتماد أو الرفض</span></div><div class="panel-b">
+      <div class="tour-intro"><div><p style="line-height:1.9">شاشة مقسومة: يمينًا الجهة الطالبة، ويسارًا الجهة التي عليها الدور. يُبنى الاستعراض من تعريف المسار الحالي (${(() => { const f = wfFinal(); return WF_STEPS.indexOf(f) + 1; })()} مراحل حتى الاعتماد النهائي) ومن حقول «شارك» الإلزامية، فيتغير تلقائيًا مع أي تعديل عليهما.</p>
+        <p class="small muted" style="margin-top:8px">يجري في نسخة معزولة: لا تُحفظ أي بيانات، ولا تُرسل إشعارات حقيقية، ولا يبقى أي أثر بعد الإنهاء.</p>
+        <div class="row wrap" style="margin-top:16px;gap:10px"><button class="btn primary lg" data-rqtour-start type="button">${icon('play')} بدء استعراض المسار</button></div></div>
+        <ol class="tour-list">${WF_STEPS.slice(0, WF_STEPS.indexOf(wfFinal()) + 1).map((s) => `<li><span>${s.n}</span>${esc(s.t)}</li>`).join('')}</ol></div>
       <div class="note" style="margin-top:16px">${icon('info')}<span>أثناء الجولة: المسافة للإيقاف والاستكمال، والسهمان للتنقل، وEsc للإنهاء. ويمكن بدء الجولة من زر «اتجاه التصميم» أسفل الشاشة أو بالاختصار Alt+T.</span></div></div></div>`;
   const sp = $('#tourSpeed', b); sp.value = String(D.settings.tourSpeed || 1);
   sp.onchange = async () => { D.settings.tourSpeed = +sp.value; await Repo.saveSettings(); };
-  b.onclick = (e) => { if (e.target.closest('[data-tour-start]')) startTour(); };
+  b.onclick = (e) => { if (e.target.closest('[data-tour-start]')) startTour(); if (e.target.closest('[data-rqtour-start]')) startReqTour(); };
 }

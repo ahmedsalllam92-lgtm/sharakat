@@ -8,6 +8,7 @@ const SPLASH_DEF = { on: true, text: 'نبني شراكات… تصنع أثرً
 const SPLASH_BGS = [['splash-aerial', 'صورة جوية للغطاء النباتي'], ['splash-forest', 'غابة ومسطحات خضراء'], ['border-guard-signing', 'صورة توقيع مذكرة'], ['waqf-saitah-signing', 'صورة توقيع شراكة']];
 function splashCfg() { let c = {}; try { c = JSON.parse(localStorage.getItem('shk_splash') || '{}') || {}; } catch (e) { c = {}; } return { ...SPLASH_DEF, ...c }; }
 function splashShow(force) {
+  if (window.__SBX) return null;
   const cfg = splashCfg();
   let auto = false; try { auto = navigator.webdriver && !localStorage.getItem('shk_splash_force'); } catch (e) { auto = !!navigator.webdriver; }
   if (!force && (!cfg.on || auto)) return null;
@@ -52,6 +53,7 @@ function splashShow(force) {
 }
 /* تُستدعى بعد تحميل البيانات: تحفظ الإعدادات والأرقام لتظهر فورًا في الفتح التالي، وتحدّث الأرقام إن كانت الشاشة ما زالت ظاهرة */
 function splashSync() {
+  if (window.__SBX) return;
   try {
     const s = (D.settings && D.settings.splash) || {};
     const nd = visiblePartnerships().filter((p) => !p.isDraft);

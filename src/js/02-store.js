@@ -8,6 +8,7 @@ const Store = {
   mode: 'idb', db: null, err: null,
   memFiles: new Map(),
   async open() {
+    if (window.__SBX) { this.mode = 'sandbox'; this.db = null; return; } // نسخة الاستعراض المعزولة: لا تخزين إطلاقًا
     try {
       if (!('indexedDB' in window) || !window.indexedDB) throw new Error('IndexedDB غير متاح');
       this.db = await new Promise((res, rej) => {
@@ -43,6 +44,7 @@ const Store = {
     if (id && id.startsWith('asset:')) { const A_ = ASSET_IMG[id.slice(6)]; if (!A_) return null; const blob = await (await fetch(A_.src)).blob(); return { id, name: A_.title + '.jpg', type: 'image/jpeg', size: blob.size, blob }; }
     if (id && id.startsWith('lib:')) { const L_ = IMG_LIB[id.slice(4)]; if (!L_) return null; const blob = await (await fetch(L_.src)).blob(); return { id, name: L_.title + '.jpg', type: 'image/jpeg', size: blob.size, blob }; }
     if (this.memFiles.has(id)) return this.memFiles.get(id);
+    if (window.__SBX) { try { return id && !String(id).startsWith('sbx:') ? (parent.__shkGetFile ? await parent.__shkGetFile(id) : null) : null; } catch (_) { return null; } } // قراءة فقط من المنصة الأصلية
     if (!this.db) return null;
     const r = await this.tx('files', 'readonly', (s) => s.get(id));
     if (r) this.memFiles.set(id, r);
@@ -85,6 +87,7 @@ async function saveUpload(file) {
 
 const Repo = {
   async load() {
+    if (window.__SBX) { sbxImport(window.__SBX.data()); return; }
     for (const c of COLS) {
       const rows = await Store.all(c);
       if (c === 'settings') D.settings = rows.find((r) => r.id === 'main') || null;

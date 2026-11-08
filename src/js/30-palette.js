@@ -18,11 +18,13 @@ function palActions() {
     can('view.reports') && { t: 'إنشاء تقرير', s: 'PowerPoint أو PDF', ic: 'file', kw: 'تقرير عرض باوربوينت', run: () => go('#/reports') },
     can('export') && { t: 'تصدير سجل الشراكات إلى Excel', s: 'كل السجلات المتاحة لدورك', ic: 'download', kw: 'اكسل تصدير', run: () => exportPartnershipsXlsx(visiblePartnerships(), 'سجل-الشراكات') },
     Session.role() !== 'viewer' && { t: 'مهامي', s: (() => { const n = wfTasks().filter((t) => !t.follow).length; return n ? `${n} بانتظارك` : 'لا مهام الآن'; })(), ic: 'flag', kw: 'مهام مهمة انتظار مسار', run: () => go('#/tasks') },
-    { t: 'تبديل الحساب', s: accountLabel(), ic: 'users', kw: 'حساب ادارة دخول', run: () => roleDialog() },
+    { t: 'حسابي', s: accountLabel(), ic: 'users', kw: 'حساب كلمة مرور خروج', run: () => accountMenu() },
+    { t: 'تسجيل الخروج', s: accountLabel(), ic: 'x', kw: 'خروج تسجيل', run: () => authLogout() },
     { t: 'مسار الشراكة والصلاحيات', s: 'من المقترح إلى الإغلاق', ic: 'convert', kw: 'مسار عملية صلاحيات', run: () => go('#/process') },
     { t: 'تبديل الوضع النهاري والليلي', s: 'حسب الاتجاه الحالي', ic: 'moon', kw: 'ليلي نهاري داكن فاتح', run: () => { const b = $('[data-themetoggle]'); b && b.click(); } },
     { t: 'استعراض المنصة', s: 'جولة تعريفية تفاعلية', ic: 'play', kw: 'جولة شرح', run: () => startTour() },
-    { t: 'تبديل الدور (محاكاة)', s: ROLES[Session.role()].label, ic: 'user', kw: 'دور صلاحية مستخدم', run: () => roleDialog() },
+    { t: 'استعراض مسار طلب الشراكة', s: 'من «شارك» حتى الاعتماد أو الرفض', ic: 'convert', kw: 'جولة مسار طلب اعتماد رفض', run: () => startReqTour() },
+    (isSysAdmin() || AUTH.dev) && { t: 'الدخول بحساب آخر للمعاينة', s: 'لمدير النظام', ic: 'user', kw: 'دور صلاحية مستخدم حساب', run: () => roleDialog() },
     ...Object.entries(DESIGNS).filter(([k]) => k !== design()).map(([k, d]) => ({ t: `اتجاه التصميم: ${d.name}`, s: d.tag, ic: 'palette', kw: 'تصميم اتجاه شكل', run: () => applyDesign(k) })),
   ];
   return A.filter(Boolean);

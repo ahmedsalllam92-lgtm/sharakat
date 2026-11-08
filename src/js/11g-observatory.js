@@ -1,13 +1,18 @@
 /* =====================================================================
-   لوحة المؤشرات «حلقات النمو»
+   لوحة المؤشرات — العرض المختصر
    المحفظة شجرة: كل حلقة سنة، وكل شعاع شراكة من بدايتها إلى نهايتها،
    والحلقة الذهبية «اليوم». حولها: النبض، وخط المسار، وبوصلة القيمة، وخريطة الشركاء.
    مشتركة بين الاتجاهين؛ الهوية تأتي من متغيرات كل اتجاه.
    ===================================================================== */
-const OB_ALT = () => (design() === 'board' ? ['brief', 'إحاطة المجلس'] : ['classic', 'العرض التفصيلي']);
+const OB_ALT = () => (design() === 'board' ? 'brief' : 'classic');
+/* مفتاح العرض «مختصر / مفصّل»: شريط واحد أعلى صفحة اللوحة في كل العروض حتى يبقى في المكان نفسه */
 function obViewSwitch(cur) {
-  const [k, l] = OB_ALT();
-  return `<div class="ob-views" role="tablist" aria-label="طريقة عرض اللوحة"><a href="#/dashboard?v=obs" role="tab" class="${cur === 'obs' ? 'on' : ''}" data-dview="obs">${icon('leaf')}<span>حلقات النمو</span></a><a href="#/dashboard?v=${k}" role="tab" class="${cur !== 'obs' ? 'on' : ''}" data-dview="${k}">${icon(k === 'brief' ? 'flag' : 'grid')}<span>${l}</span></a></div>`;
+  const k = OB_ALT();
+  return `<div class="ob-views" role="tablist" aria-label="طريقة عرض اللوحة"><a href="#/dashboard?v=obs" role="tab" class="${cur === 'obs' ? 'on' : ''}" data-dview="obs">${icon('leaf')}<span>مختصر</span></a><a href="#/dashboard?v=${k}" role="tab" class="${cur !== 'obs' ? 'on' : ''}" data-dview="${k}">${icon(k === 'brief' ? 'flag' : 'grid')}<span>مفصّل</span></a></div>`;
+}
+function dashViewBar(el, cur) {
+  const old = el.querySelector(':scope > .dv-bar'); if (old) old.remove();
+  el.insertAdjacentHTML('afterbegin', `<div class="dv-bar no-print">${obViewSwitch(cur)}</div>`);
 }
 function dashView(r) {
   const q = r && r.query && r.query.v;
@@ -24,10 +29,9 @@ function renderObservatory(el) {
   const lu = lastDataUpdate();
   el.innerHTML = `<div class="ob">
     <header class="ob-head">
-      <div class="ob-ttl"><span class="ob-eyebrow"><i></i>لوحة المؤشرات · ${esc(o.name)}</span><h1>حلقات النمو</h1>
-        <p class="ob-lead" id="obLead" aria-live="polite"></p>
+      <div class="ob-ttl"><span class="ob-eyebrow"><i></i>لوحة المؤشرات · ${esc(o.name)}</span><h1>لوحة مؤشرات الشراكات</h1>
         <dl class="ob-meta"><div><dt>تاريخ العرض</dt><dd>${fmtDate(isoDate(today()))}</dd></div><div><dt>آخر تحديث للبيانات</dt><dd>${lu ? fmtDT(lu) : '—'}</dd></div>${showDemo() ? '<div class="ob-demo">تشمل بيانات تجريبية</div>' : ''}</dl></div>
-      <div class="ob-tools no-print">${obViewSwitch('obs')}
+      <div class="ob-tools no-print">
         <div class="ob-btns">${can('export') ? `<button class="btn" data-xls type="button">${icon('download')}<span>Excel</span></button><button class="btn" data-print type="button">${icon('print')}<span>طباعة</span></button>` : ''}<button class="btn" data-present type="button">${icon('expand')}<span>عرض</span></button></div></div>
     </header>
     <div class="ob-filters no-print"><div class="fbar dz-fbar" id="dashF"></div><div class="dz2-active" id="dzActive"></div></div>
@@ -51,7 +55,6 @@ function renderObservatory(el) {
     drawActive(list);
     const body = $('#obBody', el);
     body.innerHTML = obBody(list, base(), first);
-    $('#obLead', el).innerHTML = obLead(list);
     hydrateFiles(el);
     if (!first) { body.classList.remove('ob-in'); void body.offsetWidth; body.classList.add('ob-in'); }
     runCountUps(el);
@@ -104,7 +107,7 @@ function obBody(list, all, animate) {
     ${obFoot(m)}`;
 }
 
-/* — حلقات النمو — */
+/* — حلقات السنوات — */
 function obRings(all, list) {
   const inSet = new Set(list.map((p) => p.id));
   const items = all.filter((p) => !p.isDraft && parseDate(p.startDate) && parseDate(p.endDate));
@@ -178,7 +181,7 @@ function obRings(all, list) {
       <text x="${C}" y="${C + 30}" text-anchor="middle" class="ob-cl">سارية الآن</text>
       ${labels}
     </svg>
-    <div class="ob-time no-print"><span class="ob-time-l">${icon('history')} آلة الزمن</span><input type="range" min="${T0}" max="${T1 - 86400000}" step="86400000" value="${t.getTime()}" aria-label="اختر تاريخًا لعرض الشراكات السارية فيه"><output id="obTimeOut">اليوم</output><button type="button" class="linkbtn" data-obnow hidden>العودة إلى اليوم</button></div>
+    <div class="ob-time no-print"><span class="ob-time-l">${icon('history')} عرض في تاريخ سابق</span><input type="range" min="${T0}" max="${T1 - 86400000}" step="86400000" value="${t.getTime()}" aria-label="اختر تاريخًا لعرض الشراكات السارية فيه"><output id="obTimeOut">اليوم</output><button type="button" class="linkbtn" data-obnow hidden>العودة إلى اليوم</button></div>
     <div class="ob-lg">${legend}${undated.length ? `<span class="ob-und">${plural(undated.length, 'سجل واحد', 'سجلان', 'سجلات', 'سجلًا')} بلا تواريخ لا يظهر في الحلقات</span>` : ''}</div>
   </div>`;
 }
@@ -361,7 +364,7 @@ function obPresent(el, on) {
     if (html.requestFullscreen && !document.fullscreenElement) html.requestFullscreen().catch(() => {});
     let nav = $('#obShowNav'); if (!nav) { nav = document.createElement('div'); nav.id = 'obShowNav'; nav.className = 'ob-shownav'; document.body.appendChild(nav); }
     const secs = $$('#obBody > section, #obBody > .ob-row', el);
-    const names = ['حلقات النمو', 'خط المسار', 'القيمة والشركاء', 'القرارات والفريق'];
+    const names = ['الشراكات عبر السنين', 'خط المسار', 'القيمة والشركاء', 'القرارات والفريق'];
     nav.innerHTML = `<button type="button" data-obprev aria-label="السابق">${icon('chevR')}</button>${secs.map((_, i) => `<button type="button" class="d" data-obgo="${i}" title="${names[i] || ''}">${i + 1}</button>`).join('')}<button type="button" data-obnext aria-label="التالي">${icon('chevL')}</button><button type="button" class="x" data-obexit>${icon('x')} إنهاء العرض</button>`;
     nav.onclick = (e) => { const g = e.target.closest('[data-obgo]'); if (g) return obGo(el, +g.dataset.obgo); if (e.target.closest('[data-obprev]')) return obGo(el, (App.obIdx || 0) - 1); if (e.target.closest('[data-obnext]')) return obGo(el, (App.obIdx || 0) + 1); if (e.target.closest('[data-obexit]')) return obPresent(el, false); };
     App.obKey = (e) => { if (!html.classList.contains('ob-show')) return; if (e.key === 'ArrowLeft' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); obGo(el, (App.obIdx || 0) + 1); } else if (e.key === 'ArrowRight' || e.key === 'PageUp') { e.preventDefault(); obGo(el, (App.obIdx || 0) - 1); } else if (e.key === 'Escape') obPresent(el, false); };
@@ -386,7 +389,7 @@ function obGo(el, i) {
   $$('#obShowNav .d').forEach((d, k) => d.classList.toggle('on', k === i));
 }
 
-/* — آلة الزمن: تحريك الحلقة الذهبية إلى أي تاريخ — */
+/* — العرض في تاريخ سابق: تحريك الحلقة الذهبية إلى أي تاريخ — */
 function obTimeTo(el, ms) {
   const svg = $('.ob-svg', el); if (!svg) return;
   const T0 = +svg.dataset.t0, T1 = +svg.dataset.t1, R0 = +svg.dataset.r0, R1 = +svg.dataset.r1, C = +svg.dataset.c;

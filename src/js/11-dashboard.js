@@ -267,9 +267,10 @@ function narrative(list, filtered) {
 
 /* ===== الصفحة ===== */
 function renderDashboard(el, r) {
-  if (dashView(r) === 'obs') return renderObservatory(el);
-  if (design() === 'board') return renderDashBoard(el);
-  return renderDashClassic(el);
+  const v = dashView(r);
+  const out = v === 'obs' ? renderObservatory(el) : design() === 'board' ? renderDashBoard(el) : renderDashClassic(el);
+  dashViewBar(el, v);
+  return out;
 }
 function renderDashboardBand(el) {
   const now = new Date();

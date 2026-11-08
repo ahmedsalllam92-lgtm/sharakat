@@ -29,9 +29,9 @@ const PR_STEPS = [
   { id: 'active', lane: 'requester', col: 12, kind: 'end', t: 'مذكرة مفعّلة', st: 'تتابع في السجل حتى الاستحقاق', n: () => visiblePartnerships().filter((p) => p.activation === 'مفعّلة' && ['active', 'soon'].includes(pStatus(p))).length, href: '#/partnerships?activation=مفعّلة' },
 ];
 const PR_EDGES = [
-  ...WF_STEPS.slice(0, -1).map((s, i) => [s.id, WF_STEPS[i + 1].id, s.id === 'eval' ? 'مناسبة' : s.id === 'excellency' ? 'موافقة' : s.kind === 'review' ? 'اعتماد' : '']),
-  ['eval', 'closed', 'غير مناسبة'], ['direct', 'meeting', 'تسجيل مباشر', 'long'],
-  ['strategy', 'draft', 'إعادة بملاحظات', 'back'], ['excellency', 'legal', 'إعادة المعاملة', 'back'], ['reports', 'active'],
+  ...WF_STEPS.slice(0, -1).map((s, i) => [s.id, WF_STEPS[i + 1].id, s.yesShort || (s.kind === 'review' ? 'اعتماد' : '')]),
+  ...wfBranches().filter((b) => b.type !== 'reject').map((b) => [b.from, b.to, b.label, b.type === 'back' ? 'back' : undefined]),
+  ['direct', (WF_STEPS.find((s) => s.on === 'partnership') || {}).id, 'تسجيل مباشر', 'long'], [WF_STEPS[WF_STEPS.length - 1].id, 'active'],
 ];
 /* مصفوفة المسؤوليات مستخرجة من المسار المطبق */
 const PR_ROLES = [

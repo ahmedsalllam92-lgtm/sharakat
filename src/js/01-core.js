@@ -112,6 +112,7 @@ const ICONS = {
   chevD: '<path d="m6 9 6 6 6-6"/>',
   arrowL: '<path d="M19 12H5"/><path d="m11 18-6-6 6-6"/>',
   arrowR: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>',
+  bell: '<path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
   eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
   calendar: '<rect x="3" y="4.5" width="18" height="16.5" rx="2"/><path d="M3 9.5h18M8 3v3M16 3v3"/>',
   clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',

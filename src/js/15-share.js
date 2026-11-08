@@ -29,6 +29,25 @@ const S_STEPS = [
   { id: 'idea', t: 'فكرة الشراكة', s: 'المستهدفات والأسباب والقيمة' },
   { id: 'review', t: 'المرفقات والإرسال', s: 'مراجعة نهائية' },
 ];
+/* حقول نموذج «شارك»: المصدر الوحيد للعرض والتحقق والمراجعة واستعراض «مسار طلب الشراكة».
+   kind: dept | goal | partner | sector | text | area | sep (عنوان فرعي). req: إلزامي. demo: قيمة مثال للاستعراض. */
+const SHARE_FIELDS = [
+  { k: 'department', step: 'req', l: 'اسم الإدارة الطالبة', kind: 'dept', req: true, msg: 'اختر الإدارة الطالبة.' },
+  { k: 'requesterName', step: 'req', l: 'اسم مقدم الطلب', kind: 'text', demo: 'سارة العتيبي' },
+  { k: 'requesterEmail', step: 'req', l: 'البريد الإلكتروني لمقدم الطلب', kind: 'text', type: 'email', ltr: true, add: true, ph: 'name@example.org', hint: 'للتواصل بشأن المقترح عند الحاجة.', demo: 'sara@example.org' },
+  { k: 'strategicGoal', step: 'req', l: 'الهدف الاستراتيجي', kind: 'goal' },
+  { k: 'partnerName', step: 'entity', l: 'اسم الجهة المستهدفة', kind: 'partner', req: true, msg: 'اكتب اسم الجهة المستهدفة.', demo: 'جمعية الواحة البيئية' },
+  { k: 'partnerSector', step: 'entity', l: 'قطاع الجهة', kind: 'sector', add: true, hint: 'يسهّل نقل البيانات عند تحويل المقترح إلى شراكة.' },
+  { k: '_contact', step: 'entity', l: 'بيانات مسؤول التواصل من الجهة', kind: 'sep' },
+  { k: 'contactName', step: 'entity', l: 'الاسم', kind: 'text', demo: 'خالد الشمري' },
+  { k: 'contactPhone', step: 'entity', l: 'الرقم', kind: 'text', ltr: true, ph: '05XXXXXXXX', demo: '0551234567' },
+  { k: 'contactEmail', step: 'entity', l: 'البريد الإلكتروني', kind: 'text', type: 'email', ltr: true, ph: 'name@example.com', demo: 'k.alshammari@example.com' },
+  { k: 'targets', step: 'idea', l: 'مستهدفات الشراكة', kind: 'area', hint: 'اكتب كل مستهدف في سطر مستقل، ويمكن ترقيمه.', demo: '1. زراعة 5000 شجرة محلية\n2. حملات توعية في المدارس' },
+  { k: 'reasons', step: 'idea', l: 'أسباب طلب الشراكة من الجهة', kind: 'area', demo: 'خبرة الجهة في التشجير ووجود متطوعين مدربين.' },
+  { k: 'addedValue', step: 'idea', l: 'القيمة المضافة', kind: 'area', hint: 'ما الذي تضيفه الشراكة للمؤسسة ولإدارتكم؟', demo: 'توسيع الغطاء النباتي وإشراك المجتمع.' },
+];
+const shareFields = (step) => SHARE_FIELDS.filter((x) => x.kind !== 'sep' && (!step || x.step === step));
+const shareReq = () => shareFields().filter((x) => x.req);
 function renderShareForm(el, r) {
   if (!can('proposal.create')) { el.innerHTML = noAccessHTML(); return; }
   const editing = r.params.id ? D.proposals.find((x) => x.id === r.params.id) : null;
@@ -36,7 +55,8 @@ function renderShareForm(el, r) {
     el.innerHTML = emptyHTML({ ic: 'lock', title: 'لا يمكن تعديل هذا المقترح', text: 'يمكن تعديل المقترح وهو مسودة، أو عند طلب إدارة الشراكات استكماله.', actions: editing ? `<a class="btn" href="#/proposals/${editing.id}">فتح المقترح</a>` : '' });
     return;
   }
-  const s = editing ? clone(editing) : { department: Session.role() === 'dept' ? Session.dept() : '', requesterName: '', requesterEmail: '', strategicGoal: '', partnerName: '', partnerSector: '', contactName: '', contactPhone: '', contactEmail: '', targets: '', reasons: '', addedValue: '', attachments: [], status: 'draft' };
+  const s = editing ? clone(editing) : { ...Object.fromEntries(shareFields().map((x) => [x.k, ''])), department: Session.role() === 'dept' ? Session.dept() : '', attachments: [], status: 'draft' };
+  shareFields().forEach((x) => { if (s[x.k] == null) s[x.k] = ''; });
   const fs = { step: 'req', errors: {}, reply: '' };
   App.dirty = false;
   const infoReq = editing && editing.status === 'info' ? [...editing.events].reverse().find((e) => e.type === 'status' && e.to === 'info') : null;
@@ -44,10 +64,10 @@ function renderShareForm(el, r) {
     <div class="ph-actions"><a class="btn ghost" href="${editing ? '#/proposals/' + editing.id : '#/share'}">إلغاء</a></div></div>
     ${infoReq ? `<div class="note warn" style="margin-bottom:18px">${icon('msg')}<div><b>طلب استكمال من إدارة الشراكات — ${fmtDT(infoReq.at)}</b><div style="margin-top:4px;white-space:pre-wrap">${esc(infoReq.message || '')}</div></div></div>` : ''}
     <div class="wiz-wrap" data-tour="share-form"><div class="wiz-steps" id="wsteps"></div><div class="fpanel" id="wpanel"></div></div>`;
-  const field = (k, label, inner, { hint = '', full = false, add = false } = {}) => `<div class="field ${full ? 'span2' : ''} ${fs.errors[k] ? 'invalid' : ''}" data-f="${k}"><label for="s_${k}">${esc(label)}${add ? ' <span class="chip gold plain" style="height:18px;font-size:11px">إضافة مقترحة</span>' : ''}</label>${inner}${hint ? `<span class="hint">${hint}</span>` : ''}<span class="err">${esc(fs.errors[k] || '')}</span></div>`;
+  const field = (k, label, inner, { hint = '', full = false, add = false } = {}) => `<div class="field ${full ? 'span2' : ''} ${fs.errors[k] ? 'invalid' : ''}" data-f="${k}"><label for="s_${k}">${esc(label)}${(SHARE_FIELDS.find((x) => x.k === k) || {}).req ? ' <span class="req" aria-label="إلزامي">*</span>' : ''}${add ? ' <span class="chip gold plain" style="height:18px;font-size:11px">إضافة مقترحة</span>' : ''}</label>${inner}${hint ? `<span class="hint">${hint}</span>` : ''}<span class="err">${esc(fs.errors[k] || '')}</span></div>`;
   const inp = (k, label, o = {}) => field(k, label, `<input class="in" id="s_${k}" data-k="${k}" value="${esc(s[k])}" ${o.ltr ? 'dir="ltr"' : ''} ${o.type ? `type="${o.type}"` : ''} placeholder="${esc(o.ph || '')}">`, o);
   const ta = (k, label, o = {}) => field(k, label, `<textarea class="in" id="s_${k}" data-k="${k}" rows="5">${esc(s[k])}</textarea>`, { ...o, full: true });
-  const doneStep = (id) => ({ req: s.department && s.requesterName, entity: s.partnerName, idea: s.targets || s.reasons || s.addedValue, review: false }[id]);
+  const doneStep = (id) => { const fl = shareFields(id); return fl.length > 0 && fl.every((x) => !x.req || String(s[x.k] || '').trim()) && fl.some((x) => String(s[x.k] || '').trim()); };
   const drawSteps = () => { $('#wsteps', el).innerHTML = S_STEPS.map((st, i) => `<button type="button" data-ws="${st.id}" class="${fs.step === st.id ? 'on' : ''} ${doneStep(st.id) && fs.step !== st.id ? 'done' : ''}"><span class="ix">${doneStep(st.id) && fs.step !== st.id ? icon('check') : i + 1}</span><span>${st.t}<small>${st.s}</small></span></button>`).join(''); };
   const matchBox = () => {
     if (!s.partnerName || s.partnerName.trim().length < 3) return '';
@@ -57,39 +77,26 @@ function renderShareForm(el, r) {
   };
   const drawStep = () => {
     let body = '';
-    if (fs.step === 'req') {
-      body = `<div class="grid2">
-        ${field('department', 'اسم الإدارة الطالبة', `<select class="in" id="s_department" data-k="department"><option value="">اختر الإدارة</option>${L('departments').filter((d) => d !== D.settings.org.dept).map((d) => `<option ${d === s.department ? 'selected' : ''}>${esc(d)}</option>`).join('')}</select>`, { hint: Session.role() === 'dept' ? 'إدارتك في المحاكاة الحالية.' : '' })}
-        ${inp('requesterName', 'اسم مقدم الطلب')}
-        ${inp('requesterEmail', 'البريد الإلكتروني لمقدم الطلب', { ltr: true, type: 'email', add: true, ph: 'name@example.org', hint: 'للتواصل بشأن المقترح عند الحاجة.' })}
-        ${field('strategicGoal', 'الهدف الاستراتيجي', comboHTML('strategicGoal', { options: [...new Set([...L('goals'), ...D.proposals.map((x) => x.strategicGoal).filter(Boolean)])], value: s.strategicGoal, allowAdd: true, addLabel: 'استخدام' }), { hint: L('goals').length ? 'اختر من أهداف المؤسسة الاستراتيجية.' : 'اكتب الهدف الاستراتيجي الذي تخدمه الشراكة. يمكن لمدير المنصة إضافة قائمة الأهداف المعتمدة من الإعدادات.' })}
-      </div>`;
-    } else if (fs.step === 'entity') {
-      body = `<div class="grid2">
-        ${field('partnerName', 'اسم الجهة المستهدفة', `<input class="in" id="s_partnerName" data-k="partnerName" value="${esc(s.partnerName)}"><div id="pmatch">${matchBox()}</div>`, { full: true })}
-        ${field('partnerSector', 'قطاع الجهة', `<select class="in" id="s_partnerSector" data-k="partnerSector"><option value="">غير محدد</option>${L('sectors').map((o) => `<option ${o === s.partnerSector ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`, { add: true, hint: 'يسهّل نقل البيانات إلى سجل الشراكة عند قبول المقترح.' })}
-        <div></div>
-        <div class="span2 flabel" style="margin-top:6px">بيانات مسؤول التواصل من الجهة</div>
-        ${inp('contactName', 'الاسم')}
-        ${inp('contactPhone', 'الرقم', { ltr: true, ph: '05XXXXXXXX' })}
-        ${inp('contactEmail', 'البريد الإلكتروني', { ltr: true, type: 'email', ph: 'name@example.com' })}
-      </div>`;
-    } else if (fs.step === 'idea') {
-      body = `<div class="grid2">
-        ${ta('targets', 'مستهدفات الشراكة', { hint: 'اكتب كل مستهدف في سطر مستقل، ويمكن ترقيمه.' })}
-        ${ta('reasons', 'أسباب طلب الشراكة من الجهة')}
-        ${ta('addedValue', 'القيمة المضافة', { hint: 'ما الذي تضيفه الشراكة للمؤسسة ولإدارتكم؟' })}
-      </div>`;
+    if (fs.step !== 'review') {
+      const rend = (x) => {
+        if (x.kind === 'sep') return `<div></div><div class="span2 flabel" style="margin-top:6px">${esc(x.l)}</div>`;
+        if (x.kind === 'dept') return `${field('department', x.l, `<select class="in" id="s_department" data-k="department"><option value="">اختر الإدارة</option>${L('departments').filter((d) => d !== D.settings.org.dept).map((d) => `<option ${d === s.department ? 'selected' : ''}>${esc(d)}</option>`).join('')}</select>`, { hint: Session.role() === 'dept' ? 'إدارتك في المحاكاة الحالية.' : '' })}`;
+        if (x.kind === 'goal') return `${field('strategicGoal', x.l, comboHTML('strategicGoal', { options: [...new Set([...L('goals'), ...D.proposals.map((x) => x.strategicGoal).filter(Boolean)])], value: s.strategicGoal, allowAdd: true, addLabel: 'استخدام' }), { hint: L('goals').length ? 'اختر من أهداف المؤسسة الاستراتيجية.' : 'اكتب الهدف الاستراتيجي الذي تخدمه الشراكة. يمكن لمدير المنصة إضافة قائمة الأهداف المعتمدة من الإعدادات.' })}`;
+        if (x.kind === 'partner') return `${field('partnerName', x.l, `<input class="in" id="s_partnerName" data-k="partnerName" value="${esc(s.partnerName)}"><div id="pmatch">${matchBox()}</div>`, { full: true })}`;
+        if (x.kind === 'sector') return `${field('partnerSector', x.l, `<select class="in" id="s_partnerSector" data-k="partnerSector"><option value="">غير محدد</option>${L('sectors').map((o) => `<option ${o === s.partnerSector ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`, { add: true, hint: 'يسهّل نقل البيانات إلى سجل الشراكة عند قبول المقترح.' })}`;
+        if (x.kind === 'area') return ta(x.k, x.l, { hint: x.hint || '', add: x.add });
+        if (x.kind === 'select') return field(x.k, x.l, `<select class="in" id="s_${x.k}" data-k="${x.k}"><option value="">اختر</option>${(x.options ? (typeof x.options === 'function' ? x.options() : x.options) : L(x.list || '')).map((o) => `<option ${o === s[x.k] ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`, { hint: x.hint || '', add: x.add, full: x.full });
+        return inp(x.k, x.l, { ltr: x.ltr, type: x.type, ph: x.ph, hint: x.hint || '', add: x.add, full: x.full });
+      };
+      body = `<div class="grid2">${SHARE_FIELDS.filter((x) => x.step === fs.step).map(rend).join('')}</div>`;
     } else {
       const errs = Object.entries(fs.errors);
       body = `${errs.length ? `<div class="err-sum"><b>يلزم استكمال ما يلي قبل الإرسال:</b><ul>${errs.map(([k, m]) => `<li>${esc(m)}</li>`).join('')}</ul></div>` : ''}
         <div class="flabel" style="margin-bottom:8px">المرفقات <span class="chip gold plain" style="height:18px;font-size:11px">إضافة مقترحة</span></div>
         ${attachEditorHTML('sAtt', { cats: ['مرفقات المقترح'], defaultCat: 'مرفقات المقترح' })}
         <div class="flabel" style="margin:22px 0 10px">مراجعة المقترح قبل الإرسال</div>
-        <div class="review-sum">
-          <div class="rs"><h4>الإدارة ومقدم الطلب <button type="button" data-ws="req">تعديل</button></h4><dl class="kv"><div><dt>الإدارة الطالبة</dt><dd>${esc(s.department) || '<span class="faint">—</span>'}</dd></div><div><dt>مقدم الطلب</dt><dd>${esc(s.requesterName) || '<span class="faint">—</span>'}</dd></div><div class="full"><dt>الهدف الاستراتيجي</dt><dd>${esc(s.strategicGoal) || '<span class="faint">—</span>'}</dd></div></dl></div>
-          <div class="rs"><h4>الجهة المستهدفة <button type="button" data-ws="entity">تعديل</button></h4><dl class="kv"><div><dt>الجهة</dt><dd>${esc(s.partnerName) || '<span class="faint">—</span>'}</dd></div><div><dt>القطاع</dt><dd>${esc(s.partnerSector) || '<span class="faint">—</span>'}</dd></div><div><dt>مسؤول التواصل</dt><dd>${esc(s.contactName) || '<span class="faint">—</span>'}</dd></div><div><dt>الرقم / البريد</dt><dd dir="ltr" style="text-align:right">${esc([s.contactPhone, s.contactEmail].filter(Boolean).join(' / ')) || '<span class="faint">—</span>'}</dd></div></dl></div>
-          <div class="rs"><h4>فكرة الشراكة <button type="button" data-ws="idea">تعديل</button></h4><div class="xs muted">مستهدفات الشراكة</div>${richHTML(s.targets, { empty: 'لم تُكتب.' })}<div class="xs muted" style="margin-top:10px">أسباب طلب الشراكة</div>${richHTML(s.reasons, { empty: 'لم تُكتب.' })}<div class="xs muted" style="margin-top:10px">القيمة المضافة</div>${richHTML(s.addedValue, { empty: 'لم تُكتب.' })}</div>
+        <div class="review-sum">${S_STEPS.filter((st) => st.id !== 'review').map((st) => { const fl = shareFields(st.id); const sh = fl.filter((x) => x.kind !== 'area'), ar = fl.filter((x) => x.kind === 'area');
+          return `<div class="rs"><h4>${esc(st.t)} <button type="button" data-ws="${st.id}">تعديل</button></h4>${sh.length ? `<dl class="kv">${sh.map((x) => `<div ${x.kind === 'goal' || x.kind === 'partner' ? 'class="full"' : ''}><dt>${esc(x.l)}${x.req ? ' <span class="req">*</span>' : ''}</dt><dd ${x.ltr ? 'dir="ltr" style="text-align:right"' : ''}>${esc(s[x.k]) || '<span class="faint">—</span>'}</dd></div>`).join('')}</dl>` : ''}${ar.map((x, i) => `<div class="xs muted" ${i || sh.length ? 'style="margin-top:10px"' : ''}>${esc(x.l)}</div>${richHTML(s[x.k], { empty: 'لم تُكتب.' })}`).join('')}</div>`; }).join('')}
         </div>
         ${editing && editing.status === 'info' ? `<div class="field" style="margin-top:18px"><label for="sReply">رد على طلب الاستكمال (يظهر لإدارة الشراكات)</label><textarea class="in" id="sReply" rows="3" style="min-height:80px">${esc(fs.reply)}</textarea></div>` : ''}`;
     }
@@ -107,8 +114,7 @@ function renderShareForm(el, r) {
   function dirty() { if (!App.dirty) { App.dirty = true; const f = $('#sstate', el); if (f) { f.className = 'st dirty'; f.innerHTML = icon('edit') + ' تعديلات غير محفوظة'; } } }
   const validate = () => {
     const e = {};
-    if (!s.department) e.department = 'اختر الإدارة الطالبة.';
-    if (!s.partnerName.trim()) e.partnerName = 'اكتب اسم الجهة المستهدفة.';
+    shareReq().forEach((x) => { if (!String(s[x.k] || '').trim()) e[x.k] = x.msg || `استكمل حقل «${x.l}».`; });
     if (s.contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s.contactEmail.trim())) e.contactEmail = 'صيغة البريد الإلكتروني لمسؤول التواصل غير صحيحة.';
     if (s.requesterEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s.requesterEmail.trim())) e.requesterEmail = 'صيغة البريد الإلكتروني لمقدم الطلب غير صحيحة.';
     if (s.contactPhone && !/^\+?[0-9\s-]{7,16}$/.test(s.contactPhone.trim())) e.contactPhone = 'رقم مسؤول التواصل يجب أن يتكون من أرقام فقط.';
@@ -118,6 +124,7 @@ function renderShareForm(el, r) {
     const rec = editing || { id: uid('pr'), ref: nextProposalRef(), createdAt: nowISO(), createdByRole: Session.role(), events: [], demo: false, partnershipId: null };
     const prev = editing ? editing.status : null;
     Object.assign(rec, { department: s.department, requesterName: s.requesterName.trim(), requesterEmail: (s.requesterEmail || '').trim(), strategicGoal: s.strategicGoal, partnerName: s.partnerName.trim(), partnerSector: s.partnerSector, contactName: s.contactName.trim(), contactPhone: (s.contactPhone || '').trim(), contactEmail: (s.contactEmail || '').trim(), targets: s.targets, reasons: s.reasons, addedValue: s.addedValue, attachments: s.attachments });
+    shareFields().forEach((x) => { if (!(x.k in rec) || ['text', 'area', 'select'].includes(x.kind)) rec[x.k] = typeof s[x.k] === 'string' ? s[x.k].trim() : s[x.k]; });
     if (!editing) { rec.status = 'draft'; await propEvent(rec, { type: 'created' }); }
     if (mode === 'draft') {
       rec.status = 'draft';
@@ -129,11 +136,13 @@ function renderShareForm(el, r) {
       await propEvent(rec, { type: 'resubmitted', message: reply.trim(), vis: 'all' });
       await Repo.save('proposals', rec);
       await Repo.log('proposal.update', 'proposal', rec.id, rec.ref, 'أُعيد تقديمه بعد الاستكمال');
+      await notify([{ grp: 'partnerships' }], { t: `استُكمل المقترح ${rec.ref}`, b: `${rec.department} — ${rec.partnerName}`, href: '#/proposals/' + rec.id, ic: 'send' });
     } else {
       rec.status = 'submitted'; rec.submittedAt = nowISO();
       await propEvent(rec, { type: 'submitted' });
       await Repo.save('proposals', rec); await Repo.saveSettings();
       await Repo.log('proposal.submit', 'proposal', rec.id, rec.ref, `${rec.department} — ${rec.partnerName}`);
+      await notify([{ grp: 'partnerships' }], { t: `طلب شراكة جديد ${rec.ref}`, b: `${rec.department} — ${rec.partnerName}`, href: '#/proposals/' + rec.id, ic: 'send' });
     }
     if (!editing) D.proposals.includes(rec) || D.proposals.push(rec);
     App.dirty = false;

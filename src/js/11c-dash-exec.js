@@ -55,7 +55,7 @@ function renderDashClassic(el) {
     <header class="dz3-head">
       <div><h1>لوحة مؤشرات الشراكات</h1>
         <dl class="dz3-meta"><div><dt>آخر تحديث للبيانات</dt><dd>${lu ? fmtDT(lu) : '—'}</dd></div><div><dt>تاريخ العرض</dt><dd>${fmtDate(isoDate(new Date()))}</dd></div>${showDemo() ? '<div class="dz3-demo">تشمل بيانات تجريبية</div>' : ''}</dl></div>
-      <div class="dz-tools no-print">${obViewSwitch('alt')}${can('export') ? `<button class="btn" data-xls type="button">${icon('download')} Excel</button><button class="btn" data-print type="button">${icon('print')} طباعة أو PDF</button>` : ''}<button class="btn" data-present type="button">${icon('expand')} عرض</button></div>
+      <div class="dz-tools no-print">${can('export') ? `<button class="btn" data-xls type="button">${icon('download')} Excel</button><button class="btn" data-print type="button">${icon('print')} طباعة أو PDF</button>` : ''}<button class="btn" data-present type="button">${icon('expand')} عرض</button></div>
     </header>
     <div class="dz3-filters no-print"><div class="fbar dz-fbar" id="dashF"></div><div class="dz2-active" id="dzActive"></div></div>
     <div id="dashBody"></div></div>`;

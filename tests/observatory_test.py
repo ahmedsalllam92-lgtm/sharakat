@@ -71,7 +71,7 @@ async def main():
         ok('ray opens partnership', (await E("location.hash")) == rid)
         # switch to detailed and back
         await go('#/dashboard?v=classic', 1500)
-        ok('detailed view still available with switch', await E("!!document.querySelector('.dz3') && !!document.querySelector('.dz-tools .ob-views')"))
+        ok('detailed view still available with switch', await E("!!document.querySelector('.dz3') && !!document.querySelector('.dv-bar .ob-views')"))
         await go('#/dashboard?v=obs', 1500)
         # print: landscape
         await E("window.dispatchEvent(new Event('beforeprint'))")

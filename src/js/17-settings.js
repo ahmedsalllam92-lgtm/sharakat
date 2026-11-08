@@ -160,7 +160,7 @@ function setLists(b) {
 }
 
 function wfSettingsHTML() {
-  const admin = Session.role() === 'admin';
+  const admin = can('manage.accounts');
   const A = wfAccounts();
   const depts = [...new Set([...L('departments'), wfDept('excellency')])];
   const docs = WF_STEPS.flatMap((st) => st.docs.map((d) => ({ ...d, st })));
@@ -168,9 +168,9 @@ function wfSettingsHTML() {
       <div class="tbl-wrap"><table class="tbl acc-tbl"><thead><tr><th>الحساب</th><th>الدور في المنصة</th><th>مهامه في مسار الشراكة</th><th></th></tr></thead><tbody>
       ${A.map((a) => { const steps = WF_STEPS.filter((st) => (a.role === 'admin' ? false : a.role === 'team' ? st.actor === 'partnerships' : a.role === 'dept' ? (a.duties || []).some((k) => st.actor === k) || ['requester', 'concerned'].includes(st.actor) : false)); return `<tr><td><b>${esc(a.t)}</b><small class="faint" style="display:block">${esc(a.g)}</small></td><td>${esc(ROLES[a.role].label)}</td>
         <td><div class="acc-steps">${a.role === 'admin' ? '<span class="faint small">كل الخطوات، وينفّذ نيابة عن أي جهة</span>' : a.role === 'viewer' ? '<span class="faint small">اطلاع فقط</span>' : steps.map((st) => `<span class="chip ${['requester', 'concerned'].includes(st.actor) ? '' : 'ok'}" title="${esc(st.t)}">${st.n}. ${esc(st.t.length > 26 ? st.t.slice(0, 25) + '…' : st.t)}</span>`).join('')}</div></td>
-        <td><button class="btn sm ghost" type="button" data-asacc="${esc(a.id)}">الدخول بهذا الحساب</button></td></tr>`; }).join('')}</tbody></table></div>
+        <td>${isSysAdmin() || AUTH.dev ? `<button class="btn sm ghost" type="button" data-asacc="${esc(a.id)}">معاينة بهذا الحساب</button>` : ''}</td></tr>`; }).join('')}</tbody></table></div>
       <p class="xs muted" style="margin-top:10px">خطوات «الإدارة الطالبة» و«الإدارات المعنية» تظهر لأي إدارة عندما تكون طالبة الشراكة أو ضمن الإدارات المتقاطعة معها.</p></div></div>
-    <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>جهات المراجعة والاعتماد في المسار</h3><span class="sub">${admin ? 'حدد الحساب المسؤول عن كل خطوة اعتماد' : 'يحددها مدير المنصة'}</span></div><div class="panel-b"><div class="grid2">
+    <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>جهات المراجعة والاعتماد في المسار</h3><span class="sub">${admin ? 'حدد الحساب المسؤول عن كل خطوة اعتماد' : 'تحددها إدارة الشراكات'}</span></div><div class="panel-b"><div class="grid2">
       ${Object.keys(WF_DEPT_DEFAULTS).map((k) => `<div class="field"><label>${esc(WF_KEYS[k])} <small class="faint">— الخطوة ${WF_STEPS.filter((st) => st.actor === k).map((st) => st.n).join('، ')}</small></label>${k === 'excellency' ? `<input class="in" data-wfdept="${k}" value="${esc(wfDept(k))}" ${admin ? '' : 'disabled'}>` : `<select class="in" data-wfdept="${k}" ${admin ? '' : 'disabled'}>${depts.map((d) => `<option ${d === wfDept(k) ? 'selected' : ''}>${esc(d)}</option>`).join('')}</select>`}</div>`).join('')}</div></div></div>
     <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>بيانات خطاب طلب موافقة المعالي</h3><span class="sub">تُستخدم افتراضيًا عند توليد الخطاب في الخطوة 9</span></div><div class="panel-b"><div class="grid2">
       ${[['to1', 'المخاطَب'], ['to2', 'الصفة'], ['signTitle', 'صفة الموقِّع'], ['signName', 'اسم الموقِّع']].map(([k, l]) => `<div class="field"><label>${l}</label><input class="in" data-letter="${k}" value="${esc((D.settings.letter || {})[k] || '')}" ${admin ? '' : 'disabled'}></div>`).join('')}</div></div></div>
@@ -179,17 +179,13 @@ function wfSettingsHTML() {
 }
 function setRoles(b) {
   const cur = Session.role();
-  b.innerHTML = wfSettingsHTML() + `<div style="margin-top:18px"></div>` + `<div class="panel"><div class="panel-h"><h3>محاكاة الأدوار</h3><span class="sub">للتجربة في النسخة المحلية</span></div><div class="panel-b">
-      <div class="role-grid">${Object.entries(ROLES).map(([k, r]) => `<div class="role-c ${k === cur ? 'on' : ''}" data-role="${k}"><b>${r.label}</b><p>${r.desc}</p></div>`).join('')}</div>
-      <div class="grid2" style="margin-top:14px"><div class="field"><label>الإدارة (عند محاكاة ممثل إدارة)</label><select class="in" id="rdept">${L('departments').filter((d) => d !== D.settings.org.dept).map((d) => `<option ${d === Session.dept() ? 'selected' : ''}>${esc(d)}</option>`).join('')}</select></div>
-        <div class="field"><label>عضو الفريق (عند محاكاة فريق الشراكات)</label><select class="in" id="rmem">${L('team').map((d) => `<option ${d === Session.member() ? 'selected' : ''}>${esc(d)}</option>`).join('')}</select></div></div>
-      <div class="sim-note">إخفاء الصفحات والأزرار هنا تجربة لتصور الصلاحيات فقط، وليس حماية أمنية؛ البيانات كلها محفوظة في هذا المتصفح ويمكن لأي مستخدم للجهاز الوصول إليها. الحماية الفعلية تتطلب تسجيل دخول وتطبيق الصلاحيات على الخادم.</div></div></div>
-    <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>مصفوفة الصلاحيات المقترحة</h3></div><div class="panel-b" style="overflow:auto"><table class="perm-tbl"><thead><tr><th>الصلاحية</th>${Object.values(ROLES).map((r) => `<th>${r.label}</th>`).join('')}</tr></thead><tbody>
+  b.innerHTML = authSettingsHTML() + `<div style="margin-top:18px"></div>` + wfSettingsHTML() + `
+    <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>مصفوفة الصلاحيات</h3></div><div class="panel-b" style="overflow:auto"><table class="perm-tbl"><thead><tr><th>الصلاحية</th>${Object.values(ROLES).map((r) => `<th>${r.label}</th>`).join('')}</tr></thead><tbody>
       ${Object.entries(PERMS).map(([p, rs]) => `<tr><td>${esc(PERM_LABELS[p] || p)}</td>${Object.keys(ROLES).map((k) => `<td class="${rs.includes(k) ? 'y' : 'n'}">${rs.includes(k) ? '✓' : '—'}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`;
   b.onclick = async (e) => {
+    if (authSettingsClick(e)) return;
     const ac = e.target.closest('[data-asacc]'); if (ac) return switchAccount(ac.dataset.asacc);
     const dl = e.target.closest('[data-tpldl]'); if (dl) return downloadStored(dl.dataset.tpldl, 'نموذج');
-    const rc = e.target.closest('[data-role]'); if (rc) await switchRole(rc.dataset.role, $('#rdept', b).value, $('#rmem', b).value);
   };
   b.onchange = async (e) => {
     const lt = e.target.closest('[data-letter]');
@@ -198,10 +194,10 @@ function setRoles(b) {
     if (wd) { D.settings.wfDepts = { ...(D.settings.wfDepts || {}), [wd.dataset.wfdept]: wd.value.trim() || WF_DEPT_DEFAULTS[wd.dataset.wfdept] }; await saveSet('جهات الاعتماد في مسار الشراكة', `${WF_KEYS[wd.dataset.wfdept]}: ${wd.value}`); return setRoles(b); }
     const tu = e.target.closest('[data-tplup]');
     if (tu && tu.files.length) { try { const rec = await saveUpload(tu.files[0]); D.settings.wfTemplates = { ...(D.settings.wfTemplates || {}), [tu.dataset.tplup]: rec.id }; await saveSet('نماذج مسار الشراكة', tu.files[0].name); toast('رُفع النموذج'); } catch (err) { toast(err.message, 'err'); } return setRoles(b); }
-    if (e.target.id === 'rdept' || e.target.id === 'rmem') await switchRole(Session.role(), $('#rdept', b).value, $('#rmem', b).value);
   };
 }
 async function switchRole(role, dept, member) {
+  if (!AUTH.dev && !(currentLogin() || {}).sys) return toast('تبديل الحساب متاح لمدير النظام فقط.', 'err');
   D.settings.session = { role, dept: dept || Session.dept(), member: member || Session.member() };
   await Repo.saveSettings();
   await Repo.log('role.switch', 'system', 'session', ROLES[role].label, role === 'dept' ? D.settings.session.dept : role === 'team' ? D.settings.session.member : '');

@@ -319,7 +319,67 @@ function openForm(kind, rec, key, { onDone, ro = false, evalIdx = null } = {}) {
 }
 
 /* — المستند المنسق للطباعة وWord — */
+/* — بطاقة تقييم الشراكة: مستند مصمم للعرض والطباعة (صفحة A4 واحدة) — */
+function evalDocHTML(rec, evalIdx) {
+  const st = (rec.evals || [])[evalIdx] || {}; const d = st.data || {};
+  const R = fRecInfo('partnership', rec), pr = partnerById(rec.partnerId) || {};
+  const sc = evalScore(d), grade = sc === null ? 'غير مكتمل' : evalGrade(sc);
+  const tone = sc === null ? 'na' : sc >= 85 ? 'ex' : sc >= 75 ? 'vg' : sc >= 65 ? 'gd' : 'lo';
+  const logo = (ASSET_IMG['murooj-logo'] || {}).src;
+  const v = d.scores || {};
+  const C = 2 * Math.PI * 52, dash = sc === null ? 0 : (sc / 100) * C;
+  // التقييمات السابقة لنفس الشراكة لإظهار الاتجاه
+  const hist = (rec.evals || []).map((e, i) => ({ i, s: evalScore(e.data || {}), p: (e.data || {}).period || '', dt: (e.data || {}).date || e.at || '' })).filter((x) => x.s !== null).sort((a, b) => (a.dt < b.dt ? -1 : 1));
+  const prev = hist.filter((x) => x.dt < (d.date || st.at || '')).pop();
+  const delta = prev && sc !== null ? sc - prev.s : null;
+  const dots = (n) => [1, 2, 3, 4, 5].map((k) => `<i class="${k <= n ? 'on' : ''}"></i>`).join('');
+  const crit = EVAL_CRIT.map((c) => {
+    const n = +((v[c.k] || {}).v || 0), got = n ? (n / 5) * c.w : 0;
+    return `<tr><td class="ev-cn"><b>${esc(c.l)}</b><small>${esc(c.d)}</small></td>
+      <td class="ev-w"><span>${c.w}%</span></td>
+      <td class="ev-r"><span class="ev-dots">${dots(n)}</span><em>${n || '—'}<small>/5</small></em></td>
+      <td class="ev-c"><span class="ev-bar"><i style="width:${(got / c.w) * 100}%"></i></span><b>${got ? (Math.round(got * 10) / 10) : 0}</b> <small>من ${c.w}</small></td>
+      <td class="ev-nt">${esc((v[c.k] || {}).note || '')}</td></tr>`;
+  }).join('');
+  const scale = (opts, cur, cls) => `<div class="ev-scale ${cls || ''}">${opts.map((o, i) => `<span class="${o === cur ? 'on' : ''}" style="--i:${i}">${o === cur ? '<i></i>' : ''}${esc(o)}</span>`).join('')}</div>`;
+  const recIc = { 'تجديد وتوسيع': 'chart', 'الاستمرار': 'check', 'إعادة هيكلة': 'history', 'عدم التجديد': 'x' };
+  const term = rec.startDate && rec.endDate ? `${fmtDate(rec.startDate)} — ${fmtDate(rec.endDate)}` : '';
+  return `<article class="fdoc evdoc ev-${tone}" dir="rtl">
+    <header class="ev-top"><div class="ev-brand">${logo ? `<img src="${logo}" alt="">` : ''}<div><b>${esc(D.settings.org.name)}</b><span>${esc(D.settings.org.dept)}</span></div></div>
+      <div class="ev-meta"><div><span>رقم النموذج</span><b dir="ltr">${esc(st.no || '—')}</b></div><div><span>تاريخ الإصدار</span><b>${st.at ? fmtDate(st.at.slice(0, 10)) + 'م' : '—'}</b></div></div></header>
+    <section class="ev-hero">
+      <div class="ev-id"><span class="ev-eye">نموذج تقييم الشراكة · ${esc(d.period || '')}</span>
+        <div class="ev-pn"><span class="ev-logo">${logoOrMono(pr, R.name)}</span><div><h1>${esc(R.name)}</h1><p>${[rec.code, pr.sector, term].filter(Boolean).map(esc).join(' · ')}</p></div></div>
+        <dl class="ev-facts"><div><dt>المقيِّم</dt><dd>${esc(d.by || '—')}</dd></div><div><dt>تاريخ التقييم</dt><dd>${d.date ? fmtDate(d.date) + 'م' : '—'}</dd></div><div><dt>الحالة</dt><dd>${st.status === 'done' ? 'مكتمل ومعتمد' : 'مسودة'}</dd></div></dl></div>
+      <div class="ev-ring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" class="t"/><circle cx="60" cy="60" r="52" class="v" stroke-dasharray="${dash.toFixed(1)} ${C.toFixed(1)}"/></svg>
+        <div class="ev-rv"><b>${sc === null ? '—' : sc}<small>%</small></b><span>${esc(grade)}</span></div>
+        ${delta !== null ? `<div class="ev-delta ${delta >= 0 ? 'up' : 'dn'}">${delta >= 0 ? '▲' : '▼'} ${Math.abs(delta)} عن ${esc(prev.p || 'التقييم السابق')}</div>` : ''}</div>
+    </section>
+    <section class="ev-kpis">
+      <div><span>القيمة المالية المتحققة</span><b>${d.valueSar ? sar(d.valueSar) : '—'}</b></div>
+      <div><span>القيمة المتحققة</span><b>${(d.valueTypes || []).length ? d.valueTypes.map(esc).join('، ') : '—'}</b></div>
+      <div><span>مستوى الأثر</span><b>${esc(d.impactLevel || '—')}</b></div>
+      <div class="rec"><span>التوصية</span><b>${d.rec ? icon(recIc[d.rec] || 'flag') : ''}${esc(d.rec || '—')}</b></div>
+    </section>
+    <section class="ev-sec"><h3><em>01</em>معايير التقييم<small>كل معيار من 1 إلى 5، والدرجة موزونة من 100</small></h3>
+      <table class="ev-tbl"><thead><tr><th>المعيار</th><th>الوزن</th><th>التقييم</th><th>المساهمة في الدرجة</th><th>ملاحظات</th></tr></thead><tbody>${crit}</tbody>
+        <tfoot><tr><td>الدرجة الموزونة</td><td>100%</td><td></td><td><span class="ev-bar tot"><i style="width:${sc || 0}%"></i></span><b>${sc === null ? "—" : sc}</b> <small>من 100</small></td><td><span class="ev-grade">${esc(grade)}</span></td></tr></tfoot></table>
+      <div class="ev-key"><span><i class="ex"></i>ممتاز 85+</span><span><i class="vg"></i>جيد جدًا 75–84</span><span><i class="gd"></i>جيد 65–74</span><span><i class="lo"></i>يحتاج تحسين أقل من 65</span></div>
+    </section>
+    <div class="ev-two">
+      <section class="ev-sec"><h3><em>02</em>القيمة والأثر المتحققان</h3>
+        <div class="ev-lbl">مستوى الأثر</div>${scale(['مرتفع', 'متوسط', 'منخفض', 'لم يظهر بعد'], d.impactLevel, 'imp')}
+        <div class="ev-lbl">وصف الأثر</div><blockquote class="ev-q">${esc(d.impact || 'لم يُوصف الأثر.').replace(/\n/g, '<br>')}</blockquote></section>
+      <section class="ev-sec"><h3><em>03</em>التوصية</h3>
+        <div class="ev-recs">${['تجديد وتوسيع', 'الاستمرار', 'إعادة هيكلة', 'عدم التجديد'].map((o) => `<span class="${o === d.rec ? 'on' : ''}">${icon(recIc[o])}${esc(o)}</span>`).join('')}</div>
+        <div class="ev-lbl">ملاحظات التوصية</div><blockquote class="ev-q">${esc(d.recNote || 'لا توجد ملاحظات.').replace(/\n/g, '<br>')}</blockquote>
+        ${hist.length > 1 ? `<div class="ev-lbl">تطور التقييم</div><div class="ev-hist">${hist.map((h) => `<span class="${h.i === evalIdx ? 'on' : ''}"><i style="height:${Math.max(8, h.s)}%"></i><b>${h.s}</b><small>${esc(h.p)}</small></span>`).join('')}</div>` : ''}</section>
+    </div>
+    <section class="ev-sigs"><div><span>أعدّه</span><b>${esc(st.by || '')}</b><small>${esc(st.byDept || '')}</small></div><div><span>الاعتماد</span><b>${st.status === 'done' ? 'معتمد إلكترونيًا في المنظومة' : 'مسودة — لم يُعتمد'}</b><small>${st.at ? fmtDT(st.at) : ''}</small></div><div><span>التوقيع</span><b class="ln"></b></div></section>
+    <footer class="fd-foot">${esc(D.settings.org.name)} · ${esc(D.settings.org.platform)} · نموذج تقييم الشراكة ${esc(st.no || '')}</footer></article>`;
+}
 function formDocHTML(kind, rec, key, evalIdx = null, forWord = false) {
+  if (key === 'partnershipEval' && kind === 'partnership' && !forWord && evalIdx !== null) return evalDocHTML(rec, evalIdx);
   const F = FORMS[key]; const R = fRecInfo(kind, rec);
   const st = F.periodic ? (rec.evals || [])[evalIdx] : formOf(rec, key);
   const d = (st && st.data) || {};
@@ -369,11 +429,12 @@ function printForm(kind, rec, key, evalIdx = null) {
   let host = $('#formPrint'); if (host) host.remove();
   host = document.createElement('div'); host.id = 'formPrint'; host.innerHTML = formDocHTML(kind, rec, key, evalIdx);
   document.body.appendChild(host);
+  hydrateFiles(host);
   document.documentElement.classList.add('printing-form');
   const prev = document.title; document.title = `${FORMS[key].title} — ${fRecInfo(kind, rec).name}`;
   const done = () => { document.documentElement.classList.remove('printing-form'); host.remove(); document.title = prev; window.removeEventListener('afterprint', done); };
   window.addEventListener('afterprint', done);
-  setTimeout(() => window.print(), 60);
+  setTimeout(() => window.print(), 350);
 }
 function wordForm(kind, rec, key, evalIdx = null) {
   const css = `body{font-family:'Sakkal Majalla','Traditional Arabic',Arial;direction:rtl;font-size:14pt;color:#14201B}h1{font-size:18pt;color:#0F4433;text-align:center}h3{font-size:14pt;color:#0F4433;border-bottom:2px solid #A47C32;padding-bottom:4px;margin-top:18pt}table{border-collapse:collapse;width:100%;margin:6pt 0}th,td{border:1px solid #BFB6A2;padding:5pt 7pt;vertical-align:top;text-align:right}th{background:#F1EDE2}td.c,th.c{text-align:center}.fd-head{border-bottom:3px solid #0F4433;padding-bottom:6pt}.fd-head img{height:54px}.fd-meta span{color:#5C6861}.fd-opt{margin-left:10pt}.fl-to b{display:block}.fl-body{line-height:1.9;text-align:justify;margin:10pt 0}.fl-sign{text-align:left;margin-top:24pt}.fl-sign b{display:block}.fd-foot{color:#8C958E;font-size:9pt;border-top:1px solid #D7CFBC;margin-top:18pt;padding-top:4pt}.tot td{background:#E8EFEA;font-weight:bold}`;
