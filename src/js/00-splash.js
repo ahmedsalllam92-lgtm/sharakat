@@ -4,8 +4,8 @@
    وجملة تُعدَّل من الإعدادات، وأرقام حية من آخر جلسة تُحدَّث فور تحميل البيانات.
    ملف مستقل لا يعتمد على بقية الشيفرة لأنه يعمل قبل تحميل البيانات.
    ===================================================================== */
-const SPLASH_DEF = { on: true, text: 'نبني شراكات… تصنع أثرًا يبقى', sub: 'منظومة الشراكات — مؤسسة مروج الأهلية', bg: 'signings', stats: true, dur: 3.4 };
-const SPLASH_BGS = [['signings', 'لحظات توقيع الشراكات (صور متتابعة)'], ['splash-aerial', 'صورة جوية للغطاء النباتي'], ['splash-forest', 'غابة ومسطحات خضراء'], ['border-guard-signing', 'صورة توقيع مذكرة'], ['waqf-saitah-signing', 'صورة توقيع شراكة']];
+const SPLASH_DEF = { on: true, text: 'نبني شراكات… تصنع أثرًا يبقى', sub: 'منظومة الشراكات — مؤسسة مروج الأهلية', bg: 'splash-bond', stats: true, dur: 3.4 };
+const SPLASH_BGS = [['splash-bond', 'فجر الشراكة — لوحة فنية (نهران من الضوء يلتقيان)'], ['signings', 'لحظات توقيع الشراكات (صور متتابعة)'], ['splash-aerial', 'صورة جوية للغطاء النباتي'], ['splash-forest', 'غابة ومسطحات خضراء'], ['border-guard-signing', 'صورة توقيع مذكرة'], ['waqf-saitah-signing', 'صورة توقيع شراكة']];
 function splashCfg() { let c = {}; try { c = JSON.parse(localStorage.getItem('shk_splash') || '{}') || {}; } catch (e) { c = {}; } return { ...SPLASH_DEF, ...c }; }
 function splashShow(force) {
   if (window.__SBX) return null;
@@ -27,7 +27,7 @@ function splashShow(force) {
   /* «لحظات التوقيع»: صور توقيع الشراكات الحقيقية تتعاقب ببطء، وفوقها حلقتان ذهبيتان تقتربان حتى تتشابكا (رمز الشراكة) */
   const SIGN = ['waqf-saitah-signing', 'border-guard-signing'].map(img).filter(Boolean);
   const bgs = cfg.bg === 'signings' && SIGN.length ? SIGN : [img(cfg.bg) || img('splash-aerial')];
-  el.innerHTML = `${bgs.map((u, i) => `<div class="sp-bg ${bgs.length > 1 ? 'xf' : ''}" style="background-image:url('${u}');--k:${i};--n:${bgs.length}"></div>`).join('')}<div class="sp-veil ${bgs.length > 1 ? 'warm' : ''}"></div>
+  el.innerHTML = `${bgs.map((u, i) => `<div class="sp-bg ${bgs.length > 1 ? 'xf' : ''}" style="background-image:url('${u}');--k:${i};--n:${bgs.length}"></div>`).join('')}<div class="sp-veil ${bgs.length > 1 ? 'warm' : ''} ${cfg.bg === 'splash-bond' ? 'art' : ''}"></div>
     <svg class="sp-geo" viewBox="-300 -300 600 600" aria-hidden="true">
       ${[110, 165, 220, 275].map((r, i) => `<circle r="${r}" class="ring" style="--i:${i}"/>`).join('')}
       <g class="bond"><circle class="b1" r="118"/><circle class="b2" r="118"/><circle class="knot" cy="-100" r="6"/><circle class="knot" cy="100" r="6"/></g>

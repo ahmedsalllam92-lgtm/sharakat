@@ -2718,3 +2718,7 @@ html.galv-on body{overflow:hidden}
 .mx-tree .sl{font-size:15px}
 .mx-cards{align-items:flex-start}
 .mx-cards article{padding-bottom:20px}
+
+/* الافتتاحية: لوحة «فجر الشراكة» — حجاب أخف ليظهر الأفق والنهران، مع حركة اقتراب بطيئة نحو نقطة الالتقاء */
+#shkSplash .sp-veil.art{background:radial-gradient(ellipse at 50% 42%,rgba(6,32,28,.42),rgba(6,32,28,.12) 55%,rgba(4,20,17,.55) 100%),linear-gradient(180deg,rgba(4,22,19,.35),rgba(4,22,19,0) 40%,rgba(4,22,19,.35))}
+#shkSplash.dk .sp-veil.art{background:radial-gradient(ellipse at 50% 42%,rgba(8,15,19,.55),rgba(8,15,19,.25) 55%,rgba(8,15,19,.7) 100%)}
