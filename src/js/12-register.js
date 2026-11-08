@@ -12,8 +12,8 @@ function renderRegister(el, r) {
   const st = { f: queryToFilters(q), q: q.q || '', missing: q.missing || '', importnote: q.importnote || '', partner: q.partner || '' };
   App.ui.regSort = App.ui.regSort || 'updated';
   const vkey = 'regView_' + design();
-  App.ui[vkey] = App.ui[vkey] || 'table';
-  const VIEWS = [['table', 'table', 'جدول'], ['cards', 'grid', 'بطاقات']];
+  App.ui[vkey] = App.ui[vkey] || 'cards';
+  const VIEWS = [['cards', 'grid', 'بطاقات'], ['table', 'table', 'جدول']];
   const canEdit = can('edit.partnership');
   el.innerHTML = `<div id="regPrintHead"></div>
     <div class="ph no-print"><div><h1>سجل الشراكات</h1><p>جميع الشراكات المسجلة في المنصة${can('view.drafts') ? '، بما فيها المسودات' : ''}. ابحث بالاسم أو الرمز أو أي نص في المجالات والمخرجات.</p></div>
@@ -71,6 +71,11 @@ function renderRegister(el, r) {
     hydrateFiles(body);
   };
   draw();
+  /* الطباعة (حتى بـ Ctrl+P) تكون دائمًا بالجدول الرسمي ثم يعود العرض كما كان */
+  el._bp = () => { if (!el.isConnected || App.ui[vkey] === 'table') return; el._pv = App.ui[vkey]; App.ui[vkey] = 'table'; draw(); };
+  el._ap = () => { if (!el._pv) return; App.ui[vkey] = el._pv; el._pv = null; if (el.isConnected) draw(); };
+  if (window.__regPr) { window.removeEventListener('beforeprint', window.__regPr[0]); window.removeEventListener('afterprint', window.__regPr[1]); }
+  window.__regPr = [el._bp, el._ap]; window.addEventListener('beforeprint', el._bp); window.addEventListener('afterprint', el._ap);
   $('#regQ', el).addEventListener('input', debounce((e) => { st.q = e.target.value.trim(); fb.render(); draw(); syncHash(); }, 180));
   $('#regSort', el).onchange = (e) => { App.ui.regSort = e.target.value; draw(); };
   el.addEventListener('click', (e) => {
@@ -84,7 +89,8 @@ function renderRegister(el, r) {
     const pd = e.target.closest('[data-pcdos]'); if (pd) { const pp = D.partnerships.find((x) => x.id === pd.dataset.pcdos); if (pp) dossierDialog(pp); return; }
     const row = e.target.closest('[data-row]');
     if (row && !e.target.closest('a,button') && !row.closest('.cm-detail')) go('#/partnerships/' + row.dataset.row);
-    if (e.target.closest('[data-print]')) window.print();
+    if (e.target.closest('[data-print]')) { const pv = App.ui[vkey]; if (pv !== 'table') { App.ui[vkey] = 'table'; draw(); } window.print(); if (pv !== 'table') { App.ui[vkey] = pv; draw(); } } // الطباعة دائمًا بالجدول الرسمي
+    const qa = e.target.closest('[data-rtgo]'); if (qa) { go(qa.dataset.rtgo); return; }
     if (e.target.closest('[data-xls]')) exportPartnershipsXlsx(App.lastRegList || [], 'سجل-الشراكات');
     if (e.target.closest('[data-rep]')) { const ids = (App.lastRegList || []).map((p) => p.id); if (!ids.length) return toast('لا توجد شراكات معروضة.', 'err'); App.ui.rpt.ids = ids; go('#/reports'); }
   });
@@ -96,14 +102,40 @@ function termCell(p) {
   if (dl !== null && ['active', 'soon'].includes(s)) rem = `<div class="xs ${s === 'soon' ? '' : 'faint'}" style="${s === 'soon' ? 'color:var(--warn)' : ''}">متبقٍ ${plural(dl, 'يوم واحد', 'يومان', 'أيام', 'يومًا')}</div>`;
   return `<div class="small">${fmtDate(p.startDate, 'short')} – ${fmtDate(p.endDate, 'short')}</div>${rem}`;
 }
+/* جدول السجل: خط بلون الحالة، وشريط يبيّن ما انقضى من مدة الشراكة، وتقييم، ومسؤولون، وأزرار سريعة عند المرور.
+   عند الترتيب بالحالة تُجمَّع الشراكات تحت عنوان لكل حالة. */
 function regTable(list) {
-  const th = (k, l) => `<th class="sortable ${App.ui.regSort === k ? 'sorted' : ''}" data-sort="${k}">${l}<span class="ar">▾</span></th>`;
-  return `<div class="tbl-wrap"><table class="tbl"><thead><tr>${th('name', 'الشراكة')}<th>القطاع</th><th>التصنيف</th>${th('status', 'الحالة')}${th('end', 'الفترة')}<th>المسؤول</th>${th('updated', 'آخر تحديث')}</tr></thead><tbody>
-    ${list.map((p) => { const pr = partnerById(p.partnerId); return `<tr data-row="${p.id}" tabindex="0">
-      <td><div class="t-name">${plateHTML(pr, 40)}<div><b>${esc(pr ? pr.name : p.title)} ${demoTag(p)}</b><span class="code">${esc(p.code || '')}</span>${p.title && pr && p.title !== pr.name ? `<span> — ${esc(p.title)}</span>` : ''}${(p.categories || []).length ? `<span class="t-cats">${p.categories.map(esc).join('، ')}</span>` : ''}</div></div></td>
-      <td>${esc(pSector(p) || '—')}</td><td>${esc(p.classification || '—')}</td><td>${statusChip(p)}</td><td>${termCell(p)}</td>
-      <td class="small">${esc((p.owners || []).join('، ') || '—')}</td><td class="small muted">${relDays(p.updatedAt || p.createdAt)}</td></tr>`; }).join('')}
-    </tbody></table></div>`;
+  const th = (k, l, cls = '') => `<th class="${cls}${k ? ' sortable' : ''}${k && App.ui.regSort === k ? ' sorted' : ''}" ${k ? `data-sort="${k}"` : ''}>${l}${k ? '<span class="ar">▾</span>' : ''}</th>`;
+  const group = App.ui.regSort === 'status';
+  const rows = []; let last = null;
+  list.forEach((p) => {
+    const st = pStatus(p);
+    if (group && st !== last) { last = st; rows.push(`<tr class="rt-grp" style="--c:${ST_VAR(st)}"><td colspan="7"><span><i></i>${esc(statusLabel(st))}<b>${list.filter((x) => pStatus(x) === st).length}</b></span></td></tr>`); }
+    rows.push(rtRow(p, st));
+  });
+  return `<div class="tbl-wrap rt-wrap"><table class="tbl rt"><thead><tr>${th('name', 'الشراكة', 'rt-c-name')}${th('', 'التصنيف والقطاع')}${th('status', 'الحالة')}${th('end', 'المدة', 'rt-c-term')}${th('', 'التقييم', 'rt-c-ev')}${th('', 'المسؤول')}${th('updated', 'آخر تحديث', 'rt-c-up')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
+}
+function rtRow(p, st) {
+  const pr = partnerById(p.partnerId), name = pr ? pr.name : p.title;
+  const tp = termProgress(p), dl = daysLeft(p), ev = (pProfile(p).ev || {}).score;
+  const sub = p.title && pr && p.title !== pr.name ? p.title : '';
+  const own = p.owners || [];
+  let rem = '';
+  if (dl !== null && ['active', 'soon'].includes(st)) rem = `<span class="rt-rem ${st === 'soon' ? 'w' : ''}">متبقٍ ${plural(dl, 'يوم واحد', 'يومان', 'أيام', 'يومًا')}</span>`;
+  else if (st === 'upcoming' && p.startDate) rem = `<span class="rt-rem">يبدأ بعد ${plural(Math.max(0, daysBetween(today(), parseDate(p.startDate))), 'يوم واحد', 'يومين', 'أيام', 'يومًا')}</span>`;
+  else if (st === 'ended') rem = '<span class="rt-rem e">انتهت</span>';
+  const term = p.startDate || p.endDate ? `<div class="rt-term">${tp !== null ? `<span class="rt-bar" title="انقضى ${Math.round(tp * 100)}% من المدة"><i style="width:${Math.max(3, Math.round(tp * 100))}%"></i></span>` : ''}<div class="small">${fmtDate(p.startDate, 'short')} – ${fmtDate(p.endDate, 'short')}</div>${rem}</div>` : '<span class="faint">—</span>';
+  return `<tr data-row="${p.id}" tabindex="0" class="st-${st}" style="--c:${ST_VAR(st)}">
+    <td class="rt-c-name"><div class="t-name">${plateHTML(pr, 44)}<div class="rt-nm"><b>${esc(name)} ${demoTag(p)}</b>
+      <span class="rt-meta"><span class="code">${esc(p.code || '')}</span>${sub ? `<span class="rt-sub">${esc(sub)}</span>` : ''}</span>
+      ${(p.categories || []).length ? `<span class="rt-cats">${p.categories.slice(0, 3).map((c) => `<em>${esc(c)}</em>`).join('')}${p.categories.length > 3 ? `<em>+${p.categories.length - 3}</em>` : ''}</span>` : ''}</div></div></td>
+    <td><div class="rt-cls"><b>${esc(p.classification || '—')}</b>${pSector(p) ? `<span>${esc(pSector(p))}${p.ptype ? ` · ${esc(p.ptype)}` : ''}</span>` : p.ptype ? `<span>${esc(p.ptype)}</span>` : ''}</div></td>
+    <td>${statusChip(p)}</td>
+    <td class="rt-c-term">${term}</td>
+    <td class="rt-c-ev">${ev != null ? `<span class="rt-ev ${evalTone(ev)}"><b>${ev}</b><small>/100</small></span>` : '<span class="faint xs">لم تُقيَّم</span>'}</td>
+    <td><div class="rt-own" title="${esc(own.join('، ') || 'بلا مسؤول')}">${own.length ? `<span class="rt-avs">${own.slice(0, 3).map((o) => avatar(o)).join('')}</span><span class="small">${esc(own[0])}${own.length > 1 ? ` <em>+${own.length - 1}</em>` : ''}</span>` : '<span class="faint xs">بلا مسؤول</span>'}</div></td>
+    <td class="rt-c-up"><span class="small muted">${relDays(p.updatedAt || p.createdAt)}</span>
+      <span class="rt-acts no-print"><button type="button" data-pcdos="${p.id}" title="الملف الشامل" aria-label="الملف الشامل">${icon('file')}</button>${can('view.reports') ? `<button type="button" data-rtgo="#/reports?ids=${p.id}" title="تقرير" aria-label="تقرير">${icon('chart')}</button>` : ''}<span class="rt-go" aria-hidden="true">${icon('chevL')}</span></span></td></tr>`;
 }
 function regCards(list) {
   return `<div class="pc-grid">${list.map(pcardHTML).join('')}</div>`;

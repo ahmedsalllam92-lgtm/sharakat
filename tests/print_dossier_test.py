@@ -29,6 +29,7 @@ async def main():
         for d in ['classic','board']:
             await E(f"applyDesign('{d}')"); await pg.wait_for_timeout(600)
             await go('#/partnerships')
+            await pg.click('[data-view="table"]'); await pg.wait_for_timeout(400)
             await pg.emulate_media(media='print')
             hidden = await E("['#regSort','.reg-meta .seg'].every(s=>{const e=document.querySelector(s); return !e || getComputedStyle(e).display==='none'})")
             noscroll = await E("getComputedStyle(document.querySelector('#regBody .tbl-wrap')).overflowX==='visible'")

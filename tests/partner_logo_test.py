@@ -25,7 +25,7 @@ async def main():
         ok('logo saved on the partner', await E(f"!!partnerById('{prid}').logoFileId"))
         ok('logo shows in partnership header', await E("!!document.querySelector('.dhead .plate img') && document.querySelector('.dhead .plate img').src.startsWith('blob:')"))
         ok('upload is logged', await E(f"D.audit.some(a=>a.entityId==='{prid}' && a.details==='رفع شعار الجهة')"))
-        await go('#/partnerships')
+        await go('#/partnerships'); await pg.click('[data-view="table"]'); await pg.wait_for_timeout(400)
         ok('register row shows logo', await E(f"[...document.querySelectorAll('#regBody tr')].some(tr=>tr.dataset.row==='{pid}' && tr.querySelector('.plate img'))"))
         await go('#/partners')
         ok('partners list shows logo', await E("document.querySelectorAll('#main .plate img').length>=1"))
