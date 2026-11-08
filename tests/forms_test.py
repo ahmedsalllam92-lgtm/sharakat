@@ -29,7 +29,7 @@ async def main():
         await pg.click('[data-wfopen="method"]'); await pg.wait_for_selector('.wf-modal')
         ok('step dialog offers filling the form in the platform', await E("!!document.querySelector('.wf-modal [data-wffill=\"methodology\"]')"))
         await pg.click('[data-wffill="methodology"]'); await pg.wait_for_selector('.ff-modal')
-        ok('methodology form: partner prefilled, 5 sector options, 8 items', await E("document.querySelector('#ff_partner').value.length>3 && document.querySelectorAll('[data-fk=sector] .ff-chip').length===5 && document.querySelectorAll('.ff-n').length===8"))
+        ok('methodology form: partner prefilled, 5 sector options, 8 items', await E("document.querySelector('#ff_partner').value.length>3 && document.querySelectorAll('[data-fk=sector] .ff-chip:not(.add)').length===5 && document.querySelectorAll('.ff-n').length===8"))
         await pg.click('[data-ffsave="done"]'); await pg.wait_for_timeout(300)
         ok('required items enforced', await E("document.querySelectorAll('.ff.invalid').length") >= 4 and await E("!!document.querySelector('.ff-modal')"))
         for k in ['m1','m2','m4','m6']: await pg.fill(f'#ff_{k}', f'نص البند {k} للاختبار.')

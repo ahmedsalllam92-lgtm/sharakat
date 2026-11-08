@@ -14952,6 +14952,7 @@ function openForm(kind, rec, key, { onDone, ro = false, evalIdx = null } = {}) {
     if (ro && !e.target.closest('[data-ffprint],[data-ffword],[data-mclose]')) return;
     const ch = e.target.closest('.ff-chip'); if (ch && !ch.disabled) {
       const grp = ch.closest('[data-fk]'); const f = secs.flatMap((s) => s.fields).find((x) => x.k === grp.dataset.fk);
+      if (f.auto === 'iev' && ch.classList.contains('on')) { box.dataset.recManual = '1'; ievUpd(); return; } // تأكيد النتيجة الحالية يدويًا دون إلغائها
       if (ch.dataset.goal || f.type === 'multi') ch.classList.toggle('on'); else { const was = ch.classList.contains('on'); $$('.ff-chip', grp).forEach((b) => b.classList.remove('on')); if (!was) ch.classList.add('on'); }
       if (f.auto === 'iev') { box.dataset.recManual = '1'; ievUpd(); }
       return;
