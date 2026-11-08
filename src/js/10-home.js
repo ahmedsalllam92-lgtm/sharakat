@@ -57,13 +57,15 @@ function renderHome(el) {
     <footer class="hfoot"><span>${esc(o.name)} — ${esc(o.dept)}</span><span>${showDemo() ? 'تتضمن الصفحة بيانات تجريبية مميزة بوسم «تجريبي» ولا تمثل شراكات فعلية.' : 'المحتوى مصدره سجلات المنصة المنشورة.'}</span></footer></div>`;
   hydrateFiles(el);
   initHeroFX($('[data-hfx]', el), [[14, 34], [30, 58], [8, 62], [40, 30]]);
+  initHeroRot(el);
   bindHome(el);
 }
 
 function homeHero() {
   const h = D.settings.home, o = D.settings.org;
   const draw = !App.heroDrawn; App.heroDrawn = true;
-  const art = h.heroImageFileId
+  const rot = heroRotHTML('classic');
+  const art = rot ? `<div class="hfx-media">${rot}</div><div class="photo-fade hrot-fade"></div>` : h.heroImageFileId
     ? `<div class="hfx-media"><img class="photo hfx-img" data-file="${esc(h.heroImageFileId)}" alt=""></div><div class="photo-fade"></div>${h.heroImageFileId.startsWith('lib:') ? '<span class="illus hero-illus">صورة توضيحية</span>' : ''}`
     : `<div class="hfx-media">${topoSVG('hero-' + (o.name || ''), { W: 1600, H: 900, levels: 22, cols: 92, focus: 'left', draw })}</div><div class="fade"></div>`;
   return `<section class="hero" aria-label="الواجهة" data-tour="home-hero">

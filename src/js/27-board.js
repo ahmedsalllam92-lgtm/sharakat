@@ -117,8 +117,8 @@ function renderHomeBoard(el) {
           </dl>
         </div>
         <div class="bo-hero-m">
-          <figure class="bo-ph a">${photoA ? `<img class="photo" src="${photoA.src}" alt="${esc(photoA.title)}">` : coverHTML('bo-a', null, { W: 800, H: 600 })}<figcaption>${esc(photoA ? photoA.title : '')}</figcaption></figure>
-          ${photoB ? `<figure class="bo-ph b"><img class="photo" src="${photoB.src}" alt="${esc(photoB.title)}"></figure>` : ''}
+          <figure class="bo-ph a">${heroRotHTML('board') || (photoA ? `<img class="photo" src="${photoA.src}" alt="${esc(photoA.title)}">` : coverHTML('bo-a', null, { W: 800, H: 600 }))}</figure>
+          ${photoB ? `<figure class="bo-ph b"><img class="photo hrot-twin" data-hrot-twin src="${photoB.src}" alt=""></figure>` : ''}
           <div class="bo-medal" aria-hidden="true"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="56"/><circle cx="60" cy="60" r="47" class="rot"/><circle cx="60" cy="60" r="39" class="inr"/></svg><b>${c.partners}</b><span>جهة شريكة</span></div>
         </div>
       </div>
@@ -165,6 +165,7 @@ function renderHomeBoard(el) {
   hydrateFiles(el);
   runCountUps(el);
   boReveal(el);
+  initHeroRot(el);
   el.onclick = (e) => { const s = e.target.closest('[data-story]'); if (s) { e.preventDefault(); openStory(s.dataset.story); } };
 }
 /* اختصارات العمل اليومي: كل بطاقة تذهب إلى المهمة مباشرة وتعرض ما ينتظر */
@@ -180,7 +181,7 @@ function boQuickHTML() {
     can('view.dashboard') && { h: '#/dashboard', ic: 'chart', t: 'لوحة الأداء', d: 'العرض المختصر والمفصّل', b: '' },
     can('proposal.review') && { h: '#/proposals?status=submitted', ic: 'inbox', t: 'المقترحات الواردة', d: 'مراجعة مقترحات الإدارات', b: pend ? `${pend} ${nounFor(pend, ['جديد', 'جديدان', 'جديدة', 'جديدًا'])}` : '' },
     can('proposal.create') && { h: '#/share/new', ic: 'send', t: 'شارك بمقترح', d: mineInfo ? 'لديك مقترح بانتظار الاستكمال' : `${plural(S_STEPS.length, 'خطوة واحدة', 'خطوتان', 'خطوات', 'خطوة')} لاقتراح جهة`, b: mineInfo ? `${mineInfo} بانتظار الاستكمال` : '' },
-    { h: '#/media', ic: 'image', t: 'مركز الصور', d: 'صور الشراكات والإنجازات', b: '' },
+    { h: '#/media', ic: 'image', t: 'مركز الصور', d: 'صور الشراكات والإنجازات', b: '' }, { h: '#/gallery', ic: 'star', t: 'معرض الأثر', d: 'عرض سينمائي لصور الشراكات', b: '' },
     can('view.reports') && { h: '#/reports', ic: 'file', t: 'التقارير', d: 'PowerPoint وPDF بضغطة', b: '' },
   ].filter(Boolean).slice(0, 5);
   if (T.length < 5) T.push(...[{ h: '#/process', ic: 'convert', t: 'مسار الشراكة', d: 'الخطوات والمسؤوليات', b: '' }].slice(0, 5 - T.length));

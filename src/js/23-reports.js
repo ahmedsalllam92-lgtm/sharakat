@@ -564,7 +564,7 @@ function prepareReportPrint(nodes, title) {
   host = document.createElement('div'); host.id = 'rptPrint'; host.dir = 'rtl';
   const src = nodes && nodes.length ? nodes : $$('#rpSlides .rs2');
   host.innerHTML = src.length ? src.map((n) => n.outerHTML).join('') : rptSlides().map(specHTML).join('');
-  $$('[contenteditable]', host).forEach((x) => x.removeAttribute('contenteditable')); $$('.rs2-t.ed', host).forEach((x) => x.classList.remove('ed'));
+  $$('[contenteditable]', host).forEach((x) => x.removeAttribute('contenteditable')); $$('.rs2.mk', host).forEach((x) => x.classList.remove('mk-anim', 'play')); $$('.rs2-t.ed', host).forEach((x) => x.classList.remove('ed'));
   document.body.appendChild(host);
   if (!src.length) hydrateFiles(host);
   let st = $('#printPageSize'); if (!st) { st = document.createElement('style'); st.id = 'printPageSize'; document.head.appendChild(st); }
@@ -633,12 +633,12 @@ function openReportShow(start = 0, nodes) {
     <div class="rshow-bar"><button type="button" data-a="prev" title="السابق (→)">${icon('chevR')}</button><span class="rshow-n"></span><button type="button" data-a="next" title="التالي (←)">${icon('chevL')}</button>
       <span class="rshow-sep"></span><button type="button" data-a="thumbs" title="الشرائح (T)">${icon('grid')}</button><button type="button" data-a="play" title="تشغيل تلقائي">${icon('play')}</button><button type="button" data-a="fs" title="ملء الشاشة (F)">${icon('expand')}</button><button type="button" data-a="exit" title="خروج (Esc)">${icon('x')}</button></div>
     <div class="rshow-prog"><i></i></div>`;
-  $$('[contenteditable]', ov).forEach((x) => x.removeAttribute('contenteditable')); $$('.rs2-t.ed', ov).forEach((x) => x.classList.remove('ed'));
+  $$('[contenteditable]', ov).forEach((x) => x.removeAttribute('contenteditable')); $$('.rs2.mk', ov).forEach((x) => x.classList.remove('play')); $$('.rs2-t.ed', ov).forEach((x) => x.classList.remove('ed'));
   document.body.appendChild(ov); document.documentElement.classList.add('rshowing');
   const slides = $$('.rshow-slide', ov), N = slides.length;
   let i = Math.max(0, Math.min(N - 1, start)), timer = null, idle = null;
   const fit = () => { const k = Math.min(innerWidth / 1280, innerHeight / 720); $$('.rshow-slide > .rs2', ov).forEach((s) => { s.style.transform = `scale(${k})`; }); const tk = 168 / 1280; $$('.rshow-thf > .rs2', ov).forEach((s) => { s.style.transform = `scale(${tk})`; }); };
-  const show = (n) => { i = Math.max(0, Math.min(N - 1, n)); slides.forEach((s, k) => { s.classList.toggle('on', k === i); s.classList.toggle('past', k < i); }); $('.rshow-n', ov).textContent = `${i + 1} من ${N}`; $('.rshow-prog i', ov).style.width = `${((i + 1) / N) * 100}%`; $$('.rshow-th', ov).forEach((b, k) => b.classList.toggle('on', k === i)); const cur = $(`.rshow-th[data-j="${i}"]`, ov); cur && !$('.rshow-thumbs', ov).hidden && cur.scrollIntoView({ inline: 'center', block: 'nearest' }); };
+  const show = (n) => { i = Math.max(0, Math.min(N - 1, n)); slides.forEach((s, k) => { s.classList.toggle('on', k === i); s.classList.toggle('past', k < i); const m = s.querySelector('.rs2.mk'); if (m && k === i) { m.classList.add('mk-anim'); m.classList.remove('play'); void m.offsetWidth; mkPlay(m); } }); $('.rshow-n', ov).textContent = `${i + 1} من ${N}`; $('.rshow-prog i', ov).style.width = `${((i + 1) / N) * 100}%`; $$('.rshow-th', ov).forEach((b, k) => b.classList.toggle('on', k === i)); const cur = $(`.rshow-th[data-j="${i}"]`, ov); cur && !$('.rshow-thumbs', ov).hidden && cur.scrollIntoView({ inline: 'center', block: 'nearest' }); };
   const stop = () => { clearInterval(timer); timer = null; $('[data-a="play"]', ov).innerHTML = icon('play'); };
   const close = () => { stop(); document.removeEventListener('keydown', keys, true); window.removeEventListener('resize', fit); document.removeEventListener('fullscreenchange', fsch); if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); ov.remove(); document.documentElement.classList.remove('rshowing'); };
   const keys = (e) => {

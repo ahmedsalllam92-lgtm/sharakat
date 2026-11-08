@@ -13,14 +13,15 @@ function obViewSwitch(cur) {
 /* شريط ثابت أعلى اللوحة في كل العروض: «مختصر / مفصّل» يمينًا، وExcel والطباعة وملء الشاشة يسارًا.
    أزرار كل عرض تُنقل إليه بأحداثها (التفويض على الصفحة نفسها) فتبقى الوظائف كما هي */
 function dashViewBar(el, cur) {
-  const old = el.querySelector(':scope > .dv-bar'); if (old) old.remove();
-  el.insertAdjacentHTML('afterbegin', `<div class="dv-bar no-print">${obViewSwitch(cur)}<div class="dv-acts"></div></div>`);
-  const acts = el.querySelector(':scope > .dv-bar .dv-acts');
+  el.querySelectorAll('.dv-bar').forEach((o) => o.remove());
+  const host = el.firstElementChild || el; host.classList.add('dv-host');
+  host.insertAdjacentHTML('afterbegin', `<div class="dv-bar no-print">${obViewSwitch(cur)}<div class="dv-acts"></div></div>`);
+  const acts = host.querySelector(':scope > .dv-bar .dv-acts');
   const LBL = [['[data-xls]', 'download', 'Excel'], ['[data-print]', 'print', 'طباعة'], ['[data-present],[data-bopresent]', 'expand', 'ملء الشاشة']];
   LBL.forEach(([sel, ic, t]) => {
     const b = [...el.querySelectorAll(sel)].find((x) => !x.closest('.dv-bar') && x.closest('.ob-tools,.dz-tools,.bo-cover-tools'));
     if (!b) return;
-    b.className = 'btn'; b.innerHTML = `${icon(ic)}<span>${t}</span>`; b.title = t;
+    b.className = 'btn dv-ic'; b.innerHTML = `${icon(ic)}<span class="sr-only">${t}</span>`; b.title = t; b.setAttribute('aria-label', t);
     acts.appendChild(b);
   });
   el.querySelectorAll('.ob-tools,.dz-tools,.bo-cover-tools').forEach((t) => { if (!t.querySelector('button,a')) t.remove(); });
@@ -206,8 +207,8 @@ function obPulse(m, V, P) {
   const near = m.soon[0];
   const tile = (o) => `<button type="button" class="ob-t ${o.tone || ''}" ${o.attr}><span class="ob-tl">${icon(o.ic)}${o.l}</span><span class="ob-tv">${o.v}</span><span class="ob-ts">${o.s}</span>${o.extra || ''}</button>`;
   const spend = pct(V.fin.spent, V.fin.cash);
-  return `<aside class="ob-pulse" aria-label="النبض">
-    <h2 class="ob-ph"><span class="ob-beat" aria-hidden="true"></span>النبض</h2>
+  return `<aside class="ob-pulse" aria-label="المؤشرات الحية">
+    <h2 class="ob-ph"><span class="ob-beat" aria-hidden="true"></span>المؤشرات الحية</h2>
     <div class="ob-tiles" data-tour="dash-kpis">
       ${tile({ ic: 'check', l: 'سارية الآن', v: cu(m.act, 'act'), s: `${pct(m.act, m.signed.length)}% من ${m.signed.length} موقّعة`, attr: 'data-drawer="act"', extra: m.past.length > 2 ? `<span class="ob-spark" aria-hidden="true">${sparkSVG(m.past, 120, 30)}</span>` : '' })}
       ${tile({ ic: 'clock', l: `تنتهي خلال ${D.settings.expiryDays} يومًا`, v: cu(m.soon.length, 'soon'), s: near ? `الأقرب: ${esc(partnerName(near))}` : 'لا شيء قريب', attr: 'data-drawer="soon"', tone: m.soon.length ? 'warn' : '' })}
