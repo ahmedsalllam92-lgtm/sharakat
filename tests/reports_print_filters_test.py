@@ -49,7 +49,7 @@ async def main():
         ok('contents page numbers point to each partnership cover', toc_ok)
         await pg.locator('#rpChips [data-rx]').first.click(); await pg.wait_for_timeout(700)
         ok('chip × removes a partnership', await E("App.ui.rpt.ids.length") == shown - 1)
-        await pg.click('[data-rpd]'); await pg.click('[data-rall]'); await pg.wait_for_timeout(900); await pg.mouse.click(700, 120)
+        await pg.click('[data-rpd]'); await pg.click('[data-rall]'); await pg.wait_for_timeout(900); await pg.click('.rx-hero h1')
         npc = await E("document.querySelectorAll('.rs2[data-st=\"pcover\"]').length")
         ok('a cover slide per partnership with its name', npc == shown and await E("[...document.querySelectorAll('.rs2[data-st=\"pcover\"] [data-ek$=\".name\"]')].every(h=>h.textContent.trim().length>2)"), npc)
         n0 = await E("document.querySelectorAll('.rs-frame').length")
@@ -57,7 +57,7 @@ async def main():
         await pg.click('[data-rsec="pcover"]'); await pg.wait_for_timeout(500)
         ok('removing a component updates preview instantly', await E("document.querySelectorAll('.rs2[data-st=\"pcover\"]').length") == 0 and await E("document.querySelectorAll('.rs-frame').length") == n0 - npc)
         await pg.click('[data-rsec="pcover"]'); await pg.wait_for_timeout(500)
-        await pg.mouse.click(700, 110)
+        await pg.click('.rx-hero h1')
         ok('all slides RTL', await E("[...document.querySelectorAll('.rs2')].every(s=>getComputedStyle(s).direction==='rtl')"))
         # edit text
         await pg.click('[data-ek="rep.title"]'); await E("document.execCommand('selectAll')"); await pg.keyboard.type('تقرير الربع الرابع للشراكات'); await pg.wait_for_timeout(200)

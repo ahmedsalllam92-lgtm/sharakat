@@ -662,3 +662,6 @@ function openReportShow(start = 0, nodes) {
   fit(); show(i);
   if (ov.requestFullscreen) ov.requestFullscreen().catch(() => {});
 }
+
+/* القوائم المنسدلة في استوديو التقارير تُغلق عند الضغط في أي مكان خارجها، حتى خارج الصفحة (الشريط العلوي مثلًا) */
+document.addEventListener('mousedown', (e) => { ['rpDD', 'rpPD'].forEach((id) => { const d = document.getElementById(id); if (d && d.classList.contains('open') && !d.contains(e.target)) d.classList.remove('open'); }); });
