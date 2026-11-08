@@ -14,7 +14,7 @@ async def main():
         await pg.click('a.mk-entry'); await pg.wait_for_timeout(1200)
         kinds = await E("[...document.querySelectorAll('#mkDeck .rs2.mk')].map(s=>s.dataset.mk)")
         ok('cinematic deck built (seed first, interlocking rings last)', len(kinds) >= 8 and kinds[0]=='seed' and kinds[-1]=='bond', kinds)
-        ok('numbers come from the data', await E("(()=>{const X=mkData(); const b=[...document.querySelectorAll('.mks-three .mx-gi b')].map(x=>x.textContent); return b[0]===String(X.partners.length) && b[1]===String(X.act.length) && document.querySelectorAll('.mks-seed .mx-tree .lf').length===Math.min(X.L.length, 14*Math.max(1,X.sectors.length))})()"))
+        ok('numbers come from the data', await E("(()=>{const X=mkData(); const b=[...document.querySelectorAll('.mks-three .mx-gi b')].map(x=>x.textContent); return b[0]===String(X.partners.length) && b[1]===String(X.act.length) && document.querySelectorAll('.mks-seed .mx-tree .lf').length===(X.sectors.length ? X.sectors.slice(0,6).reduce((t,[s_])=>t+Math.min(14, X.L.filter(p=>pSector(p)===s_).length),0) : Math.min(14, X.L.length))})()"))
         ok('every slide is 1280×720 and nothing overflows it', await E("[...document.querySelectorAll('#mkDeck .rs2.mk')].every(s=>s.scrollWidth<=1281 && s.scrollHeight<=721)"))
         # النطاق
         await pg.click('[data-mkscope="golden"]') if await E("!document.querySelector('[data-mkscope=golden]').disabled") else None

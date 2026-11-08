@@ -28,7 +28,7 @@ async def main():
         async def check_all(tag):
             T = await E(TRUTH)
             await E("applyDesign('classic')"); await pg.wait_for_timeout(500)
-            await go('#/', 1200)
+            await go('#/', 2600)  # العدّادات تتحرك حتى تبلغ قيمتها
             k = await E("Object.fromEntries([...document.querySelectorAll('.kpi')].map(k=>[k.querySelector('.l').textContent, k.querySelector('.v').textContent]))")
             ok(f'{tag} classic home: active/partners/outputs/depts', num(k.get('شراكة سارية','')) == T['act'] and num(k.get('جهة شريكة','')) == T['partners'] and num(k.get('مخرجًا مستهدفًا','')) == T['outputs'] and num(k.get('إدارة تتقاطع مع الشراكات','')) == T['depts'], (k, T))
             nav = await E("(()=>{const a=document.querySelector('.side .nav-a[href=\"#/tasks\"]'); const c=a&&a.querySelector('.cnt,.badge,.nb'); return c?+c.textContent:0})()")

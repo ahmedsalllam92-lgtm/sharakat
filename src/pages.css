@@ -3000,3 +3000,5 @@ body:has(.pm.stuck) .js-nav{opacity:0;pointer-events:none;transform:translateY(-
 #pkind{margin-inline-end:8px}
 #pkind .pk-n{font-weight:600;font-size:11px;margin-inline-start:4px;opacity:.75}
 .chip.pk-t{background:color-mix(in srgb,var(--gold) 16%,var(--paper));color:var(--gold-ink,#7a5c1e);border-color:transparent;font-size:11px;padding:1px 8px;vertical-align:middle}
+
+@media print{.js-map-sec{break-before:page}.pm.compact .pm-n{padding:6px 8px;gap:6px}.pm.compact .pm-n .pr-t{font-size:11px;-webkit-line-clamp:2}.pm.compact .pr-st{display:none}.pm.compact .pm-tag{bottom:-7px;font-size:9px;line-height:14px}}

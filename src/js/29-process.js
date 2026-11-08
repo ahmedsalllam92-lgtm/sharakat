@@ -147,7 +147,7 @@ function renderProcess(el) {
   const ro = new ResizeObserver(() => drawPrEdges(el)); ro.observe($('.pm-wrap', el));
   /* الطباعة: يُعاد رسم المخطط بعرض الصفحة ثم يعود */
   if (window.__prPr) { window.removeEventListener('beforeprint', window.__prPr[0]); window.removeEventListener('afterprint', window.__prPr[1]); }
-  window.__prPr = [() => el.isConnected && drawPrEdges(el, 1040), () => el.isConnected && setTimeout(() => drawPrEdges(el), 50)];
+  window.__prPr = [() => el.isConnected && drawPrEdges(el, 1040, true), () => el.isConnected && setTimeout(() => drawPrEdges(el), 50)];
   window.addEventListener('beforeprint', window.__prPr[0]); window.addEventListener('afterprint', window.__prPr[1]);
   /* رأس الجهات يثبت أعلى الشاشة عند النزول، ويصغر ارتفاعه ليبقى ظاهرًا دون أن يحجب المخطط */
   if (window.__prStick) window.removeEventListener('scroll', window.__prStick);
@@ -184,7 +184,7 @@ function prLaneOfLayout(x) {
   if (x.id === 'active') return WF_STEPS[WF_STEPS.length - 1].actor;
   return x.lane;
 }
-function drawPrEdges(el, forceW) {
+function drawPrEdges(el, forceW, compact) {
   const map = $('#prMap', el); if (!map) return;
   const wrap = map.parentElement, body = $('.pm-body', map), svg = $('.pm-edges', map);
   const NL = PR_LANES.length, ROWS = WF_STEPS.length + 1;
@@ -193,11 +193,13 @@ function drawPrEdges(el, forceW) {
   const printing = window.matchMedia && matchMedia('print').matches;
   if (printing && !forceW) return; // أثناء الطباعة يبقى تخطيط الطباعة الثابت
   const W = Math.max(forceW || wrap.clientWidth, RAIL + GUT + NL * 122);
-  map.style.setProperty('--pz', (700 / W).toFixed(3)); // تصغير المخطط ليملأ عرض صفحة A4
-  const LW = (W - RAIL - GUT) / NL, PITCH = 92, NH = 66;
+
+  const LW = (W - RAIL - GUT) / NL, PITCH = compact ? 64 : 92, NH = compact ? 50 : 66;
   map.classList.toggle('narrow', LW < 176);
   const H = ROWS * PITCH + 18;
   map.style.width = W + 'px'; body.style.height = H + 'px';
+  map.style.setProperty('--pz', Math.min(1000 / W, 530 / (H + 64)).toFixed(3)); // يتسع المخطط في صفحة A4 أفقية واحدة عند الطباعة
+  map.classList.toggle('compact', !!compact);
   wrap.classList.toggle('fit', W <= wrap.clientWidth + 1);
   map.style.setProperty('--lw', LW + 'px'); map.style.setProperty('--rail', RAIL + 'px'); map.style.setProperty('--gut', GUT + 'px');
   const laneIdx = (id) => Math.max(0, PR_LANES.findIndex((l) => l.id === id));
@@ -214,7 +216,7 @@ function drawPrEdges(el, forceW) {
     const x = PR_STEPS.find((s) => s.id === n.dataset.step); if (!x) return;
     const li = laneIdx(prLaneOfLayout(x)), r = rows[x.id];
     const pill = x.kind === 'start' || x.kind === 'end';
-    const w = LW - PAD * 2, h = pill ? 52 : NH;
+    const w = LW - PAD * 2, h = pill ? (compact ? 40 : 52) : NH;
     const l = laneL(li) + (LW - w) / 2, t = rowY(r) + (PITCH - h) / 2 - (PITCH - NH) / 4;
     Object.assign(n.style, { left: l + 'px', top: t + 'px', width: w + 'px', height: h + 'px' });
     box[x.id] = { l, r: l + w, t, b: t + h, cx: l + w / 2, cy: t + h / 2, li, row: r };

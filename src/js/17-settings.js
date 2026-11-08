@@ -304,7 +304,7 @@ function setData(b) {
       if (Store.db) await Store.tx('files', 'readwrite', (s) => s.clear());
       Store.memFiles.clear(); FileCache.urls.clear();
       for (const c of COLS) D[c] = c === 'settings' ? null : [];
-      await seedAll(); applyTheme(); renderShell(); toast('أُعيدت تهيئة المنصة'); go('#/');
+      await seedAll(); if (migrate()) { await Repo.saveSettings(); for (const c of ['partnerships', 'achievements', 'partners']) await Store.putMany(c, D[c]); } applyTheme(); renderShell(); toast('أُعيدت تهيئة المنصة'); go('#/');
     }
   };
 }
