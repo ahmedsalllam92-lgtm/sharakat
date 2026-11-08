@@ -12,7 +12,7 @@ const Store = {
     try {
       if (!('indexedDB' in window) || !window.indexedDB) throw new Error('IndexedDB غير متاح');
       this.db = await new Promise((res, rej) => {
-        const r = indexedDB.open(DB_NAME, DB_VER);
+        const r = indexedDB.open(this.dbName || DB_NAME, DB_VER);
         r.onupgradeneeded = () => {
           const db = r.result;
           COLS.forEach((c) => { if (!db.objectStoreNames.contains(c)) db.createObjectStore(c, { keyPath: 'id' }); });

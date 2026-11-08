@@ -36,7 +36,7 @@ function renderShell() {
       <div class="nav-items"><div class="nav-in">${g.items.map(navItem).join('')}</div></div></div>`).join('')}</nav>
     <div class="side-foot"><div class="side-org">${esc(o.dept)}</div>
       ${dz === 'classic' ? `<button class="side-btn icon-only collapse-btn" data-collapse type="button" title="${App.ui.sideMin ? 'توسيع القائمة' : 'طي القائمة'}" aria-label="${App.ui.sideMin ? 'توسيع القائمة' : 'طي القائمة'}">${icon('sidebar')}</button>` : ''}</div>`;
-  const roleBox = bellHTML() + `<button class="rolebox" data-role title="حسابي"><span class="rl">${esc(accountLabel())}</span><span class="av">${esc(initials(r === 'team' ? Session.member() : r === 'dept' ? Session.dept().replace(/^(إدارة|الإدارة العامة لل|الإدارة العامة|الإدارة|مكتب|الشؤون)\s*/, '') : isSysAdmin() ? 'م ن' : ROLES[r].label))}</span></button>`;
+  const roleBox = cloudBadgeHTML() + bellHTML() + `<button class="rolebox" data-role title="حسابي"><span class="rl">${esc(accountLabel())}</span><span class="av">${esc(initials(r === 'team' ? Session.member() : r === 'dept' ? Session.dept().replace(/^(إدارة|الإدارة العامة لل|الإدارة العامة|الإدارة|مكتب|الشؤون)\s*/, '') : isSysAdmin() ? 'م ن' : ROLES[r].label))}</span></button>`;
   const tourBtn = `<button class="tour-top" data-tourmenu type="button" aria-haspopup="menu" title="الاستعراضات">${icon('play')}<span>استعراض المنصة</span></button>`;
   const themeBtn = `<button class="icon-btn theme-btn" data-themetoggle title="${D.settings.theme === 'dark' ? 'الوضع النهاري' : 'الوضع الليلي'}" aria-label="تبديل الوضع النهاري والليلي">${icon(D.settings.theme === 'dark' ? 'sun' : 'moon')}</button>`;
   const demo = showDemo() ? `<button class="demo-ribbon" data-demo title="البيانات التجريبية">${icon('info')}<span class="dr-t">يتضمن بيانات تجريبية</span></button>` : '';
@@ -127,6 +127,7 @@ function bindShell(app) {
     if (e.target.closest('.nav-a')) app.classList.remove('nav-open');
     if (e.target.closest('[data-role]') && e.target.closest('#topbar')) return accountMenu();
     if (e.target.closest('[data-bell]')) return toggleBell();
+    if (e.target.closest('[data-cloudbtn]')) { cloudTick().then(() => toast(cloudStateText(), Cloud.state === 'ok' ? '' : 'err')); return; }
     if (e.target.closest('[data-demo]')) return demoDialog();
     if (e.target.closest('[data-present-exit]')) return togglePresent();
     if (e.target.closest('.topbar [data-tourmenu]')) return toggleTourMenu();
@@ -380,12 +381,14 @@ function migrate() {
 async function boot() {
   const bootEl = $('#boot');
   try {
+    cloudInit();
     await Store.open();
     await Repo.load();
     if (!D.settings) await seedAll();
     if (migrate()) { await Repo.saveSettings(); for (const c of ['partnerships', 'achievements']) await Store.putMany(c, D[c]); }
     applyTheme();
     if (!authBoot()) { showLogin(); splashSync(); return; }
+    if (Cloud.on) { if (!(await cloudEnter())) return; applyTheme(); }
     renderShell();
     App.lastHash = location.hash;
     route();

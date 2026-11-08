@@ -249,13 +249,17 @@ function setData(b) {
       <p class="small muted" style="margin-top:12px">السجلات الثلاثة المستوردة من ملف الحصر تبقى ظاهرة دائمًا. عند الإخفاء تُحسب المؤشرات من البيانات الفعلية فقط.</p>
       <div class="row" style="margin-top:12px"><button class="btn danger" id="dPurge">${icon('trash')} حذف البيانات التجريبية نهائيًا</button></div></div></div>
     <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>النسخ الاحتياطي والاستعادة</h3></div><div class="panel-b">
-      <p class="small muted" style="margin-bottom:14px">تُحفظ البيانات والمرفقات في متصفح هذا الجهاز (${Store.mode === 'idb' ? 'IndexedDB' : 'ذاكرة مؤقتة — لن تبقى بعد إغلاق الصفحة'}). صدّر نسخة احتياطية دورية، أو لنقل البيانات إلى جهاز آخر.</p>
+      <p class="small muted" style="margin-bottom:14px">${Cloud.on ? 'البيانات محفوظة على خادم المنصة المشتركة، مع نسخة على هذا الجهاز للعرض السريع. صدّر نسخة احتياطية دورية للاحتفاظ بها خارج المنصة.' : `تُحفظ البيانات والمرفقات في متصفح هذا الجهاز (${Store.mode === 'idb' ? 'IndexedDB' : 'ذاكرة مؤقتة — لن تبقى بعد إغلاق الصفحة'}). صدّر نسخة احتياطية دورية، أو لنقل البيانات إلى جهاز آخر.`}</p>
       <div class="row wrap"><button class="btn primary" id="dExp">${icon('download')} تصدير نسخة احتياطية (JSON مع المرفقات)</button>
         <label class="btn">${icon('upload')} استعادة من نسخة<input type="file" accept=".json,application/json" hidden id="dImp"></label></div>
       <div id="dStat" class="small muted" style="margin-top:12px"></div></div></div>
-    <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>إعادة التهيئة</h3></div><div class="panel-b">
+    ${Cloud.on ? `<div class="panel" style="margin-top:18px" id="dCloud"><div class="panel-h"><h3>المنصة المشتركة</h3><span class="sub">كل الحسابات تعمل على نفس البيانات من أي جهاز</span></div><div class="panel-b">
+      <p class="small" style="margin-bottom:12px"><span class="cloud-pill" data-st="${Cloud.state}"></span> ${esc(cloudStateText())}</p>
+      <div class="row wrap"><button class="btn" id="dSync">${icon('history')} مزامنة الآن</button>
+        ${['sys', 'admin'].includes(Cloud.grp) ? `<button class="btn ghost" id="dMergeOld">${icon('upload')} دمج بيانات قديمة من هذا المتصفح</button>` : ''}</div>
+      <p class="xs muted" style="margin-top:10px">«دمج البيانات القديمة» يرفع ما كان محفوظًا في هذا المتصفح قبل الربط بالمنصة المشتركة (ما ليس موجودًا على المنصة أو الأحدث منه فقط). إعادة التهيئة الكاملة غير متاحة من الواجهة حمايةً لبيانات كل الحسابات.</p></div></div>` : `<div class="panel" style="margin-top:18px"><div class="panel-h"><h3>إعادة التهيئة</h3></div><div class="panel-b">
       <p class="small muted" style="margin-bottom:12px">يحذف كل البيانات والمرفقات في هذا المتصفح ويعيد المنصة إلى حالتها الأولى (السجلات المستوردة من ملف الحصر + البيانات التجريبية).</p>
-      <button class="btn danger" id="dReset">إعادة تهيئة المنصة</button></div></div>`;
+      <button class="btn danger" id="dReset">إعادة تهيئة المنصة</button></div></div>`}`;
   Store.allFiles().then((fs) => { const tot = fs.reduce((a, f) => a + (f.size || 0), 0); $('#dStat', b) && ($('#dStat', b).textContent = `المرفقات المحفوظة: ${fs.length} ملف (${fmtSize(tot)}).`); });
   b.onchange = async (e) => {
     if (e.target.id === 'dDemo') { await setDemo(e.target.checked); setData(b); }
@@ -274,7 +278,10 @@ function setData(b) {
       const sids = new Set(D.achievements.map((p) => p.id)); D.settings.home.stories = (D.settings.home.stories || []).filter((x) => sids.has(x));
       await saveSet('حذف البيانات التجريبية'); toast('حُذفت البيانات التجريبية'); renderShell(); setData(b);
     }
+    if (e.target.closest('#dSync')) { await cloudTick(); toast(cloudStateText(), Cloud.state === 'ok' ? '' : 'err'); setData(b); return; }
+    if (e.target.closest('#dMergeOld')) { if (await confirmDlg('رفع البيانات القديمة المحفوظة في هذا المتصفح إلى المنصة المشتركة؟ يُضاف ما ليس موجودًا ويُحدَّث الأقدم فقط، ولا يُحذف شيء.', { title: 'دمج بيانات المتصفح', ok: 'دمج' })) { await cloudMergeOldLocal(); setData(b); } return; }
     if (e.target.closest('#dReset')) {
+      if (Cloud.on) return toast('إعادة التهيئة غير متاحة في المنصة المشتركة', 'err');
       if (!(await confirmDlg('سيُحذف كل شيء في هذا المتصفح، بما في ذلك ما أضفته من شراكات ومقترحات ومرفقات.', { title: 'إعادة تهيئة المنصة', ok: 'إعادة التهيئة', danger: true }))) return;
       for (const c of COLS) await Store.clear(c);
       if (Store.db) await Store.tx('files', 'readwrite', (s) => s.clear());

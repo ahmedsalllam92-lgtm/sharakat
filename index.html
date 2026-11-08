@@ -6180,6 +6180,23 @@ html.galv-on body{overflow:hidden}
 /* الافتتاحية: لوحة «فجر الشراكة» — حجاب أخف ليظهر الأفق والنهران، مع حركة اقتراب بطيئة نحو نقطة الالتقاء */
 #shkSplash .sp-veil.art{background:radial-gradient(ellipse at 50% 42%,rgba(6,32,28,.42),rgba(6,32,28,.12) 55%,rgba(4,20,17,.55) 100%),linear-gradient(180deg,rgba(4,22,19,.35),rgba(4,22,19,0) 40%,rgba(4,22,19,.35))}
 #shkSplash.dk .sp-veil.art{background:radial-gradient(ellipse at 50% 42%,rgba(8,15,19,.55),rgba(8,15,19,.25) 55%,rgba(8,15,19,.7) 100%)}
+
+/* حالة المنصة المشتركة في الشريط العلوي */
+.cloud-st{position:relative}
+.cloud-st .ic{width:19px;height:19px}
+.cloud-st .cs-ok,.cloud-st .cs-off{display:none}
+.cloud-st[data-cloud="ok"] .cs-ok{display:block}
+.cloud-st[data-cloud="off"] .cs-off,.cloud-st[data-cloud="local"] .cs-off{display:block}
+.cloud-st .cs-dot{position:absolute;top:7px;inset-inline-end:6px;width:7px;height:7px;border-radius:50%;background:#2e9e6a;box-shadow:0 0 0 2px var(--surface,#fff);transition:background .3s}
+.cloud-st[data-cloud="sync"] .cs-dot{background:var(--gold,#c9a24a);animation:csPulse 1s ease-in-out infinite}
+.cloud-st[data-cloud="off"] .cs-dot,.cloud-st[data-cloud="local"] .cs-dot{background:#c0563f}
+.cloud-st[data-cloud="idle"] .cs-dot{background:#9aa5a1}
+@keyframes csPulse{50%{transform:scale(1.5);opacity:.5}}
+.cloud-pill{display:inline-block;width:9px;height:9px;border-radius:50%;background:#2e9e6a;vertical-align:middle;margin-inline-end:4px}
+.cloud-pill[data-st="off"],.cloud-pill[data-st="local"]{background:#c0563f}.cloud-pill[data-st="sync"]{background:var(--gold,#c9a24a)}
+.lg-go.busy{opacity:.8;cursor:progress}
+/* نافذة تأكيد تظهر أثناء شاشة الدخول (تهيئة المنصة المشتركة) تكون فوقها */
+body:has(#shkLogin) .modal-bg{z-index:99995}
 </style>
 </head>
 <body>
@@ -7148,7 +7165,7 @@ const Store = {
     try {
       if (!('indexedDB' in window) || !window.indexedDB) throw new Error('IndexedDB غير متاح');
       this.db = await new Promise((res, rej) => {
-        const r = indexedDB.open(DB_NAME, DB_VER);
+        const r = indexedDB.open(this.dbName || DB_NAME, DB_VER);
         r.onupgradeneeded = () => {
           const db = r.result;
           COLS.forEach((c) => { if (!db.objectStoreNames.contains(c)) db.createObjectStore(c, { keyPath: 'id' }); });
@@ -7275,6 +7292,375 @@ async function restoreBackup(file) {
   D.settings = p.data.settings; await Store.put('settings', D.settings);
   for (const c of COLS.filter((x) => x !== 'settings')) { D[c] = p.data[c] || []; await Store.putMany(c, D[c]); }
   await Repo.log('restore', 'system', 'restore', 'استعادة نسخة احتياطية', `نسخة بتاريخ ${fmtDT(p.exportedAt)}`);
+}
+
+/* —— 02b-cloud.js —— */
+/* =====================================================================
+   المنصة المشتركة (Supabase)
+   - كل الحسابات تعمل على نفس البيانات: أي حفظ يُرفع فورًا، وتعديلات الآخرين تُسحب كل بضع ثوانٍ.
+   - تسجيل الدخول يتم على الخادم (كلمات المرور bcrypt هناك)، والجلسة رمز يُتحقق منه في كل طلب.
+   - المتصفح يحتفظ بنسخة محلية (IndexedDB) للعرض السريع وللعمل عند انقطاع الاتصال،
+     والتعديلات غير المرفوعة تُحفظ في «صندوق الصادر» وتُرفع عند عودة الاتصال.
+   - الإعدادات وثيقة واحدة يعدّلها الجميع (الإشعارات مثلًا)، فتُدمج التعديلات المتزامنة بدل أن تطغى إحداها على الأخرى.
+   - بيانات الجلسة (الحساب الحالي) وبصمات كلمات المرور المحلية لا تُرفع أبدًا.
+   المفتاح أدناه هو المفتاح العام (publishable): مصمَّم ليكون داخل الواجهة، ولا يفتح أي جدول مباشرة.
+   ===================================================================== */
+const CLOUD_DEF = { url: 'https://rrxbshacfuacokrvqtmc.supabase.co', key: 'sb_publishable_PXEDuOzZDCV-yn_F-fFB7g_EoRqDMt6' };
+const CLOUD_DB = 'sharakat-platform-cloud';
+const Cloud = {
+  on: false, ready: false, applying: false, busy: false, url: '', key: '',
+  rev: 0, sRev: 0, sBase: null, out: {}, fout: [], grp: null, state: 'idle', pwSet: null, pendingUI: false, expiredShown: false,
+  kickT: null, pollT: null,
+};
+const CLOUD_RAW = { put: Store.put, putMany: Store.putMany, del: Store.del, clear: Store.clear, putFile: Store.putFile, getFile: Store.getFile };
+const cloudRaw = (m, ...a) => CLOUD_RAW[m].apply(Store, a);
+
+function cloudInit() {
+  if (window.__SBX) return;
+  const cfg = { ...CLOUD_DEF };
+  try {
+    if (localStorage.getItem('shk_cloud_off') || sessionStorage.getItem('shk_cloud_skip')) return;
+    if (navigator.webdriver) { // الاختبارات الآلية تعمل محليًا إلا إذا طُلب غير ذلك صراحة
+      if (!localStorage.getItem('shk_cloud_force')) return;
+      cfg.url = localStorage.getItem('shk_cloud_url') || cfg.url; cfg.key = localStorage.getItem('shk_cloud_key') || cfg.key;
+    }
+  } catch (_) { return; }
+  Cloud.on = true; Cloud.url = cfg.url.replace(/\/+$/, ''); Cloud.key = cfg.key;
+  Store.dbName = CLOUD_DB;
+  try {
+    const st = JSON.parse(localStorage.getItem('shk_cloud') || 'null');
+    if (st && st.url === Cloud.url) { Cloud.rev = +st.rev || 0; Cloud.sRev = +st.sRev || 0; Cloud.out = st.out || {}; Cloud.fout = st.fout || []; }
+  } catch (_) { /* حالة تالفة: نبدأ من جديد */ }
+  window.addEventListener('online', () => Cloud.kick());
+  window.addEventListener('focus', () => cloudTick());
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') cloudTick(); });
+}
+Cloud.save = function () { try { localStorage.setItem('shk_cloud', JSON.stringify({ url: this.url, rev: this.rev, sRev: this.sRev, out: this.out, fout: this.fout })); } catch (_) { /* */ } };
+Cloud.token = function () { try { const s = JSON.parse(localStorage.getItem('shk_auth') || sessionStorage.getItem('shk_auth') || 'null'); return (s && s.tk) || null; } catch (_) { return null; } };
+Cloud.pending = function () { return Object.keys(this.out).length + this.fout.length; };
+
+Cloud.rpc = async function (fn, args = {}) {
+  const ctl = new AbortController(), big = /file/.test(fn);
+  const t = setTimeout(() => ctl.abort(), big ? 180000 : 30000);
+  let r;
+  try { r = await fetch(`${this.url}/rest/v1/rpc/${fn}`, { method: 'POST', headers: { apikey: this.key, 'Content-Type': 'application/json' }, body: JSON.stringify(args), signal: ctl.signal }); }
+  catch (e) { const er = new Error('تعذّر الاتصال بالخادم'); er.offline = true; throw er; }
+  finally { clearTimeout(t); }
+  const txt = await r.text(); let j = null; try { j = txt ? JSON.parse(txt) : null; } catch (_) { /* */ }
+  if (!r.ok) {
+    const er = new Error((j && (j.message || j.msg)) || 'HTTP ' + r.status); er.code = j && j.message; er.status = r.status;
+    if (er.code === 'invalid_token') this.expired();
+    throw er;
+  }
+  return j;
+};
+Cloud.setState = function (s) {
+  this.state = s;
+  const el = document.querySelector('#topbar [data-cloud]'); if (!el) return;
+  el.dataset.cloud = s; el.title = cloudStateText(); el.setAttribute('aria-label', el.title);
+};
+function cloudStateText() {
+  const n = Cloud.pending();
+  return { ok: 'متصل — كل التعديلات محفوظة على المنصة المشتركة', sync: 'جارٍ الحفظ على المنصة المشتركة…', off: `غير متصل — ${n ? `${n} تعديل محفوظ على هذا الجهاز وسيُرفع تلقائيًا عند عودة الاتصال` : 'تعرض آخر نسخة محفوظة على الجهاز'}`, local: 'المنصة المشتركة لم تُهيّأ بعد — التعديلات على هذا الجهاز فقط', idle: 'المنصة المشتركة' }[Cloud.state] || '';
+}
+function cloudBadgeHTML() {
+  if (!Cloud.on) return '';
+  return `<button class="icon-btn cloud-st" type="button" data-cloud="${Cloud.state}" data-cloudbtn title="${esc(cloudStateText())}" aria-label="${esc(cloudStateText())}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 8.5a4 4 0 0 1-.5 9.5z"/><path class="cs-ok" d="m9.5 13.2 2 2 3.5-3.7"/><path class="cs-off" d="M9.5 11.5l5 5m0-5-5 5"/></svg><i class="cs-dot"></i></button>`;
+}
+
+/* ===== تسجيل التعديلات المحلية في صندوق الصادر ===== */
+Cloud.mark = function (col, id, del) {
+  if (!this.on || !this.ready || this.applying || this.grp === 'viewer' || !id) return;
+  if (col === 'settings' && id !== 'main') return;
+  const k = col + '|' + id, e = this.out[k];
+  this.out[k] = { col, id, del: !!del, v: (e ? e.v : 0) + 1 };
+  this.save(); this.kick();
+};
+Cloud.markFile = function (id) {
+  if (!this.on || !this.ready || this.applying || this.grp === 'viewer' || !id || /^(lib|asset|sbx):/.test(id)) return;
+  if (!this.fout.includes(id)) this.fout.push(id);
+  this.save(); this.kick();
+};
+Cloud.kick = function () { if (!this.on || !this.ready) return; clearTimeout(this.kickT); this.kickT = setTimeout(() => this.flush().catch(() => {}), 350); };
+
+Store.put = async function (c, o) { await cloudRaw('put', c, o); Cloud.mark(c, o && o.id); };
+Store.putMany = async function (c, arr) { await cloudRaw('putMany', c, arr); (arr || []).forEach((o) => Cloud.mark(c, o && o.id)); };
+Store.del = async function (c, id) { await cloudRaw('del', c, id); Cloud.mark(c, id, true); };
+Store.putFile = async function (rec) { await cloudRaw('putFile', rec); Cloud.markFile(rec && rec.id); };
+/* مرفق غير موجود على هذا الجهاز: يُجلب من الخادم مرة واحدة ثم يُحفظ محليًا */
+Store.getFile = async function (id) {
+  const r = await cloudRaw('getFile', id);
+  if (r || !Cloud.on || !Cloud.token() || !id || /^(lib|asset|sbx):/.test(id)) return r;
+  try {
+    const f = await Cloud.rpc('shk_file_get', { p_token: Cloud.token(), p_id: id });
+    if (!f || !f.data) return null;
+    const m = f.meta || {}, blob = await (await fetch(`data:${m.type || 'application/octet-stream'};base64,${f.data}`)).blob();
+    const rec = { id, name: m.name || id, type: m.type || blob.type, size: m.size || blob.size, at: m.at, blob };
+    await cloudRaw('putFile', rec);
+    return rec;
+  } catch (_) { return null; }
+};
+
+/* ===== أدوات المقارنة والدمج ===== */
+function cloudEq(a, b) {
+  if (a === b) return true;
+  if (a == null || b == null || typeof a !== 'object' || typeof b !== 'object') return a === b || (a == null && b == null);
+  if (Array.isArray(a) !== Array.isArray(b)) return false;
+  if (Array.isArray(a)) return a.length === b.length && a.every((x, i) => cloudEq(x, b[i]));
+  const ka = Object.keys(a).filter((k) => a[k] !== undefined), kb = Object.keys(b).filter((k) => b[k] !== undefined);
+  return ka.length === kb.length && ka.every((k) => cloudEq(a[k], b[k]));
+}
+const cloudIdArr = (x) => Array.isArray(x) && x.length > 0 && x.every((o) => o && typeof o === 'object' && !Array.isArray(o) && o.id != null);
+/* دمج ثلاثي: ما غيّره هذا الجهاز منذ آخر مزامنة يُطبَّق فوق نسخة الخادم */
+function cloudMerge(base, mine, theirs) {
+  if (cloudEq(mine, base)) return theirs;
+  if (cloudEq(theirs, base) || theirs === undefined) return mine;
+  if ((cloudIdArr(mine) || cloudIdArr(theirs)) && Array.isArray(mine) && Array.isArray(theirs)) {
+    const B = new Map((Array.isArray(base) ? base : []).filter((o) => o && o.id != null).map((o) => [o.id, o]));
+    const M = new Map(mine.map((o) => [o.id, o])), T = new Map(theirs.map((o) => [o.id, o]));
+    const out = [];
+    const ids = [...new Set([...theirs.map((o) => o.id), ...mine.map((o) => o.id)])];
+    for (const id of ids) {
+      const b = B.get(id), m = M.get(id), t = T.get(id);
+      if (m && t) out.push(cloudMerge(b, m, t));
+      else if (m && !t) { if (!b || !cloudEq(b, m)) out.push(m); } // حذفه الآخر ولم أعدّله: يبقى محذوفًا
+      else if (t && !m) { if (!b || !cloudEq(b, t)) out.push(t); } // حذفته أنا ولم يعدّله الآخر: يبقى محذوفًا
+    }
+    return out;
+  }
+  if (mine && theirs && typeof mine === 'object' && typeof theirs === 'object' && !Array.isArray(mine) && !Array.isArray(theirs)) {
+    const b = base && typeof base === 'object' ? base : {}, out = {};
+    for (const k of new Set([...Object.keys(theirs), ...Object.keys(mine)])) {
+      const v = cloudMerge(b[k], mine[k], theirs[k]);
+      if (v !== undefined) out[k] = v;
+    }
+    return out;
+  }
+  return mine;
+}
+const cloudCleanSettings = (s) => { const c = { ...(s || {}) }; delete c.session; delete c.auth; return JSON.parse(JSON.stringify(c)); };
+
+/* ===== الرفع ===== */
+Cloud.flush = async function () {
+  if (!this.on || !this.ready || this.busy || !this.token() || this.grp === 'viewer') return;
+  if (!this.pending()) { if (this.state !== 'ok') this.setState('ok'); return; }
+  this.busy = true; this.setState('sync');
+  try {
+    for (let guard = 0; guard < 12 && Object.keys(this.out).length; guard++) {
+      const batch = [], sent = {}; let size = 0, sentSettings = null;
+      for (const k of Object.keys(this.out)) {
+        const e = this.out[k]; let row;
+        if (e.col === 'settings') { sentSettings = cloudCleanSettings(D.settings); row = { col: 'settings', id: 'main', data: sentSettings, base: this.sRev }; }
+        else { const rec = e.del ? null : (D[e.col] || []).find((x) => x.id === e.id); row = rec ? { col: e.col, id: e.id, data: rec } : { col: e.col, id: e.id, deleted: true }; }
+        const sz = JSON.stringify(row).length;
+        if (batch.length && (size + sz > 2500000 || batch.length >= 250)) break;
+        batch.push(row); size += sz; sent[k] = e.v;
+      }
+      const res = await this.rpc('shk_push', { p_token: this.token(), p_rows: batch });
+      for (const r of res.revs || []) {
+        const k = r.col + '|' + r.id;
+        if (r.col === 'settings') { this.sRev = r.rev; this.sBase = sentSettings; cloudRaw('put', 'settings', { id: '__base', rev: r.rev, data: sentSettings }).catch(() => {}); }
+        if (this.out[k] && this.out[k].v === sent[k]) delete this.out[k];
+      }
+      this.save();
+      if ((res.conflicts || []).length) await this.pull(); // أحد عدّل الإعدادات قبلنا: نسحب وندمج ثم نعيد الرفع
+    }
+    for (const id of [...this.fout]) {
+      const f = await cloudRaw('getFile', id);
+      if (f && f.blob) {
+        const b64 = String(await blobToDataURL(f.blob)).replace(/^data:[^,]*,/, '');
+        await this.rpc('shk_file_put', { p_token: this.token(), p_id: id, p_meta: { name: f.name, type: f.type, size: f.size, at: f.at }, p_data: b64 });
+      }
+      this.fout = this.fout.filter((x) => x !== id); this.save();
+    }
+    this.setState(this.pending() ? 'sync' : 'ok');
+  } catch (e) {
+    this.setState(e.offline ? 'off' : e.code === 'invalid_token' ? 'idle' : 'off');
+    if (!e.offline && e.code !== 'invalid_token') console.warn('cloud push', e);
+  } finally { this.busy = false; }
+  if (this.pending() && this.state === 'sync') this.kick();
+};
+
+/* ===== السحب ===== */
+Cloud.pull = async function () {
+  if (!this.on || !this.token()) return { changed: false };
+  const res = await this.rpc('shk_pull', { p_token: this.token(), p_since: this.rev });
+  if ((res.rev || 0) < this.rev) { this.rev = 0; this.save(); return this.pull(); } // الخادم أُعيدت تهيئته
+  const rows = res.rows || [];
+  const full = this.rev === 0, hasSettings = rows.some((r) => r.col === 'settings' && r.id === 'main' && !r.deleted);
+  let changed = false;
+  this.applying = true;
+  try {
+    const keepSes = D.settings && D.settings.session, keepAuth = D.settings && D.settings.auth;
+    if (full && hasSettings) { // أول مزامنة على هذا الجهاز: نسخة الخادم تحل محل النسخة المحلية بالكامل
+      for (const c of COLS) { await cloudRaw('clear', c); D[c] = c === 'settings' ? D.settings : []; }
+      changed = true;
+    }
+    if (!this.sBase && !full) { try { const b = await Store.tx('settings', 'readonly', (s) => s.get('__base')); if (b) this.sBase = b.data; } catch (_) { /* */ } }
+    for (const r of rows) {
+      if (r.col === 'settings') {
+        if (r.id !== 'main' || r.deleted) continue;
+        const mine = this.out['settings|main'] && D.settings ? cloudCleanSettings(D.settings) : null;
+        const next = mine ? cloudMerge(this.sBase || {}, mine, r.data) : r.data;
+        if (!D.settings || !cloudEq(cloudCleanSettings(D.settings), next)) changed = true;
+        D.settings = { ...next, ...(keepSes ? { session: keepSes } : {}), ...(keepAuth ? { auth: keepAuth } : {}) };
+        this.sBase = r.data; this.sRev = r.rev;
+        await cloudRaw('put', 'settings', D.settings); await cloudRaw('put', 'settings', { id: '__base', rev: r.rev, data: r.data });
+        continue;
+      }
+      const arr = D[r.col]; if (!arr || r.col === 'settings') continue;
+      if (this.out[r.col + '|' + r.id]) continue; // لدينا تعديل أحدث لم يُرفع بعد
+      const i = arr.findIndex((x) => x.id === r.id);
+      if (r.deleted) { if (i >= 0) { arr.splice(i, 1); changed = true; } await cloudRaw('del', r.col, r.id); }
+      else {
+        if (i < 0) { arr.push(r.data); changed = true; } else if (!cloudEq(arr[i], r.data)) { arr[i] = r.data; changed = true; }
+        await cloudRaw('put', r.col, r.data);
+      }
+    }
+    if (changed) D.audit.sort((a, b) => (a.at < b.at ? 1 : -1));
+  } finally { this.applying = false; }
+  this.rev = Math.max(this.rev, res.rev || 0); this.save();
+  return { changed, empty: full && !hasSettings && this.rev === 0, me: res.me };
+};
+
+/* ===== دورة المزامنة أثناء العمل ===== */
+async function cloudTick() {
+  if (!Cloud.on || !Cloud.ready || !Cloud.token() || document.visibilityState === 'hidden') return;
+  try {
+    if (Cloud.pending()) await Cloud.flush();
+    const r = await Cloud.pull();
+    if (r.changed || Cloud.pendingUI) cloudRefreshUI();
+    if (Cloud.state !== 'sync') Cloud.setState(Cloud.pending() ? 'off' : 'ok');
+  } catch (e) { if (e.offline) Cloud.setState('off'); }
+}
+Cloud.startPoll = function () { clearInterval(this.pollT); this.pollT = setInterval(cloudTick, 15000); };
+Cloud.stop = function () { clearInterval(this.pollT); this.pollT = null; this.ready = false; };
+/* إعادة رسم الصفحة بعد وصول تعديلات من حسابات أخرى — تُؤجَّل إن كان المستخدم يكتب أو داخل نافذة أو استعراض */
+function cloudRefreshUI() {
+  if (!$('#main') || !$('#topbar') || $('#shkLogin')) return;
+  const a = document.activeElement;
+  const busy = (Modal.stack && Modal.stack.length) || App.dirty || $('#tour') || $('#rqTour') || $('#tourMenu') || (a && (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable)) || document.fullscreenElement;
+  if (typeof refreshBell === 'function') try { refreshBell(); } catch (_) { /* */ }
+  if (busy) { Cloud.pendingUI = true; return; }
+  Cloud.pendingUI = false;
+  const y = window.scrollY;
+  renderShell(); route();
+  requestAnimationFrame(() => window.scrollTo(0, y));
+}
+Cloud.expired = function () {
+  if (this.expiredShown) return; this.expiredShown = true;
+  this.stop();
+  try { localStorage.removeItem('shk_auth'); sessionStorage.removeItem('shk_auth'); } catch (_) { /* */ }
+  setTimeout(() => {
+    ['#side', '#topbar', '#main'].forEach((s) => { const e = $(s); if (e) e.innerHTML = ''; });
+    if (typeof showLogin === 'function' && D.settings) showLogin();
+    toast('انتهت الجلسة — سجّل الدخول مرة أخرى', 'err');
+    this.expiredShown = false;
+  }, 0);
+};
+
+/* ===== الدخول والتهيئة ===== */
+Cloud.login = async function (id, pw) { return this.rpc('shk_login', { p_id: id, p_pw: pw }); };
+Cloud.logout = async function () { const t = this.token(); this.stop(); if (t) { try { await this.rpc('shk_logout', { p_token: t }); } catch (_) { /* */ } } };
+/* أسماء الإدارات وأعضاء الفريق من الخادم لقائمة الحسابات في شاشة الدخول (قبل تسجيل الدخول) */
+Cloud.loadPublic = async function () {
+  let p;
+  try { p = await this.rpc('shk_public', {}); }
+  catch (e) {
+    /* الخادم لم يُجهَّز بعد (ملف الإعداد لم يُشغَّل): نعمل محليًا في هذه الجلسة حتى لا يتوقف الدخول */
+    if (e.status === 404 && !sessionStorage.getItem('shk_cloud_skip')) { sessionStorage.setItem('shk_cloud_skip', '1'); location.reload(); }
+    throw e;
+  }
+  if (!p || p.empty || !D.settings) return false;
+  if (p.org) D.settings.org = { ...D.settings.org, ...p.org };
+  if (p.lists) { if (Array.isArray(p.lists.team)) D.settings.lists.team = p.lists.team; if (Array.isArray(p.lists.departments)) D.settings.lists.departments = p.lists.departments; }
+  if (p.wfDepts) D.settings.wfDepts = p.wfDepts;
+  return true;
+};
+Cloud.loadPwStatus = async function () { try { this.pwSet = new Set(await this.rpc('shk_pw_status', { p_token: this.token() })); } catch (_) { this.pwSet = this.pwSet || null; } return this.pwSet; };
+
+/* بعد تسجيل الدخول: سحب بيانات المنصة المشتركة (أو تهيئتها أول مرة) ثم بدء المزامنة. تعيد false إن انتهت الجلسة */
+async function cloudEnter() {
+  if (!Cloud.on) return true;
+  const saved = (() => { try { return JSON.parse(localStorage.getItem('shk_auth') || sessionStorage.getItem('shk_auth') || 'null'); } catch (_) { return null; } })() || {};
+  Cloud.grp = saved.grp || null;
+  let ready = true;
+  try {
+    const r = await Cloud.pull();
+    if (r.empty) {
+      if (['sys', 'admin'].includes(Cloud.grp)) ready = await cloudFirstUpload();
+      else { ready = false; toast('المنصة المشتركة لم تُهيّأ بعد — تحتاج دخول إدارة الشراكات أو مدير النظام أولًا', 'err'); }
+    }
+    Cloud.setState(ready ? 'ok' : 'local');
+  } catch (e) {
+    if (e.code === 'invalid_token') return false;
+    Cloud.setState('off');
+    toast('تعذّر الاتصال بالمنصة المشتركة — تعمل الآن على آخر نسخة محفوظة في الجهاز، وستُرفع تعديلاتك عند عودة الاتصال', 'err');
+  }
+  if (!D.settings) await seedAll();
+  Cloud.ready = ready;
+  if (ready) {
+    if (migrate()) { await Repo.saveSettings(); for (const c of ['partnerships', 'achievements']) await Store.putMany(c, D[c]); }
+    Cloud.startPoll(); Cloud.kick();
+  }
+  const a = typeof currentLogin === 'function' && currentLogin(); if (a) authApply(a);
+  return true;
+}
+/* قراءة بيانات المنصة القديمة المحفوظة في هذا المتصفح (قبل الربط) دون إنشاء قاعدة جديدة */
+async function cloudReadOldLocal() {
+  const db = await new Promise((res) => {
+    let r; try { r = indexedDB.open(DB_NAME); } catch (_) { return res(null); }
+    r.onupgradeneeded = () => { try { r.transaction.abort(); } catch (_) { /* */ } };
+    r.onsuccess = () => res(r.result); r.onerror = () => res(null); r.onblocked = () => res(null);
+  });
+  if (!db) return null;
+  const all = (c) => new Promise((res) => { try { const q = db.transaction(c, 'readonly').objectStore(c).getAll(); q.onsuccess = () => res(q.result || []); q.onerror = () => res([]); } catch (_) { res([]); } });
+  const out = { files: await all('files') };
+  for (const c of COLS) out[c] = await all(c);
+  out.settings = (out.settings || []).find((x) => x.id === 'main') || null;
+  db.close();
+  return out.settings ? out : null;
+}
+async function cloudFirstUpload() {
+  const old = await cloudReadOldLocal();
+  const src = old || { settings: D.settings, files: [] };
+  const n = (old ? old.partnerships : D.partnerships).length;
+  const ok = await confirmDlg(`المنصة المشتركة جديدة وفارغة. سيتم رفع ${old ? 'بيانات المنصة المحفوظة في هذا المتصفح' : 'البيانات الحالية'} (${n} شراكة) لتكون بداية المنصة، ويراها كل الحسابات من أي جهاز.`, { title: 'تهيئة المنصة المشتركة', ok: 'رفع البيانات وبدء العمل' });
+  if (!ok) { toast('لم تُرفع البيانات — تعمل الآن على هذا الجهاز فقط', 'err'); return false; }
+  if (old) {
+    const ses = D.settings && D.settings.session;
+    for (const c of COLS) { await cloudRaw('clear', c); D[c] = c === 'settings' ? { ...src.settings, session: ses } : (src[c] || []); if (c !== 'settings') await cloudRaw('putMany', c, D[c]); }
+    await cloudRaw('put', 'settings', D.settings);
+    for (const f of src.files) await cloudRaw('putFile', f);
+    D.audit.sort((a, b) => (a.at < b.at ? 1 : -1));
+  }
+  Cloud.ready = true;
+  Cloud.out = {};
+  for (const c of COLS) { if (c === 'settings') Cloud.out['settings|main'] = { col: 'settings', id: 'main', v: 1 }; else D[c].forEach((x) => { Cloud.out[c + '|' + x.id] = { col: c, id: x.id, v: 1 }; }); }
+  Cloud.fout = (await Store.allFiles()).map((f) => f.id).filter((id) => !/^(lib|asset|sbx):/.test(id));
+  Cloud.sRev = 0; Cloud.save();
+  toast('جارٍ رفع البيانات إلى المنصة المشتركة…');
+  await Cloud.flush();
+  if (Cloud.pending()) { toast('رُفع جزء من البيانات وسيكتمل الباقي تلقائيًا', 'err'); }
+  else toast('تمت تهيئة المنصة المشتركة — كل الحسابات تعمل الآن على نفس البيانات');
+  await Repo.log('cloud.init', 'system', 'cloud', 'تهيئة المنصة المشتركة', `${D.partnerships.length} شراكة، ${Cloud.fout.length} مرفق متبقٍ`);
+  return true;
+}
+/* دمج بيانات قديمة من هذا المتصفح في المنصة المشتركة (ما ليس موجودًا أو الأحدث) */
+async function cloudMergeOldLocal() {
+  const old = await cloudReadOldLocal();
+  if (!old) return toast('لا توجد بيانات قديمة محفوظة في هذا المتصفح', 'err');
+  let n = 0;
+  for (const c of COLS.filter((x) => x !== 'settings')) {
+    for (const r of old[c] || []) {
+      const cur = D[c].find((x) => x.id === r.id);
+      if (!cur || (r.updatedAt && (!cur.updatedAt || r.updatedAt > cur.updatedAt))) { await Repo.save(c, r, { touch: false }); n++; }
+    }
+  }
+  let f = 0;
+  for (const file of old.files || []) { if (!(await cloudRaw('getFile', file.id))) { await Store.putFile(file); f++; } }
+  await Repo.log('cloud.merge', 'system', 'cloud', 'دمج بيانات المتصفح في المنصة المشتركة', `${n} سجل، ${f} مرفق`);
+  toast(n || f ? `دُمج ${n} سجل و${f} مرفق — جارٍ رفعها` : 'لا جديد: كل بيانات هذا المتصفح موجودة على المنصة');
 }
 
 /* —— 03-model.js —— */
@@ -7913,20 +8299,27 @@ function authAccounts() {
 }
 const authGroupOf = (a) => (a.sys ? null : a.role);
 function authStore() { D.settings.auth = D.settings.auth || { pw: {} }; D.settings.auth.pw = D.settings.auth.pw || {}; return D.settings.auth; }
-function authIsDefault(a) { return !a.sys && !authStore().pw[a.id]; }
+function authIsDefault(a) { if (a.sys) return false; if (Cloud.on) return !(Cloud.pwSet && Cloud.pwSet.has(a.id)); return !authStore().pw[a.id]; }
 function authCheck(a, pw) {
   if (!a || !pw) return false;
+  if (Cloud.on) return false; // في المنصة المشتركة يتم التحقق على الخادم فقط
   if (a.sys) return pwHash(SYS_ID, pw) === SYS_HASH;
   const h = authStore().pw[a.id];
   return h ? h === pwHash(a.id, pw) : sha256('shk|default:' + authGroupOf(a) + '|' + pw) === AUTH_DEFAULT_HASH[authGroupOf(a)];
 }
-async function authSetPassword(id, pw, by) {
+async function authSetPassword(id, pw, by, old) {
   if (id === SYS_ID) throw new Error('كلمة مرور مدير النظام محمية ولا يمكن تغييرها.');
   const a = authAccounts().find((x) => x.id === id); if (!a) throw new Error('الحساب غير موجود');
   const self = currentLogin() && currentLogin().id === id;
   if (!self && !authCanManage()) throw new Error('ليست لديك صلاحية تغيير كلمات مرور الحسابات الأخرى.');
-  if (pw === null) delete authStore().pw[id]; else authStore().pw[id] = pwHash(id, pw);
-  await Repo.saveSettings();
+  if (Cloud.on) {
+    try { await Cloud.rpc('shk_set_password', { p_token: Cloud.token(), p_target: id, p_new: pw, p_old: old == null ? null : old }); }
+    catch (e) { throw new Error({ bad_old: 'كلمة المرور الحالية غير صحيحة.', forbidden: 'ليست لديك صلاحية تغيير كلمات مرور الحسابات الأخرى.', protected: 'كلمة مرور مدير النظام محمية ولا يمكن تغييرها.', short: 'كلمة المرور قصيرة.' }[e.code] || (e.offline ? 'تعذّر الاتصال بالخادم — حاول مرة أخرى.' : e.message)); }
+    if (Cloud.pwSet) { if (pw === null) Cloud.pwSet.delete(id); else Cloud.pwSet.add(id); }
+  } else {
+    if (pw === null) delete authStore().pw[id]; else authStore().pw[id] = pwHash(id, pw);
+    await Repo.saveSettings();
+  }
   await Repo.log('auth.password', 'account', id, a.t, pw === null ? 'إعادة إلى كلمة المرور الافتراضية' : self ? 'غيّر كلمة مروره' : 'عُيّنت من ' + (by || accountLabel()));
 }
 const authCanManage = () => can('manage.accounts');
@@ -7934,7 +8327,7 @@ const isSysAdmin = () => !!(D.settings && D.settings.session && D.settings.sessi
 
 /* الجلسة على هذا الجهاز فقط (لا تُشارك مع البيانات) */
 function authSaved() { try { return JSON.parse(localStorage.getItem(AUTH_KEY) || sessionStorage.getItem(AUTH_KEY) || 'null'); } catch (_) { return null; } }
-function currentLogin() { const s = authSaved(); if (!s) return null; return authAccounts().find((a) => a.id === s.id) || null; }
+function currentLogin() { const s = authSaved(); if (!s || (Cloud.on && !s.tk)) return null; return authAccounts().find((a) => a.id === s.id) || null; }
 function authApply(a) {
   D.settings.session = { role: a.role, dept: a.role === 'dept' ? a.dept : (a.dept || (D.settings.session || {}).dept), member: a.member || (D.settings.session || {}).member, accountId: a.id };
 }
@@ -7946,15 +8339,16 @@ function authBoot() {
   const a = currentLogin(); if (!a) return false;
   authApply(a); return true;
 }
-async function authLogin(a, remember) {
-  const rec = JSON.stringify({ id: a.id, at: nowISO() });
+async function authLogin(a, remember, cl) {
+  const rec = JSON.stringify({ id: a.id, at: nowISO(), ...(cl ? { tk: cl.token, grp: cl.grp } : {}) });
   try { localStorage.removeItem(AUTH_KEY); sessionStorage.removeItem(AUTH_KEY); (remember ? localStorage : sessionStorage).setItem(AUTH_KEY, rec); localStorage.setItem('shk_last_acc', a.id); } catch (_) { /* */ }
   authApply(a);
-  await Repo.log('auth.login', 'account', a.id, a.t, '');
+  if (!cl) await Repo.log('auth.login', 'account', a.id, a.t, '');
 }
 async function authLogout() {
   if (App.dirty && !(await confirmDlg('لديك تعديلات غير محفوظة. تسجيل الخروج سيغلق النموذج دون حفظ.', { ok: 'تسجيل الخروج', danger: true }))) return;
   try { await Repo.log('auth.logout', 'account', currentAccountId(), accountLabel(), ''); } catch (_) { /* */ }
+  if (Cloud.on) { try { await Cloud.flush(); } catch (_) { /* */ } await Cloud.logout(); }
   try { localStorage.removeItem(AUTH_KEY); sessionStorage.removeItem(AUTH_KEY); } catch (_) { /* */ }
   App.dirty = false;
   location.hash = '#/';
@@ -7963,10 +8357,10 @@ async function authLogout() {
 }
 
 /* شاشة الدخول */
+function lgOpts(A, sel) { return [...new Set(A.map((a) => a.g))].map((g) => `<optgroup label="${esc(g)}">${A.filter((a) => a.g === g).map((a) => `<option value="${esc(a.id)}" ${a.id === sel ? 'selected' : ''}>${esc(a.t)}</option>`).join('')}</optgroup>`).join(''); }
 function showLogin(done) {
   const old = $('#shkLogin'); if (old) old.remove();
-  const A = authAccounts();
-  const groups = [...new Set(A.map((a) => a.g))];
+  let A = authAccounts();
   let last = ''; try { last = localStorage.getItem('shk_last_acc') || ''; } catch (_) { /* */ }
   const img = (k) => ((typeof ASSET_IMG !== 'undefined' && ASSET_IMG[k]) || {}).src || '';
   const o = D.settings.org;
@@ -7975,7 +8369,7 @@ function showLogin(done) {
     <form class="lg-card" autocomplete="off" novalidate>
       ${img('murooj-logo-white') ? `<img class="lg-logo" src="${img('murooj-logo-white')}" alt="${esc(o.name)}">` : ''}
       <h1>${esc(o.platform)}</h1><p class="lg-sub">${esc(o.name)}</p>
-      <div class="field"><label for="lgAcc">الحساب</label><select class="in" id="lgAcc">${groups.map((g) => `<optgroup label="${esc(g)}">${A.filter((a) => a.g === g).map((a) => `<option value="${esc(a.id)}" ${a.id === last ? 'selected' : ''}>${esc(a.t)}</option>`).join('')}</optgroup>`).join('')}</select></div>
+      <div class="field"><label for="lgAcc">الحساب</label><select class="in" id="lgAcc">${lgOpts(A, last)}</select></div>
       <div class="field"><label for="lgPw">كلمة المرور</label><div class="lg-pw"><input class="in" id="lgPw" type="password" autocomplete="current-password" dir="ltr"><button type="button" class="icon-btn" data-lgeye aria-label="إظهار كلمة المرور">${icon('eye')}</button></div></div>
       <label class="lg-rem"><input type="checkbox" id="lgRem" checked> تذكّرني على هذا الجهاز</label>
       <div class="lg-err" id="lgErr" role="alert"></div>
@@ -7986,11 +8380,14 @@ function showLogin(done) {
   const boot = $('#boot'); if (boot) { boot.classList.add('out'); setTimeout(() => boot.remove(), 400); }
   const pw = $('#lgPw', el), err = $('#lgErr', el);
   setTimeout(() => pw.focus(), 60);
+  /* المنصة المشتركة: قائمة الإدارات وأعضاء الفريق كما هي على الخادم */
+  if (Cloud.on) Cloud.loadPublic().then((ok) => { if (!ok || !el.isConnected) return; const s = $('#lgAcc', el), v = s.value; A = authAccounts(); s.innerHTML = lgOpts(A, v || last); }).catch(() => {});
   $('[data-lgeye]', el).onclick = () => { pw.type = pw.type === 'password' ? 'text' : 'password'; };
   $('form', el).onsubmit = async (e) => {
     e.preventDefault();
     if (Date.now() < AUTH.lockUntil) { err.textContent = `محاولات كثيرة. حاول بعد ${Math.ceil((AUTH.lockUntil - Date.now()) / 1000)} ثانية.`; return; }
     const a = A.find((x) => x.id === $('#lgAcc', el).value);
+    if (Cloud.on) return cloudLoginSubmit(el, a, done);
     if (!authCheck(a, pw.value)) {
       AUTH.fails++; if (AUTH.fails >= 5) { AUTH.lockUntil = Date.now() + 30000; AUTH.fails = 0; }
       err.textContent = 'كلمة المرور غير صحيحة.'; pw.select(); el.querySelector('.lg-card').classList.remove('shake'); void el.offsetWidth; el.querySelector('.lg-card').classList.add('shake'); return;
@@ -8003,6 +8400,32 @@ function showLogin(done) {
     const n = wfTasks().filter((t) => !t.follow).length;
     toast(`مرحبًا — ${a.t}${n ? ` · ${plural(n, 'مهمة واحدة', 'مهمتان', 'مهام', 'مهمة')} بانتظارك` : ''}`);
   };
+}
+
+/* الدخول عبر الخادم: التحقق هناك، ثم سحب بيانات المنصة المشتركة */
+async function cloudLoginSubmit(el, a, done) {
+  const pw = $('#lgPw', el), err = $('#lgErr', el), btn = $('.lg-go', el);
+  const shake = () => { const c = el.querySelector('.lg-card'); c.classList.remove('shake'); void el.offsetWidth; c.classList.add('shake'); };
+  if (!a || !pw.value) { err.textContent = 'اكتب كلمة المرور.'; return; }
+  btn.disabled = true; err.textContent = ''; btn.classList.add('busy');
+  let r;
+  try { r = await Cloud.login(a.id, pw.value); }
+  catch (e) { btn.disabled = false; btn.classList.remove('busy'); err.textContent = e.offline ? 'تعذّر الاتصال بالخادم. تأكد من الإنترنت ثم حاول مرة أخرى.' : 'تعذّر تسجيل الدخول: ' + e.message; return; }
+  if (!r || r.error) {
+    btn.disabled = false; btn.classList.remove('busy');
+    err.textContent = r && r.error === 'locked' ? `محاولات خاطئة كثيرة — الحساب مقفل مؤقتًا. حاول بعد ${Math.ceil((r.wait || 60) / 60)} دقيقة.` : 'كلمة المرور غير صحيحة.';
+    pw.select(); shake(); return;
+  }
+  await authLogin(a, $('#lgRem', el).checked, r);
+  btn.innerHTML = `${icon('db')} جارٍ تحميل بيانات المنصة…`;
+  if (!(await cloudEnter())) return;
+  await Repo.log('auth.login', 'account', a.id, a.t, '');
+  applyTheme();
+  el.classList.add('out'); setTimeout(() => el.remove(), 500);
+  renderShell(); route(); splashSync();
+  if (done) done();
+  const n = wfTasks().filter((t) => !t.follow).length;
+  toast(`مرحبًا — ${a.t}${n ? ` · ${plural(n, 'مهمة واحدة', 'مهمتان', 'مهام', 'مهمة')} بانتظارك` : ''}`);
 }
 
 /* قائمة الحساب في الشريط العلوي */
@@ -8044,10 +8467,10 @@ function passwordDialog(a, self) {
   });
   m.el.querySelector('[data-ok]').onclick = async () => {
     const er = $('#pwErr', m.el), nv = $('#pwNew', m.el).value;
-    if (self && !authCheck(a, $('#pwOld', m.el).value)) { er.textContent = 'كلمة المرور الحالية غير صحيحة.'; return; }
+    if (self && !Cloud.on && !authCheck(a, $('#pwOld', m.el).value)) { er.textContent = 'كلمة المرور الحالية غير صحيحة.'; return; }
     if (nv.length < 4) { er.textContent = 'كلمة المرور قصيرة.'; return; }
     if (nv !== $('#pwNew2', m.el).value) { er.textContent = 'التأكيد لا يطابق كلمة المرور الجديدة.'; return; }
-    try { await authSetPassword(a.id, nv); m.close(); toast('حُفظت كلمة المرور'); if (App.route && App.route.name === 'settings') route(); } catch (e) { er.textContent = e.message; }
+    try { await authSetPassword(a.id, nv, undefined, self ? $('#pwOld', m.el).value : undefined); m.close(); toast('حُفظت كلمة المرور'); if (App.route && App.route.name === 'settings') route(); } catch (e) { er.textContent = e.message; }
   };
 }
 /* لوحة الحسابات في الإعدادات */
@@ -8059,13 +8482,14 @@ function authSettingsHTML() {
       ${me && !me.sys ? `<button class="btn" type="button" data-pwself>${icon('lock')} تغيير كلمة المرور</button>` : ''}</div></div>`;
   }
   const A = authAccounts();
+  if (Cloud.on && !Cloud.pwSet && !Cloud.pwLoading) { Cloud.pwLoading = true; Cloud.loadPwStatus().then(() => { Cloud.pwLoading = false; const p = $('#setPw'); if (p && Cloud.pwSet) p.outerHTML = authSettingsHTML(); }); }
   return `<div class="panel" id="setPw"><div class="panel-h"><h3>الحسابات وكلمات المرور</h3><span class="sub">إدارة الشراكات تملك كامل الصلاحيات وتعيّن كلمات مرور الحسابات؛ حساب مدير النظام محمي</span></div><div class="panel-b">
     <div class="tbl-wrap"><table class="tbl pw-tbl"><thead><tr><th>الحساب</th><th>المجموعة</th><th>الصلاحية</th><th>كلمة المرور</th><th></th></tr></thead><tbody>
     ${A.map((a) => `<tr data-pwrow="${esc(a.id)}"><td><b>${esc(a.t)}</b></td><td>${esc(a.g)}</td><td>${esc(a.sys ? 'كل الصلاحيات (الحساب الرئيسي)' : a.role === 'admin' ? 'كامل الصلاحيات' : ROLES[a.role].label)}</td>
-      <td>${a.sys ? `<span class="chip pw-lock">${icon('lock')} محمية — لا تظهر ولا تُغيَّر</span>` : authIsDefault(a) ? '<span class="chip warn">افتراضية</span>' : '<span class="chip ok">مخصّصة</span>'}</td>
+      <td>${a.sys ? `<span class="chip pw-lock">${icon('lock')} محمية — لا تظهر ولا تُغيَّر</span>` : Cloud.on && !Cloud.pwSet ? '<span class="chip">…</span>' : authIsDefault(a) ? '<span class="chip warn">افتراضية</span>' : '<span class="chip ok">مخصّصة</span>'}</td>
       <td class="pw-acts">${a.sys ? '' : `<button class="btn sm" type="button" data-pwset="${esc(a.id)}">تعيين</button>${authIsDefault(a) ? '' : `<button class="btn sm ghost" type="button" data-pwreset="${esc(a.id)}">الافتراضية</button>`}`}</td></tr>`).join('')}
     </tbody></table></div>
-    <p class="xs muted" style="margin-top:10px">كلمات المرور تُحفظ مشفّرة (بصمة) ولا يمكن عرضها؛ يمكن فقط تعيين كلمة جديدة. هذه حماية على مستوى المنصة في المتصفح، والحماية الكاملة تكون بربط المنصة بخادم.</p>
+    <p class="xs muted" style="margin-top:10px">${Cloud.on ? 'كلمات المرور محفوظة على خادم المنصة المشتركة مشفّرة (bcrypt) ولا يمكن عرضها لأحد؛ يمكن فقط تعيين كلمة جديدة، وتغييرها يُنهي جلسات الحساب المفتوحة على الأجهزة الأخرى. يُقفل الحساب 5 دقائق بعد 5 محاولات دخول خاطئة.' : 'كلمات المرور تُحفظ مشفّرة (بصمة) ولا يمكن عرضها؛ يمكن فقط تعيين كلمة جديدة. هذه حماية على مستوى المنصة في المتصفح، والحماية الكاملة تكون بربط المنصة بخادم.'}</p>
   </div></div>`;
 }
 function authSettingsClick(e) {
@@ -12062,13 +12486,17 @@ function setData(b) {
       <p class="small muted" style="margin-top:12px">السجلات الثلاثة المستوردة من ملف الحصر تبقى ظاهرة دائمًا. عند الإخفاء تُحسب المؤشرات من البيانات الفعلية فقط.</p>
       <div class="row" style="margin-top:12px"><button class="btn danger" id="dPurge">${icon('trash')} حذف البيانات التجريبية نهائيًا</button></div></div></div>
     <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>النسخ الاحتياطي والاستعادة</h3></div><div class="panel-b">
-      <p class="small muted" style="margin-bottom:14px">تُحفظ البيانات والمرفقات في متصفح هذا الجهاز (${Store.mode === 'idb' ? 'IndexedDB' : 'ذاكرة مؤقتة — لن تبقى بعد إغلاق الصفحة'}). صدّر نسخة احتياطية دورية، أو لنقل البيانات إلى جهاز آخر.</p>
+      <p class="small muted" style="margin-bottom:14px">${Cloud.on ? 'البيانات محفوظة على خادم المنصة المشتركة، مع نسخة على هذا الجهاز للعرض السريع. صدّر نسخة احتياطية دورية للاحتفاظ بها خارج المنصة.' : `تُحفظ البيانات والمرفقات في متصفح هذا الجهاز (${Store.mode === 'idb' ? 'IndexedDB' : 'ذاكرة مؤقتة — لن تبقى بعد إغلاق الصفحة'}). صدّر نسخة احتياطية دورية، أو لنقل البيانات إلى جهاز آخر.`}</p>
       <div class="row wrap"><button class="btn primary" id="dExp">${icon('download')} تصدير نسخة احتياطية (JSON مع المرفقات)</button>
         <label class="btn">${icon('upload')} استعادة من نسخة<input type="file" accept=".json,application/json" hidden id="dImp"></label></div>
       <div id="dStat" class="small muted" style="margin-top:12px"></div></div></div>
-    <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>إعادة التهيئة</h3></div><div class="panel-b">
+    ${Cloud.on ? `<div class="panel" style="margin-top:18px" id="dCloud"><div class="panel-h"><h3>المنصة المشتركة</h3><span class="sub">كل الحسابات تعمل على نفس البيانات من أي جهاز</span></div><div class="panel-b">
+      <p class="small" style="margin-bottom:12px"><span class="cloud-pill" data-st="${Cloud.state}"></span> ${esc(cloudStateText())}</p>
+      <div class="row wrap"><button class="btn" id="dSync">${icon('history')} مزامنة الآن</button>
+        ${['sys', 'admin'].includes(Cloud.grp) ? `<button class="btn ghost" id="dMergeOld">${icon('upload')} دمج بيانات قديمة من هذا المتصفح</button>` : ''}</div>
+      <p class="xs muted" style="margin-top:10px">«دمج البيانات القديمة» يرفع ما كان محفوظًا في هذا المتصفح قبل الربط بالمنصة المشتركة (ما ليس موجودًا على المنصة أو الأحدث منه فقط). إعادة التهيئة الكاملة غير متاحة من الواجهة حمايةً لبيانات كل الحسابات.</p></div></div>` : `<div class="panel" style="margin-top:18px"><div class="panel-h"><h3>إعادة التهيئة</h3></div><div class="panel-b">
       <p class="small muted" style="margin-bottom:12px">يحذف كل البيانات والمرفقات في هذا المتصفح ويعيد المنصة إلى حالتها الأولى (السجلات المستوردة من ملف الحصر + البيانات التجريبية).</p>
-      <button class="btn danger" id="dReset">إعادة تهيئة المنصة</button></div></div>`;
+      <button class="btn danger" id="dReset">إعادة تهيئة المنصة</button></div></div>`}`;
   Store.allFiles().then((fs) => { const tot = fs.reduce((a, f) => a + (f.size || 0), 0); $('#dStat', b) && ($('#dStat', b).textContent = `المرفقات المحفوظة: ${fs.length} ملف (${fmtSize(tot)}).`); });
   b.onchange = async (e) => {
     if (e.target.id === 'dDemo') { await setDemo(e.target.checked); setData(b); }
@@ -12087,7 +12515,10 @@ function setData(b) {
       const sids = new Set(D.achievements.map((p) => p.id)); D.settings.home.stories = (D.settings.home.stories || []).filter((x) => sids.has(x));
       await saveSet('حذف البيانات التجريبية'); toast('حُذفت البيانات التجريبية'); renderShell(); setData(b);
     }
+    if (e.target.closest('#dSync')) { await cloudTick(); toast(cloudStateText(), Cloud.state === 'ok' ? '' : 'err'); setData(b); return; }
+    if (e.target.closest('#dMergeOld')) { if (await confirmDlg('رفع البيانات القديمة المحفوظة في هذا المتصفح إلى المنصة المشتركة؟ يُضاف ما ليس موجودًا ويُحدَّث الأقدم فقط، ولا يُحذف شيء.', { title: 'دمج بيانات المتصفح', ok: 'دمج' })) { await cloudMergeOldLocal(); setData(b); } return; }
     if (e.target.closest('#dReset')) {
+      if (Cloud.on) return toast('إعادة التهيئة غير متاحة في المنصة المشتركة', 'err');
       if (!(await confirmDlg('سيُحذف كل شيء في هذا المتصفح، بما في ذلك ما أضفته من شراكات ومقترحات ومرفقات.', { title: 'إعادة تهيئة المنصة', ok: 'إعادة التهيئة', danger: true }))) return;
       for (const c of COLS) await Store.clear(c);
       if (Store.db) await Store.tx('files', 'readwrite', (s) => s.clear());
@@ -16919,7 +17350,7 @@ function renderShell() {
       <div class="nav-items"><div class="nav-in">${g.items.map(navItem).join('')}</div></div></div>`).join('')}</nav>
     <div class="side-foot"><div class="side-org">${esc(o.dept)}</div>
       ${dz === 'classic' ? `<button class="side-btn icon-only collapse-btn" data-collapse type="button" title="${App.ui.sideMin ? 'توسيع القائمة' : 'طي القائمة'}" aria-label="${App.ui.sideMin ? 'توسيع القائمة' : 'طي القائمة'}">${icon('sidebar')}</button>` : ''}</div>`;
-  const roleBox = bellHTML() + `<button class="rolebox" data-role title="حسابي"><span class="rl">${esc(accountLabel())}</span><span class="av">${esc(initials(r === 'team' ? Session.member() : r === 'dept' ? Session.dept().replace(/^(إدارة|الإدارة العامة لل|الإدارة العامة|الإدارة|مكتب|الشؤون)\s*/, '') : isSysAdmin() ? 'م ن' : ROLES[r].label))}</span></button>`;
+  const roleBox = cloudBadgeHTML() + bellHTML() + `<button class="rolebox" data-role title="حسابي"><span class="rl">${esc(accountLabel())}</span><span class="av">${esc(initials(r === 'team' ? Session.member() : r === 'dept' ? Session.dept().replace(/^(إدارة|الإدارة العامة لل|الإدارة العامة|الإدارة|مكتب|الشؤون)\s*/, '') : isSysAdmin() ? 'م ن' : ROLES[r].label))}</span></button>`;
   const tourBtn = `<button class="tour-top" data-tourmenu type="button" aria-haspopup="menu" title="الاستعراضات">${icon('play')}<span>استعراض المنصة</span></button>`;
   const themeBtn = `<button class="icon-btn theme-btn" data-themetoggle title="${D.settings.theme === 'dark' ? 'الوضع النهاري' : 'الوضع الليلي'}" aria-label="تبديل الوضع النهاري والليلي">${icon(D.settings.theme === 'dark' ? 'sun' : 'moon')}</button>`;
   const demo = showDemo() ? `<button class="demo-ribbon" data-demo title="البيانات التجريبية">${icon('info')}<span class="dr-t">يتضمن بيانات تجريبية</span></button>` : '';
@@ -17010,6 +17441,7 @@ function bindShell(app) {
     if (e.target.closest('.nav-a')) app.classList.remove('nav-open');
     if (e.target.closest('[data-role]') && e.target.closest('#topbar')) return accountMenu();
     if (e.target.closest('[data-bell]')) return toggleBell();
+    if (e.target.closest('[data-cloudbtn]')) { cloudTick().then(() => toast(cloudStateText(), Cloud.state === 'ok' ? '' : 'err')); return; }
     if (e.target.closest('[data-demo]')) return demoDialog();
     if (e.target.closest('[data-present-exit]')) return togglePresent();
     if (e.target.closest('.topbar [data-tourmenu]')) return toggleTourMenu();
@@ -17263,12 +17695,14 @@ function migrate() {
 async function boot() {
   const bootEl = $('#boot');
   try {
+    cloudInit();
     await Store.open();
     await Repo.load();
     if (!D.settings) await seedAll();
     if (migrate()) { await Repo.saveSettings(); for (const c of ['partnerships', 'achievements']) await Store.putMany(c, D[c]); }
     applyTheme();
     if (!authBoot()) { showLogin(); splashSync(); return; }
+    if (Cloud.on) { if (!(await cloudEnter())) return; applyTheme(); }
     renderShell();
     App.lastHash = location.hash;
     route();

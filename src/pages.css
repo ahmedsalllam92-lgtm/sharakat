@@ -2722,3 +2722,20 @@ html.galv-on body{overflow:hidden}
 /* الافتتاحية: لوحة «فجر الشراكة» — حجاب أخف ليظهر الأفق والنهران، مع حركة اقتراب بطيئة نحو نقطة الالتقاء */
 #shkSplash .sp-veil.art{background:radial-gradient(ellipse at 50% 42%,rgba(6,32,28,.42),rgba(6,32,28,.12) 55%,rgba(4,20,17,.55) 100%),linear-gradient(180deg,rgba(4,22,19,.35),rgba(4,22,19,0) 40%,rgba(4,22,19,.35))}
 #shkSplash.dk .sp-veil.art{background:radial-gradient(ellipse at 50% 42%,rgba(8,15,19,.55),rgba(8,15,19,.25) 55%,rgba(8,15,19,.7) 100%)}
+
+/* حالة المنصة المشتركة في الشريط العلوي */
+.cloud-st{position:relative}
+.cloud-st .ic{width:19px;height:19px}
+.cloud-st .cs-ok,.cloud-st .cs-off{display:none}
+.cloud-st[data-cloud="ok"] .cs-ok{display:block}
+.cloud-st[data-cloud="off"] .cs-off,.cloud-st[data-cloud="local"] .cs-off{display:block}
+.cloud-st .cs-dot{position:absolute;top:7px;inset-inline-end:6px;width:7px;height:7px;border-radius:50%;background:#2e9e6a;box-shadow:0 0 0 2px var(--surface,#fff);transition:background .3s}
+.cloud-st[data-cloud="sync"] .cs-dot{background:var(--gold,#c9a24a);animation:csPulse 1s ease-in-out infinite}
+.cloud-st[data-cloud="off"] .cs-dot,.cloud-st[data-cloud="local"] .cs-dot{background:#c0563f}
+.cloud-st[data-cloud="idle"] .cs-dot{background:#9aa5a1}
+@keyframes csPulse{50%{transform:scale(1.5);opacity:.5}}
+.cloud-pill{display:inline-block;width:9px;height:9px;border-radius:50%;background:#2e9e6a;vertical-align:middle;margin-inline-end:4px}
+.cloud-pill[data-st="off"],.cloud-pill[data-st="local"]{background:#c0563f}.cloud-pill[data-st="sync"]{background:var(--gold,#c9a24a)}
+.lg-go.busy{opacity:.8;cursor:progress}
+/* نافذة تأكيد تظهر أثناء شاشة الدخول (تهيئة المنصة المشتركة) تكون فوقها */
+body:has(#shkLogin) .modal-bg{z-index:99995}

@@ -46,20 +46,27 @@ function authAccounts() {
 }
 const authGroupOf = (a) => (a.sys ? null : a.role);
 function authStore() { D.settings.auth = D.settings.auth || { pw: {} }; D.settings.auth.pw = D.settings.auth.pw || {}; return D.settings.auth; }
-function authIsDefault(a) { return !a.sys && !authStore().pw[a.id]; }
+function authIsDefault(a) { if (a.sys) return false; if (Cloud.on) return !(Cloud.pwSet && Cloud.pwSet.has(a.id)); return !authStore().pw[a.id]; }
 function authCheck(a, pw) {
   if (!a || !pw) return false;
+  if (Cloud.on) return false; // في المنصة المشتركة يتم التحقق على الخادم فقط
   if (a.sys) return pwHash(SYS_ID, pw) === SYS_HASH;
   const h = authStore().pw[a.id];
   return h ? h === pwHash(a.id, pw) : sha256('shk|default:' + authGroupOf(a) + '|' + pw) === AUTH_DEFAULT_HASH[authGroupOf(a)];
 }
-async function authSetPassword(id, pw, by) {
+async function authSetPassword(id, pw, by, old) {
   if (id === SYS_ID) throw new Error('كلمة مرور مدير النظام محمية ولا يمكن تغييرها.');
   const a = authAccounts().find((x) => x.id === id); if (!a) throw new Error('الحساب غير موجود');
   const self = currentLogin() && currentLogin().id === id;
   if (!self && !authCanManage()) throw new Error('ليست لديك صلاحية تغيير كلمات مرور الحسابات الأخرى.');
-  if (pw === null) delete authStore().pw[id]; else authStore().pw[id] = pwHash(id, pw);
-  await Repo.saveSettings();
+  if (Cloud.on) {
+    try { await Cloud.rpc('shk_set_password', { p_token: Cloud.token(), p_target: id, p_new: pw, p_old: old == null ? null : old }); }
+    catch (e) { throw new Error({ bad_old: 'كلمة المرور الحالية غير صحيحة.', forbidden: 'ليست لديك صلاحية تغيير كلمات مرور الحسابات الأخرى.', protected: 'كلمة مرور مدير النظام محمية ولا يمكن تغييرها.', short: 'كلمة المرور قصيرة.' }[e.code] || (e.offline ? 'تعذّر الاتصال بالخادم — حاول مرة أخرى.' : e.message)); }
+    if (Cloud.pwSet) { if (pw === null) Cloud.pwSet.delete(id); else Cloud.pwSet.add(id); }
+  } else {
+    if (pw === null) delete authStore().pw[id]; else authStore().pw[id] = pwHash(id, pw);
+    await Repo.saveSettings();
+  }
   await Repo.log('auth.password', 'account', id, a.t, pw === null ? 'إعادة إلى كلمة المرور الافتراضية' : self ? 'غيّر كلمة مروره' : 'عُيّنت من ' + (by || accountLabel()));
 }
 const authCanManage = () => can('manage.accounts');
@@ -67,7 +74,7 @@ const isSysAdmin = () => !!(D.settings && D.settings.session && D.settings.sessi
 
 /* الجلسة على هذا الجهاز فقط (لا تُشارك مع البيانات) */
 function authSaved() { try { return JSON.parse(localStorage.getItem(AUTH_KEY) || sessionStorage.getItem(AUTH_KEY) || 'null'); } catch (_) { return null; } }
-function currentLogin() { const s = authSaved(); if (!s) return null; return authAccounts().find((a) => a.id === s.id) || null; }
+function currentLogin() { const s = authSaved(); if (!s || (Cloud.on && !s.tk)) return null; return authAccounts().find((a) => a.id === s.id) || null; }
 function authApply(a) {
   D.settings.session = { role: a.role, dept: a.role === 'dept' ? a.dept : (a.dept || (D.settings.session || {}).dept), member: a.member || (D.settings.session || {}).member, accountId: a.id };
 }
@@ -79,15 +86,16 @@ function authBoot() {
   const a = currentLogin(); if (!a) return false;
   authApply(a); return true;
 }
-async function authLogin(a, remember) {
-  const rec = JSON.stringify({ id: a.id, at: nowISO() });
+async function authLogin(a, remember, cl) {
+  const rec = JSON.stringify({ id: a.id, at: nowISO(), ...(cl ? { tk: cl.token, grp: cl.grp } : {}) });
   try { localStorage.removeItem(AUTH_KEY); sessionStorage.removeItem(AUTH_KEY); (remember ? localStorage : sessionStorage).setItem(AUTH_KEY, rec); localStorage.setItem('shk_last_acc', a.id); } catch (_) { /* */ }
   authApply(a);
-  await Repo.log('auth.login', 'account', a.id, a.t, '');
+  if (!cl) await Repo.log('auth.login', 'account', a.id, a.t, '');
 }
 async function authLogout() {
   if (App.dirty && !(await confirmDlg('لديك تعديلات غير محفوظة. تسجيل الخروج سيغلق النموذج دون حفظ.', { ok: 'تسجيل الخروج', danger: true }))) return;
   try { await Repo.log('auth.logout', 'account', currentAccountId(), accountLabel(), ''); } catch (_) { /* */ }
+  if (Cloud.on) { try { await Cloud.flush(); } catch (_) { /* */ } await Cloud.logout(); }
   try { localStorage.removeItem(AUTH_KEY); sessionStorage.removeItem(AUTH_KEY); } catch (_) { /* */ }
   App.dirty = false;
   location.hash = '#/';
@@ -96,10 +104,10 @@ async function authLogout() {
 }
 
 /* شاشة الدخول */
+function lgOpts(A, sel) { return [...new Set(A.map((a) => a.g))].map((g) => `<optgroup label="${esc(g)}">${A.filter((a) => a.g === g).map((a) => `<option value="${esc(a.id)}" ${a.id === sel ? 'selected' : ''}>${esc(a.t)}</option>`).join('')}</optgroup>`).join(''); }
 function showLogin(done) {
   const old = $('#shkLogin'); if (old) old.remove();
-  const A = authAccounts();
-  const groups = [...new Set(A.map((a) => a.g))];
+  let A = authAccounts();
   let last = ''; try { last = localStorage.getItem('shk_last_acc') || ''; } catch (_) { /* */ }
   const img = (k) => ((typeof ASSET_IMG !== 'undefined' && ASSET_IMG[k]) || {}).src || '';
   const o = D.settings.org;
@@ -108,7 +116,7 @@ function showLogin(done) {
     <form class="lg-card" autocomplete="off" novalidate>
       ${img('murooj-logo-white') ? `<img class="lg-logo" src="${img('murooj-logo-white')}" alt="${esc(o.name)}">` : ''}
       <h1>${esc(o.platform)}</h1><p class="lg-sub">${esc(o.name)}</p>
-      <div class="field"><label for="lgAcc">الحساب</label><select class="in" id="lgAcc">${groups.map((g) => `<optgroup label="${esc(g)}">${A.filter((a) => a.g === g).map((a) => `<option value="${esc(a.id)}" ${a.id === last ? 'selected' : ''}>${esc(a.t)}</option>`).join('')}</optgroup>`).join('')}</select></div>
+      <div class="field"><label for="lgAcc">الحساب</label><select class="in" id="lgAcc">${lgOpts(A, last)}</select></div>
       <div class="field"><label for="lgPw">كلمة المرور</label><div class="lg-pw"><input class="in" id="lgPw" type="password" autocomplete="current-password" dir="ltr"><button type="button" class="icon-btn" data-lgeye aria-label="إظهار كلمة المرور">${icon('eye')}</button></div></div>
       <label class="lg-rem"><input type="checkbox" id="lgRem" checked> تذكّرني على هذا الجهاز</label>
       <div class="lg-err" id="lgErr" role="alert"></div>
@@ -119,11 +127,14 @@ function showLogin(done) {
   const boot = $('#boot'); if (boot) { boot.classList.add('out'); setTimeout(() => boot.remove(), 400); }
   const pw = $('#lgPw', el), err = $('#lgErr', el);
   setTimeout(() => pw.focus(), 60);
+  /* المنصة المشتركة: قائمة الإدارات وأعضاء الفريق كما هي على الخادم */
+  if (Cloud.on) Cloud.loadPublic().then((ok) => { if (!ok || !el.isConnected) return; const s = $('#lgAcc', el), v = s.value; A = authAccounts(); s.innerHTML = lgOpts(A, v || last); }).catch(() => {});
   $('[data-lgeye]', el).onclick = () => { pw.type = pw.type === 'password' ? 'text' : 'password'; };
   $('form', el).onsubmit = async (e) => {
     e.preventDefault();
     if (Date.now() < AUTH.lockUntil) { err.textContent = `محاولات كثيرة. حاول بعد ${Math.ceil((AUTH.lockUntil - Date.now()) / 1000)} ثانية.`; return; }
     const a = A.find((x) => x.id === $('#lgAcc', el).value);
+    if (Cloud.on) return cloudLoginSubmit(el, a, done);
     if (!authCheck(a, pw.value)) {
       AUTH.fails++; if (AUTH.fails >= 5) { AUTH.lockUntil = Date.now() + 30000; AUTH.fails = 0; }
       err.textContent = 'كلمة المرور غير صحيحة.'; pw.select(); el.querySelector('.lg-card').classList.remove('shake'); void el.offsetWidth; el.querySelector('.lg-card').classList.add('shake'); return;
@@ -136,6 +147,32 @@ function showLogin(done) {
     const n = wfTasks().filter((t) => !t.follow).length;
     toast(`مرحبًا — ${a.t}${n ? ` · ${plural(n, 'مهمة واحدة', 'مهمتان', 'مهام', 'مهمة')} بانتظارك` : ''}`);
   };
+}
+
+/* الدخول عبر الخادم: التحقق هناك، ثم سحب بيانات المنصة المشتركة */
+async function cloudLoginSubmit(el, a, done) {
+  const pw = $('#lgPw', el), err = $('#lgErr', el), btn = $('.lg-go', el);
+  const shake = () => { const c = el.querySelector('.lg-card'); c.classList.remove('shake'); void el.offsetWidth; c.classList.add('shake'); };
+  if (!a || !pw.value) { err.textContent = 'اكتب كلمة المرور.'; return; }
+  btn.disabled = true; err.textContent = ''; btn.classList.add('busy');
+  let r;
+  try { r = await Cloud.login(a.id, pw.value); }
+  catch (e) { btn.disabled = false; btn.classList.remove('busy'); err.textContent = e.offline ? 'تعذّر الاتصال بالخادم. تأكد من الإنترنت ثم حاول مرة أخرى.' : 'تعذّر تسجيل الدخول: ' + e.message; return; }
+  if (!r || r.error) {
+    btn.disabled = false; btn.classList.remove('busy');
+    err.textContent = r && r.error === 'locked' ? `محاولات خاطئة كثيرة — الحساب مقفل مؤقتًا. حاول بعد ${Math.ceil((r.wait || 60) / 60)} دقيقة.` : 'كلمة المرور غير صحيحة.';
+    pw.select(); shake(); return;
+  }
+  await authLogin(a, $('#lgRem', el).checked, r);
+  btn.innerHTML = `${icon('db')} جارٍ تحميل بيانات المنصة…`;
+  if (!(await cloudEnter())) return;
+  await Repo.log('auth.login', 'account', a.id, a.t, '');
+  applyTheme();
+  el.classList.add('out'); setTimeout(() => el.remove(), 500);
+  renderShell(); route(); splashSync();
+  if (done) done();
+  const n = wfTasks().filter((t) => !t.follow).length;
+  toast(`مرحبًا — ${a.t}${n ? ` · ${plural(n, 'مهمة واحدة', 'مهمتان', 'مهام', 'مهمة')} بانتظارك` : ''}`);
 }
 
 /* قائمة الحساب في الشريط العلوي */
@@ -177,10 +214,10 @@ function passwordDialog(a, self) {
   });
   m.el.querySelector('[data-ok]').onclick = async () => {
     const er = $('#pwErr', m.el), nv = $('#pwNew', m.el).value;
-    if (self && !authCheck(a, $('#pwOld', m.el).value)) { er.textContent = 'كلمة المرور الحالية غير صحيحة.'; return; }
+    if (self && !Cloud.on && !authCheck(a, $('#pwOld', m.el).value)) { er.textContent = 'كلمة المرور الحالية غير صحيحة.'; return; }
     if (nv.length < 4) { er.textContent = 'كلمة المرور قصيرة.'; return; }
     if (nv !== $('#pwNew2', m.el).value) { er.textContent = 'التأكيد لا يطابق كلمة المرور الجديدة.'; return; }
-    try { await authSetPassword(a.id, nv); m.close(); toast('حُفظت كلمة المرور'); if (App.route && App.route.name === 'settings') route(); } catch (e) { er.textContent = e.message; }
+    try { await authSetPassword(a.id, nv, undefined, self ? $('#pwOld', m.el).value : undefined); m.close(); toast('حُفظت كلمة المرور'); if (App.route && App.route.name === 'settings') route(); } catch (e) { er.textContent = e.message; }
   };
 }
 /* لوحة الحسابات في الإعدادات */
@@ -192,13 +229,14 @@ function authSettingsHTML() {
       ${me && !me.sys ? `<button class="btn" type="button" data-pwself>${icon('lock')} تغيير كلمة المرور</button>` : ''}</div></div>`;
   }
   const A = authAccounts();
+  if (Cloud.on && !Cloud.pwSet && !Cloud.pwLoading) { Cloud.pwLoading = true; Cloud.loadPwStatus().then(() => { Cloud.pwLoading = false; const p = $('#setPw'); if (p && Cloud.pwSet) p.outerHTML = authSettingsHTML(); }); }
   return `<div class="panel" id="setPw"><div class="panel-h"><h3>الحسابات وكلمات المرور</h3><span class="sub">إدارة الشراكات تملك كامل الصلاحيات وتعيّن كلمات مرور الحسابات؛ حساب مدير النظام محمي</span></div><div class="panel-b">
     <div class="tbl-wrap"><table class="tbl pw-tbl"><thead><tr><th>الحساب</th><th>المجموعة</th><th>الصلاحية</th><th>كلمة المرور</th><th></th></tr></thead><tbody>
     ${A.map((a) => `<tr data-pwrow="${esc(a.id)}"><td><b>${esc(a.t)}</b></td><td>${esc(a.g)}</td><td>${esc(a.sys ? 'كل الصلاحيات (الحساب الرئيسي)' : a.role === 'admin' ? 'كامل الصلاحيات' : ROLES[a.role].label)}</td>
-      <td>${a.sys ? `<span class="chip pw-lock">${icon('lock')} محمية — لا تظهر ولا تُغيَّر</span>` : authIsDefault(a) ? '<span class="chip warn">افتراضية</span>' : '<span class="chip ok">مخصّصة</span>'}</td>
+      <td>${a.sys ? `<span class="chip pw-lock">${icon('lock')} محمية — لا تظهر ولا تُغيَّر</span>` : Cloud.on && !Cloud.pwSet ? '<span class="chip">…</span>' : authIsDefault(a) ? '<span class="chip warn">افتراضية</span>' : '<span class="chip ok">مخصّصة</span>'}</td>
       <td class="pw-acts">${a.sys ? '' : `<button class="btn sm" type="button" data-pwset="${esc(a.id)}">تعيين</button>${authIsDefault(a) ? '' : `<button class="btn sm ghost" type="button" data-pwreset="${esc(a.id)}">الافتراضية</button>`}`}</td></tr>`).join('')}
     </tbody></table></div>
-    <p class="xs muted" style="margin-top:10px">كلمات المرور تُحفظ مشفّرة (بصمة) ولا يمكن عرضها؛ يمكن فقط تعيين كلمة جديدة. هذه حماية على مستوى المنصة في المتصفح، والحماية الكاملة تكون بربط المنصة بخادم.</p>
+    <p class="xs muted" style="margin-top:10px">${Cloud.on ? 'كلمات المرور محفوظة على خادم المنصة المشتركة مشفّرة (bcrypt) ولا يمكن عرضها لأحد؛ يمكن فقط تعيين كلمة جديدة، وتغييرها يُنهي جلسات الحساب المفتوحة على الأجهزة الأخرى. يُقفل الحساب 5 دقائق بعد 5 محاولات دخول خاطئة.' : 'كلمات المرور تُحفظ مشفّرة (بصمة) ولا يمكن عرضها؛ يمكن فقط تعيين كلمة جديدة. هذه حماية على مستوى المنصة في المتصفح، والحماية الكاملة تكون بربط المنصة بخادم.'}</p>
   </div></div>`;
 }
 function authSettingsClick(e) {
