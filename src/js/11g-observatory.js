@@ -138,7 +138,8 @@ function obRings(all, list) {
   const GAP = 1.4, slots = items.length + GAP * order.length;
   const step = (Math.PI * 2) / slots;
   const pt = (r, a) => [(C + r * Math.cos(a)).toFixed(1), (C + r * Math.sin(a)).toFixed(1)];
-  const sw = Math.max(5, Math.min(15, step * ((R0 + R1) / 2) * 0.55));
+  const sw = Math.max(1.6, Math.min(15, step * ((R0 + R1) / 2) * 0.55));
+  const stg = Math.min(45, 1200 / Math.max(1, items.length)); // مدة الظهور الكلية ثابتة تقريبًا مهما زاد العدد
   let a = -Math.PI / 2 + step * GAP / 2;
   let rays = '', labels = '', arcs = '', idx = 0;
   const rT = rr(t);
@@ -150,7 +151,7 @@ function obRings(all, list) {
       const dl = daysLeft(p);
       const tip = `<b>${esc(partnerName(p))}</b><br>${esc(statusLabel(st))} · ${fmtDate(p.startDate, 'short')} – ${fmtDate(p.endDate, 'short')}${dl !== null && dl >= 0 && ['active', 'soon'].includes(st) ? `<br>متبقٍ ${plural(dl, 'يوم واحد', 'يومان', 'أيام', 'يومًا')}` : ''}<br>${esc(s)}${p.ptype ? ' · ' + esc(p.ptype) : ''}`;
       const on = inSet.has(p.id);
-      rays += `<g class="ob-ray ${on ? '' : 'dim'} st-${st}" data-href="#/partnerships/${p.id}" tabindex="${on ? 0 : -1}" role="link" aria-label="${esc(partnerName(p))}: ${esc(statusLabel(st))}" ${tipAttr(tip)} style="--i:${idx}" data-s="${ds.getTime()}" data-e="${de.getTime()}" data-a="${a.toFixed(4)}" data-in="${on ? 1 : 0}">
+      rays += `<g class="ob-ray ${on ? '' : 'dim'} st-${st}" data-href="#/partnerships/${p.id}" tabindex="${on ? 0 : -1}" role="link" aria-label="${esc(partnerName(p))}: ${esc(statusLabel(st))}" ${tipAttr(tip)} style="--i:${idx};--d:${Math.round(idx * stg)}ms" data-s="${ds.getTime()}" data-e="${de.getTime()}" data-a="${a.toFixed(4)}" data-in="${on ? 1 : 0}">
         <line x1="${x1}" y1="${y1_}" x2="${x2}" y2="${y2}" class="hit" stroke-width="${(sw + 10).toFixed(1)}"/>
         <line x1="${x1}" y1="${y1_}" x2="${x2}" y2="${y2}" class="v" pathLength="1" stroke="${ST_VAR(st)}" stroke-width="${sw.toFixed(1)}"/>
         <circle cx="${pt(rT, a)[0]}" cy="${pt(rT, a)[1]}" r="${(sw * 0.32).toFixed(1)}" class="now ${['active', 'soon'].includes(st) ? '' : 'off'}"/>
@@ -169,10 +170,11 @@ function obRings(all, list) {
     a += step * GAP;
   });
   let years = '';
+  const ySp = (R1 - R0) / (y1 - y0), yEvery = Math.max(1, Math.ceil(22 / ySp)); // عند تقارب الحلقات تُكتب سنة وتُترك أخرى
   for (let y = y0; y <= y1; y++) {
     const r = rr(new Date(y, 0, 1));
     years += `<circle cx="${C}" cy="${C}" r="${r.toFixed(1)}" class="ob-yr ${y === y0 || y === y1 ? 'edge' : ''}"/>`;
-    if (y < y1 && Math.abs(rr(new Date(y, 6, 1)) - rT) > 16) { const rm = rr(new Date(y, 6, 1)); years += `<text x="${C}" y="${(C - rm + 4).toFixed(1)}" class="ob-yl" text-anchor="middle">${y}</text>`; }
+    if (y < y1 && (y - y0) % yEvery === 0 && Math.abs(rr(new Date(y, 6, 1)) - rT) > 16) { const rm = rr(new Date(y, 6, 1)); years += `<text x="${C}" y="${(C - rm + 4).toFixed(1)}" class="ob-yl" text-anchor="middle">${y}</text>`; }
   }
   const actN = list.filter((p) => !p.isDraft && ['active', 'soon'].includes(pStatus(p))).length;
   const legend = ['active', 'soon', 'upcoming', 'sign', 'prep', 'ended'].filter((k) => items.some((p) => pStatus(p) === k)).map((k) => `<button type="button" class="${(App.dashF.status || []).includes(k) ? 'on' : ''}" data-cf="status|${k}"><i style="background:${ST_VAR(k)}"></i>${esc(statusLabel(k))}<b>${items.filter((p) => pStatus(p) === k).length}</b></button>`).join('');

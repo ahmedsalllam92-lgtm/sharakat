@@ -261,6 +261,7 @@ function fMissing(f, v) {
 
 /* — نافذة تعبئة النموذج — */
 function openForm(kind, rec, key, { onDone, ro = false, evalIdx = null } = {}) {
+  if (ro) return formPreview(kind, rec, key, evalIdx);
   const F = FORMS[key];
   const R = fRecInfo(kind, rec);
   const store = F.periodic ? (evalIdx !== null ? (rec.evals || [])[evalIdx] : null) : formOf(rec, key);
@@ -426,6 +427,20 @@ function formDocHTML(kind, rec, key, evalIdx = null, forWord = false) {
     <div class="fd-sigs"><div><span>أعدّه</span><b>${esc((st && st.by) || '')}</b><small>${esc((st && st.byDept) || '')}</small></div><div><span>الحالة</span><b>${st && st.status === 'done' ? 'مكتمل ومعتمد في المنظومة' : 'مسودة'}</b><small>${st && st.at ? fmtDT(st.at) : ''}</small></div></div>
     <footer class="fd-foot">${esc(D.settings.org.name)} · ${esc(D.settings.org.platform)} · ${esc(F.title)}</footer></article>`;
 }
+/* عرض النموذج المكتمل بنفس تصميم المستند المطبوع، مع الطباعة وWord */
+function formPreview(kind, rec, key, evalIdx = null, onEdit = null) {
+  const F = FORMS[key];
+  const m = Modal.open({ title: F.title, size: 'lg', cls: 'fdoc-modal',
+    body: `<div class="fdoc-prev">${formDocHTML(kind, rec, key, evalIdx)}</div>`,
+    foot: `<button class="btn primary" data-ffprint type="button">${icon('print')} طباعة أو PDF</button><button class="btn" data-ffword type="button">${icon('download')} Word</button>${onEdit ? `<button class="btn" data-ffedit type="button">${icon('edit')} تعديل</button>` : ''}<button class="btn ghost" data-mclose type="button">إغلاق</button>` });
+  hydrateFiles(m.el);
+  m.el.addEventListener('click', (e) => {
+    if (e.target.closest('[data-ffprint]')) return printForm(kind, rec, key, evalIdx);
+    if (e.target.closest('[data-ffword]')) return wordForm(kind, rec, key, evalIdx);
+    if (e.target.closest('[data-ffedit]') && onEdit) { m.close(); return onEdit(); }
+  });
+  return m;
+}
 function printForm(kind, rec, key, evalIdx = null) {
   let host = $('#formPrint'); if (host) host.remove();
   host = document.createElement('div'); host.id = 'formPrint'; host.innerHTML = formDocHTML(kind, rec, key, evalIdx);
@@ -515,6 +530,6 @@ function bindProfile(el, p) {
   el.addEventListener('click', (e) => {
     if (e.target.closest('[data-pfedit]')) { e.stopPropagation(); return profileDialog(p, () => route()); }
     if (e.target.closest('[data-evnew]')) { e.stopPropagation(); return openForm('partnership', p, 'partnershipEval', { onDone: () => route() }); }
-    const v = e.target.closest('[data-evview]'); if (v) { e.stopPropagation(); return openForm('partnership', p, 'partnershipEval', { ro: !can('edit.partnership'), evalIdx: +v.dataset.evview, onDone: () => route() }); }
+    const v = e.target.closest('[data-evview]'); if (v) { e.stopPropagation(); const ix = +v.dataset.evview; return formPreview('partnership', p, 'partnershipEval', ix, can('edit.partnership') ? () => openForm('partnership', p, 'partnershipEval', { evalIdx: ix, onDone: () => route() }) : null); }
   }, true);
 }

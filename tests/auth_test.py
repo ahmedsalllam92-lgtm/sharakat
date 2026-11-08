@@ -66,7 +66,7 @@ async def main():
         await pg.click('#topbar [data-role]'); await pg.wait_for_timeout(300)
         await pg.click('.acc-menu [data-am="back"]'); await pg.wait_for_timeout(500)
         ok('back to system admin', await E("isSysAdmin()"))
-        await pg.reload(); await pg.wait_for_timeout(900)
+        await pg.reload(); await pg.wait_for_selector('#main .page, #shkLogin', timeout=15000); await pg.wait_for_timeout(400)
         ok('remembered session survives reload', await E("!document.getElementById('shkLogin') && isSysAdmin()"))
         await logout()
         for i in range(5): await login('admin','nope')

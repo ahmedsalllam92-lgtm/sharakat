@@ -4391,8 +4391,8 @@ html.dossier-open,html.dossier-open body{overflow:hidden}
 .ob-ray .now{fill:#fff}
 .ob-ray .pulse{fill:none;stroke:var(--ob-gold);stroke-width:2;transform-box:fill-box;transform-origin:center;animation:obPulse 2.2s ease-out infinite}
 @keyframes obPulse{0%{transform:scale(.6);opacity:1}100%{transform:scale(2.2);opacity:0}}
-.ob-anim .ob-ray .v{stroke-dasharray:1;stroke-dashoffset:1;animation:obGrow .9s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i) * 45ms + .15s)}
-.ob-anim .ob-ray .now{opacity:0;animation:obFade .4s forwards;animation-delay:calc(var(--i) * 45ms + .8s)}
+.ob-anim .ob-ray .v{stroke-dasharray:1;stroke-dashoffset:1;animation:obGrow .9s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--d, 0ms) + .15s)}
+.ob-anim .ob-ray .now{opacity:0;animation:obFade .4s forwards;animation-delay:calc(var(--d, 0ms) + .8s)}
 @keyframes obGrow{to{stroke-dashoffset:0}}
 @keyframes obFade{to{opacity:1}}
 .ob-core{fill:var(--ob-deep);stroke:var(--ob-gold);stroke-width:1.2}
@@ -5379,6 +5379,13 @@ html.rq-in #dsw,html.rq-in .tour-top{display:none!important}
 .app.present .dv-bar{display:none}
 .ob-head{grid-template-columns:1fr!important}
 @media (max-width:720px){.dv-bar .dv-acts{width:100%}.dv-bar .dv-acts .btn{flex:1;justify-content:center}.dv-bar .dv-acts .btn span{display:none}}
+
+/* معاينة النموذج المصمم داخل المنصة */
+.fdoc-modal{max-width:920px!important;width:calc(100vw - 32px)!important}
+.fdoc-modal .modal-b{background:#E9E5DC;padding:18px}
+.fdoc-prev{background:#fff;border-radius:6px;box-shadow:0 10px 30px -14px rgba(0,0,0,.35);padding:26px 30px;max-width:820px;margin:0 auto;color:#14201B}
+[data-theme="dark"] .fdoc-modal .modal-b{background:#0E1714}
+@media (max-width:720px){.fdoc-prev{padding:14px}}
 </style>
 </head>
 <body>
@@ -8815,7 +8822,8 @@ function obRings(all, list) {
   const GAP = 1.4, slots = items.length + GAP * order.length;
   const step = (Math.PI * 2) / slots;
   const pt = (r, a) => [(C + r * Math.cos(a)).toFixed(1), (C + r * Math.sin(a)).toFixed(1)];
-  const sw = Math.max(5, Math.min(15, step * ((R0 + R1) / 2) * 0.55));
+  const sw = Math.max(1.6, Math.min(15, step * ((R0 + R1) / 2) * 0.55));
+  const stg = Math.min(45, 1200 / Math.max(1, items.length)); // مدة الظهور الكلية ثابتة تقريبًا مهما زاد العدد
   let a = -Math.PI / 2 + step * GAP / 2;
   let rays = '', labels = '', arcs = '', idx = 0;
   const rT = rr(t);
@@ -8827,7 +8835,7 @@ function obRings(all, list) {
       const dl = daysLeft(p);
       const tip = `<b>${esc(partnerName(p))}</b><br>${esc(statusLabel(st))} · ${fmtDate(p.startDate, 'short')} – ${fmtDate(p.endDate, 'short')}${dl !== null && dl >= 0 && ['active', 'soon'].includes(st) ? `<br>متبقٍ ${plural(dl, 'يوم واحد', 'يومان', 'أيام', 'يومًا')}` : ''}<br>${esc(s)}${p.ptype ? ' · ' + esc(p.ptype) : ''}`;
       const on = inSet.has(p.id);
-      rays += `<g class="ob-ray ${on ? '' : 'dim'} st-${st}" data-href="#/partnerships/${p.id}" tabindex="${on ? 0 : -1}" role="link" aria-label="${esc(partnerName(p))}: ${esc(statusLabel(st))}" ${tipAttr(tip)} style="--i:${idx}" data-s="${ds.getTime()}" data-e="${de.getTime()}" data-a="${a.toFixed(4)}" data-in="${on ? 1 : 0}">
+      rays += `<g class="ob-ray ${on ? '' : 'dim'} st-${st}" data-href="#/partnerships/${p.id}" tabindex="${on ? 0 : -1}" role="link" aria-label="${esc(partnerName(p))}: ${esc(statusLabel(st))}" ${tipAttr(tip)} style="--i:${idx};--d:${Math.round(idx * stg)}ms" data-s="${ds.getTime()}" data-e="${de.getTime()}" data-a="${a.toFixed(4)}" data-in="${on ? 1 : 0}">
         <line x1="${x1}" y1="${y1_}" x2="${x2}" y2="${y2}" class="hit" stroke-width="${(sw + 10).toFixed(1)}"/>
         <line x1="${x1}" y1="${y1_}" x2="${x2}" y2="${y2}" class="v" pathLength="1" stroke="${ST_VAR(st)}" stroke-width="${sw.toFixed(1)}"/>
         <circle cx="${pt(rT, a)[0]}" cy="${pt(rT, a)[1]}" r="${(sw * 0.32).toFixed(1)}" class="now ${['active', 'soon'].includes(st) ? '' : 'off'}"/>
@@ -8846,10 +8854,11 @@ function obRings(all, list) {
     a += step * GAP;
   });
   let years = '';
+  const ySp = (R1 - R0) / (y1 - y0), yEvery = Math.max(1, Math.ceil(22 / ySp)); // عند تقارب الحلقات تُكتب سنة وتُترك أخرى
   for (let y = y0; y <= y1; y++) {
     const r = rr(new Date(y, 0, 1));
     years += `<circle cx="${C}" cy="${C}" r="${r.toFixed(1)}" class="ob-yr ${y === y0 || y === y1 ? 'edge' : ''}"/>`;
-    if (y < y1 && Math.abs(rr(new Date(y, 6, 1)) - rT) > 16) { const rm = rr(new Date(y, 6, 1)); years += `<text x="${C}" y="${(C - rm + 4).toFixed(1)}" class="ob-yl" text-anchor="middle">${y}</text>`; }
+    if (y < y1 && (y - y0) % yEvery === 0 && Math.abs(rr(new Date(y, 6, 1)) - rT) > 16) { const rm = rr(new Date(y, 6, 1)); years += `<text x="${C}" y="${(C - rm + 4).toFixed(1)}" class="ob-yl" text-anchor="middle">${y}</text>`; }
   }
   const actN = list.filter((p) => !p.isDraft && ['active', 'soon'].includes(pStatus(p))).length;
   const legend = ['active', 'soon', 'upcoming', 'sign', 'prep', 'ended'].filter((k) => items.some((p) => pStatus(p) === k)).map((k) => `<button type="button" class="${(App.dashF.status || []).includes(k) ? 'on' : ''}" data-cf="status|${k}"><i style="background:${ST_VAR(k)}"></i>${esc(statusLabel(k))}<b>${items.filter((p) => pStatus(p) === k).length}</b></button>`).join('');
@@ -14558,6 +14567,7 @@ function fMissing(f, v) {
 
 /* — نافذة تعبئة النموذج — */
 function openForm(kind, rec, key, { onDone, ro = false, evalIdx = null } = {}) {
+  if (ro) return formPreview(kind, rec, key, evalIdx);
   const F = FORMS[key];
   const R = fRecInfo(kind, rec);
   const store = F.periodic ? (evalIdx !== null ? (rec.evals || [])[evalIdx] : null) : formOf(rec, key);
@@ -14723,6 +14733,20 @@ function formDocHTML(kind, rec, key, evalIdx = null, forWord = false) {
     <div class="fd-sigs"><div><span>أعدّه</span><b>${esc((st && st.by) || '')}</b><small>${esc((st && st.byDept) || '')}</small></div><div><span>الحالة</span><b>${st && st.status === 'done' ? 'مكتمل ومعتمد في المنظومة' : 'مسودة'}</b><small>${st && st.at ? fmtDT(st.at) : ''}</small></div></div>
     <footer class="fd-foot">${esc(D.settings.org.name)} · ${esc(D.settings.org.platform)} · ${esc(F.title)}</footer></article>`;
 }
+/* عرض النموذج المكتمل بنفس تصميم المستند المطبوع، مع الطباعة وWord */
+function formPreview(kind, rec, key, evalIdx = null, onEdit = null) {
+  const F = FORMS[key];
+  const m = Modal.open({ title: F.title, size: 'lg', cls: 'fdoc-modal',
+    body: `<div class="fdoc-prev">${formDocHTML(kind, rec, key, evalIdx)}</div>`,
+    foot: `<button class="btn primary" data-ffprint type="button">${icon('print')} طباعة أو PDF</button><button class="btn" data-ffword type="button">${icon('download')} Word</button>${onEdit ? `<button class="btn" data-ffedit type="button">${icon('edit')} تعديل</button>` : ''}<button class="btn ghost" data-mclose type="button">إغلاق</button>` });
+  hydrateFiles(m.el);
+  m.el.addEventListener('click', (e) => {
+    if (e.target.closest('[data-ffprint]')) return printForm(kind, rec, key, evalIdx);
+    if (e.target.closest('[data-ffword]')) return wordForm(kind, rec, key, evalIdx);
+    if (e.target.closest('[data-ffedit]') && onEdit) { m.close(); return onEdit(); }
+  });
+  return m;
+}
 function printForm(kind, rec, key, evalIdx = null) {
   let host = $('#formPrint'); if (host) host.remove();
   host = document.createElement('div'); host.id = 'formPrint'; host.innerHTML = formDocHTML(kind, rec, key, evalIdx);
@@ -14812,7 +14836,7 @@ function bindProfile(el, p) {
   el.addEventListener('click', (e) => {
     if (e.target.closest('[data-pfedit]')) { e.stopPropagation(); return profileDialog(p, () => route()); }
     if (e.target.closest('[data-evnew]')) { e.stopPropagation(); return openForm('partnership', p, 'partnershipEval', { onDone: () => route() }); }
-    const v = e.target.closest('[data-evview]'); if (v) { e.stopPropagation(); return openForm('partnership', p, 'partnershipEval', { ro: !can('edit.partnership'), evalIdx: +v.dataset.evview, onDone: () => route() }); }
+    const v = e.target.closest('[data-evview]'); if (v) { e.stopPropagation(); const ix = +v.dataset.evview; return formPreview('partnership', p, 'partnershipEval', ix, can('edit.partnership') ? () => openForm('partnership', p, 'partnershipEval', { evalIdx: ix, onDone: () => route() }) : null); }
   }, true);
 }
 

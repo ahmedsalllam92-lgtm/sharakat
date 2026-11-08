@@ -56,15 +56,15 @@ async def main():
         rec = await E(f"(()=>{{const p=D.partnerships.find(x=>x.id==='{ptid}');return [p.ptype,p.origin,p.originBy,(partnerById(p.partnerId)||{{}}).domain,Object.keys(p.forms||{{}}).sort().join(',')]}})()")
         ok('classification, origin, domain and forms carry over to the partnership', rec == ['شريك استراتيجي','علاقة شخصية','عضو مجلس الأمناء','سياحة','initialEval,methodology'], rec)
         ok('partnership page shows the completed forms in the track', await E("document.querySelectorAll('.wf-sec .wf-doc.form.done').length") == 2)
-        await pg.click('.wf-sec .wf-doc.form[data-wfform="methodology"]'); await pg.wait_for_selector('.ff-modal')
-        ok('form opens read-only with print and Word', await E("document.querySelector('.ff-modal #ff_m1').disabled && !!document.querySelector('[data-ffprint]') && !!document.querySelector('[data-ffword]')"))
+        await pg.click('.wf-sec .wf-doc.form[data-wfform="methodology"]'); await pg.wait_for_selector('.fdoc-modal')
+        ok('completed form opens as the designed document with print and Word', await E("!!document.querySelector('.fdoc-modal .fxdoc .fx-steps') && !!document.querySelector('[data-ffprint]') && !!document.querySelector('[data-ffword]')"))
         async with pg.expect_download() as dl: await pg.click('[data-ffword]')
         d = await dl.value
         ok('Word download (.doc)', d.suggested_filename.endswith('.doc'), d.suggested_filename)
         await pg.keyboard.press('Escape'); await pg.wait_for_timeout(300)
         # الطباعة
         await E(f"printForm('partnership', D.partnerships.find(x=>x.id==='{ptid}'), 'methodology')"); await pg.wait_for_timeout(200)
-        ok('print renders the formatted document only', await E("document.documentElement.classList.contains('printing-form') && document.querySelectorAll('#formPrint .fd-tbl tbody tr').length===8 && !!document.querySelector('#formPrint .fd-head img')"))
+        ok('print renders the formatted document only', await E("document.documentElement.classList.contains('printing-form') && document.querySelectorAll('#formPrint .fx-step').length===8 && !!document.querySelector('#formPrint .ev-top img')"))
         await E("window.dispatchEvent(new Event('afterprint'))")
         # — المواءمة الاستراتيجية —
         await E(f"(()=>{{const p=D.partnerships.find(x=>x.id==='{ptid}');p.wf.steps.meeting={{status:'done',at:nowISO(),by:'اختبار'}};p.wf.steps.draft={{status:'done',at:nowISO(),by:'اختبار'}};p.wf.steps.depts={{status:'done',at:nowISO(),by:'اختبار'}};p.cooperationAreas='1. الاستشارات البيئية.\\n2. بناء القدرات.';return Repo.save('partnerships',p)}})()")
