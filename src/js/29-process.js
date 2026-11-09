@@ -122,7 +122,7 @@ function renderProcess(el) {
     </section>
 
     <section class="panel pr-raci pr-heat" id="prRaci">
-      <div class="panel-h"><h3>مصفوفة المسؤوليات</h3><span class="sub">مستخرجة من الصلاحيات المطبقة في المسار. تُعدّل جهات الاعتماد من <a href="#/settings/roles">الحسابات والصلاحيات</a>.</span></div>
+      <div class="panel-h"><h3>مصفوفة المسؤوليات</h3></div>
       <div class="panel-b"><div class="pr-raci-lg">${Object.entries(RACI).map(([k, v]) => `<span><i class="rc ${v.c}">${k}</i>${v.t}</span>`).join('')}</div>
         <div class="tbl-wrap"><table class="tbl pr-mx"><thead><tr><th>الخطوة</th>${PR_ROLES.map((r) => `<th>${esc(r.t)}<small>${esc(['strategy', 'legal', 'excellency', 'bizdev'].includes(r.k) ? wfDept(r.k) : '')}</small></th>`).join('')}<th>المستند المطلوب</th></tr></thead><tbody>
         ${PR_PHASES.map((ph, pi) => `<tr class="pr-mx-ph"><td colspan="${PR_ROLES.length + 2}"><em>${pad(pi + 1)}</em>${ph.t}</td></tr>` + WF_STEPS.filter((s) => s.n - 1 >= ph.from && s.n - 1 <= ph.to).map((s) => `<tr><th><button class="linkbtn" type="button" data-step="${s.id}">${s.n}. ${esc(s.t)}</button>${s.ref ? `<small>البند ${s.ref} في إجراء المذكرات</small>` : ''}</th>

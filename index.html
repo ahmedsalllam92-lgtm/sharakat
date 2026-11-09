@@ -7254,6 +7254,15 @@ code.pw-user{font-size:12.5px;background:var(--paper-2);padding:2px 8px;border-r
 @keyframes gsSrc{0%,12%{opacity:0}26%{opacity:.9}80%{opacity:.9}100%{opacity:0}}
 @keyframes gsDust{0%{opacity:0;transform:translateY(-8px)}40%{opacity:.85}100%{opacity:0;transform:translateY(22px)}}
 .gspot-pool{transform-box:fill-box;transform-origin:center}
+/* صفحة الشراكة: الشريط الجانبي أضيق وأبعد، ومساحة أعرض لمسار المذكرة */
+.dbody{grid-template-columns:minmax(0,1fr) 236px!important;gap:18px!important;max-width:1720px!important;padding-inline:20px!important}
+.dbody .side-card{padding:14px 15px}
+/* نماذج المراحل في بطاقات المسار: الاسم كاملًا ورقمه في سطر مستقل */
+.wf-s .wf-docs{display:grid;grid-template-columns:1fr;gap:6px}
+.wf-s .wf-doc{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:7px;row-gap:1px;width:100%;padding:6px 10px;text-align:start}
+.wf-s .wf-doc .ic{grid-row:span 2}
+.wf-s .wf-doc span{white-space:normal;overflow:visible;line-height:1.35;font-weight:600}
+.wf-s .wf-doc small{display:block;white-space:nowrap;direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -26460,7 +26469,7 @@ function renderProcess(el) {
     </section>
 
     <section class="panel pr-raci pr-heat" id="prRaci">
-      <div class="panel-h"><h3>مصفوفة المسؤوليات</h3><span class="sub">مستخرجة من الصلاحيات المطبقة في المسار. تُعدّل جهات الاعتماد من <a href="#/settings/roles">الحسابات والصلاحيات</a>.</span></div>
+      <div class="panel-h"><h3>مصفوفة المسؤوليات</h3></div>
       <div class="panel-b"><div class="pr-raci-lg">${Object.entries(RACI).map(([k, v]) => `<span><i class="rc ${v.c}">${k}</i>${v.t}</span>`).join('')}</div>
         <div class="tbl-wrap"><table class="tbl pr-mx"><thead><tr><th>الخطوة</th>${PR_ROLES.map((r) => `<th>${esc(r.t)}<small>${esc(['strategy', 'legal', 'excellency', 'bizdev'].includes(r.k) ? wfDept(r.k) : '')}</small></th>`).join('')}<th>المستند المطلوب</th></tr></thead><tbody>
         ${PR_PHASES.map((ph, pi) => `<tr class="pr-mx-ph"><td colspan="${PR_ROLES.length + 2}"><em>${pad(pi + 1)}</em>${ph.t}</td></tr>` + WF_STEPS.filter((s) => s.n - 1 >= ph.from && s.n - 1 <= ph.to).map((s) => `<tr><th><button class="linkbtn" type="button" data-step="${s.id}">${s.n}. ${esc(s.t)}</button>${s.ref ? `<small>البند ${s.ref} في إجراء المذكرات</small>` : ''}</th>

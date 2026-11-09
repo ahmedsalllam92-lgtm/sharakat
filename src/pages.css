@@ -3790,3 +3790,12 @@ code.pw-user{font-size:12.5px;background:var(--paper-2);padding:2px 8px;border-r
 @keyframes gsSrc{0%,12%{opacity:0}26%{opacity:.9}80%{opacity:.9}100%{opacity:0}}
 @keyframes gsDust{0%{opacity:0;transform:translateY(-8px)}40%{opacity:.85}100%{opacity:0;transform:translateY(22px)}}
 .gspot-pool{transform-box:fill-box;transform-origin:center}
+/* صفحة الشراكة: الشريط الجانبي أضيق وأبعد، ومساحة أعرض لمسار المذكرة */
+.dbody{grid-template-columns:minmax(0,1fr) 236px!important;gap:18px!important;max-width:1720px!important;padding-inline:20px!important}
+.dbody .side-card{padding:14px 15px}
+/* نماذج المراحل في بطاقات المسار: الاسم كاملًا ورقمه في سطر مستقل */
+.wf-s .wf-docs{display:grid;grid-template-columns:1fr;gap:6px}
+.wf-s .wf-doc{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:7px;row-gap:1px;width:100%;padding:6px 10px;text-align:start}
+.wf-s .wf-doc .ic{grid-row:span 2}
+.wf-s .wf-doc span{white-space:normal;overflow:visible;line-height:1.35;font-weight:600}
+.wf-s .wf-doc small{display:block;white-space:nowrap;direction:ltr;text-align:right;font-variant-numeric:tabular-nums}
