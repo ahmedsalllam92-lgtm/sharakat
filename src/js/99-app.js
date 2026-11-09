@@ -374,7 +374,9 @@ function migrate() {
   if (!s.wfDepts) { s.wfDepts = { ...WF_DEPT_DEFAULTS }; changed = true; }
   if (!s.wfTemplates) { s.wfTemplates = {}; changed = true; }
   if ((s.realV || 1) < 2 && applyRealV2()) { s.realV = 2; changed = true; }
-  if ((s.realV || 1) === 2) { applyRealPhotos(); s.realV = 3; changed = true; } // صور الشراكات الفعلية المضافة لاحقًا (المهيدب)
+  if ((s.realV || 1) === 2) { applyRealPhotos(); s.realV = 3; changed = true; }
+  /* إصلاح: سجلات ملف الحصر التي طُبّقت على نسخة الجهاز قبل الاتصال بالخادم ولم تُرفع — تُضاف الناقصة فقط، بعد سحب بيانات الخادم */
+  if (!s.realFix1 && (!Cloud.on || Cloud.ready)) { const n = applyRealV2({ onlyMissing: true }); s.realFix1 = true; changed = true; if (n && Cloud.on) setTimeout(() => toast(`استُكملت ${n} شراكة من ملف الحصر على المنصة المشتركة`), 1500); } // صور الشراكات الفعلية المضافة لاحقًا (المهيدب)
   if (s.schema < 5) {
     if (!s.org.platform || s.org.platform === 'منصة الشراكات') s.org.platform = 'منظومة الشراكات';
     if (!s.alertDays) s.alertDays = 30;
@@ -389,7 +391,8 @@ async function boot() {
     await Store.open();
     await Repo.load();
     if (!D.settings) await seedAll();
-    if (migrate()) { await Repo.saveSettings(); for (const c of ['partnerships', 'achievements', 'partners']) await Store.putMany(c, D[c]); }
+    /* المنصة المشتركة: التحديثات تُطبَّق بعد سحب بيانات الخادم (في cloudEnter) حتى تُرفع إليه، لا على نسخة الجهاز وحدها */
+    if (!Cloud.on && migrate()) { await Repo.saveSettings(); for (const c of ['partnerships', 'achievements', 'partners']) await Store.putMany(c, D[c]); }
     applyTheme();
     if (!authBoot()) { showLogin(); splashSync(); return; }
     if (Cloud.on) { if (!(await cloudEnter())) return; applyTheme(); }

@@ -63,8 +63,10 @@ const IMG_DEFAULTS = {
 const REAL_PHOTOS = { 'المديرية العامة لحرس الحدود': 'border-guard-signing', 'وقف الأمير صيته بنت عبدالعزيز': 'waqf-saitah-signing', 'مؤسسة عبدالقادر المهيدب الخيرية': 'muhaidib-meet' };
 /* ملف الحصر الفعلي (الإصدار 2): يحدّث الشراكات الموجودة بمطابقة الاسم ويضيف الجديدة والجهات المستهدفة.
    لا يمس الصور والمرفقات والتقييمات وحالة المسار؛ والمعرّفات ثابتة (من رقم الصف) فلا تتكرر السجلات إن طُبّق من جهازين. */
-function applyRealV2() {
+/* onlyMissing: يضيف ما ليس موجودًا فقط (شراكات وجهات) دون تعديل أي سجل قائم — لإصلاح خادم لم تصله السجلات */
+function applyRealV2({ onlyMissing = false } = {}) {
   if (typeof REAL_V2 === 'undefined') return false;
+  let added = 0;
   const s = D.settings, t0 = nowISO(), by = 'تحديث ملف الحصر';
   ['العنود'].forEach((m) => { if (!s.lists.team.includes(m)) s.lists.team.push(m); });
   ['تعليمي'].forEach((x) => { if (!s.lists.sectors.includes(x)) s.lists.sectors.push(x); });
@@ -73,6 +75,7 @@ function applyRealV2() {
   const findPartner = (name) => D.partners.find((x) => !x.demo && (same(x.name, name) || (x.aliases || []).some((a) => same(a, name))));
   const ensurePartner = (r, extra) => {
     let pr = findPartner(r.partner);
+    if (onlyMissing && pr) return pr;
     if (!pr) { pr = { id: 'ptr-r2-' + r.row, name: r.partner, sector: r.sector, aliases: [], website: '', notes: '', logoFileId: null, createdAt: t0, demo: false }; D.partners.push(pr); }
     else { if (!pr.sector && r.sector) pr.sector = r.sector; if (pr.name !== r.partner) { pr.aliases = [...new Set([...(pr.aliases || []), pr.name])]; pr.name = r.partner; } } // الاسم المصحَّح من الملف، والقديم اسمًا بديلًا
     (r.aliases || []).forEach((a) => { if (!(pr.aliases || []).includes(a) && !same(a, pr.name)) pr.aliases = [...(pr.aliases || []), a]; });
@@ -92,8 +95,9 @@ function applyRealV2() {
     ['contactName', 'contactEmail', 'contactPhone'].forEach((k) => { if (r[k]) f[k] = r[k]; }); // بيانات التواصل لا تُمحى (تُستورد من داخل المنصة)
     let p = D.partnerships.find((x) => !x.demo && x.realRow === r.row) || D.partnerships.find((x) => !x.demo && !x.realRow && same(x.title, r.title));
     if (p) {
-      Object.assign(p, f, { activation: p.activation || r.activation || '', updatedAt: t0, updatedBy: by });
+      if (!onlyMissing) Object.assign(p, f, { activation: p.activation || r.activation || '', updatedAt: t0, updatedBy: by });
     } else {
+      added++;
       s.counters.pt = (s.counters.pt || 0) + 1;
       D.partnerships.push({ id: 'pt-r2-' + r.row, code: `PT-${(r.startDate || t0).slice(0, 4)}-${String(s.counters.pt).padStart(3, '0')}`, seq: s.counters.pt, ...f,
         departments: [], activation: r.activation || '', attachments: [], categories: [], isDraft: false, public: r.stage === 'signed', highlight: null, coverFileId: null, proposalId: null,
@@ -106,7 +110,7 @@ function applyRealV2() {
     ensurePartner(r, { target: true, targetNote: r.note || '', owners: r.owners || [] });
   }
   applyRealPhotos();
-  return true;
+  return onlyMissing ? added : true;
 }
 /* شعارات الجهات الفعلية المرفقة من الإدارة (تُطبق إن لم يكن للجهة شعار) */
 const REAL_LOGOS = { 'مؤسسة عبدالقادر المهيدب الخيرية': 'amsf-logo' };
