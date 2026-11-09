@@ -18,22 +18,38 @@ function goldBurst(btn) {
   btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
   setTimeout(() => fx.remove(), 1100);
 }
-/* تمييز رسمي عند إضافة شراكة ذهبية: يخفت ما حولها قليلًا، ويُرسم إطار ذهبي رفيع حولها، وتعبر لمعة ذهبية فوق اسمها ثم يعود كل شيء */
+/* تمييز رسمي عند إضافة شراكة ذهبية: يخفت ما حولها قليلًا، ويظهر إطار ذهبي كامل يضم الشعار والاسم،
+   وتتطاير منه نفس الشرارات الذهبية التي تخرج من النجمة، وتعبر لمعة فوقه ثم يعود كل شيء */
+function goldTargetRect(btn) {
+  const head = btn && btn.closest('.dhead-in');
+  if (head) { /* رأس الشراكة: الشعار + الاسم والبيانات معًا */
+    const parts = [head.querySelector(':scope > :first-child'), head.querySelector(':scope > .grow')].filter(Boolean).map((e) => e.getBoundingClientRect()).filter((r) => r.width);
+    if (parts.length) return { left: Math.min(...parts.map((r) => r.left)), top: Math.min(...parts.map((r) => r.top)), right: Math.max(...parts.map((r) => r.right)), bottom: Math.max(...parts.map((r) => r.bottom)) };
+  }
+  const t = btn && btn.closest('.gcard, .pc, .pcard, .st-card, .bo-card, .sh-card, tr');
+  return (t || btn) ? (t || btn).getBoundingClientRect() : null;
+}
 function goldSpotlight(btn) {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const tgt = (btn && (btn.closest('.gcard, .pc, .pcard, .st-card, .bo-card, .sh-card, tr') || ((document.querySelector('#main .dhead h1') || {}).parentElement || document.querySelector('#main .dhead-in, #main .dhead')))) || btn;
-  if (!tgt) return;
+  const r = goldTargetRect(btn); if (!r) return;
   const old = document.querySelector('.gspot'); if (old) old.remove();
-  const r = tgt.getBoundingClientRect(), pad = 14;
-  const x = r.left - pad, y = r.top - pad, w = r.width + pad * 2, h = r.height + pad * 2, rad = 18;
+  const pad = 16, x = r.left - pad, y = r.top - pad, w = (r.right - r.left) + pad * 2, h = (r.bottom - r.top) + pad * 2, rad = 20;
+  /* شرارات نجمية على محيط الإطار تنطلق للخارج */
+  const per = 2 * (w + h), N = Math.max(22, Math.min(46, Math.round(per / 70)));
+  const sparks = Array.from({ length: N }, (_, k) => {
+    let d = (k + 0.5) / N * per, px, py, nx, ny;
+    if (d < w) { px = x + d; py = y; nx = 0; ny = -1; } else if ((d -= w) < h) { px = x + w; py = y + d; nx = 1; ny = 0; } else if ((d -= h) < w) { px = x + w - d; py = y + h; nx = 0; ny = 1; } else { d -= w; px = x; py = y + h - d; nx = -1; ny = 0; }
+    const dist = 34 + (k * 37) % 52, sz = k % 3 ? 9 : 13, jit = ((k * 53) % 21 - 10) / 10;
+    return `<i class="gsf-sp" style="left:${px.toFixed(0)}px;top:${py.toFixed(0)}px;--dx:${(nx * dist + (ny ? jit * 14 : 0)).toFixed(0)}px;--dy:${(ny * dist + (nx ? jit * 14 : 0)).toFixed(0)}px;--s:${sz}px;--d:${(380 + (k % 7) * 60)}ms"></i>`;
+  }).join('');
+  const corners = [[x, y], [x + w, y], [x + w, y + h], [x, y + h]].map(([cx, cy], k) => `<i class="gsf-ring" style="left:${cx}px;top:${cy}px;--d:${300 + k * 90}ms"></i>`).join('');
   const el = document.createElement('div'); el.className = 'gspot gspot-formal'; el.setAttribute('aria-hidden', 'true');
   el.style.cssText = `--x:${x + w / 2}px;--y:${y + h / 2}px;--w:${w}px;--h:${h}px`;
   el.innerHTML = `<i class="gsf-veil"></i>
-    <svg class="gsf-svg" width="${innerWidth}" height="${innerHeight}"><defs><linearGradient id="gsfG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3DFA6"/><stop offset=".5" stop-color="#C9A24F"/><stop offset="1" stop-color="#F3DFA6"/></linearGradient></defs>
-      <rect class="gsf-frame" x="${x}" y="${y}" width="${w}" height="${h}" rx="${rad}" pathLength="1" fill="none" stroke="url(#gsfG)" stroke-width="2"/></svg>
-    <span class="gsf-sheen" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${rad}px"><i></i></span>`;
+    <span class="gsf-box" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${rad}px"><i class="gsf-sh"></i><b class="c1"></b><b class="c2"></b><b class="c3"></b><b class="c4"></b></span>
+    ${corners}${sparks}`;
   document.body.appendChild(el);
-  setTimeout(() => el.remove(), 2200);
+  setTimeout(() => el.remove(), 2600);
 }
 async function toggleGolden(p, btn) {
   const on = !p.golden;

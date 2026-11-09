@@ -14,14 +14,14 @@ async def main():
         for d in ['classic','board']:
             await E(f"applyDesign('{d}')"); await pg.wait_for_timeout(500)
             await E("location.hash='#/reports'"); await pg.wait_for_timeout(1200)
-            ok(f'{d}: studio hero + 4 story presets + quick picks', await E("!!document.querySelector('.rx-hero') && document.querySelectorAll('[data-rpreset]').length===4 && document.querySelectorAll('[data-rquick]').length===4"))
+            ok(f'{d}: studio hero + 3 report kinds (marketing link + 2 presets) with captions + quick picks', await E("!!document.querySelector('.rx-hero') && document.querySelectorAll('.rx-kind').length===3 && document.querySelectorAll('[data-rpreset]').length===2 && !!document.querySelector('.rx-kind.mk[href=\"#/reports/marketing\"]') && document.querySelectorAll('.rx-kind .rk-n').length===3 && document.querySelectorAll('[data-rquick]').length===4"))
         # quick pick
         await pg.click('[data-rquick="strategic"]'); await pg.wait_for_timeout(1500)
         exp = await E("visiblePartnerships({includeDrafts:can('view.drafts')}).filter(p=>(p.ptype||'').includes('استراتيجي')).map(p=>p.id).sort().join()")
         ok('quick pick selects exactly the strategic partnerships', await E("RPT.ids.slice().sort().join()") == exp and await E("document.querySelector('[data-rquick=strategic]').classList.contains('on')"))
         # preset
-        await pg.click('[data-rpreset="story"]'); await pg.wait_for_timeout(1200)
-        ok('«قصة أثر» preset sets its components', await E("RPT.sections") == ['cover','pcover','story','hero','impact','activity','photos','end'] and await E("document.querySelector('[data-rpreset=story]').classList.contains('on')"))
+        await E("RPT.sections=['cover','pcover','story','hero','impact','activity','photos','end']; route()"); await pg.wait_for_timeout(1500)
+        ok('custom components (story set) apply', await E("RPT.sections") == ['cover','pcover','story','hero','impact','activity','photos','end'])
         kinds = await E("[...document.querySelectorAll('#rpSlides .rs2')].map(s=>s.dataset.st)")
         n_story = await E("RPT.ids.map(id=>D.partnerships.find(p=>p.id===id)).filter(p=>p.showcaseGoal||richItems(p.expectedImpact).length).length")
         n_hero = await E("RPT.ids.map(id=>D.partnerships.find(p=>p.id===id)).filter(p=>p.highlight&&p.highlight.value).length")

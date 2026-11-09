@@ -432,10 +432,8 @@ function FileCache_src(id) { if (id.startsWith('lib:')) return (IMG_LIB[id.slice
 /* — الصفحة — */
 /* — قوالب القصة الجاهزة — */
 const RPT_PRESETS = [
-  { k: 'story', t: 'قصة أثر', d: 'تسويقية: صور، واقتباس الهدف، والرقم البطل، والأثر', ic: 'star', secs: ['cover', 'pcover', 'story', 'hero', 'impact', 'activity', 'photos', 'end'] },
-  { k: 'brief', t: 'إحاطة تنفيذية', d: 'للقيادة: لمحة المحفظة وملخص كل شراكة', ic: 'chart', secs: ['cover', 'toc', 'portfolio', 'summary', 'exec', 'end'] },
-  { k: 'card', t: 'بطاقة تعريفية', d: 'لشريك أو زائر: غلاف وقصة ونظرة عامة', ic: 'award', secs: ['pcover', 'story', 'hero', 'overview', 'partner', 'end'] },
-  { k: 'full', t: 'الملف الكامل', d: 'كل المكونات المتاحة لكل شراكة', ic: 'layers', secs: null },
+  { k: 'brief', t: 'الإحاطة التنفيذية', d: 'صورة سريعة للمحفظة ثم شريحة واحدة لكل شراكة: حالتها وأرقامها وما يحتاج قرارًا.', who: 'للقيادة والاجتماعات', use: 'PowerPoint وPDF · شرائح قليلة ومركّزة', ic: 'chart', secs: ['cover', 'toc', 'portfolio', 'summary', 'exec', 'end'] },
+  { k: 'full', t: 'الملف الكامل', d: 'كل مكونات كل شراكة بلا استثناء: البيانات والفريق والإنجازات والصور والسجل.', who: 'للتوثيق والأرشفة والمراجعة', use: 'PDF للطباعة · أشمل تقرير', ic: 'layers', secs: null },
 ];
 const RPT_QUICK = [
   ['active', 'السارية', (p) => ['active', 'soon'].includes(pStatus(p))],
@@ -458,10 +456,9 @@ function renderReports(el, r) {
         <p>اختر نوع التقرير وحدد الشراكات، وعدّل النصوص على الشرائح مباشرة، ثم اعرضه بملء الشاشة أو نزّله PowerPoint وPDF. الأرقام تُقرأ من السجلات لحظة العرض.</p></div>
       <div class="rx-fan" aria-hidden="true"><span class="f1"><b></b><i></i><i></i><i></i></span><span class="f2"><b></b><em></em><i></i><i></i></span><span class="f3"><strong>”</strong><i></i><i></i><i></i></span></div>
     </section>
-    <a class="mk-entry" href="#/reports/marketing"><span class="mk-entry-art" aria-hidden="true">${MK_RINGS}<b>${nf(liveCounts().partners)}</b></span><span class="mk-entry-b"><b>التقرير التسويقي</b><small>لكل الشراكات أو لشراكة واحدة: الأعمال والإنجازات والأثر في شرائح تُبنى من البيانات — للعملاء والقيادات</small></span><span class="btn gold">${icon('play')} افتح التقرير</span></a>
     <section class="rx-pick">
-      <div class="rx-step"><span>1</span><div><b>اختر القصة</b><small>قالب جاهز يحدد مكونات التقرير، ويمكنك تعديلها بعد ذلك</small></div></div>
-      <div class="rx-presets" id="rxPresets"></div>
+      <div class="rx-step"><span>1</span><div><b>اختر نوع التقرير</b><small>ثلاثة أنواع، لكل منها جمهور وشكل مختلف</small></div></div>
+      <div class="rx-kinds" id="rxPresets"></div>
       <div class="rx-step"><span>2</span><div><b>حدد الشراكات</b><small>اختيار سريع، أو من القائمة الكاملة في اللوحة الجانبية</small></div></div>
       <div class="rx-quick" id="rxQuick"></div>
     </section>
@@ -506,7 +503,8 @@ function renderReports(el, r) {
     $('#rpDDm', el).innerHTML = `<div class="rp-ddh"><button class="linkbtn" data-rsall type="button">تحديد الكل</button><button class="linkbtn" data-rsnone type="button">إلغاء الكل</button></div>` + ['التقرير', 'الشراكة'].map((g) => `<div class="rp-ddg">${g === 'التقرير' ? 'على مستوى التقرير' : 'لكل شراكة'}</div>${avail.filter((s) => s.g === g).map((s) => `<label class="rp-ddo"><input type="checkbox" data-rsec="${s.k}" ${RPT.sections.includes(s.k) ? 'checked' : ''}><span>${esc(s.l)}</span></label>`).join('')}`).join('');
   };
   const drawPicks = () => {
-    $('#rxPresets', el).innerHTML = RPT_PRESETS.map((pr) => { const n = (pr.secs || RPT_SECTIONS.map((s) => s.k)).length; return `<button type="button" class="rx-pre ${rptPresetOn(pr) ? 'on' : ''}" data-rpreset="${pr.k}"><span class="rx-pre-art a-${pr.k}" aria-hidden="true"><i></i><i></i><i></i></span><span class="rx-pre-b"><b>${icon(pr.ic)}${esc(pr.t)}</b><small>${esc(pr.d)}</small><em>${n} مكونات</em></span>${rptPresetOn(pr) ? `<span class="rx-on">${icon('check')}</span>` : ''}</button>`; }).join('');
+    $('#rxPresets', el).innerHTML = `<a class="rx-kind mk mk-entry" href="#/reports/marketing"><span class="rk-art" aria-hidden="true">${MK_RINGS}<b>${nf(liveCounts().partners)}</b></span><span class="rk-b"><b>${icon('play')}التقرير التسويقي</b><span class="rk-d">عرض سينمائي متحرك يحكي قصة الشراكات وأثرها بالصور والأرقام، لكل الشراكات أو لشراكة واحدة.</span><small class="rk-n">للشركاء والجمهور والمناسبات · عرض بملء الشاشة وتنزيل فيديو</small></span><span class="rk-go">افتح ${icon('chevL')}</span></a>`
+      + RPT_PRESETS.map((pr) => { const on = rptPresetOn(pr), n = (pr.secs || RPT_SECTIONS.map((s) => s.k)).length; return `<button type="button" class="rx-kind ${pr.k} ${on ? 'on' : ''}" data-rpreset="${pr.k}"><span class="rk-art a-${pr.k}" aria-hidden="true"><i></i><i></i><i></i></span><span class="rk-b"><b>${icon(pr.ic)}${esc(pr.t)}</b><span class="rk-d">${esc(pr.d)}</span><small class="rk-n">${esc(pr.who)} · ${esc(pr.use)} · ${n} مكونات</small></span>${on ? `<span class="rx-on">${icon('check')}</span>` : ''}</button>`; }).join('');
     const all = base();
     $('#rxQuick', el).innerHTML = RPT_QUICK.map(([k, l, f]) => { const ids = all.filter(f).map((p) => p.id); const on = ids.length && ids.length === RPT.ids.length && ids.every((id) => RPT.ids.includes(id)); return `<button type="button" class="rx-q ${on ? 'on' : ''}" data-rquick="${k}" ${ids.length ? '' : 'disabled'}><b>${ids.length}</b><span>${esc(l)}</span></button>`; }).join('') + `<span class="rx-q-note">${RPT.ids.length ? `محدد الآن: <b>${RPT.ids.length}</b>` : 'لم تُحدَّد شراكات بعد'}</span>`;
   };

@@ -139,6 +139,7 @@ function mkSplit(text) {
 const MK_ICONS = [[/سياح|معسكر|زائر|رحل/, 'flag'], [/أخرى|اهتمام المشترك/, 'link'], [/مجتمع|تطوع|متطوع|شباب|أسر/, 'users'], [/دراس|بحث|بحوث|ابتكار|تقني|حلول/, 'search'], [/تدريب|تعليم|ورش|قدرات|معرف|خبرات/, 'award'], [/قياس|أثر|مؤشر|تقارير|بيانات/, 'chart'], [/إعلام|محتوى|نشر|أخبار|توعي/, 'news'], [/مال|استثمار|تمويل|رعاي/, 'star'], [/مياه|سيول/, 'layers'], [/نبات|غطاء|تشجير|شجر|بيئ|موائل|أحيائ|تصحر|مناخ|زراع/, 'leaf']];
 /* بطاقات البنود (مجالات التعاون، والمخرجات، والأثر): عنوان قصير وأيقونة ووصف موجز */
 function mkFitText(root) {
+  (root || document).querySelectorAll('.mx-wall').forEach((w) => { let k = 1; w.style.setProperty('--fs', '1'); const over = () => w.scrollHeight > w.clientHeight + 1 || [...w.querySelectorAll('ul')].some((u) => u.scrollWidth > u.clientWidth + 1); while (over() && k > 0.55) { k = +(k - 0.04).toFixed(2); w.style.setProperty('--fs', String(k)); } });
   (root || document).querySelectorAll('.px-co2 article, .hz-c, .px-pp-b').forEach((a) => {
     let k = 1; a.style.setProperty('--fs', '1');
     /* المحتوى الفعلي (لا الزخارف المطلقة) مقابل المساحة الداخلية للبطاقة */
@@ -379,7 +380,20 @@ function mkSlides() {
     <h2 class="mx-h">${mkE('num.h', 'أبرز الأرقام')}</h2>
     <div class="mx-giants">${[[X.partners.length, mkNum(X.partners.length), 'جهة شريكة'], [X.act.length, mkNum(X.act.length), 'شراكة سارية الآن'], [X.value || X.outputs.length, X.value ? sarShort(X.value).replace(' مليون', 'M').replace(' ألف', 'K') : mkNum(X.outputs.length), X.value ? '⃁ قيمة تقديرية' : 'مخرجًا موثّقًا']].map(([v, t, l], i) => `<div class="mx-gi" style="--i:${i}"><b data-t="${esc(t)}">${esc(t)}</b><span>${l}</span></div>`).join('')}</div>
     <div class="mx-ticker">${[[X.outputs.length, 'مخرجًا موثّقًا'], [actPct + '%', 'نسبة التفعيل'], [X.avgEv === null ? '—' : X.avgEv + '/100', 'متوسط التقييم'], [X.depts.size, 'إدارة داخلية شريكة'], [X.signed.length, 'مذكرة موقّعة']].map(([v, l]) => `<span><b>${esc(String(v))}</b>${l}</span>`).join('<i>✦</i>')}</div>`]);
-  /* 4. كوكبة الشركاء */
+  /* 4. الشركاء: كوكبة حين يكونون قليلين، وجدار كامل مقسّم حسب القطاع حين يكثرون (كل الجهات تظهر) */
+  if (X.partners.length > 18) {
+    const secOf = (pr) => { const p = X.L.find((x) => x.partnerId === pr.id); return (p && pSector(p)) || 'جهات أخرى'; };
+    const G = {}; X.partners.forEach((pr) => { (G[secOf(pr)] = G[secOf(pr)] || []).push(pr); });
+    const grp = Object.entries(G).sort((a, b) => b[1].length - a[1].length);
+    let perCol = Math.ceil(X.partners.length / 6); while (grp.reduce((t, [, l]) => t + Math.ceil(l.length / perCol), 0) > 6) perCol++;
+    const spans = grp.map(([, l]) => Math.ceil(l.length / perCol)), tot = spans.reduce((t, n) => t + n, 0);
+    let k = 0;
+    S.push(['wall', 'deep', 'الجهات الشريكة', `
+    <h2 class="mx-h">${mkE('pa.h', 'شركاؤنا')}</h2>
+    <p class="mx-sub">${mkE('pa.s', `${X.partners.length} جهة شريكة من ${X.sectors.length || 1} قطاعات.`)}</p>
+    <div class="mx-wall" style="--c:${tot}">${grp.map(([sec, l], gi) => `<section class="wl-s" style="grid-column:span ${spans[gi]};--cols:${spans[gi]}"><h3><span>${esc(sec)}</span><b>${nf(l.length)}</b></h3>
+      <ul>${l.map((pr) => `<li class="wl-t" style="--i:${k++}"><i>${logoOrMono(pr, pr.name)}</i><span>${esc(pr.name)}</span></li>`).join('')}</ul></section>`).join('')}</div>`]);
+  } else {
   const PR = X.partners.slice(0, 18), rings = [150, 230, 305];
   const nodes = PR.map((pr, i) => { const ring = i < 6 ? 0 : i < 12 ? 1 : 2, inRing = PR.filter((_, j) => (j < 6 ? 0 : j < 12 ? 1 : 2) === ring).length, idx = i - ring * 6; const a = (idx / inRing) * Math.PI * 2 + ring * 0.5 - Math.PI / 2; return { pr, x: 640 + Math.cos(a) * rings[ring] * 1.25, y: 400 + Math.sin(a) * rings[ring] * 0.62, i }; });
   S.push(['orbit', 'deep', 'الجهات الشريكة', `
@@ -389,6 +403,7 @@ function mkSlides() {
     <div class="mx-core">${(ASSET_IMG['murooj-logo-white'] || {}).src ? `<img src="${ASSET_IMG['murooj-logo-white'].src}" alt="">` : ''}</div>
     ${nodes.map((n) => `<span class="mx-node" style="left:${n.x.toFixed(0)}px;top:${n.y.toFixed(0)}px;--i:${n.i}" title="${esc(n.pr.name)}"><i>${logoOrMono(n.pr, n.pr.name)}</i><small>${esc(n.pr.name)}</small></span>`).join('')}
     ${X.partners.length > PR.length ? `<span class="mx-more">+${X.partners.length - PR.length} جهة أخرى</span>` : ''}`]);
+  }
   /* 5. التسلسل الزمني */
   const dated = X.L.filter((p) => parseDate(p.startDate)).sort((a, b) => (a.startDate < b.startDate ? -1 : 1));
   if (dated.length >= 2) {
