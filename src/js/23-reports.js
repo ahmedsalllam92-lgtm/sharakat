@@ -682,7 +682,10 @@ function openReportShow(start = 0, nodes) {
   const isMk = !!(src[0] && src[0].classList.contains('mk'));
   if (isMk) {
     ov.classList.add('rshow-mk');
-    if (i === 0 && typeof mkPrelude === 'function') { const one = typeof mkOne === 'function' && mkOne(); const c = liveCounts(); mkPrelude(ov, { title: one ? partnerName(one) : 'تقرير الشراكات والأثر', sub: one ? `تقرير الشراكة · ${new Date().getFullYear()}` : `${c.partners} جهة شريكة · ${c.active} شراكة سارية`, count: one ? 28 : c.partners }, () => show(i)); }
+    const auto = window.__rshowAuto; window.__rshowAuto = null;
+    const runAuto = () => { if (!auto) return; ov.classList.add('rshow-rec'); const tick = () => { if (!ov.isConnected) return; if (i >= N - 1) { setTimeout(() => auto.onEnd && auto.onEnd(), auto.per); return; } setTimeout(() => { if (!ov.isConnected) return; show(i + 1); tick(); }, auto.per); }; tick(); };
+    if (i === 0 && typeof mkPrelude === 'function') { const one = typeof mkOne === 'function' && mkOne(); const c = liveCounts(); mkPrelude(ov, { title: one ? partnerName(one) : 'تقرير الشراكات والأثر', sub: one ? `تقرير الشراكة · ${new Date().getFullYear()}` : `${c.partners} جهة شريكة · ${c.active} شراكة سارية`, count: one ? 28 : c.partners }, () => { show(i); runAuto(); }); }
+    else runAuto();
     ov.addEventListener('pointermove', (e) => { const cur = $('.rshow-slide.on > .rs2', ov); if (!cur || matchMedia('(prefers-reduced-motion: reduce)').matches) return; const dx = (e.clientX / innerWidth - 0.5) * 2, dy = (e.clientY / innerHeight - 0.5) * 2, m = Math.hypot(dx, dy) || 1; cur.style.rotate = `${(-dy / m).toFixed(3)} ${(dx / m).toFixed(3)} 0 ${(Math.min(1, Math.hypot(dx, dy)) * 2.2).toFixed(2)}deg`; });
   }
   if (ov.requestFullscreen) ov.requestFullscreen().catch(() => {});

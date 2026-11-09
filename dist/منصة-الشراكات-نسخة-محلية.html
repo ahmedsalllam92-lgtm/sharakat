@@ -7149,6 +7149,62 @@ code.pw-user{font-size:12.5px;background:var(--paper-2);padding:2px 8px;border-r
 .px-co2.n4 .px-co2-n{font-size:64px;bottom:auto;top:50%;transform:translateY(-50%);inset-inline-start:22px}
 
 .px-co2 article:not(:has(p)) .px-co2-h{flex:1}
+
+/* الغلاف الرسمي: حلقات القطاعات */
+.mx-emb{position:absolute;left:30px;top:0;width:600px;height:720px;overflow:visible}
+.mx-emb .em-o{fill:none;stroke:rgba(230,199,134,.18);stroke-width:1}
+.mx-emb .em-t{stroke:rgba(230,199,134,.35);stroke-width:1.2}
+.mx-emb .em-a{fill:none;stroke-width:30;stroke-linecap:butt}
+.mx-emb .em-l text{fill:#C9DAD3;font-size:15px;font-family:var(--font)}.mx-emb .em-l text.n{fill:#F0D9A0;font-size:22px;font-weight:700}
+.mx-emb .em-big{fill:#fff;font-size:96px;font-weight:700;font-family:var(--display,var(--font))}
+.mx-emb .em-cap{fill:#E6C786;font-size:20px;font-family:var(--font)}.mx-emb .em-cap2{fill:#9FBDB2;font-size:15px;font-family:var(--font)}
+.mk-anim .mx-emb .em-a{stroke-dasharray:1;stroke-dashoffset:1}.mk-anim.play .mx-emb .em-a{animation:mxDraw 1.1s cubic-bezier(.6,0,.3,1) forwards;animation-delay:calc(.4s + var(--k) * .25s)}
+.mk-anim .mx-emb .em-l,.mk-anim .mx-emb .em-big,.mk-anim .mx-emb .em-cap,.mk-anim .mx-emb .em-cap2{opacity:0}
+.mk-anim.play .mx-emb .em-l{animation:mxFade .6s forwards;animation-delay:calc(1.2s + var(--k) * .25s)}
+.mk-anim.play .mx-emb .em-big,.mk-anim.play .mx-emb .em-cap,.mk-anim.play .mx-emb .em-cap2{animation:mxFade .8s .6s forwards}
+.mk-anim .mx-emb .em-t{opacity:0}.mk-anim.play .mx-emb .em-t{animation:mxFade 1.4s .2s forwards}
+.mx-cv-stats{display:flex;gap:12px;margin-top:22px}
+.mx-cv-stats>div{padding:12px 20px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(230,199,134,.28);display:flex;flex-direction:column;gap:2px;min-width:130px}
+.mx-cv-stats b{font-family:var(--display,var(--font));font-size:30px;color:#F0D9A0;line-height:1.1}.mx-cv-stats span{font-size:13px;color:#BFD3CB}
+.mk-anim .mx-cv-stats>div{opacity:0;transform:translateY(12px)}.mk-anim.play .mx-cv-stats>div{animation:mxUpIn .6s forwards}.mk-anim.play .mx-cv-stats>div:nth-child(2){animation-delay:.15s}.mk-anim.play .mx-cv-stats>div:nth-child(3){animation-delay:.3s}
+.mk-cover button{font-size:12.5px}
+/* منحنى النمو: بطاقة الشراكة المتحركة */
+.mx-rcard{position:absolute;z-index:6;width:300px;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;background:#fff;border:1px solid #E6DECB;box-shadow:0 22px 44px -22px rgba(15,46,39,.55);opacity:0;transform:translateY(10px) scale(.96);transition:opacity .3s ease,transform .35s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.mx-rcard.on{opacity:1;transform:none}
+.mx-rcard::after{content:"";position:absolute;left:50%;bottom:-8px;width:14px;height:14px;background:#fff;border-right:1px solid #E6DECB;border-bottom:1px solid #E6DECB;transform:translateX(-50%) rotate(45deg)}
+.mx-rcard.below::after{bottom:auto;top:-8px;transform:translateX(-50%) rotate(225deg)}
+.mx-rcard .lg{flex:none;width:52px;height:52px;border-radius:14px;background:#F6F3EC;display:grid;place-items:center;overflow:hidden;padding:6px}
+.mx-rcard .lg img{max-width:100%;max-height:100%;object-fit:contain}.mx-rcard .lg .emb{width:40px;height:40px}
+.mx-rcard .tx{display:flex;flex-direction:column;min-width:0}
+.mx-rcard em{font-style:normal;font-size:12px;color:#A47C32;font-weight:700}
+.mx-rcard b{font-size:16px;line-height:1.4;color:#0F2E27;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mx-rcard small{font-size:11.5px;color:#7A8580}
+.mx-rcard .n{position:absolute;inset-inline-end:10px;top:8px;font-style:normal;font-size:11px;color:#C9BFA8}
+@media print{.mx-rcard{display:none!important}}
+/* الفرص القادمة */
+.mks-horizon .mx-sun{top:-40px!important;opacity:.55}
+.mx-hz2{position:absolute;top:200px;bottom:120px;inset-inline:56px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;z-index:2}
+.hz-c{display:flex;flex-direction:column;gap:6px;padding:20px 22px;border-radius:20px;background:linear-gradient(170deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(6px);box-shadow:0 24px 50px -30px rgba(0,0,0,.6);overflow:hidden}
+.hz-top{display:flex;align-items:center;justify-content:space-between}
+.hz-ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#E6C786,#B8913F);color:#0F2E27}.hz-ic .ic{width:22px;height:22px}
+.hz-top b{font-family:var(--display,var(--font));font-size:54px;line-height:1;color:#F6E4B0}
+.hz-c h3{margin:6px 0 0;font-size:20px;color:#fff}
+.hz-d{font-size:13px;color:#BFD3CB}
+.hz-c ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:7px}
+.hz-c li{display:flex;justify-content:space-between;gap:10px;align-items:baseline;padding:8px 12px;border-radius:10px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.07)}
+.hz-c li b{font-size:14px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.hz-c li span{font-size:12px;color:#E6C786;white-space:nowrap;flex:none}
+.hz-c li.none{justify-content:center}.hz-c li.none span{color:#9FBDB2}
+.hz-more{font-style:normal;font-size:12.5px;color:#BFD3CB;margin-top:4px}
+.mk-anim .hz-c{opacity:0;transform:translateY(24px)}.mk-anim.play .hz-c{animation:mxUpIn .7s forwards;animation-delay:calc(.3s + var(--i) * .18s)}
+.mk-anim .hz-c li{opacity:0;transform:translateX(-10px)}.mk-anim.play .hz-c li{animation:mxUpIn .5s forwards;animation-delay:calc(1s + var(--i) * .18s + var(--k) * 90ms)}
+/* التسجيل: إخفاء أدوات العرض */
+.rshow-rec .rshow-bar,.rshow-rec .rshow-thumbs,.rshow-rec .rshow-prog,.rshow-rec .mk-pre-skip{display:none!important}
+.rshow-rec{cursor:none}
+/* الشمس خلف الأفق أسفل البطاقات بدل أن تغطي الوسط */
+.mks-horizon .mx-sun{top:auto!important;bottom:-170px!important;width:620px;height:620px;margin-left:-310px;opacity:.5!important;z-index:0}
+.mk-anim.play.mks-horizon .mx-sun{animation:mxSunLow 2.4s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes mxSunLow{from{opacity:0;transform:translateY(80px) scale(.85)}to{opacity:.5;transform:none}}
 </style>
 </head>
 <body>
@@ -22993,7 +23049,10 @@ function openReportShow(start = 0, nodes) {
   const isMk = !!(src[0] && src[0].classList.contains('mk'));
   if (isMk) {
     ov.classList.add('rshow-mk');
-    if (i === 0 && typeof mkPrelude === 'function') { const one = typeof mkOne === 'function' && mkOne(); const c = liveCounts(); mkPrelude(ov, { title: one ? partnerName(one) : 'تقرير الشراكات والأثر', sub: one ? `تقرير الشراكة · ${new Date().getFullYear()}` : `${c.partners} جهة شريكة · ${c.active} شراكة سارية`, count: one ? 28 : c.partners }, () => show(i)); }
+    const auto = window.__rshowAuto; window.__rshowAuto = null;
+    const runAuto = () => { if (!auto) return; ov.classList.add('rshow-rec'); const tick = () => { if (!ov.isConnected) return; if (i >= N - 1) { setTimeout(() => auto.onEnd && auto.onEnd(), auto.per); return; } setTimeout(() => { if (!ov.isConnected) return; show(i + 1); tick(); }, auto.per); }; tick(); };
+    if (i === 0 && typeof mkPrelude === 'function') { const one = typeof mkOne === 'function' && mkOne(); const c = liveCounts(); mkPrelude(ov, { title: one ? partnerName(one) : 'تقرير الشراكات والأثر', sub: one ? `تقرير الشراكة · ${new Date().getFullYear()}` : `${c.partners} جهة شريكة · ${c.active} شراكة سارية`, count: one ? 28 : c.partners }, () => { show(i); runAuto(); }); }
+    else runAuto();
     ov.addEventListener('pointermove', (e) => { const cur = $('.rshow-slide.on > .rs2', ov); if (!cur || matchMedia('(prefers-reduced-motion: reduce)').matches) return; const dx = (e.clientX / innerWidth - 0.5) * 2, dy = (e.clientY / innerHeight - 0.5) * 2, m = Math.hypot(dx, dy) || 1; cur.style.rotate = `${(-dy / m).toFixed(3)} ${(dx / m).toFixed(3)} 0 ${(Math.min(1, Math.hypot(dx, dy)) * 2.2).toFixed(2)}deg`; });
   }
   if (ov.requestFullscreen) ov.requestFullscreen().catch(() => {});
@@ -23076,6 +23135,29 @@ function mkFrame(k, tone, n, N, kicker, inner, extra = '') {
 /* — المشاهد السينمائية: كل مشهد بصري بتوقيع خاص، يتحرك عند ظهوره ويُطبع في حالته النهائية — */
 const mxCnt = (v, txt) => `<b data-cnt="${+v || 0}">${txt != null ? txt : mkNum(v)}</b>`;
 /* شجرة الأثر: الجذع المؤسسة، والأغصان القطاعات، والأوراق الشراكات */
+/* الغلاف الرسمي: حلقات القطاعات — قوس لكل قطاع بطول نصيبه، والرقم في المركز */
+function mxEmblem(X) {
+  const secs = X.sectors.length ? X.sectors : [['الشراكات', X.L.length || 1]];
+  const tot = secs.reduce((t, [, n]) => t + n, 0) || 1, cx = 300, cy = 360, R = 210, gap = 0.035;
+  const cols = ['#2E8B6E', '#E6C786', '#5FB894', '#B8913F', '#9CC9B4', '#D9B467'];
+  let a = -Math.PI / 2, arcs = '', labels = '';
+  secs.forEach(([nm, n], i) => {
+    const sweep = (n / tot) * Math.PI * 2 - gap, a1 = a + gap / 2, a2 = a1 + sweep, r = R - (i % 2) * 0;
+    const p = (ang, rr) => [cx + Math.cos(ang) * rr, cy + Math.sin(ang) * rr];
+    const [x1, y1] = p(a1, r), [x2, y2] = p(a2, r), large = sweep > Math.PI ? 1 : 0;
+    arcs += `<path class="em-a" d="M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 ${large} 1 ${x2.toFixed(1)} ${y2.toFixed(1)}" stroke="${cols[i % cols.length]}" pathLength="1" style="--k:${i}"/>`;
+    const mid = (a1 + a2) / 2, [lx, ly] = p(mid, R + 46);
+    labels += `<g class="em-l" style="--k:${i}"><text x="${lx.toFixed(1)}" y="${(ly - 4).toFixed(1)}" text-anchor="middle" class="n">${nf(n)}</text><text x="${lx.toFixed(1)}" y="${(ly + 18).toFixed(1)}" text-anchor="middle">${esc(nm)}</text></g>`;
+    a += (n / tot) * Math.PI * 2;
+  });
+  return `<svg class="mx-emb" viewBox="0 0 600 720" aria-hidden="true">
+    <circle cx="${cx}" cy="${cy}" r="${R + 26}" class="em-o"/><circle cx="${cx}" cy="${cy}" r="${R - 26}" class="em-o"/>
+    ${Array.from({ length: 72 }, (_, i) => { const ang = i / 72 * Math.PI * 2, r1 = R + 30, r2 = R + (i % 6 ? 34 : 40); return `<line class="em-t" x1="${(cx + Math.cos(ang) * r1).toFixed(1)}" y1="${(cy + Math.sin(ang) * r1).toFixed(1)}" x2="${(cx + Math.cos(ang) * r2).toFixed(1)}" y2="${(cy + Math.sin(ang) * r2).toFixed(1)}"/>`; }).join('')}
+    ${arcs}${labels}
+    <text x="${cx}" y="${cy + 6}" text-anchor="middle" class="em-big">${nf(X.signed.length || X.L.length)}</text>
+    <text x="${cx}" y="${cy + 44}" text-anchor="middle" class="em-cap">${X.signed.length ? 'شراكة موقّعة' : 'شراكة'}</text>
+    <text x="${cx}" y="${cy + 70}" text-anchor="middle" class="em-cap2">${nf(X.partners.length)} جهة · ${nf(secs.length)} قطاعات</text></svg>`;
+}
 function mxTree(X) {
   const secs = (X.sectors.length ? X.sectors : [['الشراكات', X.L.length]]).slice(0, 6);
   const W = 640, H = 600, bx = W / 2, by = H - 12, ty = H - 230;
@@ -23125,6 +23207,7 @@ function mkCardsHTML(items, startN, total, label) {
   return `<div class="px-co2 n${n}">${items.map((raw, i) => { const sp = mkSplit(raw); return `<article style="--i:${i}"><span class="px-co2-n">${String(startN + i + 1).padStart(2, '0')}</span><div class="px-co2-h"><i class="px-co2-ic">${icon(mkIconFor(sp.t, raw))}</i><b>${esc(mkClip(sp.t, sp.d ? (n <= 4 ? 90 : 62) : 140))}</b></div>${sp.d ? `<p>${esc(mkClip(sp.d, n <= 3 ? 230 : 120))}</p>` : ''}</article>`; }).join('')}</div>`;
 }
 const mkCardsHead = (h, count, noun, page, pages, sub) => `<div class="px-co2-head"><h2 class="mx-h">${h}</h2><div class="px-co2-sum"><b>${nf(count)}</b><span>${noun}${pages > 1 ? `<small>الصفحة ${page} من ${pages}</small>` : sub ? `<small>${esc(sub)}</small>` : ''}</span></div></div>`;
+if (!MK.cover) { try { MK.cover = localStorage.getItem('shk_mk_cover') || 'formal'; } catch (_) { MK.cover = 'formal'; } }
 const mkIconFor = (t, full) => (MK_ICONS.find(([re]) => re.test(t)) || MK_ICONS.find(([re]) => re.test(full || '')) || [, 'link'])[1];
 
 /* تقرير تسويقي لشراكة واحدة: كل شريحة تُبنى من بيانات الشراكة نفسها، وتُحذف إن لم تتوفر بياناتها */
@@ -23331,12 +23414,12 @@ function mkSlides() {
   /* 1. الغلاف */
   S.push(['seed', 'night', 'الغلاف', `
     <div class="mx-grain"></div>
-    ${mxTree(X)}
+    ${MK.cover === 'tree' ? mxTree(X) : mxEmblem(X)}
     <div class="mx-seed-t">
       <span class="mx-mast">${esc(org.name)} · تقرير الأثر ${yr}</span>
       <h1 class="mx-title"><span>${mkE('cover.t1', 'تقرير الشراكات')}</span> <em>${mkE('cover.t2', 'والأثر')}</em></h1>
-      <p>${mkE('cover.s', `${X.signed.length} شراكة موقّعة مع ${X.partners.length} جهة في ${X.sectors.length || 1} قطاعات. كل ورقة في الشكل تمثّل شراكة.`)}</p>
-      <div class="mx-key"><span><i class="a"></i>سارية</span><span><i class="g"></i>ذهبية</span><span><i class="u"></i>قادمة أو قيد الإعداد</span><span><i class="e"></i>منتهية</span></div>
+      <p>${mkE('cover.s', `${X.signed.length} شراكة موقّعة مع ${X.partners.length} جهة في ${X.sectors.length || 1} قطاعات.${MK.cover === 'tree' ? ' كل ورقة في الشكل تمثّل شراكة.' : ''}`)}</p>
+      ${MK.cover === 'tree' ? '<div class="mx-key"><span><i class="a"></i>سارية</span><span><i class="g"></i>ذهبية</span><span><i class="u"></i>قادمة أو قيد الإعداد</span><span><i class="e"></i>منتهية</span></div>' : `<div class="mx-cv-stats">${[[X.act.length, 'شراكة سارية'], [X.partners.length, 'جهة شريكة'], [X.value ? sarShort(X.value) : X.outputs.length, X.value ? 'قيمة تقديرية ⃁' : 'مخرجًا']].map(([v, l]) => `<div><b>${typeof v === 'number' ? nf(v) : esc(v)}</b><span>${l}</span></div>`).join('')}</div>`}
     </div>`]);
   /* 2. السطر الواحد: كلمة بكلمة */
   const man = rptVal('mk.man.t', `خلال ${yrs} بنينا ${X.signed.length} شراكة مع ${X.partners.length} جهة${X.value ? `، بقيمة تتجاوز ${sarShort(X.value)} ⃁` : ''}، بهدف تحقيق أثر بيئي ملموس وقابل للقياس.`);
@@ -23372,7 +23455,8 @@ function mkSlides() {
       <p class="mx-sub">${mkE('gr.s', `من أول شراكة في ${fmtDate(dated[0].startDate)} إلى اليوم: ${dated.length} شراكة.`)}</p>
       <svg class="mx-riv" viewBox="0 0 1280 720" aria-hidden="true"><path d="${d}" class="bed"/><path d="${d}" class="flow" pathLength="1"/>
         ${yrsL.map((y) => { const f = (new Date(y, 0, 1).getTime() - t0) / (t1 - t0); if (f < 0 || f > 1) return ''; const [x, yy] = P(f); return `<g class="yr"><line x1="${x}" x2="${x}" y1="${yy + 24}" y2="${yy + 60}"/><text x="${x}" y="${yy + 80}" text-anchor="middle">${y}</text></g>`; }).join('')}
-        ${dated.map((p, i) => { const f = (parseDate(p.startDate).getTime() - t0) / (t1 - t0); const [x, y] = P(f); return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${p.golden ? 10 : 7}" class="dt ${p.golden ? 'g' : ''}" style="--i:${i}"/>`; }).join('')}</svg>
+        ${dated.map((p, i) => { const f = (parseDate(p.startDate).getTime() - t0) / (t1 - t0); const [x, y] = P(f); return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${p.golden ? 10 : 7}" class="dt ${p.golden ? 'g' : ''}" style="--i:${i}" data-f="${f.toFixed(4)}"/>`; }).join('')}</svg>
+      ${dated.map((p, i) => { const pr = partnerById(p.partnerId); return `<div class="mx-rcard" data-i="${i}"><span class="lg">${logoOrMono(pr, partnerName(p))}</span><span class="tx"><em>${fmtDate(p.startDate)}</em><b>${esc(partnerName(p))}</b><small>${esc([pSector(p), statusLabel(pStatus(p))].filter(Boolean).join(' · '))}</small></span><i class="n">${i + 1}</i></div>`; }).join('')}
       ${[dated[0], dated[dated.length - 1]].map((p, k) => { const f = (parseDate(p.startDate).getTime() - t0) / (t1 - t0); const [x, y] = P(f); return `<div class="mx-call ${k ? 'end' : 'start'}" style="left:${Math.max(40, Math.min(1000, x - 120)).toFixed(0)}px;top:${(y - 150).toFixed(0)}px"><em>${k ? 'الأحدث' : 'البداية'}</em><b>${esc(partnerName(p))}</b><span>${fmtDate(p.startDate)}</span></div>`; }).join('')}`]);
   }
   /* 6. بطاقات النجوم */
@@ -23422,10 +23506,17 @@ function mkSlides() {
       </div>`]);
   }
   /* 10. الخطوات القادمة */
+  const hzCols = [
+    { n: X.props.length, l: 'مقترحات قيد الدراسة', d: 'وصلت من الإدارات عبر «شارك»', ic: 'send', items: X.props.map((x) => [x.partnerName || x.title || '—', propStatusLabel(x.status)]) },
+    { n: X.pipe.length, l: 'شراكات تقترب من التوقيع', d: 'في مراحل المذكرة والاعتماد', ic: 'convert', items: X.pipe.map((p) => { const w = wfStateOf('partnership', p); return [partnerName(p), w.cur ? `المرحلة ${w.cur.n} من ${WF_STEPS.length}` : stageLabel(p.stage)]; }) },
+    { n: X.soon.length, l: 'فرص تجديد وتوسّع', d: 'شراكات سارية تقترب من نهايتها', ic: 'history', items: X.soon.map((p) => [partnerName(p), daysLeft(p) !== null ? `تنتهي خلال ${nf(daysLeft(p))} يومًا` : 'تنتهي قريبًا']) },
+  ];
   S.push(['horizon', 'dawn', 'الخطوات القادمة', `
-    <div class="mx-sun"></div><svg class="mx-hz" viewBox="0 0 1280 720" preserveAspectRatio="none" aria-hidden="true"><path d="M0 560 Q 640 470 1280 560 L1280 720 L0 720Z"/><path d="M0 600 Q 640 520 1280 600" class="l"/></svg>
+    <div class="mx-sun"></div><svg class="mx-hz" viewBox="0 0 1280 720" preserveAspectRatio="none" aria-hidden="true"><path d="M0 610 Q 640 540 1280 610 L1280 720 L0 720Z"/><path d="M0 640 Q 640 575 1280 640" class="l"/></svg>
     <h2 class="mx-h">${mkE('nx.h', 'الفرص القادمة')}</h2>
-    <div class="mx-rise">${[[X.props.length, 'مقترح قيد الدراسة', 'send'], [X.pipe.length, 'شراكة تقترب من التوقيع', 'convert'], [X.soon.length, 'فرصة تجديد وتوسع', 'history']].map(([v, l, ic], i) => `<div style="--i:${i}"><span>${icon(ic)}</span>${mxCnt(v)}<small>${l}</small></div>`).join('')}</div>`]);
+    <p class="mx-sub">${mkE('nx.s', `${nf(hzCols.reduce((t, c) => t + c.n, 0))} فرصة على طاولة إدارة الشراكات الآن`)}</p>
+    <div class="mx-hz2">${hzCols.map((c, ci) => `<div class="hz-c" style="--i:${ci}"><div class="hz-top"><span class="hz-ic">${icon(c.ic)}</span>${mxCnt(c.n)}</div><h3>${c.l}</h3><small class="hz-d">${c.d}</small>
+      <ul>${c.items.slice(0, 4).map(([a, b], k) => `<li style="--k:${k}"><b>${esc(mkClip(a, 34))}</b><span>${esc(b)}</span></li>`).join('') || '<li class="none"><span>لا توجد حاليًا</span></li>'}</ul>${c.items.length > 4 ? `<em class="hz-more">+${nf(c.items.length - 4)} أخرى</em>` : ''}</div>`).join('')}</div>`]);
   /* 11. الختام: حلقتان تتشابكان */
   S.push(['bond', 'night', 'الختام', `
     <div class="mx-grain"></div>
@@ -23461,12 +23552,12 @@ function renderMarketingReport(el, r) {
     el.innerHTML = `<section class="mk-head">
         <div class="mk-head-t">${retLinkHTML('#/reports', 'استوديو التقارير')}<span class="rx-eye"><i></i>التقرير التسويقي</span><h1>${mkOne() ? esc(partnerName(mkOne())) : 'التقرير التسويقي'}</h1>
           <p>${mkOne() ? `تقرير تسويقي لهذه الشراكة في ${S.length} شرائح مبنية من بياناتها` : `أعمال الشراكات وإنجازاتها وأثرها في ${S.length} شرائح مبنية من البيانات`} لحظة العرض. اضغط أي عنوان لتعديله قبل العرض.</p></div>
-        <div class="mk-head-a"><button class="btn gold lg" type="button" data-mkshow ${S.length ? '' : 'disabled'}>${icon('play')} عرض بملء الشاشة</button><button class="btn lg" type="button" data-mkpdf ${S.length ? '' : 'disabled'}>${icon('print')} PDF</button></div>
+        <div class="mk-head-a"><button class="btn gold lg" type="button" data-mkshow ${S.length ? '' : 'disabled'}>${icon('play')} عرض بملء الشاشة</button><button class="btn lg" type="button" data-mkpdf ${S.length ? '' : 'disabled'}>${icon('print')} PDF</button><button class="btn lg" type="button" data-mkvideo ${S.length ? '' : 'disabled'} title="يُسجَّل العرض الحالي بالبيانات الحالية ويُنزَّل ملف فيديو">${icon('play')} فيديو</button></div>
       </section>
       <div class="mk-scope" role="tablist" aria-label="نطاق التقرير">
         <div class="mk-mode"><button type="button" class="${MK.scope !== 'one' ? 'on' : ''}" data-mkmode="all">${icon('layers')} كل الشراكات</button><button type="button" class="${MK.scope === 'one' ? 'on' : ''}" data-mkmode="one">${icon('file')} شراكة واحدة</button></div>
         ${MK.scope === 'one' ? `<select class="in mk-pick" id="mkPick" aria-label="اختر الشراكة"><option value="">اختر الشراكة…</option>${mkPool().sort((a, b) => partnerName(a).localeCompare(partnerName(b), 'ar')).map((p) => `<option value="${p.id}" ${p.id === MK.pid ? 'selected' : ''}>${esc(partnerName(p))}${p.title && partnerById(p.partnerId) && p.title !== partnerById(p.partnerId).name ? ' — ' + esc(p.title) : ''} (${esc(p.code || '')})</option>`).join('')}</select>`
-        : MK_SCOPES.map(([k, l, f]) => { const n = mkPool().filter(f).length; return `<button type="button" class="${MK.scope === k ? 'on' : ''}" data-mkscope="${k}" ${n ? '' : 'disabled'}>${esc(l)}<b>${n}</b></button>`; }).join('')}<span class="sp"></span>${mkOne() && (mkOne().attachments || []).some((a2) => !isImg(a2)) ? `<label class="mk-tog" title="عند الإخفاء تبقى الصور فقط، ولا تُطبع المستندات"><span class="switch"><input type="checkbox" data-mkdocs ${MK.docs === false ? '' : 'checked'}><i></i></span>المستندات في التقرير والطباعة</label>` : ''}<button type="button" class="linkbtn" data-mkreset>${icon('history')} استعادة النصوص الأصلية</button></div>
+        : MK_SCOPES.map(([k, l, f]) => { const n = mkPool().filter(f).length; return `<button type="button" class="${MK.scope === k ? 'on' : ''}" data-mkscope="${k}" ${n ? '' : 'disabled'}>${esc(l)}<b>${n}</b></button>`; }).join('')}${MK.scope !== 'one' ? `<div class="mk-mode mk-cover" title="شكل غلاف التقرير"><button type="button" class="${MK.cover !== 'tree' ? 'on' : ''}" data-mkcover="formal">غلاف رسمي</button><button type="button" class="${MK.cover === 'tree' ? 'on' : ''}" data-mkcover="tree">غلاف الشجرة</button></div>` : ''}<span class="sp"></span>${mkOne() && (mkOne().attachments || []).some((a2) => !isImg(a2)) ? `<label class="mk-tog" title="عند الإخفاء تبقى الصور فقط، ولا تُطبع المستندات"><span class="switch"><input type="checkbox" data-mkdocs ${MK.docs === false ? '' : 'checked'}><i></i></span>المستندات في التقرير والطباعة</label>` : ''}<button type="button" class="linkbtn" data-mkreset>${icon('history')} استعادة النصوص الأصلية</button></div>
       <div class="mk-deck" id="mkDeck">${S.length ? S.map((s, i) => `<div class="mk-fr" data-i="${i}">${s}</div>`).join('') : `<div class="panel">${MK.scope === 'one' ? emptyHTML({ ic: 'file', title: 'اختر الشراكة', text: 'اختر من القائمة أعلاه الشراكة التي تريد تقريرها التسويقي.' }) : emptyHTML({ ic: 'file', title: 'لا توجد شراكات في هذا النطاق', text: 'اختر نطاقًا آخر.' })}</div>`}</div>`;
     hydrateFiles(el);
     fit();
@@ -23485,6 +23576,8 @@ function renderMarketingReport(el, r) {
     const md = e.target.closest('[data-mkmode]'); if (md) { if (md.dataset.mkmode === 'one') { MK.scope = 'one'; if (!MK.pid || !mkPool().some((p) => p.id === MK.pid)) MK.pid = (mkPool()[0] || {}).id; } else if (MK.scope === 'one') MK.scope = 'all'; return draw(); }
     if (e.target.closest('[data-mkreset]')) { Object.keys(RPT.ov).filter((k) => k.startsWith('mk.')).forEach((k) => delete RPT.ov[k]); toast('استُعيدت النصوص الأصلية'); return draw(); }
     if (e.target.closest('[data-mkshow]')) return openReportShow(0, $$('#mkDeck .rs2', el));
+    const cv = e.target.closest('[data-mkcover]'); if (cv) { MK.cover = cv.dataset.mkcover; try { localStorage.setItem('shk_mk_cover', MK.cover); } catch (_) { /* */ } return draw(); }
+    if (e.target.closest('[data-mkvideo]')) return mkVideo($$('#mkDeck .rs2', el));
     if (e.target.closest('[data-mkpdf]')) {
       const one = mkOne(), title = 'التقرير-التسويقي-' + (one ? partnerName(one).replace(/\s+/g, '-') + '-' : '') + isoDate(today());
       const withDocs = one && MK.docs !== false && (one.attachments || []).some((a2) => a2.fileId && !isImg(a2));
@@ -23610,7 +23703,7 @@ function mkFxStart(sl) {
   /* إعداد كل نوع */
   const timers = [];
   const later = (ms, fn) => timers.push({ at: ms, fn, done: false });
-  let nodes = [], core = null, path = null, pathLen = 0, rays = 0;
+  let nodes = [], core = null, path = null, pathLen = 0, rays = 0, stops = [], rv = { k: -1, f: 0, t: 0, on: null };
   if (['seed', 'pcover', 'film'].includes(k) || tone === 'film') { dust(70, { up: true, gold: 0.75, r1: 2.6 }); rays = 3; }
   else if (k === 'three' || k === 'mult') { addBokeh(9); dust(30, { gold: 0.7 }); later(2000, () => sl.querySelectorAll('.mx-giants > *, .mx-eq b').forEach((e, i) => setTimeout(() => { if (sl._fxTk === tk) { const p = mkFxPos(sl, e); burst(p.x, p.y - 20, 30, 3.6); } }, i * 220))); }
   else if (k === 'orbit') {
@@ -23618,7 +23711,13 @@ function mkFxStart(sl) {
     later(300, () => { const c = sl.querySelector('.mx-core'); core = c ? mkFxPos(sl, c) : { x: 640, y: 400 }; nodes = [...sl.querySelectorAll('.mx-node')].map((n) => mkFxPos(sl, n)); });
   } else if (k === 'river' || k === 'ptime') {
     dust(26, { gold: 0.8, r1: 1.6 });
-    later(200, () => { path = sl.querySelector('.mx-riv .flow, svg path.flow'); try { pathLen = path ? path.getTotalLength() : 0; } catch (_) { pathLen = 0; } });
+    later(200, () => {
+      path = sl.querySelector('.mx-riv .flow, svg path.flow'); try { pathLen = path ? path.getTotalLength() : 0; } catch (_) { pathLen = 0; }
+      if (path && pathLen) {
+        const samp = Array.from({ length: 401 }, (_, q) => { const pt = path.getPointAtLength(q / 400 * pathLen); return [q / 400, pt.x, pt.y]; });
+        stops = [...sl.querySelectorAll('.mx-riv circle.dt')].map((c, ci) => { const x = +c.getAttribute('cx'), y = +c.getAttribute('cy'); let best = samp[0], bd = 1e9; samp.forEach((s_) => { const d = (s_[1] - x) ** 2 + (s_[2] - y) ** 2; if (d < bd) { bd = d; best = s_; } }); return { f: best[0], x, y, card: sl.querySelector(`.mx-rcard[data-i="${ci}"]`) }; }).sort((a, b) => a.f - b.f);
+      }
+    });
   } else if (k === 'bond') {
     dust(50, { gold: 0.8, up: true }); rays = 2;
     later(1700, () => { const pts = [...sl.querySelectorAll('.mx-bond .knot, circle.knot')]; if (pts.length) pts.forEach((e) => { const p = mkFxPos(sl, e); burst(p.x, p.y, 40, 4); }); else { burst(640, 270, 40, 4); burst(640, 470, 40, 4); } });
@@ -23654,7 +23753,23 @@ function mkFxStart(sl) {
     }
     /* نقطة تجري على منحنى النمو */
     if (path && pathLen && t > 2.6) {
-      const f = ((t - 2.6) * 0.09) % 1; for (let q = 0; q < 14; q++) { const ff = Math.max(0, f - q * 0.006); const pt = path.getPointAtLength(ff * pathLen); cx.fillStyle = q ? ink(0.32 * (1 - q / 14)) : 'rgba(217,180,103,1)'; cx.beginPath(); cx.arc(pt.x, pt.y, q ? 5 - q * 0.3 : 7, 0, 6.283); cx.fill(); }
+      /* تتنقل النقطة بين الشراكات بالترتيب الزمني: تتوقف عند كل شراكة وتظهر بطاقتها، ثم تكمل */
+      let f;
+      if (stops.length) {
+        const TRAVEL = 0.45, DWELL = 1.5, cyc = stops.length * (TRAVEL + DWELL) + 2, tt = (t - 2.6) % cyc, seg = Math.floor(tt / (TRAVEL + DWELL)), inSeg = tt - seg * (TRAVEL + DWELL);
+        if (seg >= stops.length) { f = stops[stops.length - 1].f; if (rv.on) { rv.on.classList.remove('on'); rv.on = null; } }
+        else {
+          const from = seg ? stops[seg - 1].f : 0, to = stops[seg].f, k_ = Math.min(1, inSeg / TRAVEL), e = k_ * k_ * (3 - 2 * k_);
+          f = from + (to - from) * e;
+          const card = stops[seg].card;
+          if (k_ >= 1 && card && rv.on !== card) {
+            if (rv.on) rv.on.classList.remove('on');
+            const st = stops[seg], above = st.y > 300;
+            card.style.left = Math.max(30, Math.min(1280 - 330, st.x - 150)) + 'px'; card.style.top = (above ? st.y - 118 : st.y + 26) + 'px';
+            card.classList.toggle('below', !above); card.classList.add('on'); rv.on = card; burst(st.x, st.y, 14, 1.8);
+          } else if (k_ < 1 && rv.on) { rv.on.classList.remove('on'); rv.on = null; }
+        }
+      } else f = ((t - 2.6) * 0.09) % 1; for (let q = 0; q < 14; q++) { const ff = Math.max(0, f - q * 0.006); const pt = path.getPointAtLength(ff * pathLen); cx.fillStyle = q ? ink(0.32 * (1 - q / 14)) : 'rgba(217,180,103,1)'; cx.beginPath(); cx.arc(pt.x, pt.y, q ? 5 - q * 0.3 : 7, 0, 6.283); cx.fill(); }
       const pt = path.getPointAtLength(f * pathLen), h = cx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, 26); h.addColorStop(0, 'rgba(217,180,103,.45)'); h.addColorStop(1, 'rgba(217,180,103,0)'); cx.fillStyle = h; cx.beginPath(); cx.arc(pt.x, pt.y, 26, 0, 6.283); cx.fill();
     }
     /* الجزيئات */
@@ -23698,6 +23813,37 @@ function mkPrelude(host, { title, sub, count }, done) {
   };
   if (MKFX_STILL()) setTimeout(finish, 1200); else requestAnimationFrame(frame);
   return finish;
+}
+
+/* — تنزيل التقرير فيديو: يُبنى من بيانات المنصة لحظة التسجيل، فيتحدث تلقائيًا مع أي تعديل.
+   يطلب المتصفح إذن تسجيل هذا التبويب، ثم يُعرض التقرير تلقائيًا بمقدمته وحركته ويُنزَّل الملف عند انتهائه. — */
+async function mkVideo(nodes) {
+  if (!nodes || !nodes.length) return;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia || typeof MediaRecorder === 'undefined') return toast('تسجيل الفيديو يحتاج متصفح Chrome أو Edge على الكمبيوتر.', 'err');
+  const per = 7, secs = Math.round(6 + nodes.length * per);
+  const ok = await confirmDlg(`سيُعرض التقرير تلقائيًا بملء الشاشة ويُسجَّل فيديو (حوالي ${Math.ceil(secs / 60)} دقيقة)، ثم يُنزَّل الملف.<br><br>عند ظهور نافذة المتصفح اختر <b>«هذا التبويب»</b> ثم «مشاركة». لا تغيّر التبويب أثناء التسجيل.`, { title: 'تنزيل التقرير فيديو', ok: 'بدء التسجيل' });
+  if (!ok) return;
+  let stream;
+  try { stream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 30, displaySurface: 'browser', width: { ideal: 1920 }, height: { ideal: 1080 } }, audio: false, preferCurrentTab: true, selfBrowserSurface: 'include', surfaceSwitching: 'exclude' }); }
+  catch (e) { return toast('لم يُسمح بالتسجيل.', 'err'); }
+  const types = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm'];
+  const mime = types.find((t) => MediaRecorder.isTypeSupported(t)) || '';
+  const rec = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 8e6 } : {});
+  const chunks = []; rec.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
+  let stopped = false;
+  const stop = () => { if (stopped) return; stopped = true; try { rec.state !== 'inactive' && rec.stop(); } catch (_) { /* */ } stream.getTracks().forEach((t) => t.stop()); };
+  rec.onstop = () => {
+    const ext = /mp4/.test(rec.mimeType || mime) ? 'mp4' : 'webm';
+    const one = typeof mkOne === 'function' && mkOne();
+    download(`التقرير-التسويقي-${one ? partnerName(one).replace(/\s+/g, '-') + '-' : ''}${isoDate(today())}.${ext}`, new Blob(chunks, { type: rec.mimeType || 'video/webm' }));
+    toast('نُزّل فيديو التقرير');
+    const ov = document.getElementById('rptShow'); if (ov) ov.querySelector('[data-a="exit"]') && ov.querySelector('[data-a="exit"]').click();
+  };
+  stream.getVideoTracks()[0].addEventListener('ended', stop);
+  await new Promise((r) => setTimeout(r, 400));
+  rec.start(1000);
+  window.__rshowAuto = { per: per * 1000, onEnd: () => setTimeout(stop, 800) };
+  openReportShow(0, nodes);
 }
 
 /* —— 24-reveal.js —— */

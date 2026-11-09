@@ -37,7 +37,7 @@ function mkFxStart(sl) {
   /* إعداد كل نوع */
   const timers = [];
   const later = (ms, fn) => timers.push({ at: ms, fn, done: false });
-  let nodes = [], core = null, path = null, pathLen = 0, rays = 0;
+  let nodes = [], core = null, path = null, pathLen = 0, rays = 0, stops = [], rv = { k: -1, f: 0, t: 0, on: null };
   if (['seed', 'pcover', 'film'].includes(k) || tone === 'film') { dust(70, { up: true, gold: 0.75, r1: 2.6 }); rays = 3; }
   else if (k === 'three' || k === 'mult') { addBokeh(9); dust(30, { gold: 0.7 }); later(2000, () => sl.querySelectorAll('.mx-giants > *, .mx-eq b').forEach((e, i) => setTimeout(() => { if (sl._fxTk === tk) { const p = mkFxPos(sl, e); burst(p.x, p.y - 20, 30, 3.6); } }, i * 220))); }
   else if (k === 'orbit') {
@@ -45,7 +45,13 @@ function mkFxStart(sl) {
     later(300, () => { const c = sl.querySelector('.mx-core'); core = c ? mkFxPos(sl, c) : { x: 640, y: 400 }; nodes = [...sl.querySelectorAll('.mx-node')].map((n) => mkFxPos(sl, n)); });
   } else if (k === 'river' || k === 'ptime') {
     dust(26, { gold: 0.8, r1: 1.6 });
-    later(200, () => { path = sl.querySelector('.mx-riv .flow, svg path.flow'); try { pathLen = path ? path.getTotalLength() : 0; } catch (_) { pathLen = 0; } });
+    later(200, () => {
+      path = sl.querySelector('.mx-riv .flow, svg path.flow'); try { pathLen = path ? path.getTotalLength() : 0; } catch (_) { pathLen = 0; }
+      if (path && pathLen) {
+        const samp = Array.from({ length: 401 }, (_, q) => { const pt = path.getPointAtLength(q / 400 * pathLen); return [q / 400, pt.x, pt.y]; });
+        stops = [...sl.querySelectorAll('.mx-riv circle.dt')].map((c, ci) => { const x = +c.getAttribute('cx'), y = +c.getAttribute('cy'); let best = samp[0], bd = 1e9; samp.forEach((s_) => { const d = (s_[1] - x) ** 2 + (s_[2] - y) ** 2; if (d < bd) { bd = d; best = s_; } }); return { f: best[0], x, y, card: sl.querySelector(`.mx-rcard[data-i="${ci}"]`) }; }).sort((a, b) => a.f - b.f);
+      }
+    });
   } else if (k === 'bond') {
     dust(50, { gold: 0.8, up: true }); rays = 2;
     later(1700, () => { const pts = [...sl.querySelectorAll('.mx-bond .knot, circle.knot')]; if (pts.length) pts.forEach((e) => { const p = mkFxPos(sl, e); burst(p.x, p.y, 40, 4); }); else { burst(640, 270, 40, 4); burst(640, 470, 40, 4); } });
@@ -81,7 +87,23 @@ function mkFxStart(sl) {
     }
     /* نقطة تجري على منحنى النمو */
     if (path && pathLen && t > 2.6) {
-      const f = ((t - 2.6) * 0.09) % 1; for (let q = 0; q < 14; q++) { const ff = Math.max(0, f - q * 0.006); const pt = path.getPointAtLength(ff * pathLen); cx.fillStyle = q ? ink(0.32 * (1 - q / 14)) : 'rgba(217,180,103,1)'; cx.beginPath(); cx.arc(pt.x, pt.y, q ? 5 - q * 0.3 : 7, 0, 6.283); cx.fill(); }
+      /* تتنقل النقطة بين الشراكات بالترتيب الزمني: تتوقف عند كل شراكة وتظهر بطاقتها، ثم تكمل */
+      let f;
+      if (stops.length) {
+        const TRAVEL = 0.45, DWELL = 1.5, cyc = stops.length * (TRAVEL + DWELL) + 2, tt = (t - 2.6) % cyc, seg = Math.floor(tt / (TRAVEL + DWELL)), inSeg = tt - seg * (TRAVEL + DWELL);
+        if (seg >= stops.length) { f = stops[stops.length - 1].f; if (rv.on) { rv.on.classList.remove('on'); rv.on = null; } }
+        else {
+          const from = seg ? stops[seg - 1].f : 0, to = stops[seg].f, k_ = Math.min(1, inSeg / TRAVEL), e = k_ * k_ * (3 - 2 * k_);
+          f = from + (to - from) * e;
+          const card = stops[seg].card;
+          if (k_ >= 1 && card && rv.on !== card) {
+            if (rv.on) rv.on.classList.remove('on');
+            const st = stops[seg], above = st.y > 300;
+            card.style.left = Math.max(30, Math.min(1280 - 330, st.x - 150)) + 'px'; card.style.top = (above ? st.y - 118 : st.y + 26) + 'px';
+            card.classList.toggle('below', !above); card.classList.add('on'); rv.on = card; burst(st.x, st.y, 14, 1.8);
+          } else if (k_ < 1 && rv.on) { rv.on.classList.remove('on'); rv.on = null; }
+        }
+      } else f = ((t - 2.6) * 0.09) % 1; for (let q = 0; q < 14; q++) { const ff = Math.max(0, f - q * 0.006); const pt = path.getPointAtLength(ff * pathLen); cx.fillStyle = q ? ink(0.32 * (1 - q / 14)) : 'rgba(217,180,103,1)'; cx.beginPath(); cx.arc(pt.x, pt.y, q ? 5 - q * 0.3 : 7, 0, 6.283); cx.fill(); }
       const pt = path.getPointAtLength(f * pathLen), h = cx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, 26); h.addColorStop(0, 'rgba(217,180,103,.45)'); h.addColorStop(1, 'rgba(217,180,103,0)'); cx.fillStyle = h; cx.beginPath(); cx.arc(pt.x, pt.y, 26, 0, 6.283); cx.fill();
     }
     /* الجزيئات */
@@ -125,4 +147,35 @@ function mkPrelude(host, { title, sub, count }, done) {
   };
   if (MKFX_STILL()) setTimeout(finish, 1200); else requestAnimationFrame(frame);
   return finish;
+}
+
+/* — تنزيل التقرير فيديو: يُبنى من بيانات المنصة لحظة التسجيل، فيتحدث تلقائيًا مع أي تعديل.
+   يطلب المتصفح إذن تسجيل هذا التبويب، ثم يُعرض التقرير تلقائيًا بمقدمته وحركته ويُنزَّل الملف عند انتهائه. — */
+async function mkVideo(nodes) {
+  if (!nodes || !nodes.length) return;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia || typeof MediaRecorder === 'undefined') return toast('تسجيل الفيديو يحتاج متصفح Chrome أو Edge على الكمبيوتر.', 'err');
+  const per = 7, secs = Math.round(6 + nodes.length * per);
+  const ok = await confirmDlg(`سيُعرض التقرير تلقائيًا بملء الشاشة ويُسجَّل فيديو (حوالي ${Math.ceil(secs / 60)} دقيقة)، ثم يُنزَّل الملف.<br><br>عند ظهور نافذة المتصفح اختر <b>«هذا التبويب»</b> ثم «مشاركة». لا تغيّر التبويب أثناء التسجيل.`, { title: 'تنزيل التقرير فيديو', ok: 'بدء التسجيل' });
+  if (!ok) return;
+  let stream;
+  try { stream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 30, displaySurface: 'browser', width: { ideal: 1920 }, height: { ideal: 1080 } }, audio: false, preferCurrentTab: true, selfBrowserSurface: 'include', surfaceSwitching: 'exclude' }); }
+  catch (e) { return toast('لم يُسمح بالتسجيل.', 'err'); }
+  const types = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm'];
+  const mime = types.find((t) => MediaRecorder.isTypeSupported(t)) || '';
+  const rec = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 8e6 } : {});
+  const chunks = []; rec.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
+  let stopped = false;
+  const stop = () => { if (stopped) return; stopped = true; try { rec.state !== 'inactive' && rec.stop(); } catch (_) { /* */ } stream.getTracks().forEach((t) => t.stop()); };
+  rec.onstop = () => {
+    const ext = /mp4/.test(rec.mimeType || mime) ? 'mp4' : 'webm';
+    const one = typeof mkOne === 'function' && mkOne();
+    download(`التقرير-التسويقي-${one ? partnerName(one).replace(/\s+/g, '-') + '-' : ''}${isoDate(today())}.${ext}`, new Blob(chunks, { type: rec.mimeType || 'video/webm' }));
+    toast('نُزّل فيديو التقرير');
+    const ov = document.getElementById('rptShow'); if (ov) ov.querySelector('[data-a="exit"]') && ov.querySelector('[data-a="exit"]').click();
+  };
+  stream.getVideoTracks()[0].addEventListener('ended', stop);
+  await new Promise((r) => setTimeout(r, 400));
+  rec.start(1000);
+  window.__rshowAuto = { per: per * 1000, onEnd: () => setTimeout(stop, 800) };
+  openReportShow(0, nodes);
 }
