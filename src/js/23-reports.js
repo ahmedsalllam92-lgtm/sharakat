@@ -648,13 +648,13 @@ function openReportShow(start = 0, nodes) {
     <div class="rshow-thumbs" hidden>${src.map((n, k) => `<button type="button" class="rshow-th" data-j="${k}"><span class="rshow-thf">${n.outerHTML}</span><b>${k + 1}</b></button>`).join('')}</div>
     <div class="rshow-bar"><button type="button" data-a="prev" title="السابق (→)">${icon('chevR')}</button><span class="rshow-n"></span><button type="button" data-a="next" title="التالي (←)">${icon('chevL')}</button>
       <span class="rshow-sep"></span><button type="button" data-a="thumbs" title="الشرائح (T)">${icon('grid')}</button><button type="button" data-a="play" title="تشغيل تلقائي">${icon('play')}</button><button type="button" data-a="fs" title="ملء الشاشة (F)">${icon('expand')}</button><button type="button" data-a="exit" title="خروج (Esc)">${icon('x')}</button></div>
-    <div class="rshow-prog"><i></i></div>`;
+    <div class="rshow-prog"><i></i></div><div class="rshow-sweep" aria-hidden="true"></div>`;
   $$('[contenteditable]', ov).forEach((x) => x.removeAttribute('contenteditable')); $$('.rs2.mk', ov).forEach((x) => x.classList.remove('play')); $$('.rs2-t.ed', ov).forEach((x) => x.classList.remove('ed'));
   document.body.appendChild(ov); document.documentElement.classList.add('rshowing');
   const slides = $$('.rshow-slide', ov), N = slides.length;
   let i = Math.max(0, Math.min(N - 1, start)), timer = null, idle = null;
   const fit = () => { const k = Math.min(innerWidth / 1280, innerHeight / 720); $$('.rshow-slide > .rs2', ov).forEach((s) => { s.style.transform = `scale(${k})`; }); const tk = 168 / 1280; $$('.rshow-thf > .rs2', ov).forEach((s) => { s.style.transform = `scale(${tk})`; }); };
-  const show = (n) => { i = Math.max(0, Math.min(N - 1, n)); slides.forEach((s, k) => { s.classList.toggle('on', k === i); s.classList.toggle('past', k < i); const m = s.querySelector('.rs2.mk'); if (m && k === i) { m.classList.add('mk-anim'); m.classList.remove('play'); void m.offsetWidth; mkPlay(m); } }); $('.rshow-n', ov).textContent = `${i + 1} من ${N}`; $('.rshow-prog i', ov).style.width = `${((i + 1) / N) * 100}%`; $$('.rshow-th', ov).forEach((b, k) => b.classList.toggle('on', k === i)); const cur = $(`.rshow-th[data-j="${i}"]`, ov); cur && !$('.rshow-thumbs', ov).hidden && cur.scrollIntoView({ inline: 'center', block: 'nearest' }); };
+  const show = (n) => { i = Math.max(0, Math.min(N - 1, n)); slides.forEach((s, k) => { s.classList.toggle('on', k === i); s.classList.toggle('past', k < i); const m = s.querySelector('.rs2.mk'); if (m && k === i) { m.classList.add('mk-anim'); m.classList.remove('play'); void m.offsetWidth; mkPlay(m); } }); $('.rshow-n', ov).textContent = `${i + 1} من ${N}`; $('.rshow-prog i', ov).style.width = `${((i + 1) / N) * 100}%`; const sw = $('.rshow-sweep', ov); if (sw) { sw.classList.remove('go'); void sw.offsetWidth; sw.classList.add('go'); } $$('.rshow-th', ov).forEach((b, k) => b.classList.toggle('on', k === i)); const cur = $(`.rshow-th[data-j="${i}"]`, ov); cur && !$('.rshow-thumbs', ov).hidden && cur.scrollIntoView({ inline: 'center', block: 'nearest' }); };
   const stop = () => { clearInterval(timer); timer = null; $('[data-a="play"]', ov).innerHTML = icon('play'); };
   const close = () => { stop(); document.removeEventListener('keydown', keys, true); window.removeEventListener('resize', fit); document.removeEventListener('fullscreenchange', fsch); if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); ov.remove(); document.documentElement.classList.remove('rshowing'); };
   const keys = (e) => {
@@ -678,6 +678,13 @@ function openReportShow(start = 0, nodes) {
   ['mousemove', 'pointerdown', 'touchstart', 'wheel'].forEach((ev) => ov.addEventListener(ev, wake, { passive: true }));
   document.addEventListener('keydown', keys, true); window.addEventListener('resize', fit); document.addEventListener('fullscreenchange', fsch);
   fit(); show(i); wake();
+  /* التقرير التسويقي: مقدمة سينمائية، وميلان خفيف للشريحة مع حركة الفأرة */
+  const isMk = !!(src[0] && src[0].classList.contains('mk'));
+  if (isMk) {
+    ov.classList.add('rshow-mk');
+    if (i === 0 && typeof mkPrelude === 'function') { const one = typeof mkOne === 'function' && mkOne(); const c = liveCounts(); mkPrelude(ov, { title: one ? partnerName(one) : 'تقرير الشراكات والأثر', sub: one ? `تقرير الشراكة · ${new Date().getFullYear()}` : `${c.partners} جهة شريكة · ${c.active} شراكة سارية`, count: one ? 28 : c.partners }, () => show(i)); }
+    ov.addEventListener('pointermove', (e) => { const cur = $('.rshow-slide.on > .rs2', ov); if (!cur || matchMedia('(prefers-reduced-motion: reduce)').matches) return; const dx = (e.clientX / innerWidth - 0.5) * 2, dy = (e.clientY / innerHeight - 0.5) * 2, m = Math.hypot(dx, dy) || 1; cur.style.rotate = `${(-dy / m).toFixed(3)} ${(dx / m).toFixed(3)} 0 ${(Math.min(1, Math.hypot(dx, dy)) * 2.2).toFixed(2)}deg`; });
+  }
   if (ov.requestFullscreen) ov.requestFullscreen().catch(() => {});
 }
 

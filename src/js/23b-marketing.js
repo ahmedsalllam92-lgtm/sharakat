@@ -409,6 +409,7 @@ function mkSlides() {
 function mkPlay(sl) {
   if (!sl || sl.classList.contains('play')) return;
   sl.classList.add('play');
+  if (typeof mkFxStart === 'function') try { mkFxStart(sl); } catch (_) { /* المؤثرات ليست حرجة */ }
   sl.querySelectorAll('[data-cnt]').forEach((b) => {
     const to = +b.dataset.cnt, dec = +b.dataset.dec || 0, fmt = b.dataset.fmt, t0 = performance.now(), d = 1500;
     const step = (t) => { const k = Math.min(1, (t - t0) / d), v = to * (1 - Math.pow(1 - k, 3)); const txt = dec ? v.toFixed(dec) : nf(Math.round(v)); if (b.dataset.suf) b.innerHTML = txt + b.dataset.suf; else b.textContent = txt; /* اللاحقة (علامة الريال) تبقى أثناء العدّ */ if (k < 1) requestAnimationFrame(step); };
