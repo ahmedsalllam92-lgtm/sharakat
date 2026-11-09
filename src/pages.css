@@ -3326,3 +3326,11 @@ input.ph-bad{animation:phBad .4s}
 .wf-s.lock.cur .wf-now{color:color-mix(in srgb,var(--gold) 70%,var(--ink))}
 .wf-wait{font-size:12px;color:var(--muted);align-self:center;white-space:nowrap}
 .wf-ph.lockp .wf-list:has(.wf-s.lock.cur){opacity:1}
+
+/* العرض بملء الشاشة: الشريط والمصغّرات تختفي مع السكون */
+.rshow-bar,.rshow-prog,.rshow-thumbs{transition:opacity .35s ease,transform .35s ease}
+.rshow.idle .rshow-bar,.rshow.with-thumbs.idle .rshow-bar{opacity:0;pointer-events:none}
+.rshow.idle .rshow-thumbs{opacity:0;transform:translateY(16px);pointer-events:none}
+.rshow-thumbs{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.28) transparent}
+.rshow-thumbs::-webkit-scrollbar{height:6px}.rshow-thumbs::-webkit-scrollbar-track{background:transparent}
+.rshow-thumbs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.28);border-radius:6px}

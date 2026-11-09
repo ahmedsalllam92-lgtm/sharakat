@@ -642,7 +642,7 @@ function openReportShow(start = 0, nodes) {
   const stop = () => { clearInterval(timer); timer = null; $('[data-a="play"]', ov).innerHTML = icon('play'); };
   const close = () => { stop(); document.removeEventListener('keydown', keys, true); window.removeEventListener('resize', fit); document.removeEventListener('fullscreenchange', fsch); if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); ov.remove(); document.documentElement.classList.remove('rshowing'); };
   const keys = (e) => {
-    const k = e.key;
+    const k = e.key; wake();
     if (k === 'Escape') { e.preventDefault(); close(); }
     else if (k === 'ArrowLeft' || k === 'PageDown' || k === ' ' || k === 'Enter') { e.preventDefault(); show(i + 1); }
     else if (k === 'ArrowRight' || k === 'PageUp' || k === 'Backspace') { e.preventDefault(); show(i - 1); }
@@ -653,13 +653,15 @@ function openReportShow(start = 0, nodes) {
   const fsch = () => { ov.classList.toggle('fs', !!document.fullscreenElement); };
   ov.addEventListener('click', (e) => {
     const a = e.target.closest('[data-a]'), th = e.target.closest('[data-j]');
-    if (th) { show(+th.dataset.j); return; }
+    if (th) { show(+th.dataset.j); const tb = $('.rshow-thumbs', ov); tb.hidden = true; ov.classList.remove('with-thumbs'); return; }
     if (a) { const t = a.dataset.a; if (t === 'prev') show(i - 1); else if (t === 'next') show(i + 1); else if (t === 'exit') close(); else if (t === 'thumbs') { const tb = $('.rshow-thumbs', ov); tb.hidden = !tb.hidden; ov.classList.toggle('with-thumbs', !tb.hidden); show(i); } else if (t === 'fs') { if (!document.fullscreenElement) ov.requestFullscreen && ov.requestFullscreen().catch(() => {}); else document.exitFullscreen().catch(() => {}); } else if (t === 'play') { if (timer) stop(); else { a.innerHTML = icon('pause'); timer = setInterval(() => { if (i >= N - 1) stop(); else show(i + 1); }, 6000); } } return; }
     if (e.target.closest('.rshow-stage')) show(e.clientX < innerWidth / 2 ? i + 1 : i - 1);
   });
-  ov.addEventListener('mousemove', () => { ov.classList.remove('idle'); clearTimeout(idle); idle = setTimeout(() => ov.classList.add('idle'), 2600); });
+  /* أدوات العرض تختفي بعد ثوانٍ من السكون وتعود بتحريك الماوس أو بأي مفتاح؛ لا تختفي والمؤشر فوقها */
+  const wake = () => { ov.classList.remove('idle'); clearTimeout(idle); idle = setTimeout(() => { if (ov.querySelector('.rshow-bar:hover, .rshow-thumbs:hover')) wake(); else ov.classList.add('idle'); }, 2600); };
+  ['mousemove', 'pointerdown', 'touchstart', 'wheel'].forEach((ev) => ov.addEventListener(ev, wake, { passive: true }));
   document.addEventListener('keydown', keys, true); window.addEventListener('resize', fit); document.addEventListener('fullscreenchange', fsch);
-  fit(); show(i);
+  fit(); show(i); wake();
   if (ov.requestFullscreen) ov.requestFullscreen().catch(() => {});
 }
 
