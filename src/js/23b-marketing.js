@@ -258,7 +258,7 @@ function mkSlidesOne(p) {
     <div class="px-goals">${[...(p.strategicGoal ? [['الهدف الاستراتيجي', p.strategicGoal]] : []), ...(p.initiative ? [['المبادرة', p.initiative]] : []), ...gl.map((g) => ['هدف مرتبط', g])].slice(0, 6).map(([l, t], i) => `<div style="--i:${i}"><small>${esc(l)}</small><b>${esc(String(t).slice(0, 110))}</b></div>`).join('')}</div>`]);
   /* 7. المسار الزمني: السنوات والشهور، ونسبة المنقضي، وكل أحداث الشراكة الموثقة */
   if (s0 && e0 && e0 > s0) {
-    const ev = [[p.startDate, 'بداية الشراكة', 'a', 'flag']];
+    const ev = [[p.startDate, 'بداية الشراكة', 'a', 'flag'], ...(p.renewals || []).map((x) => [String(x.at).slice(0, 10), `تجديد حتى ${fmtDate(x.to)}`, 'g', 'history'])];
     try { const W = wfStateOf('partnership', p); WF_STEPS.forEach((x) => { const r_ = W.S[x.id]; if (r_ && r_.status === 'done' && r_.at && !r_.legacy) ev.push([r_.at, x.t, 'w', 'check']); }); } catch (_) { /* */ }
     evs.forEach((e) => ev.push([e.data.date || e.at, `تقييم الشراكة${evalScore(e.data) != null ? ': ' + evalScore(e.data) + '/100' : ''}`, 'b', 'award']));
     stories.forEach((st_) => st_.date && ev.push([st_.date, trimP(st_.title || 'إنجاز').slice(0, 42), 'c', 'star']));

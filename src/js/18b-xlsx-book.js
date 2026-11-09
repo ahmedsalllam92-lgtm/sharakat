@@ -105,8 +105,8 @@ function exportPartnershipsXlsx(list, base) {
   const sorted = [...list].sort((a, b) => STATUS_ORDER.indexOf(pStatus(a)) - STATUS_ORDER.indexOf(pStatus(b)) || partnerName(a).localeCompare(partnerName(b), 'ar'));
 
   /* — الشراكات — */
-  const H = ['#', 'الرمز', 'الجهة الشريكة', 'عنوان الشراكة', 'القطاع', 'نوع المذكرة', 'تصنيف الشراكة', 'الحالة', 'تاريخ البدء', 'تاريخ الانتهاء', 'المتبقي (يوم)', 'المسؤول', 'الإدارات المتقاطعة', 'التفعيل', ...(contacts ? ['ضابط الاتصال', 'البريد الإلكتروني', 'الجوال'] : []), 'آخر تحديث'];
-  const W = [5, 13, 34, 30, 11, 13, 20, 16, 12, 12, 10, 18, 28, 12, ...(contacts ? [22, 28, 14] : []), 16];
+  const H = ['#', 'الرمز', 'الجهة الشريكة', 'عنوان الشراكة', 'القطاع', 'نوع المذكرة', 'تصنيف الشراكة', 'الحالة', 'تاريخ البدء', 'تاريخ الانتهاء', 'المتبقي (يوم)', 'التجديد', 'المسؤول', 'الإدارات المتقاطعة', 'التفعيل', ...(contacts ? ['ضابط الاتصال', 'البريد الإلكتروني', 'الجوال'] : []), 'آخر تحديث'];
+  const W = [5, 13, 34, 30, 11, 13, 20, 16, 12, 12, 10, 20, 18, 28, 12, ...(contacts ? [22, 28, 14] : []), 16];
   const main = { name: 'الشراكات', tab: XL_C.petrol, cols: W, freeze: { row: 4, col: 3 }, rows: titleRows('سجل الشراكات', `${list.length} شراكة`), active: true, printTitles: 4 };
   main.rows[2].cells = H.map(() => ({ v: '', s: T.band }));
   main.rows.push({ ht: 30, cells: H.map((h) => ({ v: h, s: T.head })) });
@@ -119,6 +119,7 @@ function exportPartnershipsXlsx(list, base) {
       { v: statusLabel(st) + (p.isDraft ? ' (مسودة)' : ''), s: stS[st] || T.cell },
       { v: xlDate(p.startDate), s: z(i, T.date, T.dateZ) }, { v: xlDate(p.endDate), s: z(i, T.date, T.dateZ) },
       { v: dl !== null && ['active', 'soon'].includes(st) ? dl : '', s: z(i, T.num, T.numZ) },
+      { v: (p.renewals || []).length ? `مُجدَّدة ${(p.renewals || []).length > 1 ? (p.renewals || []).length + ' مرات' : 'مرة'} — آخرها حتى ${fmtDate(p.renewals[p.renewals.length - 1].to)}` : (p.renewDecision && p.renewDecision.rec === 'لا تستحق التجديد' ? 'لا تستحق التجديد' : ''), s: z(i, T.cell, T.cellZ) },
       { v: (p.owners || []).join('، '), s: z(i, T.cell, T.cellZ) }, { v: (p.departments || []).join('، '), s: z(i, T.cell, T.cellZ) }, { v: p.activation || '', s: z(i, T.cell, T.cellZ) },
       ...(contacts ? [{ v: p.contactName || '', s: z(i, T.cell, T.cellZ) }, { v: p.contactEmail || '', s: z(i, T.cell, T.cellZ) }, { v: p.contactPhone || '', s: z(i, T.num, T.numZ) }] : []),
       { v: fmtDT(p.updatedAt || p.createdAt), s: z(i, T.num, T.numZ) },

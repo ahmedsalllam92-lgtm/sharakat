@@ -7274,6 +7274,33 @@ code.pw-user{font-size:12.5px;background:var(--paper-2);padding:2px 8px;border-r
 @keyframes gsfFrame{0%{stroke-dashoffset:1;opacity:1}45%{stroke-dashoffset:0;opacity:1}78%{opacity:1}100%{stroke-dashoffset:0;opacity:0}}
 @keyframes gsfSheen{to{left:120%}}
 @media print{.gspot-formal{display:none!important}}
+/* تقييم التجديد: الدائرة المتحركة */
+.rnw-fab{position:fixed;inset-inline-start:22px;bottom:96px;z-index:60;width:104px;height:104px;border:0;padding:0;border-radius:50%;cursor:pointer;background:radial-gradient(circle at 35% 30%,#1F6B55,#0F4433 70%);color:#fff;box-shadow:0 18px 40px -16px rgba(15,68,51,.75);animation:rnwFloat 4.5s ease-in-out infinite}
+.rnw-fab svg{position:absolute;inset:-6px;width:116px;height:116px}
+.rnw-fab .t{fill:none;stroke:rgba(255,255,255,.14);stroke-width:4}
+.rnw-fab .v{fill:none;stroke:#E6C786;stroke-width:4;stroke-linecap:round}
+.rnw-fab .o{fill:none;stroke:rgba(230,199,134,.5);stroke-width:1.2;stroke-dasharray:3 7;transform-origin:50% 50%;animation:rnwSpin 14s linear infinite}
+.rnw-fab::before{content:"";position:absolute;inset:-10px;border-radius:50%;border:2px solid rgba(230,199,134,.45);animation:rnwPulse 2.4s ease-out infinite}
+.rnw-in{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;margin-top:-8px}
+.rnw-in b{font-family:var(--display,var(--font));font-size:30px;line-height:1;color:#F6E4B0}.rnw-in small{font-size:11px;color:#CFE3DB}
+.rnw-lbl{position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);white-space:nowrap;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:20px;background:#E6C786;color:#0F2E27;box-shadow:0 6px 14px -6px rgba(0,0,0,.4)}
+.rnw-fab:hover{animation-play-state:paused;transform:scale(1.05)}
+@keyframes rnwFloat{0%,100%{translate:0 0}25%{translate:0 -8px}50%{translate:6px -2px}75%{translate:0 6px}}
+@keyframes rnwSpin{to{transform:rotate(360deg)}}
+@keyframes rnwPulse{0%{transform:scale(.92);opacity:.9}100%{transform:scale(1.25);opacity:0}}
+@media (prefers-reduced-motion:reduce){.rnw-fab,.rnw-fab::before,.rnw-fab .o{animation:none}}
+@media print{.rnw-fab{display:none!important}}
+.rnw-chip{background:color-mix(in srgb,var(--gold) 16%,var(--paper));color:var(--gold-ink,#7A5C22);border-color:color-mix(in srgb,var(--gold) 40%,transparent)}
+.rnw-chip .ic{width:12px;height:12px}
+.rnw-hist{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:6px;font-size:12.5px}
+.rnw-hist>b{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--gold-ink,#7A5C22)}.rnw-hist>b .ic{width:13px;height:13px}
+.rnw-hist>div{display:flex;gap:8px;align-items:flex-start}
+.rnw-hist .n{flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--paper-2);color:var(--ink-2)}
+.rnw-hist small{display:block;font-size:11px;color:var(--muted)}
+
+/* الدائرة في مساحة المحتوى بعيدًا عن القائمة الجانبية */
+.rnw-fab{inset-inline-start:auto;left:26px;right:auto}
+.p-alert .rnw-go{margin-inline-start:8px}
 </style>
 </head>
 <body>
@@ -20948,8 +20975,8 @@ function exportPartnershipsXlsx(list, base) {
   const sorted = [...list].sort((a, b) => STATUS_ORDER.indexOf(pStatus(a)) - STATUS_ORDER.indexOf(pStatus(b)) || partnerName(a).localeCompare(partnerName(b), 'ar'));
 
   /* — الشراكات — */
-  const H = ['#', 'الرمز', 'الجهة الشريكة', 'عنوان الشراكة', 'القطاع', 'نوع المذكرة', 'تصنيف الشراكة', 'الحالة', 'تاريخ البدء', 'تاريخ الانتهاء', 'المتبقي (يوم)', 'المسؤول', 'الإدارات المتقاطعة', 'التفعيل', ...(contacts ? ['ضابط الاتصال', 'البريد الإلكتروني', 'الجوال'] : []), 'آخر تحديث'];
-  const W = [5, 13, 34, 30, 11, 13, 20, 16, 12, 12, 10, 18, 28, 12, ...(contacts ? [22, 28, 14] : []), 16];
+  const H = ['#', 'الرمز', 'الجهة الشريكة', 'عنوان الشراكة', 'القطاع', 'نوع المذكرة', 'تصنيف الشراكة', 'الحالة', 'تاريخ البدء', 'تاريخ الانتهاء', 'المتبقي (يوم)', 'التجديد', 'المسؤول', 'الإدارات المتقاطعة', 'التفعيل', ...(contacts ? ['ضابط الاتصال', 'البريد الإلكتروني', 'الجوال'] : []), 'آخر تحديث'];
+  const W = [5, 13, 34, 30, 11, 13, 20, 16, 12, 12, 10, 20, 18, 28, 12, ...(contacts ? [22, 28, 14] : []), 16];
   const main = { name: 'الشراكات', tab: XL_C.petrol, cols: W, freeze: { row: 4, col: 3 }, rows: titleRows('سجل الشراكات', `${list.length} شراكة`), active: true, printTitles: 4 };
   main.rows[2].cells = H.map(() => ({ v: '', s: T.band }));
   main.rows.push({ ht: 30, cells: H.map((h) => ({ v: h, s: T.head })) });
@@ -20962,6 +20989,7 @@ function exportPartnershipsXlsx(list, base) {
       { v: statusLabel(st) + (p.isDraft ? ' (مسودة)' : ''), s: stS[st] || T.cell },
       { v: xlDate(p.startDate), s: z(i, T.date, T.dateZ) }, { v: xlDate(p.endDate), s: z(i, T.date, T.dateZ) },
       { v: dl !== null && ['active', 'soon'].includes(st) ? dl : '', s: z(i, T.num, T.numZ) },
+      { v: (p.renewals || []).length ? `مُجدَّدة ${(p.renewals || []).length > 1 ? (p.renewals || []).length + ' مرات' : 'مرة'} — آخرها حتى ${fmtDate(p.renewals[p.renewals.length - 1].to)}` : (p.renewDecision && p.renewDecision.rec === 'لا تستحق التجديد' ? 'لا تستحق التجديد' : ''), s: z(i, T.cell, T.cellZ) },
       { v: (p.owners || []).join('، '), s: z(i, T.cell, T.cellZ) }, { v: (p.departments || []).join('، '), s: z(i, T.cell, T.cellZ) }, { v: p.activation || '', s: z(i, T.cell, T.cellZ) },
       ...(contacts ? [{ v: p.contactName || '', s: z(i, T.cell, T.cellZ) }, { v: p.contactEmail || '', s: z(i, T.cell, T.cellZ) }, { v: p.contactPhone || '', s: z(i, T.num, T.numZ) }] : []),
       { v: fmtDT(p.updatedAt || p.createdAt), s: z(i, T.num, T.numZ) },
@@ -23408,7 +23436,7 @@ function mkSlidesOne(p) {
     <div class="px-goals">${[...(p.strategicGoal ? [['الهدف الاستراتيجي', p.strategicGoal]] : []), ...(p.initiative ? [['المبادرة', p.initiative]] : []), ...gl.map((g) => ['هدف مرتبط', g])].slice(0, 6).map(([l, t], i) => `<div style="--i:${i}"><small>${esc(l)}</small><b>${esc(String(t).slice(0, 110))}</b></div>`).join('')}</div>`]);
   /* 7. المسار الزمني: السنوات والشهور، ونسبة المنقضي، وكل أحداث الشراكة الموثقة */
   if (s0 && e0 && e0 > s0) {
-    const ev = [[p.startDate, 'بداية الشراكة', 'a', 'flag']];
+    const ev = [[p.startDate, 'بداية الشراكة', 'a', 'flag'], ...(p.renewals || []).map((x) => [String(x.at).slice(0, 10), `تجديد حتى ${fmtDate(x.to)}`, 'g', 'history'])];
     try { const W = wfStateOf('partnership', p); WF_STEPS.forEach((x) => { const r_ = W.S[x.id]; if (r_ && r_.status === 'done' && r_.at && !r_.legacy) ev.push([r_.at, x.t, 'w', 'check']); }); } catch (_) { /* */ }
     evs.forEach((e) => ev.push([e.data.date || e.at, `تقييم الشراكة${evalScore(e.data) != null ? ': ' + evalScore(e.data) + '/100' : ''}`, 'b', 'award']));
     stories.forEach((st_) => st_.date && ev.push([st_.date, trimP(st_.title || 'إنجاز').slice(0, 42), 'c', 'star']));
@@ -25672,7 +25700,7 @@ function fFieldHTML(f, v, ro) {
       return `<div class="field ff ${f.opts.length > 4 ? 'full' : ''}" data-fk="${f.k}">${lab}<div class="ff-chips" role="${f.type === 'multi' ? 'group' : 'radiogroup'}">${f.opts.map((o) => `<button type="button" class="ff-chip ${vals.includes(o) ? 'on' : ''}" data-chip="${esc(o)}" ${dis} aria-pressed="${vals.includes(o)}">${f.type === 'multi' ? icon('check') : ''}${esc(o)}</button>`).join('')}</div>${hint}${f.list && !ro ? `<button type="button" class="ff-chip add" data-chipadd="${f.list}" title="${canListDirect() ? 'يُضاف إلى القائمة مباشرة' : 'يُرسل لإدارة الشراكات للاعتماد'}">${icon('plus')} إضافة خيار</button>` : ''}${f.auto === 'iev' ? `<div class="ff-auto" data-auto="${f.k}"></div>` : ''}</div>`;
     }
     case 'checklist': return `<div class="field ff full" data-fk="${f.k}"><table class="ff-tbl"><thead><tr><th>م</th><th>عنصر المراجعة</th>${f.weights ? '<th>الوزن</th>' : ''}${f.opts.map(([, l]) => `<th>${l}</th>`).join('')}<th>الملاحظات</th></tr></thead><tbody>
-      ${f.items.map((it, i) => { const c = (v || {})[i] || {}; return `<tr data-row="${i}"><td class="c">${i + 1}</td><td>${esc(it)}</td>${f.weights ? `<td class="c"><span class="ff-w">${f.weights[i]}%</span></td>` : ''}${f.opts.map(([k]) => `<td class="c"><button type="button" class="ff-tick ${c.v === k ? 'on ' + k : ''}" data-tick="${k}" ${dis} aria-label="${esc(it)}">${c.v === k ? icon(k === 'ok' ? 'check' : 'x') : ''}</button></td>`).join('')}<td><input class="in sm" data-note value="${esc(c.n || '')}" ${dis}></td></tr>`; }).join('')}</tbody></table>${f.weights ? '<div class="ff-iev" id="ffIev"></div>' : ''}</div>`;
+      ${f.items.map((it, i) => { const c = (v || {})[i] || {}; return `<tr data-row="${i}"><td class="c">${i + 1}</td><td>${esc(it)}</td>${f.weights ? `<td class="c"><span class="ff-w">${f.weights[i]}%</span></td>` : ''}${f.opts.map(([k]) => `<td class="c"><button type="button" class="ff-tick ${c.v === k ? 'on ' + k : ''}" data-tick="${k}" ${dis} aria-label="${esc(it)}">${c.v === k ? icon(k === 'ok' || k === 'yes' ? 'check' : k === 'part' ? 'alert' : 'x') : ''}</button></td>`).join('')}<td><input class="in sm" data-note value="${esc(c.n || '')}" ${dis}></td></tr>`; }).join('')}</tbody></table>${f.weights ? '<div class="ff-iev" id="ffIev"></div>' : ''}</div>`;
     case 'scores': return `<div class="field ff full" data-fk="${f.k}"><table class="ff-tbl ff-sc"><thead><tr><th>المعيار</th><th>الوزن</th><th>التقييم</th><th>ملاحظات</th></tr></thead><tbody>
       ${f.items.map((c) => { const x = (v || {})[c.k] || {}; return `<tr data-row="${c.k}"><td><b>${esc(c.l)}</b><small>${esc(c.d)}</small></td><td class="c">${c.w}%</td><td class="c"><div class="ff-stars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" class="ff-st ${+x.v >= n ? 'on' : ''}" data-score="${n}" ${dis} aria-label="${n}">${n}</button>`).join('')}</div></td><td><input class="in sm" data-note value="${esc(x.n || '')}" ${dis}></td></tr>`; }).join('')}</tbody></table><div class="ff-total" id="ffTotal"></div></div>`;
     case 'clauses': {
@@ -25799,7 +25827,7 @@ function openForm(kind, rec, key, { onDone, ro = false, evalIdx = null } = {}) {
     await Repo.saveSettings();
     await Repo.save(kind === 'proposal' ? 'proposals' : 'partnerships', rec);
     await Repo.log('form.' + mode, kind, rec.id, kind === 'proposal' ? rec.ref : rec.code, `${F.short || F.title} (${target.no})${mode === 'done' ? ' — مكتمل' : ' — مسودة'}${F.score && F.score(d) ? ': ' + F.score(d) : ''}`);
-    toast(mode === 'done' ? `اكتمل ${F.short || F.title}` : 'حُفظت المسودة');
+    toast(mode === 'done' ? ((F.doneMsg && F.doneMsg(rec, d)) || `اكتمل ${F.short || F.title}`) : 'حُفظت المسودة');
     m.close(); onDone && onDone();
   };
 }
@@ -26344,6 +26372,123 @@ function mouDocHTML(kind, rec) {
 FORM_DOCS.mou = mouDocHTML;
 /* خطوة «بناء مسودة المذكرة»: المسودة تُكتب على نموذج المنظومة أو تُرفع ملفًا */
 (() => { const s = WF_STEPS.find((x) => x.id === 'draft'); const dk = s && s.docs.find((x) => x.k === 'draft'); if (dk && !dk.form) dk.form = 'mou'; })();
+
+/* —— 28g-renewal.js —— */
+/* =====================================================================
+   تقييم التجديد وخطة التفعيل
+   - قبل انتهاء الشراكة بـ 60 يومًا تظهر في صفحتها دائرة متحركة «تقييم التجديد» تفتح نموذجًا بسيطًا:
+     هل حققت الشراكة أهدافها وتستحق التجديد؟ وإن كانت التوصية التجديد تُحدد مدته أو تاريخه،
+     فيُحدَّث تاريخ الانتهاء ويُسجَّل التجديد في سجل الشراكة ويظهر في صفحتها وفي التقارير.
+   - خطة تفعيل المذكرة (الخطوة 12) نموذج داخل المنظومة بدل الملف (ويبقى رفع الملف ممكنًا).
+   ===================================================================== */
+const RNW_DAYS = 60;
+const RNW_YES = ['تستحق التجديد', 'تجديد بشروط'];
+const RNW_MODES = ['سنة', 'سنتان', 'ثلاث سنوات', 'حتى تاريخ محدد'];
+function rnwAddYears(iso, n) { const d = parseDate(iso) || today(); const x = new Date(d); x.setFullYear(x.getFullYear() + n); return isoDate(x); }
+function rnwNewEnd(p, d) {
+  if (d.renewMode === 'حتى تاريخ محدد') return d.renewTo || '';
+  const n = { 'سنة': 1, 'سنتان': 2, 'ثلاث سنوات': 3 }[d.renewMode]; return n ? rnwAddYears(d.forEnd || p.endDate, n) : '';
+}
+FORMS.renewal = {
+  no: 'RNW', title: 'نموذج تقييم الشراكة للتجديد', short: 'تقييم التجديد', ic: 'history',
+  sections: (R, rec) => [
+    { t: 'الشراكة ومدتها', fields: [
+      { k: 'partner', l: 'الجهة الشريكة', type: 'text', def: R.name, req: true },
+      { k: 'term', l: 'مدة الشراكة الحالية', type: 'text', def: rec.startDate || rec.endDate ? `${rec.startDate ? fmtDate(rec.startDate) : '—'} — ${rec.endDate ? fmtDate(rec.endDate) : '—'}` : '' },
+      { k: 'forEnd', l: 'تاريخ الانتهاء الحالي', type: 'date', def: rec.endDate || '', req: true },
+    ] },
+    { t: 'هل نجحت الشراكة؟', note: 'خمسة أسئلة مباشرة؛ الإجابة «نعم» أو «جزئيًا» أو «لا»، مع ملاحظة عند الحاجة.', fields: [
+      { k: 'crit', type: 'checklist', opts: [['yes', 'نعم'], ['part', 'جزئيًا'], ['no', 'لا']], req: true, items: [
+        'حققت الشراكة أهدافها ومجالات التعاون المتفق عليها',
+        'نُفّذت المخرجات المستهدفة أو معظمها',
+        'التزم الشريك وكان التواصل معه فعّالًا',
+        'للشراكة أثر ملموس يخدم المؤسسة وأهدافها الاستراتيجية',
+        'يرغب الطرفان في الاستمرار وتوجد فرص لتوسيع التعاون',
+      ] },
+      { k: 'achieved', l: 'أبرز ما تحقق', type: 'textarea', rows: 3, def: (rec.highlight && rec.highlight.value) ? `${rec.highlight.value} ${rec.highlight.label || ''}`.trim() : '' },
+    ] },
+    { t: 'التوصية والتجديد', note: 'عند التوصية بالتجديد يُحدَّث تاريخ انتهاء الشراكة تلقائيًا عند إتمام النموذج.', fields: [
+      { k: 'rec', l: 'التوصية', type: 'chips', opts: ['تستحق التجديد', 'تجديد بشروط', 'لا تستحق التجديد'], req: true },
+      { k: 'renewMode', l: 'مدة التجديد', type: 'chips', opts: RNW_MODES, hint: 'تُحسب من تاريخ الانتهاء الحالي.' },
+      { k: 'renewTo', l: 'تاريخ الانتهاء الجديد (عند اختيار «حتى تاريخ محدد»)', type: 'date' },
+      { k: 'conds', l: 'الشروط أو الملاحظات', type: 'textarea', rows: 2 },
+      { k: 'by', l: 'المقيِّم', type: 'select', opts: partnersAccNames(), def: partnersAccDefault(), req: true },
+      { k: 'date', l: 'تاريخ التقييم', type: 'date', def: isoDate(today()), req: true },
+    ] },
+  ],
+  out: (rec, d) => {
+    if (!RNW_YES.includes(d.rec)) { rec.renewDecision = { at: nowISO(), rec: d.rec, forEnd: d.forEnd }; return; }
+    const to = rnwNewEnd(rec, d), from = d.forEnd || rec.endDate;
+    if (!to || (from && to <= from)) return;
+    rec.renewals = rec.renewals || [];
+    if (rec.renewals.some((x) => x.from === from && x.to === to)) return;
+    rec.renewals.push({ at: nowISO(), by: Session.userName(), from, to, mode: d.renewMode, rec: d.rec, conds: d.conds || '', no: (rec.forms && rec.forms.renewal && rec.forms.renewal.no) || '', data: JSON.parse(JSON.stringify(d)) });
+    rec.endDate = to; rec.renewDecision = { at: nowISO(), rec: d.rec, forEnd: to };
+  },
+  doneMsg: (rec, d) => RNW_YES.includes(d.rec) && rnwCount(rec) && rec.endDate === (rec.renewals[rec.renewals.length - 1] || {}).to ? `جُدّدت الشراكة حتى ${fmtDate(rec.endDate)}` : 'حُفظ تقييم التجديد في ملف الشراكة',
+  score: (d) => {
+    const c = d.crit || {}, v = Object.values(c).map((x) => x && x.v), yes = v.filter((x) => x === 'yes').length, part = v.filter((x) => x === 'part').length;
+    return `${d.rec || ''}${v.length ? ` — ${yes} نعم، ${part} جزئيًا من 5` : ''}`;
+  },
+};
+/* خطة تفعيل المذكرة */
+FORMS.activation = {
+  no: 'ACT', title: 'خطة تفعيل المذكرة', short: 'خطة التفعيل', step: 'bizdev', ic: 'flag',
+  sections: (R, rec) => [
+    { t: 'بيانات الخطة', fields: [
+      { k: 'partner', l: 'الجهة الشريكة', type: 'text', def: R.name, req: true },
+      { k: 'owner', l: 'الإدارة المسؤولة عن التفعيل', type: 'select', opts: L('departments'), def: wfDept('bizdev') },
+      { k: 'depts', l: 'الإدارات المنفذة', type: 'multi', opts: L('departments'), def: rec.departments || [] },
+      { k: 'from', l: 'بداية التنفيذ', type: 'date', def: rec.startDate || '' },
+      { k: 'to', l: 'نهاية التنفيذ', type: 'date', def: rec.endDate || '' },
+    ] },
+    { t: 'المبادرات المقترحة', note: 'كل مبادرة في سطر: اسمها — الإدارة — موعدها (مثال: حملة تشجير المنافذ — إدارة المشاريع — الربع الأول).', fields: [
+      { k: 'inits', l: 'المبادرات', type: 'textarea', rows: 6, req: true, def: (R.coop || []).slice(0, 4).map((c) => trimP(c).split(/[،,]/)[0]).join('\n') },
+      { k: 'kpis', l: 'مؤشرات القياس', type: 'textarea', rows: 3, hint: 'كيف يُقاس نجاح التفعيل (أعداد، نسب، مخرجات).' },
+      { k: 'needs', l: 'المتطلبات والموارد', type: 'textarea', rows: 2 },
+    ] },
+    { t: 'الاعتماد', fields: [
+      { k: 'by', l: 'المُعِدّ', type: 'text', def: Session.userName(), req: true },
+      { k: 'date', l: 'التاريخ', type: 'date', def: isoDate(today()), req: true },
+    ] },
+  ],
+  score: (d) => { const n = String(d.inits || '').split('\n').filter((x) => x.trim()).length; return n ? `${n} مبادرات` : ''; },
+};
+(() => { const s = WF_STEPS.find((x) => x.id === 'bizdev'); const dk = s && s.docs.find((x) => x.k === 'activationPlan'); if (dk && !dk.form) dk.form = 'activation'; })();
+
+/* — الحالة: هل حان تقييم التجديد؟ — */
+function rnwDue(p) {
+  if (!p || p.stage !== 'signed' || !p.endDate) return null;
+  const dl = daysLeft(p); if (dl === null || dl > RNW_DAYS || dl < -30) return null;
+  const dec = p.renewDecision; if (dec && dec.forEnd === p.endDate) return null; // قُيِّمت لهذه المدة
+  return dl;
+}
+const rnwCount = (p) => (p.renewals || []).length;
+function rnwChipHTML(p) { const n = rnwCount(p); return n ? `<span class="chip rnw-chip" title="آخر تجديد: حتى ${esc(fmtDate(p.renewals[n - 1].to))}">${icon('history')} مُجدَّدة${n > 1 ? ` (${n})` : ''}</span>` : ''; }
+function rnwHistoryHTML(p) {
+  const R = p.renewals || []; if (!R.length) return '';
+  return `<div class="rnw-hist"><b>${icon('history')} سجل التجديد</b>${R.map((x, i) => `<div><span class="n">${i + 1}</span><span>من ${fmtDate(x.from, 'short')} إلى <b>${fmtDate(x.to, 'short')}</b><small>${esc(x.mode || '')}${x.rec === 'تجديد بشروط' ? ' · بشروط' : ''} · ${fmtDate(String(x.at).slice(0, 10), 'short')}</small></span></div>`).join('')}</div>`;
+}
+/* الدائرة المتحركة داخل صفحة الشراكة */
+function rnwMount(el, id) {
+  const p = D.partnerships.find((x) => x.id === id); if (!p) return;
+  /* شارة التجديد وسجله */
+  const tag = el.querySelector('.dhead .tagline'); if (tag && rnwCount(p) && !tag.querySelector('.rnw-chip')) tag.insertAdjacentHTML('beforeend', rnwChipHTML(p));
+  const per = [...el.querySelectorAll('.side-card')].find((c) => (c.querySelector('h3') || {}).textContent === 'فترة الشراكة');
+  if (per && rnwCount(p)) per.insertAdjacentHTML('beforeend', rnwHistoryHTML(p));
+  const dl = rnwDue(p); if (dl === null || !can('edit.partnership')) return;
+  const C = 2 * Math.PI * 44, frac = Math.max(0, Math.min(1, dl / RNW_DAYS));
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'rnw-fab no-print'; b.title = 'تقييم الشراكة قبل انتهائها: هل تستحق التجديد؟';
+  b.innerHTML = `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44" class="t"/><circle cx="50" cy="50" r="44" class="v" stroke-dasharray="${(frac * C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/><circle cx="50" cy="50" r="48" class="o"/></svg>
+    <span class="rnw-in"><b>${dl >= 0 ? nf(dl) : '!'}</b><small>${dl >= 0 ? 'يومًا' : 'انتهت'}</small></span><span class="rnw-lbl">تقييم التجديد</span>`;
+  const go = () => openForm('partnership', p, 'renewal', { onDone: () => route() });
+  b.onclick = go; el.appendChild(b);
+  /* زر مختصر داخل تنبيه قرب الانتهاء */
+  const al = el.querySelector('.p-alert'); if (al && !al.querySelector('.rnw-go')) { const g = document.createElement('button'); g.type = 'button'; g.className = 'btn sm primary rnw-go'; g.innerHTML = `${icon('history')} تقييم التجديد`; g.onclick = go; al.appendChild(g); }
+}
+/* ربطها بصفحة الشراكة */
+const _rnwRender = renderPartnership;
+renderPartnership = function (el, r) { _rnwRender(el, r); try { rnwMount(el, r.params.id); } catch (e) { console.warn(e); } };
 
 /* —— 29-process.js —— */
 /* =====================================================================
