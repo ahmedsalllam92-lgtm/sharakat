@@ -6878,6 +6878,56 @@ input.ph-bad{animation:phBad .4s}
 
 .rp-grid{align-content:start;grid-auto-rows:auto}.rp-grid button{height:38px;min-height:0}
 .rp-grid{width:100%;box-sizing:border-box;contain:inline-size}
+
+/* لوحة المؤشرات: ترويسة مدمجة (العنوان والتاريخ في سطر، والفلاتر والنطاق في سطر) */
+.ob{gap:14px}
+.ob-head{align-items:center;gap:6px 20px;padding-inline-end:360px;min-height:64px}
+.ob-ttl h1{font-size:30px!important;margin:2px 0 0!important;line-height:1.2}
+.ob-ttl{display:grid;grid-template-columns:auto 1fr;align-items:end;gap:2px 18px}
+.ob-ttl .ob-eyebrow{grid-column:1/-1}
+.ob-meta{margin:0 0 4px!important;font-size:12px}
+.ob-filters{flex-direction:row!important;align-items:center;flex-wrap:wrap;gap:8px 14px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+.ob-filters .dz-fbar{flex:1 1 640px;min-width:0;margin:0}
+.ob-filters .dz2-active{flex:0 1 auto;border-top:0!important;padding-top:0!important}
+.ob-filters .dz2-active .sp{display:none}
+[data-design="board"] .ob-filters{border-radius:4px}
+@media (max-width:1100px){.ob-head{padding-inline-end:0;padding-top:56px}.ob-ttl{grid-template-columns:1fr}}
+@media (max-width:720px){.ob-ttl h1{font-size:26px!important}.ob-filters{padding:8px}}
+/* البوصلة والتذييل في صف واحد متوازن */
+.ob-row2{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)!important;align-items:stretch}
+.ob-row2 .ob-foot2{grid-template-columns:1fr!important;align-content:start}
+.ob-row2 .ob-foot2>div+div{border-inline-start:0!important;border-top:1px solid var(--line)}
+@media (max-width:1180px){.ob-row2{grid-template-columns:1fr!important}}
+/* خريطة الشركاء: صفوف القطاعات */
+.ob-mz3 .ob-sh p .ic{width:12px;height:12px;color:var(--gold);fill:currentColor;vertical-align:-1px}
+.ob-mz3 .ob-mzl b{font-weight:700;color:var(--ink-2);margin-inline-start:2px}
+.mz3{display:flex;flex-direction:column;margin-top:6px}
+.mz3-r{display:grid;grid-template-columns:200px minmax(0,1fr);gap:18px;padding:14px 0;border-top:1px solid var(--line)}
+.mz3-r:first-child{border-top:0;padding-top:4px}
+.mz3-h{align-self:start;position:sticky;top:calc(var(--top,64px) + 12px);display:flex;flex-direction:column;gap:8px;text-align:start;font:inherit;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--paper-2);cursor:pointer;color:var(--ink);transition:border-color .2s,background .2s}
+.mz3-h:hover{border-color:var(--petrol-3)}
+.mz3-t{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.mz3-t b{font-size:15px;font-family:var(--display,var(--font))}
+.mz3-t em{font-style:normal;font-size:22px;font-weight:700;color:var(--petrol);font-variant-numeric:tabular-nums;line-height:1}
+.mz3-bar{display:flex;gap:2px;height:7px;width:var(--w);min-width:30%;border-radius:4px;overflow:hidden}
+.mz3-bar i{display:block;min-width:4px}
+.mz3-h small{font-size:11.5px;color:var(--muted)}
+.mz3-h.on{background:var(--petrol);border-color:var(--petrol);color:#fff}.mz3-h.on .mz3-t em{color:#E6C786}.mz3-h.on small{color:#CFE3DB}
+.mz3-l{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;align-content:start}
+.mz3-p{position:relative;display:flex;align-items:center;gap:9px;height:44px;padding:0 10px 0 12px;border-radius:10px;border:1px solid var(--line);background:var(--paper);text-decoration:none;color:var(--ink-2);overflow:hidden;transition:border-color .2s,box-shadow .2s,transform .2s}
+.mz3-p::before{content:"";position:absolute;inset-block:8px;inset-inline-start:0;width:3px;border-radius:0 3px 3px 0;background:var(--c)}
+.mz3-p:hover{border-color:color-mix(in srgb,var(--c) 55%,var(--line));box-shadow:0 10px 22px -16px rgba(10,30,26,.45);transform:translateY(-1px)}
+.mz3-p .mg{width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:11px;font-weight:700;background:color-mix(in srgb,var(--c) 16%,var(--paper));color:var(--ink);overflow:hidden}
+.mz3-p .mg.has-lg{background:#fff;padding:3px;border:1px solid var(--line)}
+.mz3-p .mg img{max-width:100%;max-height:100%;object-fit:contain}
+.mz3-p .mg:has(.emb){background:transparent;padding:0}.mz3-p .mg>.emb{border-radius:50%;width:28px;height:28px}
+.mz3-p .nm{flex:1;min-width:0;font-size:12.5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mz3-p .star{flex:none;color:var(--gold)}.mz3-p .star .ic{width:12px;height:12px;fill:currentColor}
+[data-design="board"] .mz3-h,[data-design="board"] .mz3-p{border-radius:3px}
+@media (max-width:900px){.mz3-r{grid-template-columns:1fr;gap:10px}.mz3-h{position:static;flex-direction:row;flex-wrap:wrap;align-items:center}.mz3-bar{flex:1;width:auto;min-width:80px}.mz3-l{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}}
+@media print{.mz3-h{position:static}.mz3-p{height:34px}.mz3-l{grid-template-columns:repeat(4,1fr);gap:4px}}
+.ob-filters .dz-fbar{flex:0 1 auto}.ob-filters .dz2-active{margin-inline-start:auto}
+@media (max-width:1100px){.dv-host>.dv-bar{position:static!important;margin:0 0 4px!important}.ob-head{padding-top:0!important;min-height:0}}
 </style>
 </head>
 <body>
@@ -17874,11 +17924,11 @@ function obBody(list, all, animate) {
       ${obPulse(m, V, P)}
     </section>
     ${obMetro(P)}
-    <div class="ob-row">
+    <div class="ob-row ob-row2">
       ${obCompass(V)}
-      ${obMosaic(m.nd)}
+      ${obFoot(m)}
     </div>
-    ${obFoot(m)}`;
+    ${obMosaic(m.nd)}`;
 }
 
 /* — حلقات السنوات — */
@@ -18046,19 +18096,30 @@ function obCompass(V) {
   </section>`;
 }
 
-/* — خريطة الشركاء: عمود لكل قطاع، وكل شراكة سطر مدمج بالاسم الكامل ولون حالتها — */
+/* — خريطة الشركاء: صف لكل قطاع (توزيع حالاته وعدده) وشراكاته شرائح مدمجة تملأ العرض، مرتبة بالحالة — */
 function obMosaic(nd) {
   const secs = [...L('sectors'), 'غير محدد'];
   const g = {}; nd.forEach((p) => { const s = pSector(p) || 'غير محدد'; (g[s] = g[s] || []).push(p); });
-  const order = [...secs.filter((s) => g[s]), ...Object.keys(g).filter((s) => !secs.includes(s))];
+  const order = [...secs.filter((s) => g[s]), ...Object.keys(g).filter((s) => !secs.includes(s))].sort((a, b) => g[b].length - g[a].length);
   const rank = (p) => STATUS_ORDER.indexOf(pStatus(p));
-  const stl = ['active', 'soon', 'upcoming', 'sign', 'prep', 'ended'].filter((k) => nd.some((p) => pStatus(p) === k));
-  return `<section class="ob-card ob-mosaic" data-tour="dash-status">
-    <header class="ob-sh"><div><h2>${icon('grid')} خريطة الشركاء</h2><p>الشراكات حسب القطاع بلون حالتها. اضغط القطاع لتصفية اللوحة.</p></div>
-      <div class="ob-mzl">${stl.map((k) => `<span><i style="background:${ST_VAR(k)}"></i>${esc(statusLabel(k))}</span>`).join('')}</div></header>
-    <div class="ob-mz2" style="--n:${order.length}">${order.map((s) => `<div class="ob-mzc2">
-      <button type="button" class="ob-mzh2 ${(App.dashF.sector || []).includes(s) ? 'on' : ''}" data-cf="sector|${esc(s)}"><b>${esc(s)}</b><em>${g[s].length}</em></button>
-      <ul>${g[s].sort((a, b) => rank(a) - rank(b)).map((p) => { const pr = partnerById(p.partnerId) || {}; const st = pStatus(p); return `<li><a class="ob-tile2" href="#/partnerships/${p.id}" style="--c:${ST_VAR(st)}" ${tipAttr(`<b>${esc(partnerName(p))}</b><br>${esc(statusLabel(st))}${pr.domain ? ' · ' + esc(pr.domain) : ''}${p.ptype ? '<br>' + esc(p.ptype) : ''}`)}><span class="mg ${pr.logoFileId ? 'has-lg' : ''}">${logoOrMono(pr, partnerName(p))}</span><span class="nm">${esc(partnerName(p))}</span>${p.ptype && p.ptype.includes('استراتيجي') ? `<i class="star" title="شريك استراتيجي">${icon('star')}</i>` : ''}</a></li>`; }).join('')}</ul></div>`).join('')}</div>
+  const ST = ['active', 'soon', 'upcoming', 'sign', 'prep', 'ended'];
+  const stl = ST.filter((k) => nd.some((p) => pStatus(p) === k));
+  const max = Math.max(1, ...order.map((s) => g[s].length));
+  const strat = nd.filter((p) => p.ptype && p.ptype.includes('استراتيجي')).length;
+  return `<section class="ob-card ob-mosaic ob-mz3" id="obMap" data-tour="dash-status">
+    <header class="ob-sh"><div><h2>${icon('grid')} خريطة الشركاء</h2><p>${nd.length} شراكة في ${order.length} ${order.length === 1 ? 'قطاع' : 'قطاعات'}${strat ? ` · ${strat} شريك استراتيجي ${icon('star')}` : ''}. اضغط القطاع لتصفية اللوحة.</p></div>
+      <div class="ob-mzl">${stl.map((k) => `<span><i style="background:${ST_VAR(k)}"></i>${esc(statusLabel(k))} <b>${nd.filter((p) => pStatus(p) === k).length}</b></span>`).join('')}</div></header>
+    <div class="mz3">${order.map((s) => {
+      const ps = g[s].sort((a, b) => rank(a) - rank(b) || partnerName(a).localeCompare(partnerName(b), 'ar'));
+      const cnt = ST.map((k) => [k, ps.filter((p) => pStatus(p) === k).length]).filter(([, n]) => n);
+      const act = (cnt.find(([k]) => k === 'active') || [, 0])[1];
+      return `<div class="mz3-r">
+      <button type="button" class="mz3-h ${(App.dashF.sector || []).includes(s) ? 'on' : ''}" data-cf="sector|${esc(s)}" title="تصفية اللوحة على القطاع ${esc(s)}">
+        <span class="mz3-t"><b>${esc(s)}</b><em>${ps.length}</em></span>
+        <span class="mz3-bar" style="--w:${(ps.length / max * 100).toFixed(1)}%">${cnt.map(([k, n]) => `<i style="flex:${n};background:${ST_VAR(k)}" title="${esc(statusLabel(k))}: ${n}"></i>`).join('')}</span>
+        <small>${act ? `${act} سارية` : 'لا شراكات سارية'}${ps.length - act ? ` · ${ps.length - act} أخرى` : ''}</small></button>
+      <ul class="mz3-l">${ps.map((p) => { const pr = partnerById(p.partnerId) || {}; const st = pStatus(p); return `<li><a class="mz3-p" href="#/partnerships/${p.id}" style="--c:${ST_VAR(st)}" ${tipAttr(`<b>${esc(partnerName(p))}</b><br>${esc(statusLabel(st))}${pr.domain ? ' · ' + esc(pr.domain) : ''}${p.ptype ? '<br>' + esc(p.ptype) : ''}`)}><span class="mg ${pr.logoFileId ? 'has-lg' : ''}">${logoOrMono(pr, partnerName(p))}</span><span class="nm">${esc(partnerName(p))}</span>${p.ptype && p.ptype.includes('استراتيجي') ? `<i class="star" title="شريك استراتيجي">${icon('star')}</i>` : ''}</a></li>`; }).join('')}</ul>
+    </div>`; }).join('')}</div>
   </section>`;
 }
 
@@ -18141,7 +18202,7 @@ function obPresent(el, on) {
     if (html.requestFullscreen && !document.fullscreenElement) html.requestFullscreen().catch(() => {});
     let nav = $('#obShowNav'); if (!nav) { nav = document.createElement('div'); nav.id = 'obShowNav'; nav.className = 'ob-shownav'; document.body.appendChild(nav); }
     const secs = $$('#obBody > section, #obBody > .ob-row', el);
-    const names = ['الشراكات عبر السنين', 'خط المسار', 'القيمة والشركاء', 'القرارات والفريق'];
+    const names = ['الشراكات عبر السنين', 'خط المسار', 'القيمة والقرارات والفريق', 'خريطة الشركاء'];
     nav.innerHTML = `<button type="button" data-obprev aria-label="السابق">${icon('chevR')}</button>${secs.map((_, i) => `<button type="button" class="d" data-obgo="${i}" title="${names[i] || ''}">${i + 1}</button>`).join('')}<button type="button" data-obnext aria-label="التالي">${icon('chevL')}</button><button type="button" class="x" data-obexit>${icon('x')} إنهاء العرض</button>`;
     nav.onclick = (e) => { const g = e.target.closest('[data-obgo]'); if (g) return obGo(el, +g.dataset.obgo); if (e.target.closest('[data-obprev]')) return obGo(el, (App.obIdx || 0) - 1); if (e.target.closest('[data-obnext]')) return obGo(el, (App.obIdx || 0) + 1); if (e.target.closest('[data-obexit]')) return obPresent(el, false); };
     App.obKey = (e) => { if (!html.classList.contains('ob-show')) return; if (e.key === 'ArrowLeft' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); obGo(el, (App.obIdx || 0) + 1); } else if (e.key === 'ArrowRight' || e.key === 'PageUp') { e.preventDefault(); obGo(el, (App.obIdx || 0) - 1); } else if (e.key === 'Escape') obPresent(el, false); };

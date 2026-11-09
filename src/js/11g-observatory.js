@@ -112,11 +112,11 @@ function obBody(list, all, animate) {
       ${obPulse(m, V, P)}
     </section>
     ${obMetro(P)}
-    <div class="ob-row">
+    <div class="ob-row ob-row2">
       ${obCompass(V)}
-      ${obMosaic(m.nd)}
+      ${obFoot(m)}
     </div>
-    ${obFoot(m)}`;
+    ${obMosaic(m.nd)}`;
 }
 
 /* — حلقات السنوات — */
@@ -284,19 +284,30 @@ function obCompass(V) {
   </section>`;
 }
 
-/* — خريطة الشركاء: عمود لكل قطاع، وكل شراكة سطر مدمج بالاسم الكامل ولون حالتها — */
+/* — خريطة الشركاء: صف لكل قطاع (توزيع حالاته وعدده) وشراكاته شرائح مدمجة تملأ العرض، مرتبة بالحالة — */
 function obMosaic(nd) {
   const secs = [...L('sectors'), 'غير محدد'];
   const g = {}; nd.forEach((p) => { const s = pSector(p) || 'غير محدد'; (g[s] = g[s] || []).push(p); });
-  const order = [...secs.filter((s) => g[s]), ...Object.keys(g).filter((s) => !secs.includes(s))];
+  const order = [...secs.filter((s) => g[s]), ...Object.keys(g).filter((s) => !secs.includes(s))].sort((a, b) => g[b].length - g[a].length);
   const rank = (p) => STATUS_ORDER.indexOf(pStatus(p));
-  const stl = ['active', 'soon', 'upcoming', 'sign', 'prep', 'ended'].filter((k) => nd.some((p) => pStatus(p) === k));
-  return `<section class="ob-card ob-mosaic" data-tour="dash-status">
-    <header class="ob-sh"><div><h2>${icon('grid')} خريطة الشركاء</h2><p>الشراكات حسب القطاع بلون حالتها. اضغط القطاع لتصفية اللوحة.</p></div>
-      <div class="ob-mzl">${stl.map((k) => `<span><i style="background:${ST_VAR(k)}"></i>${esc(statusLabel(k))}</span>`).join('')}</div></header>
-    <div class="ob-mz2" style="--n:${order.length}">${order.map((s) => `<div class="ob-mzc2">
-      <button type="button" class="ob-mzh2 ${(App.dashF.sector || []).includes(s) ? 'on' : ''}" data-cf="sector|${esc(s)}"><b>${esc(s)}</b><em>${g[s].length}</em></button>
-      <ul>${g[s].sort((a, b) => rank(a) - rank(b)).map((p) => { const pr = partnerById(p.partnerId) || {}; const st = pStatus(p); return `<li><a class="ob-tile2" href="#/partnerships/${p.id}" style="--c:${ST_VAR(st)}" ${tipAttr(`<b>${esc(partnerName(p))}</b><br>${esc(statusLabel(st))}${pr.domain ? ' · ' + esc(pr.domain) : ''}${p.ptype ? '<br>' + esc(p.ptype) : ''}`)}><span class="mg ${pr.logoFileId ? 'has-lg' : ''}">${logoOrMono(pr, partnerName(p))}</span><span class="nm">${esc(partnerName(p))}</span>${p.ptype && p.ptype.includes('استراتيجي') ? `<i class="star" title="شريك استراتيجي">${icon('star')}</i>` : ''}</a></li>`; }).join('')}</ul></div>`).join('')}</div>
+  const ST = ['active', 'soon', 'upcoming', 'sign', 'prep', 'ended'];
+  const stl = ST.filter((k) => nd.some((p) => pStatus(p) === k));
+  const max = Math.max(1, ...order.map((s) => g[s].length));
+  const strat = nd.filter((p) => p.ptype && p.ptype.includes('استراتيجي')).length;
+  return `<section class="ob-card ob-mosaic ob-mz3" id="obMap" data-tour="dash-status">
+    <header class="ob-sh"><div><h2>${icon('grid')} خريطة الشركاء</h2><p>${nd.length} شراكة في ${order.length} ${order.length === 1 ? 'قطاع' : 'قطاعات'}${strat ? ` · ${strat} شريك استراتيجي ${icon('star')}` : ''}. اضغط القطاع لتصفية اللوحة.</p></div>
+      <div class="ob-mzl">${stl.map((k) => `<span><i style="background:${ST_VAR(k)}"></i>${esc(statusLabel(k))} <b>${nd.filter((p) => pStatus(p) === k).length}</b></span>`).join('')}</div></header>
+    <div class="mz3">${order.map((s) => {
+      const ps = g[s].sort((a, b) => rank(a) - rank(b) || partnerName(a).localeCompare(partnerName(b), 'ar'));
+      const cnt = ST.map((k) => [k, ps.filter((p) => pStatus(p) === k).length]).filter(([, n]) => n);
+      const act = (cnt.find(([k]) => k === 'active') || [, 0])[1];
+      return `<div class="mz3-r">
+      <button type="button" class="mz3-h ${(App.dashF.sector || []).includes(s) ? 'on' : ''}" data-cf="sector|${esc(s)}" title="تصفية اللوحة على القطاع ${esc(s)}">
+        <span class="mz3-t"><b>${esc(s)}</b><em>${ps.length}</em></span>
+        <span class="mz3-bar" style="--w:${(ps.length / max * 100).toFixed(1)}%">${cnt.map(([k, n]) => `<i style="flex:${n};background:${ST_VAR(k)}" title="${esc(statusLabel(k))}: ${n}"></i>`).join('')}</span>
+        <small>${act ? `${act} سارية` : 'لا شراكات سارية'}${ps.length - act ? ` · ${ps.length - act} أخرى` : ''}</small></button>
+      <ul class="mz3-l">${ps.map((p) => { const pr = partnerById(p.partnerId) || {}; const st = pStatus(p); return `<li><a class="mz3-p" href="#/partnerships/${p.id}" style="--c:${ST_VAR(st)}" ${tipAttr(`<b>${esc(partnerName(p))}</b><br>${esc(statusLabel(st))}${pr.domain ? ' · ' + esc(pr.domain) : ''}${p.ptype ? '<br>' + esc(p.ptype) : ''}`)}><span class="mg ${pr.logoFileId ? 'has-lg' : ''}">${logoOrMono(pr, partnerName(p))}</span><span class="nm">${esc(partnerName(p))}</span>${p.ptype && p.ptype.includes('استراتيجي') ? `<i class="star" title="شريك استراتيجي">${icon('star')}</i>` : ''}</a></li>`; }).join('')}</ul>
+    </div>`; }).join('')}</div>
   </section>`;
 }
 
@@ -379,7 +390,7 @@ function obPresent(el, on) {
     if (html.requestFullscreen && !document.fullscreenElement) html.requestFullscreen().catch(() => {});
     let nav = $('#obShowNav'); if (!nav) { nav = document.createElement('div'); nav.id = 'obShowNav'; nav.className = 'ob-shownav'; document.body.appendChild(nav); }
     const secs = $$('#obBody > section, #obBody > .ob-row', el);
-    const names = ['الشراكات عبر السنين', 'خط المسار', 'القيمة والشركاء', 'القرارات والفريق'];
+    const names = ['الشراكات عبر السنين', 'خط المسار', 'القيمة والقرارات والفريق', 'خريطة الشركاء'];
     nav.innerHTML = `<button type="button" data-obprev aria-label="السابق">${icon('chevR')}</button>${secs.map((_, i) => `<button type="button" class="d" data-obgo="${i}" title="${names[i] || ''}">${i + 1}</button>`).join('')}<button type="button" data-obnext aria-label="التالي">${icon('chevL')}</button><button type="button" class="x" data-obexit>${icon('x')} إنهاء العرض</button>`;
     nav.onclick = (e) => { const g = e.target.closest('[data-obgo]'); if (g) return obGo(el, +g.dataset.obgo); if (e.target.closest('[data-obprev]')) return obGo(el, (App.obIdx || 0) - 1); if (e.target.closest('[data-obnext]')) return obGo(el, (App.obIdx || 0) + 1); if (e.target.closest('[data-obexit]')) return obPresent(el, false); };
     App.obKey = (e) => { if (!html.classList.contains('ob-show')) return; if (e.key === 'ArrowLeft' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); obGo(el, (App.obIdx || 0) + 1); } else if (e.key === 'ArrowRight' || e.key === 'PageUp') { e.preventDefault(); obGo(el, (App.obIdx || 0) - 1); } else if (e.key === 'Escape') obPresent(el, false); };

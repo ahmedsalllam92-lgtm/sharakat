@@ -24,7 +24,7 @@ async def main():
             ok(f'{d}: metro has 13 stations', await E("document.querySelectorAll('.ob-st').length===13"))
             ok(f'{d}: station counters add up to pipeline items', await E("[...document.querySelectorAll('.ob-cnt b')].reduce((t,b)=>t+ +b.textContent,0)===wfPipeline(applyFilters(visiblePartnerships(),App.dashF)).items.length && !document.querySelector('.ob-tk')"))
             ok(f'{d}: compass plots evaluated partnerships', await E("document.querySelectorAll('.ob-pt').length===valueData(visiblePartnerships().filter(p=>!p.isDraft)).ev.length"))
-            ok(f'{d}: mosaic tile per partnership', await E("document.querySelectorAll('.ob-tile2').length===visiblePartnerships().filter(p=>!p.isDraft).length"))
+            ok(f'{d}: mosaic tile per partnership', await E("document.querySelectorAll('.mz3-p').length===visiblePartnerships().filter(p=>!p.isDraft).length"))
             ok(f'{d}: switch to the other view', await E("document.querySelector('.ob-views a:not(.on)').getAttribute('href')") == '#/dashboard?v=' + ('brief' if d=='board' else 'classic'))
         # cross-filter from sector label + rays dim
         await E("applyDesign('classic')"); await pg.wait_for_timeout(500); await go('#/dashboard?v=obs', 2000)
@@ -88,7 +88,7 @@ async def main():
             await pg.keyboard.press('ArrowLeft'); await pg.wait_for_timeout(500)
             ok(f'{d}: arrow key moves to the next section', await E("App.obIdx===1 && document.querySelector('#obBody > .ob-cur').id==='obMetro'"))
             await pg.click('#obShowNav [data-obgo="3"]'); await pg.wait_for_timeout(500)
-            ok(f'{d}: navigator jumps to a section', await E("document.querySelector('#obBody > .ob-cur').id==='obFoot'"))
+            ok(f'{d}: navigator jumps to a section', await E("document.querySelector('#obBody > .ob-cur').id==='obMap'"))
             await pg.keyboard.press('Escape'); await pg.wait_for_timeout(400)
             ok(f'{d}: Esc ends the presentation', await E("!document.documentElement.classList.contains('ob-show') && !document.querySelector('#obShowNav')"))
             await E("window.dispatchEvent(new Event('beforeprint'))")
