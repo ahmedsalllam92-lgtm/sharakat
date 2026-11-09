@@ -30,7 +30,7 @@ function splashShow(force) {
   if (calm) el.classList.add('sp-min');
   const bgs = calm ? [] : cfg.bg === 'signings' && SIGN.length ? SIGN : [img(cfg.bg) || img('splash-aerial')];
   el.innerHTML = `${bgs.map((u, i) => `<div class="sp-bg ${bgs.length > 1 ? 'xf' : ''}" style="background-image:url('${u}');--k:${i};--n:${bgs.length}"></div>`).join('')}<div class="sp-veil ${bgs.length > 1 ? 'warm' : ''} ${cfg.bg === 'splash-bond' ? 'art' : ''}"></div>
-    ${calm ? '<div class="sp-glow" aria-hidden="true"></div>' : ''}<svg class="sp-geo" ${calm ? 'hidden' : ''} viewBox="-300 -300 600 600" aria-hidden="true">
+    ${calm ? '<div class="calm-deco" aria-hidden="true"><i class="cd-a"></i><i class="cd-b"></i><i class="cd-c"></i><span class="cd-lines"></span></div><div class="sp-glow" aria-hidden="true"></div>' : ''}<svg class="sp-geo" ${calm ? 'hidden' : ''} viewBox="-300 -300 600 600" aria-hidden="true">
       ${[110, 165, 220, 275].map((r, i) => `<circle r="${r}" class="ring" style="--i:${i}"/>`).join('')}
       <g class="bond"><circle class="b1" r="118"/><circle class="b2" r="118"/><circle class="knot" cy="-100" r="6"/><circle class="knot" cy="100" r="6"/></g>
       ${Array.from({ length: 12 }, (_, i) => { const a = i / 12 * Math.PI * 2; return `<circle class="dot" r="3" cx="${(Math.cos(a) * 220).toFixed(1)}" cy="${(Math.sin(a) * 220).toFixed(1)}" style="--i:${i}"/>`; }).join('')}
