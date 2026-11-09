@@ -6796,6 +6796,88 @@ input.ph-bad{animation:phBad .4s}
 .rshow-thumbs{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.28) transparent}
 .rshow-thumbs::-webkit-scrollbar{height:6px}.rshow-thumbs::-webkit-scrollbar-track{background:transparent}
 .rshow-thumbs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.28);border-radius:6px}
+/* نموذج مذكرة التعاون */
+.fdoc.mou{font-size:12.5px;line-height:1.95;padding:4px 2px}
+.mou *{box-sizing:border-box}
+.mou-cover{position:relative;overflow:hidden;margin:16px 0 18px;padding:22px 24px 18px;border-radius:14px;background:linear-gradient(135deg,#0F4433,#0B3F38 60%,#123B45);color:#fff;text-align:center}
+.mou-cover::before{content:"";position:absolute;inset:auto auto -70px -70px;width:230px;height:230px;border-radius:50%;border:1px solid rgba(230,199,134,.25);box-shadow:0 0 0 26px rgba(230,199,134,.06),0 0 0 54px rgba(230,199,134,.04)}
+.mou-eye{display:inline-block;font-size:12px;color:#E6C786;border:1px solid rgba(230,199,134,.45);border-radius:20px;padding:2px 14px;margin-bottom:14px}
+.mou-pp{position:relative;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px}
+.mou-p{display:flex;flex-direction:column;align-items:center;gap:6px}
+.mou-p b{font-size:16px;line-height:1.45}.mou-p small{font-size:10.5px;color:#B9CFC6}
+.mou-lg{width:64px;height:64px;border-radius:14px;background:#fff;display:grid;place-items:center;overflow:hidden;padding:7px;color:#0F4433;font-weight:700}
+.mou-lg img{max-width:100%;max-height:100%;object-fit:contain}.mou-lg .emb{width:50px;height:50px}
+.mou-amp{font-size:30px;color:#E6C786;line-height:1}
+.mou-facts{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0 0}
+.mou-facts>div{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:6px 8px}
+.mou-facts dt{font-size:10px;color:#9FBDB2}.mou-facts dd{margin:0;font-size:12.5px;font-weight:600}
+.mou-facts .mou-blank{color:#E6C786;border-color:rgba(230,199,134,.5)}
+.mou-basm{text-align:center;font-size:15px;font-weight:700;color:#0F4433;margin:6px 0 8px}
+.mou-intro{margin:6px 0;color:#2C3833}
+.mou-parties{list-style:none;padding:0;margin:8px 0;display:grid;gap:8px}
+.mou-parties li{border:1px solid #E4DED0;border-inline-start:4px solid #A47C32;border-radius:10px;padding:8px 12px;background:#FBF9F4}
+.mou-parties b{display:block;font-size:12px;color:#A47C32}.mou-parties p{margin:2px 0 0}
+.mou-art{margin:14px 0 0;break-inside:auto}
+.mou-art h3{display:flex;align-items:baseline;gap:10px;margin:0 0 6px;font-size:14px;color:#0F4433;padding-bottom:5px;border-bottom:1px solid #E4DED0;break-after:avoid}
+.mou-art h3 em{font-style:normal;font-size:11.5px;font-weight:700;color:#fff;background:#0F4433;border-radius:6px;padding:1px 10px;white-space:nowrap}
+.mou-pre h3 em{background:#A47C32}
+.mou-art p{margin:4px 0;text-align:justify}
+.mou-lead{font-weight:600;color:#2C3833}
+.mou-ol,.mou-coop{margin:4px 0;padding-inline-start:22px}
+.mou-ol li,.mou-coop li{margin:3px 0;text-align:justify;padding-inline-start:4px}
+.mou-coop{list-style:none;padding:0;counter-reset:mc;display:grid;gap:6px}
+.mou-coop li{counter-increment:mc;position:relative;padding:6px 40px 6px 10px;border-radius:9px;background:#F4F8F6;border:1px solid #E1ECE6}
+.mou-coop li::before{content:counter(mc);position:absolute;right:8px;top:7px;width:22px;height:22px;border-radius:50%;background:#1F6B55;color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center}
+.mou-ct{width:100%;border-collapse:collapse;margin-top:6px;font-size:12px}
+.mou-ct th,.mou-ct td{border:1px solid #E4DED0;padding:6px 10px;text-align:start}
+.mou-ct thead th{background:#F1EDE2;color:#0F4433}.mou-ct tbody th{width:120px;background:#FBF9F4;color:#6B756F;font-weight:600}
+.mou-blank{display:inline-block;min-width:70px;color:#9AA29D;border-bottom:1px dashed #C9C2B2;line-height:1.3}
+.mou-empty{color:#9AA29D}
+.mou-end{text-align:center;font-weight:700;color:#0F4433;margin:18px 0 10px}
+.mou-sigs{display:grid;grid-template-columns:1fr 1fr;gap:16px;break-inside:avoid}
+.mou-sigs>div{border:1px solid #E4DED0;border-radius:12px;padding:12px 14px;text-align:center;display:flex;flex-direction:column;gap:2px}
+.mou-sigs span{font-size:11px;color:#A47C32;font-weight:700}.mou-sigs b{font-size:13px;color:#0F4433}.mou-sigs small{font-size:11.5px;color:#6B756F}.mou-sigs strong{font-size:13px}
+.mou-sigs i{font-style:normal;margin-top:26px;padding-top:4px;border-top:1px dashed #C9C2B2;font-size:10.5px;color:#9AA29D}
+@media (max-width:640px){.mou-facts{grid-template-columns:1fr 1fr}.mou-sigs{grid-template-columns:1fr}.mou-pp{grid-template-columns:1fr}}
+@media print{.fdoc.mou{font-size:11.5px;line-height:1.85}.mou-cover{-webkit-print-color-adjust:exact;print-color-adjust:exact}.mou-coop li::before,.mou-art h3 em{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* استوديو التقارير: ترويسة أصغر */
+.rx-hero{padding:22px 30px;gap:16px;border-radius:18px}
+.rx-hero h1{font-size:34px;margin:6px 0 6px}
+.rx-hero p{font-size:14px;line-height:1.75;max-width:600px}
+.rx-fan{height:130px;transform:scale(.72);transform-origin:center}
+@media (max-width:720px){.rx-hero{padding:18px 16px}.rx-hero h1{font-size:28px}}
+/* شريط الشرائح: الموضع الحالي + مقاطع لكل شريحة تتسع للعرض كاملًا + شبكة «كل الشرائح» */
+.rp-nav2{display:flex;align-items:center;gap:10px;min-width:0}
+.rp-nav2 .rp-play{flex:none;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:999px;border:1px solid var(--brand);background:var(--brand);color:var(--brand-ink);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.rp-nav2 .rp-play .ic{width:13px;height:13px}
+.rp-cur{flex:none;display:flex;align-items:center;gap:6px;height:34px;padding:0 4px;border-radius:999px;border:1px solid var(--line);background:var(--paper);max-width:300px;min-width:0}
+.rp-cur button{width:26px;height:26px;border-radius:50%;border:0;background:transparent;color:var(--ink-2);display:grid;place-items:center;cursor:pointer;flex:none}
+.rp-cur button:hover{background:var(--paper-2);color:var(--petrol)}.rp-cur button .ic{width:15px;height:15px}
+.rp-cur span{display:inline-flex;align-items:baseline;gap:3px;font-variant-numeric:tabular-nums;flex:none}
+.rp-cur span b{font-size:14px;color:var(--ink)}.rp-cur span small{font-size:11.5px;color:var(--faint)}
+.rp-cur em{font-style:normal;font-size:12.5px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;padding-inline-start:6px;border-inline-start:1px solid var(--line)}
+.rp-segs{flex:1;min-width:60px;display:flex;gap:3px;align-items:center;height:34px}
+.rp-segs button{flex:1;min-width:0;height:100%;border:0;background:transparent;padding:0;cursor:pointer;display:flex;align-items:center}
+.rp-segs i{display:block;width:100%;height:6px;border-radius:4px;background:color-mix(in srgb,var(--ink) 12%,transparent);transition:height .15s,background .15s}
+.rp-segs button.rp-cv i{background:color-mix(in srgb,var(--gold) 45%,transparent)}
+.rp-segs button:hover i{height:10px;background:var(--petrol-3)}
+.rp-segs button.on i{height:10px;background:var(--brand)}
+.rp-all{flex:none;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink-2);font:inherit;font-size:12.5px;cursor:pointer}
+.rp-all .ic{width:14px;height:14px}.rp-all:hover,.rp-all.on{border-color:var(--petrol-3);color:var(--petrol)}
+.rp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:6px;max-height:min(46vh,360px);overflow:auto;padding:8px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+.rp-grid[hidden]{display:none}
+.rp-grid button{display:flex;align-items:center;gap:8px;min-height:34px;padding:4px 10px;border-radius:9px;border:1px solid transparent;background:var(--paper-2);color:var(--ink-2);font:inherit;font-size:12.5px;text-align:start;cursor:pointer}
+.rp-grid button b{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;background:var(--paper);color:var(--faint)}
+.rp-grid button span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rp-grid button.rp-cv b{color:var(--gold-ink)}
+.rp-grid button:hover{border-color:var(--petrol-3);color:var(--petrol)}
+.rp-grid button.on{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 10%,var(--paper))}.rp-grid button.on b{background:var(--brand);color:var(--brand-ink)}
+[data-design="board"] .rp-nav2 .rp-play,[data-design="board"] .rp-cur,[data-design="board"] .rp-all{border-radius:3px}
+@media (max-width:720px){.rp-nav2{flex-wrap:wrap}.rp-segs{order:5;flex-basis:100%;height:18px}.rp-cur{flex:1;max-width:none}}
+
+.rp-grid{align-content:start;grid-auto-rows:auto}.rp-grid button{height:38px;min-height:0}
+.rp-grid{width:100%;box-sizing:border-box;contain:inline-size}
 </style>
 </head>
 <body>
@@ -20014,6 +20096,10 @@ function setData(b) {
       <p class="small muted" style="margin-bottom:12px">بيانات التواصل الشخصية لا تُحفظ في شيفرة المنصة المنشورة. اختر «ملف حصر الشراكات» من جهازك لتُقرأ منه أعمدة ضابط الاتصال والبريد والجوال وتُحفظ في بيانات المنصة${Cloud.on ? ' المشتركة المحمية بتسجيل الدخول' : ''}. لا يُرفع الملف نفسه ولا يتغير شيء غير بيانات التواصل.</p>
       <label class="btn">${icon('upload')} اختيار ملف الحصر (xlsx)<input type="file" accept=".xlsx" hidden id="dCImp"></label>
       <span class="small muted" id="dCStat" style="margin-inline-start:10px">${D.partnerships.filter((p) => !p.demo && (p.contactEmail || p.contactPhone)).length} شراكة لها بيانات تواصل حاليًا</span></div></div>` : ''}
+    ${can('edit.partnership') ? `<div class="panel" style="margin-top:18px" id="dPkg"><div class="panel-h"><h3>استيراد حزمة شراكة</h3><span class="sub">مستندات وصور ونماذج معبأة لشراكة قائمة</span></div><div class="panel-b">
+      <p class="small muted" style="margin-bottom:12px">ملف حزمة (.json) يضم مستندات شراكة ونماذجها جاهزة. تُضاف المرفقات إلى ملف الشراكة في مراحل مسارها، وتُنشأ النماذج بتصميم المنظومة. الاستيراد آمن للتكرار: لا يتكرر ملف موجود ولا يُستبدل نموذج مكتمل.</p>
+      <label class="btn">${icon('upload')} اختيار ملف الحزمة<input type="file" accept=".json,application/json" hidden id="dPkgImp"></label>
+      <span class="small muted" id="dPkgStat" style="margin-inline-start:10px"></span></div></div>` : ''}
     <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>النسخ الاحتياطي والاستعادة</h3></div><div class="panel-b">
       <p class="small muted" style="margin-bottom:14px">${Cloud.on ? 'البيانات محفوظة على خادم المنصة المشتركة، مع نسخة على هذا الجهاز للعرض السريع. صدّر نسخة احتياطية دورية للاحتفاظ بها خارج المنصة.' : `تُحفظ البيانات والمرفقات في متصفح هذا الجهاز (${Store.mode === 'idb' ? 'IndexedDB' : 'ذاكرة مؤقتة — لن تبقى بعد إغلاق الصفحة'}). صدّر نسخة احتياطية دورية، أو لنقل البيانات إلى جهاز آخر.`}</p>
       <div class="row wrap"><button class="btn primary" id="dExp">${icon('download')} تصدير نسخة احتياطية (JSON مع المرفقات)</button>
@@ -20036,6 +20122,15 @@ function setData(b) {
   Store.allFiles().then((fs) => { const tot = fs.reduce((a, f) => a + (f.size || 0), 0); $('#dStat', b) && ($('#dStat', b).textContent = `المرفقات المحفوظة: ${fs.length} ملف (${fmtSize(tot)}).`); });
   b.onchange = async (e) => {
     if (e.target.id === 'dDemo') { await setDemo(e.target.checked); setData(b); }
+    if (e.target.id === 'dPkgImp' && e.target.files[0]) {
+      const st = $('#dPkgStat', b); st.textContent = 'جارٍ الاستيراد…';
+      try {
+        const r = await importPartnerPackage(e.target.files[0], (i, n, nm) => { st.textContent = `رفع ${i} من ${n}: ${nm}`; });
+        st.innerHTML = `${icon('check')} ${esc(partnerName(r.p))}: أُضيف ${r.added} مرفق${r.skipped ? ` (${r.skipped} موجود مسبقًا)` : ''}${r.forms ? ` و${r.forms} نموذج` : ''} — <a href="#/partnerships/${r.p.id}">فتح الشراكة</a>`;
+        toast('اكتمل استيراد الحزمة');
+      } catch (er) { st.textContent = er.message; toast(er.message, 'err'); }
+      e.target.value = ''; return;
+    }
     if (e.target.id === 'dCImp' && e.target.files[0]) {
       const st = $('#dCStat', b); st.textContent = 'جارٍ القراءة…';
       try { const r = await importContactsFromXlsx(e.target.files[0]); toast(r.n ? `حُدّثت بيانات التواصل لـ ${r.n} شراكة` : 'لا جديد: بيانات التواصل مطابقة للملف'); setData(b); }
@@ -20456,6 +20551,55 @@ async function importContactsFromXlsx(file) {
   }
   await Repo.log('contacts.import', 'system', 'import', 'استيراد بيانات التواصل من ملف الحصر', `${n} شراكة${miss ? `، ${miss} صف بلا شراكة مطابقة` : ''}`);
   return { n, miss };
+}
+
+/* —— 18d-package.js —— */
+/* =====================================================================
+   استيراد «حزمة شراكة»: مستندات وصور ونماذج معبأة لشراكة قائمة في ملف واحد (.json)
+   تُستخدم لنقل ملفات شراكة دفعة واحدة دون نشرها في شيفرة المنصة؛
+   تُحفظ المرفقات في مخزن المنصة (والخادم المشترك عند تفعيله) كأي ملف يُرفع يدويًا.
+   الصيغة: { app: 'sharakat-package', v: 1, match: { title }, cover?, attachments: [{ name, type, category, wf?, doc?, data(base64) }], forms: { key: { status, data } } }
+   الاستيراد آمن للتكرار: لا يُضاف ملف موجود بنفس الاسم والحجم، ولا يُستبدل نموذج مكتمل.
+   ===================================================================== */
+function pkgFindPartnership(m) {
+  const nk = (x) => String(x || '').replace(/[ً-ْـ]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[()\s]+/g, ' ').trim();
+  const keys = [m.title, ...(m.alt || [])].filter(Boolean).map(nk);
+  return D.partnerships.find((p) => !p.demo && (keys.includes(nk(p.title)) || keys.includes(nk(partnerName(p)))))
+    || D.partnerships.find((p) => !p.demo && keys.some((k) => k.length > 6 && (nk(p.title).includes(k) || nk(partnerName(p)).includes(k))));
+}
+async function importPartnerPackage(file, onStep) {
+  let P;
+  try { P = JSON.parse(await file.text()); } catch (_) { throw new Error('تعذّرت قراءة الملف: ليس حزمة شراكة صالحة.'); }
+  if (!P || P.app !== 'sharakat-package' || !P.match) throw new Error('الملف ليس «حزمة شراكة» من منظومة الشراكات.');
+  const p = pkgFindPartnership(P.match);
+  if (!p) throw new Error(`لم تُعثر على شراكة باسم «${P.match.title}» في السجل.`);
+  p.attachments = p.attachments || [];
+  let added = 0, skipped = 0, forms = 0;
+  const atts = P.attachments || [];
+  for (let i = 0; i < atts.length; i++) {
+    const a = atts[i]; onStep && onStep(i + 1, atts.length, a.name);
+    const bin = Uint8Array.from(atob(a.data), (c) => c.charCodeAt(0));
+    if (p.attachments.some((x) => (x.srcName || x.name) === a.name && (x.srcSize === bin.length || x.size === bin.length))) { skipped++; continue; }
+    const up = await saveUpload(new File([bin], a.name, { type: a.type || 'application/octet-stream' }));
+    const att = { id: uid('att'), fileId: up.id, name: up.name, type: up.type, size: up.size, srcSize: bin.length, srcName: a.name, category: a.category || 'أخرى', addedAt: nowISO(), by: Session.userName() };
+    if (a.wf) Object.assign(att, { wf: a.wf, doc: a.doc, byDept: D.settings.org.dept });
+    p.attachments.push(att); added++;
+    if (a.cover && (!p.coverFileId || /^(lib|asset):/.test(p.coverFileId))) p.coverFileId = up.id;
+  }
+  p.forms = p.forms || {};
+  for (const [k, f] of Object.entries(P.forms || {})) {
+    if (!FORMS[k] || (p.forms[k] && p.forms[k].status === 'done')) continue;
+    /* الحقول غير الواردة في الحزمة تأخذ نصوص النموذج الافتراضية، فتُحفظ كاملة */
+    const defs = Object.fromEntries(FORMS[k].sections(fRecInfo('partnership', p), p).flatMap((x) => x.fields).filter((x) => x.def !== undefined && typeof x.def !== 'function').map((x) => [x.k, x.def]));
+    const t = p.forms[k] = { ...(p.forms[k] || {}), data: { ...defs, ...(f.data || {}) }, status: f.status === 'done' ? 'done' : 'draft', at: nowISO(), by: Session.userName(), byDept: D.settings.org.dept };
+    if (!t.no) t.no = formNumber(k);
+    if (t.status === 'done' && FORMS[k].out) FORMS[k].out(p, t.data, 'partnership');
+    forms++;
+  }
+  await Repo.saveSettings();
+  await Repo.save('partnerships', p);
+  await Repo.log('package.import', 'partnership', p.id, p.code, `استيراد حزمة: ${added} مرفق${forms ? ` و${forms} نموذج` : ''}`);
+  return { p, added, skipped, forms };
 }
 
 /* —— 20-designs.js —— */
@@ -22079,11 +22223,11 @@ function renderReports(el, r) {
   const base = () => visiblePartnerships({ includeDrafts: can('view.drafts') });
   if (q.all) RPT.ids = applyFilters(base(), RPT.f).map((p) => p.id);
   el.innerHTML = `<section class="rx-hero">
-      <div class="rx-hero-t">${App.ret ? retLinkHTML() : ''}<span class="rx-eye"><i></i>التقارير</span><h1>استوديو القصة</h1>
-        <p>حوّل بيانات الشراكات إلى عرض يُقنع ويُلهم: اختر القصة، وحدد الشراكات، وعدّل أي نص مباشرة على الشريحة، ثم اعرضه بملء الشاشة أو نزّله PowerPoint وPDF. الأرقام تُقرأ من السجلات لحظة العرض.</p></div>
+      <div class="rx-hero-t">${App.ret ? retLinkHTML() : ''}<span class="rx-eye"><i></i>التقارير</span><h1>استوديو التقارير</h1>
+        <p>اختر نوع التقرير وحدد الشراكات، وعدّل النصوص على الشرائح مباشرة، ثم اعرضه بملء الشاشة أو نزّله PowerPoint وPDF. الأرقام تُقرأ من السجلات لحظة العرض.</p></div>
       <div class="rx-fan" aria-hidden="true"><span class="f1"><b></b><i></i><i></i><i></i></span><span class="f2"><b></b><em></em><i></i><i></i></span><span class="f3"><strong>”</strong><i></i><i></i><i></i></span></div>
     </section>
-    <a class="mk-entry" href="#/reports/marketing"><span class="mk-entry-art" aria-hidden="true">${MK_RINGS}<b>${nf(liveCounts().partners)}</b></span><span class="mk-entry-b"><em>جديد</em><b>التقرير التسويقي</b><small>لكل الشراكات أو لشراكة واحدة: الأعمال والإنجازات والأثر في شرائح تُبنى من البيانات — للعملاء والقيادات</small></span><span class="btn gold">${icon('play')} افتح التقرير</span></a>
+    <a class="mk-entry" href="#/reports/marketing"><span class="mk-entry-art" aria-hidden="true">${MK_RINGS}<b>${nf(liveCounts().partners)}</b></span><span class="mk-entry-b"><b>التقرير التسويقي</b><small>لكل الشراكات أو لشراكة واحدة: الأعمال والإنجازات والأثر في شرائح تُبنى من البيانات — للعملاء والقيادات</small></span><span class="btn gold">${icon('play')} افتح التقرير</span></a>
     <section class="rx-pick">
       <div class="rx-step"><span>1</span><div><b>اختر القصة</b><small>قالب جاهز يحدد مكونات التقرير، ويمكنك تعديلها بعد ذلك</small></div></div>
       <div class="rx-presets" id="rxPresets"></div>
@@ -22140,7 +22284,21 @@ function renderReports(el, r) {
     const S = rptSlides();
     $('#rxDock', el).innerHTML = RPT.ids.length ? `<div class="rx-dock-in"><span class="rx-dock-n">${icon('layers')}<b>${S.length}</b> شريحة · ${plural(RPT.ids.length, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')}</span><button type="button" class="btn gold" data-rshow>${icon('play')} عرض</button><button type="button" class="btn primary" data-rpptx2>${icon('download')} PowerPoint</button><button type="button" class="btn" data-rpdf>${icon('print')} PDF</button></div>` : '';
     $('#rpBar', el).innerHTML = RPT.ids.length ? `<div class="rp-bar-t"><span>${icon('layers')} ${plural(S.length, 'شريحة واحدة', 'شريحتان', 'شرائح', 'شريحة')} · ${plural(RPT.ids.length, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')}</span><span class="rp-tip">${icon('edit')} اضغط على أي نص قابل للتعديل في المعاينة</span></div>
-      <div class="rp-nav"><button type="button" class="rp-play" data-rshow>${icon('play')} عرض</button>${S.map((x, k) => `<button type="button" data-goto="${k}" class="${x.t === 'pcover' ? 'pc' : ''}"><b>${k + 1}</b>${esc(x.nav)}</button>`).join('')}</div>` : '';
+      <div class="rp-nav2"><button type="button" class="rp-play" data-rshow>${icon('play')} عرض</button>
+        <div class="rp-cur"><button type="button" data-rpstep="-1" title="الشريحة السابقة">${icon('chevR')}</button><span><b id="rpCurN">1</b><small>من ${S.length}</small></span><em id="rpCurT">${esc(S[0].nav)}</em><button type="button" data-rpstep="1" title="الشريحة التالية">${icon('chevL')}</button></div>
+        <div class="rp-segs">${S.map((x, k) => `<button type="button" data-goto="${k}" class="${x.t === 'pcover' ? 'rp-cv' : ''} ${k ? '' : 'on'}" title="${k + 1} · ${esc(x.nav)}"><i></i></button>`).join('')}</div>
+        <button type="button" class="rp-all" data-rpall aria-expanded="false">${icon('grid')} كل الشرائح</button></div>
+      <div class="rp-grid" hidden>${S.map((x, k) => `<button type="button" data-goto="${k}" class="${x.t === 'pcover' ? 'rp-cv' : ''}"><b>${k + 1}</b><span>${esc(x.nav)}</span></button>`).join('')}</div>` : '';
+    /* الشريحة الحالية تتبع التمرير */
+    const navSync = () => {
+      const fr = $$('.rs-frame', el); if (!fr.length || !document.body.contains(el)) return;
+      const y = ($('#rpBar', el) || el).getBoundingClientRect().bottom + 30;
+      let cur = 0; fr.forEach((f, k) => { if (f.getBoundingClientRect().top <= y) cur = k; });
+      if (el.__rpCur === cur) return; el.__rpCur = cur;
+      $$('[data-goto]', $('#rpBar', el)).forEach((b) => b.classList.toggle('on', +b.dataset.goto === cur));
+      const n = $('#rpCurN', el), t = $('#rpCurT', el); if (n) n.textContent = cur + 1; if (t) t.textContent = S[cur] ? S[cur].nav : '';
+    };
+    el.__rpCur = -1; window.removeEventListener('scroll', window.__rpNavSync); window.__rpNavSync = () => requestAnimationFrame(navSync); window.addEventListener('scroll', window.__rpNavSync, { passive: true }); navSync();
     $('#rpSlides', el).innerHTML = RPT.ids.length ? S.map((s, i) => `<div class="rs-frame" data-si="${i}">${specHTML(s)}</div>`).join('') : `<div class="panel">${emptyHTML({ ic: 'file', title: 'اختر شراكة أو أكثر', text: 'حدد الشراكات من القائمة، أو استخدم الفلاتر ثم «تحديد المعروضة» لاختيار مجموعة كاملة (مثل الساري أو المنتهي).' })}</div>`;
     hydrateFiles($('#rpSlides', el));
     fitSlides();
@@ -22172,7 +22330,9 @@ function renderReports(el, r) {
     if (!e.target.closest('#rpPD')) $('#rpPD', el).classList.remove('open');
     const rxb = e.target.closest('[data-rx]'); if (rxb) { RPT.ids = RPT.ids.filter((x) => x !== rxb.dataset.rx); drawList(); drawPreview(); return; }
     if (e.target.closest('[data-rshow]')) { if (!RPT.ids.length) return toast('اختر شراكة واحدة على الأقل.', 'err'); return openReportShow(0); }
-    const nv = e.target.closest('[data-goto]'); if (nv) { const f = $(`.rs-frame[data-si="${nv.dataset.goto}"]`, el); f && window.scrollTo({ top: f.getBoundingClientRect().top + scrollY - 90, behavior: 'smooth' }); return; }
+    const stp = e.target.closest('[data-rpstep]'); if (stp) { const k = Math.max(0, Math.min($$('.rs-frame', el).length - 1, Math.max(0, el.__rpCur || 0) + +stp.dataset.rpstep)); const f = $(`.rs-frame[data-si="${k}"]`, el); f && window.scrollTo({ top: f.getBoundingClientRect().top + scrollY - (($('#rpBar', el) || {}).offsetHeight || 0) - 80, behavior: 'smooth' }); return; }
+    const all = e.target.closest('[data-rpall]'); if (all) { const g = $('.rp-grid', el); g.hidden = !g.hidden; all.setAttribute('aria-expanded', String(!g.hidden)); all.classList.toggle('on', !g.hidden); return; }
+    const nv = e.target.closest('[data-goto]'); if (nv) { if (nv.closest('.rp-grid')) { $('.rp-grid', el).hidden = true; const ab = $('[data-rpall]', el); if (ab) { ab.classList.remove('on'); ab.setAttribute('aria-expanded', 'false'); } } const f = $(`.rs-frame[data-si="${nv.dataset.goto}"]`, el); f && window.scrollTo({ top: f.getBoundingClientRect().top + scrollY - 90, behavior: 'smooth' }); return; }
     if (e.target.closest('[data-rnone]')) { RPT.ids = []; drawList(); drawPreview(); return; }
     if (e.target.closest('[data-rsall]')) { RPT.sections = RPT_SECTIONS.map((s) => s.k); drawDD(); drawPreview(); return; }
     if (e.target.closest('[data-rsnone]')) { RPT.sections = []; drawDD(); drawPreview(); return; }
@@ -24728,7 +24888,7 @@ function evalDocHTML(rec, evalIdx) {
 }
 function formDocHTML(kind, rec, key, evalIdx = null, forWord = false) {
   if (key === 'partnershipEval' && kind === 'partnership' && !forWord && evalIdx !== null) return evalDocHTML(rec, evalIdx);
-  if (!forWord && typeof FORM_DOCS !== 'undefined' && FORM_DOCS[key]) return FORM_DOCS[key](kind, rec);
+  if ((!forWord || key === 'mou') && typeof FORM_DOCS !== 'undefined' && FORM_DOCS[key]) return FORM_DOCS[key](kind, rec);
   const F = FORMS[key]; const R = fRecInfo(kind, rec);
   const st = F.periodic ? (rec.evals || [])[evalIdx] : formOf(rec, key);
   const d = (st && st.data) || {};
@@ -24801,7 +24961,8 @@ function printForm(kind, rec, key, evalIdx = null) {
 }
 function wordForm(kind, rec, key, evalIdx = null) {
   const css = `body{font-family:'Sakkal Majalla','Traditional Arabic',Arial;direction:rtl;font-size:14pt;color:#14201B}h1{font-size:18pt;color:#0F4433;text-align:center}h3{font-size:14pt;color:#0F4433;border-bottom:2px solid #A47C32;padding-bottom:4px;margin-top:18pt}table{border-collapse:collapse;width:100%;margin:6pt 0}th,td{border:1px solid #BFB6A2;padding:5pt 7pt;vertical-align:top;text-align:right}th{background:#F1EDE2}td.c,th.c{text-align:center}.fd-head{border-bottom:3px solid #0F4433;padding-bottom:6pt}.fd-head img{height:54px}.fd-meta span{color:#5C6861}.fd-opt{margin-left:10pt}.fl-to b{display:block}.fl-body{line-height:1.9;text-align:justify;margin:10pt 0}.fl-sign{text-align:left;margin-top:24pt}.fl-sign b{display:block}.fd-foot{color:#8C958E;font-size:9pt;border-top:1px solid #D7CFBC;margin-top:18pt;padding-top:4pt}.tot td{background:#E8EFEA;font-weight:bold}`;
-  const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${esc(FORMS[key].title)}</title><style>${css}</style></head><body dir="rtl">${formDocHTML(kind, rec, key, evalIdx, true)}</body></html>`;
+  const mouCss = key === 'mou' ? `.ev-top{border-bottom:3px solid #0F4433;padding-bottom:6pt}.ev-top img{height:46pt}.ev-meta,.mou-pp,.mou-facts,.mou-lg{display:none}.mou-eye{display:block;text-align:center;font-size:20pt;font-weight:bold;color:#0F4433;margin:14pt 0 4pt}.mou-basm,.mou-end{text-align:center;font-weight:bold}.mou-art h3 em{font-style:normal;margin-left:6pt}.mou-ct th{background:#F1EDE2}.mou-sigs div{display:inline-block;width:48%;vertical-align:top;text-align:center}.mou-sigs span,.mou-sigs b,.mou-sigs small,.mou-sigs strong,.mou-sigs i{display:block}.mou-blank{color:#888}` : '';
+  const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${esc(FORMS[key].title)}</title><style>${css}${mouCss}</style></head><body dir="rtl">${formDocHTML(kind, rec, key, evalIdx, true)}</body></html>`;
   download(`${FORMS[key].short || FORMS[key].title} — ${fRecInfo(kind, rec).name}.doc`, new Blob(['﻿' + html], { type: 'application/msword' }));
   toast('نُزّل النموذج بصيغة Word');
 }
@@ -25078,6 +25239,133 @@ function alignmentDocHTML(kind, rec) {
     body });
 }
 const FORM_DOCS = { methodology: methodologyDocHTML, initialEval: initialEvalDocHTML, alignment: alignmentDocHTML };
+
+/* —— 28f-mou.js —— */
+/* =====================================================================
+   نموذج «مذكرة التعاون» داخل المنظومة
+   مبني على نموذج المذكرة المعتمد لدى المؤسسة: الأطراف، والتمهيد، ومجالات التعاون،
+   والبنود العامة، ومسؤولو الاتصال، والتوقيع. يرتبط بخطوة «بناء مسودة المذكرة»،
+   ويُعرض ويُطبع بتصميم نماذج المنظومة، ويُنزَّل Word.
+   ===================================================================== */
+const MOU_ORD = ['الأول', 'الثاني', 'الثالث', 'الرابع', 'الخامس', 'السادس', 'السابع', 'الثامن', 'التاسع', 'العاشر', 'الحادي عشر', 'الثاني عشر', 'الثالث عشر', 'الرابع عشر'];
+/* البنود العامة من نموذج المذكرة المعتمد (كل سطر فقرة أو عنصر) */
+const MOU_ART = [
+  ['a1', 'الزامية التمهيد', 'يعد التمهيد أعلاه جزءًا لا يتجزأ من هذه المذكرة يقرأ ويفسر به.'],
+  ['a3', 'آلية تفعيل التعاون', 'يتم تنفيذ جميع الأنشطة والمشاريع المشتركة وفقًا للآلية التالية:\nتحديد أهداف ومدة التعاون أو النشاط المشترك.\nنطاق المسؤوليات والمهام الموكلة إلى كل طرف أو الطرفين فيما يتعلق بالأنشطة المشتركة.\nيُوثّق نطاق المسؤوليات والمدة لكل نشاط مشترك كتابةً وباتفاق الطرفين قبل بدء التنفيذ، لأي من مجالات التعاون.\nلا يجوز البدء في تنفيذ أي من مجالات التعاون أو المبادرات أو الأنشطة المنبثقة عن هذه المذكرة إلا بعد الحصول على موافقة كتابية مسبقة من الطرفين، واستكمال الإجراءات والموافقات اللازمة وفقًا للأنظمة والسياسات والإجراءات المعمول بها لدى كل طرف، ولا يُعد توقيع هذه المذكرة بذاته موافقةً على تنفيذ أي نشاط أو مشروع.'],
+  ['a4', 'سرية المعلومات', 'يتعهد الطرفان بالمحافظة على سرية البيانات والمعلومات الشفهية والخطية الورقية والإلكترونية التي تتوافر لأي طرف منهما أو التي حصل عليها أي منهما بناءً على التعاون المشترك فيما بينهما في المجالات المحددة في هذه المذكرة، ولا يجوز لأي طرف منهما أو منسوبي أي طرف منهما إفشاء ما تحتويه البيانات والمعلومات لأي من الأفراد أو الجهات أو الأطراف الأخرى إلا بعد الحصول على موافقة خطية مسبقة من الطرف الآخر، ولا يجوز لأي طرف استخدام تلك المعلومات لأي غرض غير منصوص عليه في هذه المذكرة، إلا بعد الحصول على موافقة خطية مسبقة من الطرف الآخر. ولا يسري هذا الالتزام إذا كان الإفصاح مطلوبًا بموجب الأنظمة أو الأوامر القضائية أو تعليمات الجهات الرقابية المختصة، كما يستمر الالتزام بسرية المعلومات بعد انتهاء هذه المذكرة لأي سبب كان.'],
+  ['a5', 'الأثر المالي', 'لا يترتب على توقيع هذه المذكرة أي التزامات مالية على أي من الطرفين، ولا يتأثر أي طرف بالالتزامات المالية الناشئة عن العقود والاتفاقيات التي يبرمها أي من الطرفين مع أي من الأطراف أو الجهات الأخرى.'],
+  ['a6', 'الحقوق والالتزامات', 'لا يجوز لأي من الطرفين التفويض أو التنازل عن أي من حقوقه أو التزاماته الواردة في هذه المذكرة لطرف ثالث بدون موافقة الطرف الآخر الخطية على ذلك.\nلا يحق لأي من الطرفين التصرف نيابةً عن الطرف الآخر، أو اختراق سلطته، أو إنشاء موافقة نيابةً عنه، أو إجراء معاملات ينشأ بموجبها أي التزامات عليه.'],
+  ['a7', 'الأحكام العامة', 'يلتزم الطرفان بما يلي:\nالشفافية التامة والمصداقية في التعامل بين الطرفين.\nاحترام القيم المؤسسية لكلا الطرفين.\nيقر الطرفان بالتزامهما بحقوق الملكية الفكرية الناتجة عن النشاط المشترك بينهما، على أن يتم تحديد ملكية هذه الحقوق واستخدامها وفقًا لما يتم الاتفاق عليه بين الطرفين في اتفاقيات منفصلة أو ملحقات تكميلية لهذه المذكرة.\nاللغة العربية هي اللغة المعتمدة في تفسير المذكرة وتنفيذها. ومع ذلك يجوز للطرفين استعمال اللغة الإنجليزية في كتابة المذكرة أو جزء منها إلى جانب اللغة العربية لأغراض الترجمة فقط، وفي حال وجود أي اختلاف بين اللغتين فيعتد بنص اللغة العربية.\nيتم توجيه جميع الإخطارات والمراسلات إلى الطرف الآخر إما عن طريق التسليم المباشر مع الحصول على إيصال موقع بالتسلُّم، أو عبر البريد المسجل، أو البريد الإلكتروني، وذلك وفقًا لما يقتضيه الحال، على أن يكون بالإمكان إثبات عملية التسليم. وتُعتمد العناوين المذكورة في صدر هذه المذكرة باعتبارها العناوين الرسمية والمعتمدة لكلا الطرفين، ما لم يُخطر أحدهما الآخر بتغييرها كتابةً.\nيلتزم كل طرف بإشعار الطرف الآخر خطيًا في حال تغييره للعنوان الخاص به قبل التغيير بـ (15) يومًا على الأقل، وإلا اعتُبر العنوان المدون في صدر هذه المذكرة هو المعتمد نظامًا ويكون الإشعار الذي يتم عن طريقه صحيحًا.\nأن هذه المذكرة لا تمنع أي طرف من عقد اتفاقيات أخرى شريطة أن تعامل بصفة مستقلة وبشروط وأحكام منفصلة عن المذكرة.'],
+  ['a8', 'مدة سريان المذكرة', 'تدخل هذه المذكرة حيز النفاذ من تاريخ توقيعها واعتمادها من الطرفين، ومدة هذه المذكرة (سنتين ميلادية) تُجدد باتفاق الطرفين كتابيًا لمدة أو مدد مماثلة، ويحق لأي من الطرفين إنهاء العمل بالمذكرة بإرادته المنفردة وذلك بموجب إخطار مكتوب برغبته في الإنهاء قبل (30) ثلاثين يومًا على الأقل من تاريخ الإنهاء، وعلى كلا الطرفين اتخاذ جميع التدابير المناسبة للتأكد من أن الإنهاء لا يضر بالمشاريع أو الجهود قيد الإنجاز في إطار هذه المذكرة.'],
+  ['a9', 'المراجعة والتحسين', 'تخضع هذه المذكرة للمراجعة المستمرة لتطويرها أو تحسينها أو تعديلها بما يخدم سير العمل وتذليل أي صعوبات أو عقبات تستجد، وتعقد الاجتماعات اللازمة لذلك بين أعضاء فريق العمل الرئيسي المشترك المشكل لإنفاذ هذه المذكرة والعمل بموجبها.'],
+  ['a10', 'النزاع والتقاضي', 'تخضع هذه المذكرة للأنظمة واللوائح والقرارات والتعليمات الصادرة من السلطات التشريعية والتنفيذية في المملكة العربية السعودية وتفسر بها، وفي حال حدوث أي نزاع بشأن تفسير أو تنفيذ أي بند من بنودها يتم تسوية النزاع بالطرق الودية إن أمكن خلال مدة أقصاها (30) ثلاثون يومًا، فإن انقضت المدة المحددة دون التوصل إلى حل ودي، فيجوز للطرفين رفعه إلى أصحاب الصلاحية الموقعين على هذه المذكرة للتوجيه بما يرونه مناسبًا.'],
+  ['a12', 'التوثيق', 'أي تغيير أو تعديل في أي بند من بنود هذه المذكرة يجب أن يتم خطيًا وموقعًا من قبل الطرفين ويتم الاتفاق عليه بملحق يضاف إلى هذه المذكرة ويكون جزءًا لا يتجزأ من هذه المذكرة.\nيقوم الطرفان بالتوقيع على نسختين أصليتين من هذه المذكرة، ويحتفظ كل طرف منهما بنسخة للعمل بموجبها، وعليه جرى التوقيع.'],
+];
+const mouCfg = () => (D.settings && D.settings.mou) || {};
+FORMS.mou = {
+  no: 'MOU', title: 'مذكرة التعاون', short: 'مذكرة التعاون', step: 'draft', ic: 'file',
+  sections: (R) => {
+    const C = mouCfg(), L_ = D.settings.letter || {}, org = D.settings.org.name, cls = R.cls || 'مذكرة تعاون';
+    const s1Name = L_.signName || 'م. محمد بن عبدالعزيز باجري', s1Title = 'الرئيس التنفيذي';
+    return [
+      { t: 'بيانات المذكرة', fields: [
+        { k: 'cls', l: 'نوع المذكرة', type: 'chips', opts: L('classifications'), def: cls, req: true },
+        { k: 'city', l: 'مدينة الإبرام', type: 'text', def: C.city || 'الرياض', req: true },
+        { k: 'date', l: 'تاريخ الإبرام', type: 'date', hint: 'يُترك فارغًا حتى التوقيع.' },
+        { k: 'duration', l: 'مدة المذكرة', type: 'text', def: 'سنتين ميلادية' },
+      ] },
+      { t: 'أطراف المذكرة', note: 'يُكتب تعريف كل طرف كما يرد في صدر المذكرة: الترخيص أو السجل، والعنوان الوطني، والبريد، ومن يمثله في التوقيع.', fields: [
+        { k: 'p1', l: 'الطرف الأول', type: 'textarea', rows: 4, req: true, def: C.p1 || `${org} مؤسسة غير ربحية أسست من قبل وزارة البيئة والمياه والزراعة، ويمثلها في التوقيع سعادة المهندس/ ${s1Name.replace(/^م\.\s*/, '')} بصفته ${s1Title} للمؤسسة، ويشار إليها فيما بعد بـ "الطرف الأول".` },
+        { k: 'p2', l: 'الطرف الثاني', type: 'textarea', rows: 4, req: true, def: `${R.name}، رقم السجل: ………، وعنوانها الوطني: ………، بريد إلكتروني: ………، ويمثلها في التوقيع ……… بصفته ………، ويشار إليها فيما بعد بـ "الطرف الثاني".` },
+      ] },
+      { t: 'التمهيد ومجالات التعاون', fields: [
+        { k: 'preamble', l: 'التمهيد', type: 'textarea', rows: 6, req: true, def: `سعيًا من الطرفين إلى تعزيز الشراكة الاستراتيجية وتوحيد الجهود المشتركة لتحقيق أثر بيئي ومجتمعي واقتصادي مستدام، ولرغبتهما في توثيق أواصر التعاون المشترك بين "${org}" و"${R.name}" في مجالات التنمية المستدامة، وتبادل الخبرات البيئية والمعرفة في تطوير البرامج التوعوية والتطبيقية، وتعزيز مشاركة المتطوعين والشباب في المجتمعات المحلية، وتفعيل المبادرات البيئية، والتنسيق الإعلامي للمبادرات المشتركة؛ فقد اتفق الطرفان على إبرام هذه المذكرة وفقًا للشروط والأحكام المبينة فيها وما قد يُضاف إليها من ملاحق أو يُنتج عنها من اتفاقيات.` },
+        { k: 'coop', l: 'مجالات التعاون (البند الثاني)', type: 'textarea', rows: 8, req: true, hint: 'كل مجال في سطر مستقل.', def: (R.coop || []).join('\n') },
+      ] },
+      { t: 'البنود العامة', note: 'نصوص نموذج المذكرة المعتمد؛ تُعدَّل عند الحاجة. كل سطر فقرة أو عنصر مستقل.', fields: MOU_ART.map(([k, l, def]) => ({ k, l, type: 'textarea', rows: k === 'a7' ? 8 : 4, def })) },
+      { t: 'مسؤولو الاتصال (البند الحادي عشر)', fields: [
+        { k: 'c1Name', l: 'مسؤول الاتصال — الطرف الأول', type: 'text', def: C.c1Name || '' },
+        { k: 'c1Email', l: 'البريد الإلكتروني', type: 'text', def: C.c1Email || '' },
+        { k: 'c1Phone', l: 'رقم الجوال', type: 'text', def: C.c1Phone || '' },
+        { k: 'c2Name', l: 'مسؤول الاتصال — الطرف الثاني', type: 'text' },
+        { k: 'c2Email', l: 'البريد الإلكتروني', type: 'text' },
+        { k: 'c2Phone', l: 'رقم الجوال', type: 'text' },
+      ] },
+      { t: 'التوقيع', fields: [
+        { k: 's1Title', l: 'صفة الموقِّع — الطرف الأول', type: 'text', def: s1Title, req: true },
+        { k: 's1Name', l: 'اسم الموقِّع — الطرف الأول', type: 'text', def: s1Name, req: true },
+        { k: 's2Title', l: 'صفة الموقِّع — الطرف الثاني', type: 'text', def: 'الرئيس التنفيذي' },
+        { k: 's2Name', l: 'اسم الموقِّع — الطرف الثاني', type: 'text' },
+      ] },
+    ];
+  },
+  /* تعريف الطرف الأول ومسؤول الاتصال يُحفظان لتعبئة المذكرات القادمة تلقائيًا */
+  out: (rec, d) => {
+    D.settings.mou = { ...mouCfg(), p1: d.p1, city: d.city, c1Name: d.c1Name, c1Email: d.c1Email, c1Phone: d.c1Phone };
+    if (d.cls && !rec.classification) rec.classification = d.cls;
+  },
+  score: (d) => { const n = String(d.coop || '').split('\n').filter((x) => x.trim()).length; return n ? `${n} ${n === 1 ? 'مجال تعاون' : 'مجالات تعاون'}` : ''; },
+};
+
+/* فقرات البند: السطر المنتهي بنقطتين مقدمة، وما بعده عناصر؛ والسطر الواحد فقرة */
+function mouBody(t) {
+  const ls = String(t || '').split('\n').map((x) => x.trim()).filter(Boolean);
+  if (!ls.length) return '<p class="mou-empty">—</p>';
+  if (ls.length === 1) return `<p>${esc(ls[0])}</p>`;
+  let h = '', ul = [];
+  const flush = () => { if (ul.length) { h += `<ol class="mou-ol">${ul.map((x) => `<li>${esc(x)}</li>`).join('')}</ol>`; ul = []; } };
+  ls.forEach((x, i) => { if (/[:：]$/.test(x) && i < ls.length - 1) { flush(); h += `<p class="mou-lead">${esc(x)}</p>`; } else ul.push(x); });
+  flush(); return h;
+}
+const mouBlank = (v, w = 'يُستكمل') => (String(v || '').trim() ? esc(v) : `<span class="mou-blank">${w}</span>`);
+
+function mouDocHTML(kind, rec) {
+  const F = FORMS.mou, R = fRecInfo(kind, rec), st = formOf(rec, 'mou') || {};
+  const defs = Object.fromEntries(F.sections(R, rec).flatMap((s) => s.fields).map((f) => [f.k, f.def]));
+  const d = { ...defs, ...(st.data || {}) };
+  const org = D.settings.org.name, pr = (kind === 'partnership' && partnerById(rec.partnerId)) || { name: R.name };
+  const logo = (ASSET_IMG['murooj-logo'] || {}).src;
+  const coop = String(d.coop || '').split('\n').map((x) => x.trim()).filter(Boolean);
+  let n = 0;
+  const art = (t, inner) => `<section class="mou-art"><h3><em>البند ${MOU_ORD[n++]}</em>${esc(t)}</h3>${inner}</section>`;
+  const A = Object.fromEntries(MOU_ART.map(([k, l]) => [k, l]));
+  const date = d.date ? `${fmtDate(d.date)}م` : '<span class="mou-blank">…… / …… / ……</span>';
+  return `<article class="fdoc mou" dir="rtl">
+    <header class="ev-top"><div class="ev-brand">${logo ? `<img src="${logo}" alt="">` : ''}<div><b>${esc(org)}</b><span>${esc(D.settings.org.dept)}</span></div></div>
+      <div class="ev-meta"><div><span>رقم النموذج</span><b dir="ltr">${esc(st.no || '—')}</b></div><div><span>الحالة</span><b>${st.status === 'done' ? 'مسودة معتمدة' : 'مسودة'}</b></div></div></header>
+    <section class="mou-cover">
+      <span class="mou-eye">${esc(d.cls || 'مذكرة تعاون')}</span>
+      <div class="mou-pp">
+        <div class="mou-p"><span class="mou-lg">${logo ? `<img src="${logo}" alt="">` : esc(org.slice(0, 2))}</span><b>${esc(org)}</b><small>الطرف الأول</small></div>
+        <span class="mou-amp">و</span>
+        <div class="mou-p"><span class="mou-lg">${logoOrMono(pr, R.name)}</span><b>${esc(R.name)}</b><small>الطرف الثاني</small></div>
+      </div>
+      <dl class="mou-facts"><div><dt>مدينة الإبرام</dt><dd>${mouBlank(d.city)}</dd></div><div><dt>تاريخ الإبرام</dt><dd>${date}</dd></div><div><dt>المدة</dt><dd>${mouBlank(d.duration)}</dd></div><div><dt>مجالات التعاون</dt><dd>${coop.length}</dd></div></dl>
+    </section>
+    <p class="mou-basm">بسم الله الرحمن الرحيم</p>
+    <p class="mou-intro">بعون الله وتوفيقه تم إبرام هذه المذكرة في مدينة ${mouBlank(d.city)} بتاريخ ${date} بين كل من:</p>
+    <ol class="mou-parties"><li><b>الطرف الأول</b><p>${mouBlank(d.p1)}</p></li><li><b>الطرف الثاني</b><p>${mouBlank(d.p2)}</p></li></ol>
+    <p class="mou-intro">ويُشار إلى الطرفين مجتمعين بـ ("الطرفين أو الطرفان") وإلى كل منهما منفردًا بـ ("الطرف").</p>
+    <section class="mou-art mou-pre"><h3><em>التمهيد</em></h3><p>${mouBlank(d.preamble)}</p></section>
+    ${art(A.a1, mouBody(d.a1))}
+    ${art('مجالات التعاون', `<p class="mou-lead">يبذل كل طرف جهده — بحسب الاختصاص — لتحقيق أهداف هذه المذكرة على النحو التالي:</p>${coop.length ? `<ol class="mou-coop">${coop.map((c) => `<li>${esc(c.replace(/^\s*\d+\s*[-–.)]\s*/, ''))}</li>`).join('')}</ol>` : '<p class="mou-empty">لم تُحدَّد مجالات التعاون بعد.</p>'}`)}
+    ${['a3', 'a4', 'a5', 'a6', 'a7', 'a8', 'a9', 'a10'].map((k) => art(A[k], mouBody(d[k]))).join('')}
+    ${art('بيانات مسؤولي الاتصال', `<p>اتفق الطرفان على تسمية مسؤول اتصال من كل طرف للتنسيق ومتابعة تنفيذ هذه المذكرة.</p>
+      <table class="mou-ct"><thead><tr><th></th><th>الطرف الأول (${esc(org)})</th><th>الطرف الثاني (${esc(R.name)})</th></tr></thead><tbody>
+        <tr><th>الاسم</th><td>${mouBlank(d.c1Name)}</td><td>${mouBlank(d.c2Name)}</td></tr>
+        <tr><th>البريد الإلكتروني</th><td dir="ltr">${mouBlank(d.c1Email)}</td><td dir="ltr">${mouBlank(d.c2Email)}</td></tr>
+        <tr><th>رقم الجوال</th><td dir="ltr">${mouBlank(d.c1Phone)}</td><td dir="ltr">${mouBlank(d.c2Phone)}</td></tr></tbody></table>`)}
+    ${art(A.a12, mouBody(d.a12))}
+    <p class="mou-end">والله ولي التوفيق،،</p>
+    <section class="mou-sigs">
+      <div><span>الطرف الأول</span><b>${esc(org)}</b><small>${mouBlank(d.s1Title)}</small><strong>${mouBlank(d.s1Name)}</strong><i>التوقيع</i></div>
+      <div><span>الطرف الثاني</span><b>${esc(R.name)}</b><small>${mouBlank(d.s2Title)}</small><strong>${mouBlank(d.s2Name, '……………')}</strong><i>التوقيع</i></div>
+    </section>
+    <footer class="fd-foot">${esc(org)} · ${esc(D.settings.org.platform)} · ${esc(d.cls || 'مذكرة تعاون')} ${esc(st.no || '')}</footer></article>`;
+}
+FORM_DOCS.mou = mouDocHTML;
+/* خطوة «بناء مسودة المذكرة»: المسودة تُكتب على نموذج المنظومة أو تُرفع ملفًا */
+(() => { const s = WF_STEPS.find((x) => x.id === 'draft'); const dk = s && s.docs.find((x) => x.k === 'draft'); if (dk && !dk.form) dk.form = 'mou'; })();
 
 /* —— 29-process.js —— */
 /* =====================================================================

@@ -457,7 +457,7 @@ function evalDocHTML(rec, evalIdx) {
 }
 function formDocHTML(kind, rec, key, evalIdx = null, forWord = false) {
   if (key === 'partnershipEval' && kind === 'partnership' && !forWord && evalIdx !== null) return evalDocHTML(rec, evalIdx);
-  if (!forWord && typeof FORM_DOCS !== 'undefined' && FORM_DOCS[key]) return FORM_DOCS[key](kind, rec);
+  if ((!forWord || key === 'mou') && typeof FORM_DOCS !== 'undefined' && FORM_DOCS[key]) return FORM_DOCS[key](kind, rec);
   const F = FORMS[key]; const R = fRecInfo(kind, rec);
   const st = F.periodic ? (rec.evals || [])[evalIdx] : formOf(rec, key);
   const d = (st && st.data) || {};
@@ -530,7 +530,8 @@ function printForm(kind, rec, key, evalIdx = null) {
 }
 function wordForm(kind, rec, key, evalIdx = null) {
   const css = `body{font-family:'Sakkal Majalla','Traditional Arabic',Arial;direction:rtl;font-size:14pt;color:#14201B}h1{font-size:18pt;color:#0F4433;text-align:center}h3{font-size:14pt;color:#0F4433;border-bottom:2px solid #A47C32;padding-bottom:4px;margin-top:18pt}table{border-collapse:collapse;width:100%;margin:6pt 0}th,td{border:1px solid #BFB6A2;padding:5pt 7pt;vertical-align:top;text-align:right}th{background:#F1EDE2}td.c,th.c{text-align:center}.fd-head{border-bottom:3px solid #0F4433;padding-bottom:6pt}.fd-head img{height:54px}.fd-meta span{color:#5C6861}.fd-opt{margin-left:10pt}.fl-to b{display:block}.fl-body{line-height:1.9;text-align:justify;margin:10pt 0}.fl-sign{text-align:left;margin-top:24pt}.fl-sign b{display:block}.fd-foot{color:#8C958E;font-size:9pt;border-top:1px solid #D7CFBC;margin-top:18pt;padding-top:4pt}.tot td{background:#E8EFEA;font-weight:bold}`;
-  const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${esc(FORMS[key].title)}</title><style>${css}</style></head><body dir="rtl">${formDocHTML(kind, rec, key, evalIdx, true)}</body></html>`;
+  const mouCss = key === 'mou' ? `.ev-top{border-bottom:3px solid #0F4433;padding-bottom:6pt}.ev-top img{height:46pt}.ev-meta,.mou-pp,.mou-facts,.mou-lg{display:none}.mou-eye{display:block;text-align:center;font-size:20pt;font-weight:bold;color:#0F4433;margin:14pt 0 4pt}.mou-basm,.mou-end{text-align:center;font-weight:bold}.mou-art h3 em{font-style:normal;margin-left:6pt}.mou-ct th{background:#F1EDE2}.mou-sigs div{display:inline-block;width:48%;vertical-align:top;text-align:center}.mou-sigs span,.mou-sigs b,.mou-sigs small,.mou-sigs strong,.mou-sigs i{display:block}.mou-blank{color:#888}` : '';
+  const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${esc(FORMS[key].title)}</title><style>${css}${mouCss}</style></head><body dir="rtl">${formDocHTML(kind, rec, key, evalIdx, true)}</body></html>`;
   download(`${FORMS[key].short || FORMS[key].title} — ${fRecInfo(kind, rec).name}.doc`, new Blob(['﻿' + html], { type: 'application/msword' }));
   toast('نُزّل النموذج بصيغة Word');
 }

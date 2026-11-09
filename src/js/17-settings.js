@@ -252,6 +252,10 @@ function setData(b) {
       <p class="small muted" style="margin-bottom:12px">بيانات التواصل الشخصية لا تُحفظ في شيفرة المنصة المنشورة. اختر «ملف حصر الشراكات» من جهازك لتُقرأ منه أعمدة ضابط الاتصال والبريد والجوال وتُحفظ في بيانات المنصة${Cloud.on ? ' المشتركة المحمية بتسجيل الدخول' : ''}. لا يُرفع الملف نفسه ولا يتغير شيء غير بيانات التواصل.</p>
       <label class="btn">${icon('upload')} اختيار ملف الحصر (xlsx)<input type="file" accept=".xlsx" hidden id="dCImp"></label>
       <span class="small muted" id="dCStat" style="margin-inline-start:10px">${D.partnerships.filter((p) => !p.demo && (p.contactEmail || p.contactPhone)).length} شراكة لها بيانات تواصل حاليًا</span></div></div>` : ''}
+    ${can('edit.partnership') ? `<div class="panel" style="margin-top:18px" id="dPkg"><div class="panel-h"><h3>استيراد حزمة شراكة</h3><span class="sub">مستندات وصور ونماذج معبأة لشراكة قائمة</span></div><div class="panel-b">
+      <p class="small muted" style="margin-bottom:12px">ملف حزمة (.json) يضم مستندات شراكة ونماذجها جاهزة. تُضاف المرفقات إلى ملف الشراكة في مراحل مسارها، وتُنشأ النماذج بتصميم المنظومة. الاستيراد آمن للتكرار: لا يتكرر ملف موجود ولا يُستبدل نموذج مكتمل.</p>
+      <label class="btn">${icon('upload')} اختيار ملف الحزمة<input type="file" accept=".json,application/json" hidden id="dPkgImp"></label>
+      <span class="small muted" id="dPkgStat" style="margin-inline-start:10px"></span></div></div>` : ''}
     <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>النسخ الاحتياطي والاستعادة</h3></div><div class="panel-b">
       <p class="small muted" style="margin-bottom:14px">${Cloud.on ? 'البيانات محفوظة على خادم المنصة المشتركة، مع نسخة على هذا الجهاز للعرض السريع. صدّر نسخة احتياطية دورية للاحتفاظ بها خارج المنصة.' : `تُحفظ البيانات والمرفقات في متصفح هذا الجهاز (${Store.mode === 'idb' ? 'IndexedDB' : 'ذاكرة مؤقتة — لن تبقى بعد إغلاق الصفحة'}). صدّر نسخة احتياطية دورية، أو لنقل البيانات إلى جهاز آخر.`}</p>
       <div class="row wrap"><button class="btn primary" id="dExp">${icon('download')} تصدير نسخة احتياطية (JSON مع المرفقات)</button>
@@ -274,6 +278,15 @@ function setData(b) {
   Store.allFiles().then((fs) => { const tot = fs.reduce((a, f) => a + (f.size || 0), 0); $('#dStat', b) && ($('#dStat', b).textContent = `المرفقات المحفوظة: ${fs.length} ملف (${fmtSize(tot)}).`); });
   b.onchange = async (e) => {
     if (e.target.id === 'dDemo') { await setDemo(e.target.checked); setData(b); }
+    if (e.target.id === 'dPkgImp' && e.target.files[0]) {
+      const st = $('#dPkgStat', b); st.textContent = 'جارٍ الاستيراد…';
+      try {
+        const r = await importPartnerPackage(e.target.files[0], (i, n, nm) => { st.textContent = `رفع ${i} من ${n}: ${nm}`; });
+        st.innerHTML = `${icon('check')} ${esc(partnerName(r.p))}: أُضيف ${r.added} مرفق${r.skipped ? ` (${r.skipped} موجود مسبقًا)` : ''}${r.forms ? ` و${r.forms} نموذج` : ''} — <a href="#/partnerships/${r.p.id}">فتح الشراكة</a>`;
+        toast('اكتمل استيراد الحزمة');
+      } catch (er) { st.textContent = er.message; toast(er.message, 'err'); }
+      e.target.value = ''; return;
+    }
     if (e.target.id === 'dCImp' && e.target.files[0]) {
       const st = $('#dCStat', b); st.textContent = 'جارٍ القراءة…';
       try { const r = await importContactsFromXlsx(e.target.files[0]); toast(r.n ? `حُدّثت بيانات التواصل لـ ${r.n} شراكة` : 'لا جديد: بيانات التواصل مطابقة للملف'); setData(b); }

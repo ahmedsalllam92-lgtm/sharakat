@@ -454,11 +454,11 @@ function renderReports(el, r) {
   const base = () => visiblePartnerships({ includeDrafts: can('view.drafts') });
   if (q.all) RPT.ids = applyFilters(base(), RPT.f).map((p) => p.id);
   el.innerHTML = `<section class="rx-hero">
-      <div class="rx-hero-t">${App.ret ? retLinkHTML() : ''}<span class="rx-eye"><i></i>التقارير</span><h1>استوديو القصة</h1>
-        <p>حوّل بيانات الشراكات إلى عرض يُقنع ويُلهم: اختر القصة، وحدد الشراكات، وعدّل أي نص مباشرة على الشريحة، ثم اعرضه بملء الشاشة أو نزّله PowerPoint وPDF. الأرقام تُقرأ من السجلات لحظة العرض.</p></div>
+      <div class="rx-hero-t">${App.ret ? retLinkHTML() : ''}<span class="rx-eye"><i></i>التقارير</span><h1>استوديو التقارير</h1>
+        <p>اختر نوع التقرير وحدد الشراكات، وعدّل النصوص على الشرائح مباشرة، ثم اعرضه بملء الشاشة أو نزّله PowerPoint وPDF. الأرقام تُقرأ من السجلات لحظة العرض.</p></div>
       <div class="rx-fan" aria-hidden="true"><span class="f1"><b></b><i></i><i></i><i></i></span><span class="f2"><b></b><em></em><i></i><i></i></span><span class="f3"><strong>”</strong><i></i><i></i><i></i></span></div>
     </section>
-    <a class="mk-entry" href="#/reports/marketing"><span class="mk-entry-art" aria-hidden="true">${MK_RINGS}<b>${nf(liveCounts().partners)}</b></span><span class="mk-entry-b"><em>جديد</em><b>التقرير التسويقي</b><small>لكل الشراكات أو لشراكة واحدة: الأعمال والإنجازات والأثر في شرائح تُبنى من البيانات — للعملاء والقيادات</small></span><span class="btn gold">${icon('play')} افتح التقرير</span></a>
+    <a class="mk-entry" href="#/reports/marketing"><span class="mk-entry-art" aria-hidden="true">${MK_RINGS}<b>${nf(liveCounts().partners)}</b></span><span class="mk-entry-b"><b>التقرير التسويقي</b><small>لكل الشراكات أو لشراكة واحدة: الأعمال والإنجازات والأثر في شرائح تُبنى من البيانات — للعملاء والقيادات</small></span><span class="btn gold">${icon('play')} افتح التقرير</span></a>
     <section class="rx-pick">
       <div class="rx-step"><span>1</span><div><b>اختر القصة</b><small>قالب جاهز يحدد مكونات التقرير، ويمكنك تعديلها بعد ذلك</small></div></div>
       <div class="rx-presets" id="rxPresets"></div>
@@ -515,7 +515,21 @@ function renderReports(el, r) {
     const S = rptSlides();
     $('#rxDock', el).innerHTML = RPT.ids.length ? `<div class="rx-dock-in"><span class="rx-dock-n">${icon('layers')}<b>${S.length}</b> شريحة · ${plural(RPT.ids.length, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')}</span><button type="button" class="btn gold" data-rshow>${icon('play')} عرض</button><button type="button" class="btn primary" data-rpptx2>${icon('download')} PowerPoint</button><button type="button" class="btn" data-rpdf>${icon('print')} PDF</button></div>` : '';
     $('#rpBar', el).innerHTML = RPT.ids.length ? `<div class="rp-bar-t"><span>${icon('layers')} ${plural(S.length, 'شريحة واحدة', 'شريحتان', 'شرائح', 'شريحة')} · ${plural(RPT.ids.length, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')}</span><span class="rp-tip">${icon('edit')} اضغط على أي نص قابل للتعديل في المعاينة</span></div>
-      <div class="rp-nav"><button type="button" class="rp-play" data-rshow>${icon('play')} عرض</button>${S.map((x, k) => `<button type="button" data-goto="${k}" class="${x.t === 'pcover' ? 'pc' : ''}"><b>${k + 1}</b>${esc(x.nav)}</button>`).join('')}</div>` : '';
+      <div class="rp-nav2"><button type="button" class="rp-play" data-rshow>${icon('play')} عرض</button>
+        <div class="rp-cur"><button type="button" data-rpstep="-1" title="الشريحة السابقة">${icon('chevR')}</button><span><b id="rpCurN">1</b><small>من ${S.length}</small></span><em id="rpCurT">${esc(S[0].nav)}</em><button type="button" data-rpstep="1" title="الشريحة التالية">${icon('chevL')}</button></div>
+        <div class="rp-segs">${S.map((x, k) => `<button type="button" data-goto="${k}" class="${x.t === 'pcover' ? 'rp-cv' : ''} ${k ? '' : 'on'}" title="${k + 1} · ${esc(x.nav)}"><i></i></button>`).join('')}</div>
+        <button type="button" class="rp-all" data-rpall aria-expanded="false">${icon('grid')} كل الشرائح</button></div>
+      <div class="rp-grid" hidden>${S.map((x, k) => `<button type="button" data-goto="${k}" class="${x.t === 'pcover' ? 'rp-cv' : ''}"><b>${k + 1}</b><span>${esc(x.nav)}</span></button>`).join('')}</div>` : '';
+    /* الشريحة الحالية تتبع التمرير */
+    const navSync = () => {
+      const fr = $$('.rs-frame', el); if (!fr.length || !document.body.contains(el)) return;
+      const y = ($('#rpBar', el) || el).getBoundingClientRect().bottom + 30;
+      let cur = 0; fr.forEach((f, k) => { if (f.getBoundingClientRect().top <= y) cur = k; });
+      if (el.__rpCur === cur) return; el.__rpCur = cur;
+      $$('[data-goto]', $('#rpBar', el)).forEach((b) => b.classList.toggle('on', +b.dataset.goto === cur));
+      const n = $('#rpCurN', el), t = $('#rpCurT', el); if (n) n.textContent = cur + 1; if (t) t.textContent = S[cur] ? S[cur].nav : '';
+    };
+    el.__rpCur = -1; window.removeEventListener('scroll', window.__rpNavSync); window.__rpNavSync = () => requestAnimationFrame(navSync); window.addEventListener('scroll', window.__rpNavSync, { passive: true }); navSync();
     $('#rpSlides', el).innerHTML = RPT.ids.length ? S.map((s, i) => `<div class="rs-frame" data-si="${i}">${specHTML(s)}</div>`).join('') : `<div class="panel">${emptyHTML({ ic: 'file', title: 'اختر شراكة أو أكثر', text: 'حدد الشراكات من القائمة، أو استخدم الفلاتر ثم «تحديد المعروضة» لاختيار مجموعة كاملة (مثل الساري أو المنتهي).' })}</div>`;
     hydrateFiles($('#rpSlides', el));
     fitSlides();
@@ -547,7 +561,9 @@ function renderReports(el, r) {
     if (!e.target.closest('#rpPD')) $('#rpPD', el).classList.remove('open');
     const rxb = e.target.closest('[data-rx]'); if (rxb) { RPT.ids = RPT.ids.filter((x) => x !== rxb.dataset.rx); drawList(); drawPreview(); return; }
     if (e.target.closest('[data-rshow]')) { if (!RPT.ids.length) return toast('اختر شراكة واحدة على الأقل.', 'err'); return openReportShow(0); }
-    const nv = e.target.closest('[data-goto]'); if (nv) { const f = $(`.rs-frame[data-si="${nv.dataset.goto}"]`, el); f && window.scrollTo({ top: f.getBoundingClientRect().top + scrollY - 90, behavior: 'smooth' }); return; }
+    const stp = e.target.closest('[data-rpstep]'); if (stp) { const k = Math.max(0, Math.min($$('.rs-frame', el).length - 1, Math.max(0, el.__rpCur || 0) + +stp.dataset.rpstep)); const f = $(`.rs-frame[data-si="${k}"]`, el); f && window.scrollTo({ top: f.getBoundingClientRect().top + scrollY - (($('#rpBar', el) || {}).offsetHeight || 0) - 80, behavior: 'smooth' }); return; }
+    const all = e.target.closest('[data-rpall]'); if (all) { const g = $('.rp-grid', el); g.hidden = !g.hidden; all.setAttribute('aria-expanded', String(!g.hidden)); all.classList.toggle('on', !g.hidden); return; }
+    const nv = e.target.closest('[data-goto]'); if (nv) { if (nv.closest('.rp-grid')) { $('.rp-grid', el).hidden = true; const ab = $('[data-rpall]', el); if (ab) { ab.classList.remove('on'); ab.setAttribute('aria-expanded', 'false'); } } const f = $(`.rs-frame[data-si="${nv.dataset.goto}"]`, el); f && window.scrollTo({ top: f.getBoundingClientRect().top + scrollY - 90, behavior: 'smooth' }); return; }
     if (e.target.closest('[data-rnone]')) { RPT.ids = []; drawList(); drawPreview(); return; }
     if (e.target.closest('[data-rsall]')) { RPT.sections = RPT_SECTIONS.map((s) => s.k); drawDD(); drawPreview(); return; }
     if (e.target.closest('[data-rsnone]')) { RPT.sections = []; drawDD(); drawPreview(); return; }
