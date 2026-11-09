@@ -97,6 +97,31 @@ function mxTree(X) {
   });
   return `<svg class="mx-tree" viewBox="0 0 ${W} ${H}" aria-hidden="true"><defs><radialGradient id="mxGlow"><stop offset="0" stop-color="#E6C786" stop-opacity=".35"/><stop offset="1" stop-color="#E6C786" stop-opacity="0"/></radialGradient></defs><circle cx="${bx}" cy="${ty - 40}" r="250" fill="url(#mxGlow)" class="glow"/>${trunk}${br}${lv}${lb}<circle class="seed" cx="${bx}" cy="${by}" r="7"/></svg>`;
 }
+/* — نصوص الشرائح: قصّ عند حدود الكلمات، وعنوان قصير ووصف من كل بند، وأيقونة حسب موضوعه — */
+function mkClip(t, n) {
+  t = String(t || '').replace(/\s+/g, ' ').trim(); if (t.length <= n) return t;
+  const cut = t.slice(0, n), i = Math.max(cut.lastIndexOf(' '), cut.lastIndexOf('،'));
+  return cut.slice(0, i > n * 0.6 ? i : n).replace(/[،,؛:\s]+$/u, '') + '…';
+}
+function mkSplit(text) {
+  let t = trimP(text).replace(/^\s*(\d+\s*[-–.)]\s*)/, '');
+  const stripLead = (x) => x.replace(/^(التعاون|العمل المشترك|التنسيق)\s+(في|على)\s+/, '');
+  const m = t.match(/^(.{12,95}?)[،,]\s*((?:بما|وذلك|من خلال|عبر|مثل|ومنها|وتشمل|بهدف).+)$/);
+  if (m) return { t: stripLead(m[1]).replace(/^./, (c) => c), d: m[2] };
+  const c = t.match(/^([^:：]{4,70})[:：]\s*(.+)$/); if (c) return { t: stripLead(c[1]), d: c[2] };
+  const w = stripLead(t).split(' ');
+  const cm = t.match(/^(.{12,95}?)[،,]\s*(.{8,})$/); if (cm) return { t: stripLead(cm[1]), d: cm[2] }; // أول فاصلة
+  return { t: stripLead(t), d: '' }; // جملة واحدة بلا فاصل: تبقى كاملة عنوانًا (لا تُقسم في منتصفها)
+}
+const MK_ICONS = [[/سياح|معسكر|زائر|رحل/, 'flag'], [/أخرى|اهتمام المشترك/, 'link'], [/مجتمع|تطوع|متطوع|شباب|أسر/, 'users'], [/دراس|بحث|بحوث|ابتكار|تقني|حلول/, 'search'], [/تدريب|تعليم|ورش|قدرات|معرف|خبرات/, 'award'], [/قياس|أثر|مؤشر|تقارير|بيانات/, 'chart'], [/إعلام|محتوى|نشر|أخبار|توعي/, 'news'], [/مال|استثمار|تمويل|رعاي/, 'star'], [/مياه|سيول/, 'layers'], [/نبات|غطاء|تشجير|شجر|بيئ|موائل|أحيائ|تصحر|مناخ|زراع/, 'leaf']];
+/* بطاقات البنود (مجالات التعاون، والمخرجات، والأثر): عنوان قصير وأيقونة ووصف موجز */
+function mkCardsHTML(items, startN, total, label) {
+  const n = items.length;
+  return `<div class="px-co2 n${n}">${items.map((raw, i) => { const sp = mkSplit(raw); return `<article style="--i:${i}"><span class="px-co2-n">${String(startN + i + 1).padStart(2, '0')}</span><div class="px-co2-h"><i class="px-co2-ic">${icon(mkIconFor(sp.t, raw))}</i><b>${esc(mkClip(sp.t, sp.d ? (n <= 4 ? 90 : 62) : 140))}</b></div>${sp.d ? `<p>${esc(mkClip(sp.d, n <= 3 ? 230 : 120))}</p>` : ''}</article>`; }).join('')}</div>`;
+}
+const mkCardsHead = (h, count, noun, page, pages, sub) => `<div class="px-co2-head"><h2 class="mx-h">${h}</h2><div class="px-co2-sum"><b>${nf(count)}</b><span>${noun}${pages > 1 ? `<small>الصفحة ${page} من ${pages}</small>` : sub ? `<small>${esc(sub)}</small>` : ''}</span></div></div>`;
+const mkIconFor = (t, full) => (MK_ICONS.find(([re]) => re.test(t)) || MK_ICONS.find(([re]) => re.test(full || '')) || [, 'link'])[1];
+
 /* تقرير تسويقي لشراكة واحدة: كل شريحة تُبنى من بيانات الشراكة نفسها، وتُحذف إن لم تتوفر بياناتها */
 function mkSlidesOne(p) {
   const org = D.settings.org, pr = partnerById(p.partnerId) || null, name = partnerName(p), P = pProfile(p), st = pStatus(p);
@@ -125,7 +150,7 @@ function mkSlidesOne(p) {
       <div class="px-meta">${[p.classification, pSector(p), p.ptype, s0 ? `${fmtDate(p.startDate)}${e0 ? ' – ' + fmtDate(p.endDate) : ''}` : ''].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join('')}<span class="st st-${st}">${esc(statusLabel(st))}</span></div>
     </div>`]);
   /* 2. الملخص */
-  const lineDef = `${s0 ? `منذ ${fmtDate(p.startDate)} ` : ''}تجمع ${p.classification || 'شراكة'} بين ${org.name} و${name}${goal ? `، في ${goal.slice(0, 90)}` : ''}.`;
+  const lineDef = `${s0 ? `منذ ${fmtDate(p.startDate)} ` : ''}تجمع ${p.classification || 'شراكة'} بين ${org.name} و${name}${goal ? `، في ${mkClip(mkSplit(goal).t, 110)}` : ''}.`;
   const line = rptVal('mk.' + k('ln'), lineDef);
   S.push(['line', 'paper', 'الملخص', `
     <span class="mx-qm" aria-hidden="true">“</span>
@@ -151,22 +176,24 @@ function mkSlidesOne(p) {
       <div class="px-pp-lg">${logoOrMono(pr, name)}</div>
       <div class="px-pp-b"><h2>${esc(pr.name)}</h2>
         <div class="px-pp-tags">${[pr.sector || pSector(p), pr.domain, pr.type].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join('')}</div>
-        <p>${mkE(k('pp.s'), trimP(pr.notes || '').slice(0, 260) || `${pr.name} شريك ${org.name} في ${pSector(p) ? 'القطاع ' + pSector(p) : 'هذه الشراكة'}.`)}</p>
+        <p>${mkE(k('pp.s'), mkClip(trimP(pr.notes || ''), 260) || `${pr.name} شريك ${org.name} في ${pSector(p) ? 'القطاع ' + pSector(p) : 'هذه الشراكة'}.`)}</p>
+        <dl class="px-pp-facts">${[['القطاع', pr.sector || pSector(p)], ['مجال العمل', pr.domain], ['نوع الشراكة', p.classification], ['تصنيف الشراكة', p.ptype], ['بداية الشراكة', s0 ? fmtDate(p.startDate) : ''], ['المدة', dur ? `${nf(dur[0])} ${dur[1]}` : ''], ['مجالات التعاون', coop.length ? nf(coop.length) : ''], ['الحالة', statusLabel(st)]].filter(([, v]) => v).slice(0, 6).map(([l, v], i) => `<div style="--i:${i}"><dt>${esc(l)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
         ${others.length ? `<div class="px-pp-others"><small>شراكات أخرى مع الجهة</small>${others.slice(0, 4).map((o) => `<span>${esc(o.title || o.code || '')}<em>${esc(statusLabel(pStatus(o)))}</em></span>`).join('')}</div>` : ''}
       </div></div>`]);
   /* 5. مجالات التعاون — كلها، ست بطاقات في كل شريحة */
   const pages = (arr, n) => { const o = []; for (let i = 0; i < arr.length; i += n) o.push(arr.slice(i, i + n)); return o; };
   pages(coop, 6).forEach((part, pi, all) => S.push(['pcoop', 'paper', 'مجالات التعاون', `
-    <h2 class="mx-h">${mkE(k('co.h' + (pi || '')), 'مجالات التعاون' + (all.length > 1 ? ` (${pi + 1}/${all.length})` : ''))}</h2>
-    <div class="px-coop n${part.length}">${part.map((c, i) => `<article style="--i:${i}"><em>${String(pi * 6 + i + 1).padStart(2, '0')}</em><b>${esc(trimP(c.t || c.x).slice(0, 90))}</b>${c.t && c.x ? `<p>${esc(trimP(c.x).slice(0, 150))}</p>` : ''}</article>`).join('')}</div>`]));
+    <div class="px-co2-head"><h2 class="mx-h">${mkE(k('co.h' + (pi || '')), 'مجالات التعاون')}</h2>
+      <div class="px-co2-sum"><b>${nf(coop.length)}</b><span>${coop.length === 1 ? 'مجال تعاون' : 'مجالات تعاون'}${all.length > 1 ? `<small>الصفحة ${pi + 1} من ${all.length}</small>` : `<small>بين ${esc(org.name)} و${esc(name)}</small>`}</span></div></div>
+    <div class="px-co2 n${part.length}">${part.map((c, i) => { const sp = c.t ? { t: trimP(c.t), d: trimP(c.x) } : mkSplit(c.x); const all_ = (c.t || '') + ' ' + c.x; return `<article style="--i:${i}"><span class="px-co2-n">${String(pi * 6 + i + 1).padStart(2, '0')}</span><div class="px-co2-h"><i class="px-co2-ic">${icon(mkIconFor(sp.t, all_))}</i><b>${esc(mkClip(sp.t, sp.d ? (part.length <= 4 ? 90 : 62) : 140))}</b></div>${sp.d ? `<p>${esc(mkClip(sp.d, part.length <= 3 ? 230 : 120))}</p>` : ''}</article>`; }).join('')}</div>`]));
   /* 6. المخرجات — كلها */
   pages(outs, 6).forEach((part, pi, all) => S.push(['pout', 'night', 'المخرجات', `
-    <h2 class="mx-h">${mkE(k('ou.h' + (pi || '')), 'المخرجات المستهدفة' + (all.length > 1 ? ` (${pi + 1}/${all.length})` : ''))}</h2>
-    <div class="px-out one"><div class="px-out-l"><small>إسناد مشاريع وبناء مبادرات</small><ol start="${pi * 6 + 1}" style="counter-reset:o ${pi * 6}">${part.map((o, i) => `<li style="--i:${i}">${esc(o.slice(0, 160))}</li>`).join('')}</ol></div></div>`]));
+    ${mkCardsHead(mkE(k('ou.h' + (pi || '')), 'المخرجات المستهدفة'), outs.length, outs.length === 1 ? 'مخرج مستهدف' : 'مخرجات مستهدفة', pi + 1, all.length, 'إسناد مشاريع وبناء مبادرات')}
+    ${mkCardsHTML(part, pi * 6, outs.length)}`]));
   /* 6ب. الأثر المتوقع — كله */
-  pages(imps, 4).forEach((part, pi, all) => S.push(['pimp', 'deep', 'الأثر المتوقع', `
-    <h2 class="mx-h">${mkE(k('im.h' + (pi || '')), 'الأثر المتوقع وكيف يخدم المؤسسة' + (all.length > 1 ? ` (${pi + 1}/${all.length})` : ''))}</h2>
-    <div class="px-imp n${part.length}">${part.map((o, i) => { const m = o.match(/^([^:：]{3,60})[:：]\s*(.+)$/); return `<article style="--i:${i}"><i>${icon('leaf')}</i>${m ? `<b>${esc(m[1])}</b><p>${esc(m[2].slice(0, 170))}</p>` : `<p>${esc(o.slice(0, 200))}</p>`}</article>`; }).join('')}</div>`]));
+  pages(imps, 6).forEach((part, pi, all) => S.push(['pimp', 'deep', 'الأثر المتوقع', `
+    ${mkCardsHead(mkE(k('im.h' + (pi || '')), 'الأثر المتوقع'), imps.length, imps.length === 1 ? 'أثر متوقع' : 'آثار متوقعة', pi + 1, all.length, 'وكيف يخدم المؤسسة')}
+    ${mkCardsHTML(part, pi * 6, imps.length)}`]));
   /* 6ج. شبكة الشراكة: الشراكة في المركز، وفريق إدارة الشراكات يمينًا، والإدارات يسارًا، والتفعيل أسفلها */
   const own = p.owners || [], deps = p.departments || [];
   if (own.length || deps.length || p.activation) {
@@ -238,7 +265,8 @@ function mkSlidesOne(p) {
     S.push(['pwf', 'paper', 'مسار المذكرة', `
       <h2 class="mx-h">${mkE(k('wf.h'), 'مسار المذكرة حتى الأثر')}</h2>
       <p class="mx-sub">${W.cur ? `الخطوة الحالية: ${W.cur.n}. ${esc(W.cur.t)}` : W.closed ? 'أُغلق الطلب' : 'اكتملت خطوات المسار'} — ${done} من ${WF_STEPS.length} خطوة مكتملة.</p>
-      <div class="px-wf">${WF_PHASES.map((ph, pi) => { const st = WF_STEPS.filter((x) => x.ph === ph.id); const d = st.filter((x) => W.S[x.id] && W.S[x.id].status === 'done').length; const cur = W.cur && st.some((x) => x.id === W.cur.id); return `<div class="px-ph ${d === st.length ? 'd' : cur ? 'c' : ''}" style="--i:${pi}"><em>${String(pi + 1).padStart(2, '0')}</em><b>${esc(ph.t)}</b><span class="px-ph-bar"><i style="width:${Math.round(d / st.length * 100)}%"></i></span><small>${d}/${st.length}</small></div>`; }).join('')}</div>`]);
+      <div class="px-wf">${WF_PHASES.map((ph, pi) => { const st = WF_STEPS.filter((x) => x.ph === ph.id); const d = st.filter((x) => W.S[x.id] && W.S[x.id].status === 'done').length; const cur = W.cur && st.some((x) => x.id === W.cur.id); return `<div class="px-ph ${d === st.length ? 'd' : cur ? 'c' : ''}" style="--i:${pi}"><em>${String(pi + 1).padStart(2, '0')}</em><b>${esc(ph.t)}</b><span class="px-ph-bar"><i style="width:${Math.round(d / st.length * 100)}%"></i></span><small>${d}/${st.length}</small></div>`; }).join('')}</div>      <ol class="px-wf-steps">${WF_STEPS.map((x, si) => { const r = W.S[x.id] || {}, dn = r.status === 'done', cu = W.cur && W.cur.id === x.id; return `<li class="${dn ? 'd' : cu ? 'c' : ''}" style="--i:${si}"><em>${dn ? '✓' : x.n}</em><span><b>${esc(x.t)}</b><small>${dn ? (r.at && !r.legacy ? fmtDate(String(r.at).slice(0, 10)) : 'مكتملة') : cu ? 'الخطوة الحالية — ' + esc(wfActorName(x.actor)) : esc(wfActorName(x.actor))}</small></span></li>`; }).join('')}</ol>
+`]);
   } catch (_) { /* المسار اختياري */ }
   /* 8ج. الوثائق والصور: صور الشراكة الفعلية وقائمة المستندات بتصنيفاتها */
   const atts = (p.attachments || []).filter((a2) => a2.fileId);

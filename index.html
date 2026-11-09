@@ -7064,6 +7064,91 @@ code.pw-user{font-size:12.5px;background:var(--paper-2);padding:2px 8px;border-r
 @keyframes mkPreUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes mkPreTitle{to{opacity:1;filter:none;letter-spacing:0}}
 @media (prefers-reduced-motion:reduce){.rshow-mk .rshow-slide{filter:none!important;transition:opacity .3s}.mk-pre-c *{animation-duration:.01s!important;animation-delay:0s!important}}
+
+/* تقرير الشراكة: مجالات التعاون — عنوان قصير وأيقونة ووصف موجز لكل مجال */
+.px-co2-head{position:absolute;top:44px;inset-inline:56px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+.px-co2-head .mx-h{position:static!important;margin:0}
+.px-co2-sum{display:flex;align-items:center;gap:14px;padding:10px 18px 10px 22px;border-radius:18px;background:linear-gradient(135deg,#0F4433,#1F6B55);color:#fff;box-shadow:0 18px 40px -24px rgba(15,68,51,.7)}
+.px-co2-sum b{font-family:var(--display,var(--font));font-size:46px;line-height:1;color:#F0D9A0}
+.px-co2-sum span{display:flex;flex-direction:column;font-size:15px;font-weight:700}
+.px-co2-sum small{font-size:12px;font-weight:400;color:#BFD7CD;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.px-co2{position:absolute;top:170px;bottom:64px;inset-inline:56px;display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;gap:18px}
+.px-co2.n1,.px-co2.n2{grid-template-columns:repeat(2,1fr)}.px-co2.n1{grid-template-columns:1fr}
+.px-co2.n4{grid-template-columns:repeat(2,1fr)}
+.px-co2 article{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:10px;padding:22px 24px 20px;border-radius:20px;background:#fff;border:1px solid #ECE5D6;box-shadow:0 22px 44px -32px rgba(20,32,27,.45)}
+.px-co2 article::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,#E6C786,#1F6B55)}
+.px-co2 article::after{content:"";position:absolute;inset:auto auto -60px -60px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(230,199,134,.18),rgba(230,199,134,0) 70%)}
+.px-co2-n{position:absolute;inset-inline-end:18px;top:12px;font-family:var(--display,var(--font));font-size:54px;font-weight:700;line-height:1;color:rgba(15,68,51,.07)}
+.px-co2-ic{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#0F4433,#2E7D67);color:#F0D9A0;box-shadow:0 10px 22px -12px rgba(15,68,51,.8);flex:none}
+.px-co2-ic .ic{width:26px;height:26px}
+.px-co2 article b{font-size:21px;line-height:1.45;color:#0F2E27;font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.px-co2 article p{margin:0;font-size:15.5px;line-height:1.75;color:#55625C;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.px-co2.n1 article b,.px-co2.n2 article b,.px-co2.n3 article b{font-size:24px}.px-co2.n1 article p,.px-co2.n2 article p,.px-co2.n3 article p{-webkit-line-clamp:6;font-size:17px}
+.mk-anim .px-co2 article{opacity:0;transform:translateY(26px) scale(.97)}
+.mk-anim.play .px-co2 article{animation:mxUpIn .7s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(.35s + var(--i) * 110ms)}
+.mk-anim.play .px-co2-ic{animation:mkIcPop .6s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(.7s + var(--i) * 110ms)}
+.mk-anim .px-co2-sum{opacity:0}.mk-anim.play .px-co2-sum{animation:mxUpIn .7s .15s forwards}
+@keyframes mxUpIn{to{opacity:1;transform:none}}
+@keyframes mkIcPop{from{transform:scale(.4) rotate(-20deg)}to{transform:none}}
+
+.px-co2-head{top:66px}
+.px-co2{top:182px;bottom:62px}
+.px-co2-h{display:flex;align-items:center;gap:14px;min-height:56px}
+.px-co2-ic{width:46px;height:46px;border-radius:14px}
+.px-co2-ic .ic{width:22px;height:22px}
+.px-co2 article{gap:12px;padding:20px 22px}
+.px-co2 article b{font-size:19.5px;line-height:1.5}
+.px-co2 article p{font-size:15px;line-height:1.7;-webkit-line-clamp:3}
+.px-co2-n{font-size:46px;top:auto;bottom:10px;inset-inline-end:auto;inset-inline-start:18px}
+/* الجهة الشريكة: حقائق */
+.px-pp-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0 0}
+.px-pp-facts>div{padding:12px 16px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+.px-pp-facts dt{font-size:12.5px;color:#9FBDB2}.px-pp-facts dd{margin:4px 0 0;font-size:17px;font-weight:700;color:#fff}
+.mk-anim .px-pp-facts>div{opacity:0;transform:translateY(14px)}.mk-anim.play .px-pp-facts>div{animation:mxUpIn .6s forwards;animation-delay:calc(.9s + var(--i) * 90ms)}
+/* مسار المذكرة: الخطوات */
+.px-wf-steps{position:absolute;inset-inline:56px;bottom:58px;list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);grid-auto-flow:row;gap:8px 12px}
+.px-wf-steps li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:#fff;border:1px solid #ECE5D6;min-height:60px}
+.px-wf-steps em{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:700;background:#EEF1EE;color:#7A8580}
+.px-wf-steps li.d em{background:#1F6B55;color:#fff}.px-wf-steps li.c{border-color:#D9B467;background:#FBF6EA}.px-wf-steps li.c em{background:#D9B467;color:#0F2E27;box-shadow:0 0 0 4px rgba(217,180,103,.25)}
+.px-wf-steps span{display:flex;flex-direction:column;min-width:0}
+.px-wf-steps b{font-size:12.5px;line-height:1.4;color:#14201B;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.px-wf-steps small{font-size:11px;color:#7A8580;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.px-wf-steps li.c small{color:#8A6A2A;font-weight:600}
+.mk-anim .px-wf-steps li{opacity:0;transform:translateY(10px)}.mk-anim.play .px-wf-steps li{animation:mxUpIn .5s forwards;animation-delay:calc(1s + var(--i) * 60ms)}
+.mks-pwf .px-wf{top:200px}
+.mks-pwf .px-ph{min-height:0;padding:16px 16px 14px;gap:8px}
+.mks-pwf .px-ph em{font-size:28px}
+.mks-pwf .px-ph b{font-size:16.5px}
+.px-wf-steps{bottom:56px}
+.px-pp-facts{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+
+/* بطاقات البنود على الشرائح الداكنة */
+.mk-night .px-co2 article,.mk-deep .px-co2 article{background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.035));border-color:rgba(255,255,255,.13);box-shadow:0 26px 50px -30px rgba(0,0,0,.7);backdrop-filter:blur(4px)}
+.mk-night .px-co2 article b,.mk-deep .px-co2 article b{color:#fff}
+.mk-night .px-co2 article p,.mk-deep .px-co2 article p{color:#BFD3CB}
+.mk-night .px-co2-n,.mk-deep .px-co2-n{color:rgba(240,217,160,.12)}
+.mk-night .px-co2-ic,.mk-deep .px-co2-ic{background:linear-gradient(135deg,#E6C786,#B8913F);color:#0F2E27}
+.mk-night .px-co2-sum,.mk-deep .px-co2-sum{background:linear-gradient(135deg,#E6C786,#C9A65C);color:#0F2E27}
+.mk-night .px-co2-sum b,.mk-deep .px-co2-sum b{color:#0F2E27}.mk-night .px-co2-sum small,.mk-deep .px-co2-sum small{color:#4A4026}
+.px-co2.n1 article,.px-co2.n2 article{padding:30px 34px}
+.px-co2.n1 article b,.px-co2.n2 article b{font-size:28px}
+/* بنود قليلة (1–3): صفوف عريضة تملأ الشريحة بدل أعمدة نصف فارغة */
+.px-co2.n1,.px-co2.n2,.px-co2.n3{grid-template-columns:1fr!important;gap:16px}
+.px-co2.n1 article,.px-co2.n2 article,.px-co2.n3 article{flex-direction:row;align-items:center;gap:26px;padding:22px 30px}
+.px-co2.n1 .px-co2-h,.px-co2.n2 .px-co2-h,.px-co2.n3 .px-co2-h{flex:0 0 40%;gap:18px}
+.px-co2.n1 .px-co2-ic,.px-co2.n2 .px-co2-ic,.px-co2.n3 .px-co2-ic{width:64px;height:64px;border-radius:20px}
+.px-co2.n1 .px-co2-ic .ic,.px-co2.n2 .px-co2-ic .ic,.px-co2.n3 .px-co2-ic .ic{width:30px;height:30px}
+.px-co2.n1 article b,.px-co2.n2 article b,.px-co2.n3 article b{font-size:25px;-webkit-line-clamp:3}
+.px-co2.n1 article p,.px-co2.n2 article p,.px-co2.n3 article p{flex:1;font-size:17.5px;line-height:1.8;-webkit-line-clamp:4;padding-inline-start:26px;border-inline-start:2px solid rgba(217,180,103,.45)}
+.px-co2.n1 .px-co2-n,.px-co2.n2 .px-co2-n,.px-co2.n3 .px-co2-n{font-size:84px;bottom:auto;top:50%;transform:translateY(-50%);inset-inline-start:24px}
+.px-co2.n4{grid-template-columns:1fr!important;gap:12px}
+.px-co2.n4 article{flex-direction:row;align-items:center;gap:22px;padding:14px 26px}
+.px-co2.n4 .px-co2-h{flex:0 0 42%;gap:16px}
+.px-co2.n4 article b{font-size:20px;-webkit-line-clamp:2}
+.px-co2.n4 article p{flex:1;font-size:15.5px;line-height:1.7;-webkit-line-clamp:3;padding-inline-start:22px;border-inline-start:2px solid rgba(217,180,103,.45)}
+.px-co2.n4 .px-co2-n{font-size:64px;bottom:auto;top:50%;transform:translateY(-50%);inset-inline-start:22px}
+
+.px-co2 article:not(:has(p)) .px-co2-h{flex:1}
 </style>
 </head>
 <body>
@@ -23017,6 +23102,31 @@ function mxTree(X) {
   });
   return `<svg class="mx-tree" viewBox="0 0 ${W} ${H}" aria-hidden="true"><defs><radialGradient id="mxGlow"><stop offset="0" stop-color="#E6C786" stop-opacity=".35"/><stop offset="1" stop-color="#E6C786" stop-opacity="0"/></radialGradient></defs><circle cx="${bx}" cy="${ty - 40}" r="250" fill="url(#mxGlow)" class="glow"/>${trunk}${br}${lv}${lb}<circle class="seed" cx="${bx}" cy="${by}" r="7"/></svg>`;
 }
+/* — نصوص الشرائح: قصّ عند حدود الكلمات، وعنوان قصير ووصف من كل بند، وأيقونة حسب موضوعه — */
+function mkClip(t, n) {
+  t = String(t || '').replace(/\s+/g, ' ').trim(); if (t.length <= n) return t;
+  const cut = t.slice(0, n), i = Math.max(cut.lastIndexOf(' '), cut.lastIndexOf('،'));
+  return cut.slice(0, i > n * 0.6 ? i : n).replace(/[،,؛:\s]+$/u, '') + '…';
+}
+function mkSplit(text) {
+  let t = trimP(text).replace(/^\s*(\d+\s*[-–.)]\s*)/, '');
+  const stripLead = (x) => x.replace(/^(التعاون|العمل المشترك|التنسيق)\s+(في|على)\s+/, '');
+  const m = t.match(/^(.{12,95}?)[،,]\s*((?:بما|وذلك|من خلال|عبر|مثل|ومنها|وتشمل|بهدف).+)$/);
+  if (m) return { t: stripLead(m[1]).replace(/^./, (c) => c), d: m[2] };
+  const c = t.match(/^([^:：]{4,70})[:：]\s*(.+)$/); if (c) return { t: stripLead(c[1]), d: c[2] };
+  const w = stripLead(t).split(' ');
+  const cm = t.match(/^(.{12,95}?)[،,]\s*(.{8,})$/); if (cm) return { t: stripLead(cm[1]), d: cm[2] }; // أول فاصلة
+  return { t: stripLead(t), d: '' }; // جملة واحدة بلا فاصل: تبقى كاملة عنوانًا (لا تُقسم في منتصفها)
+}
+const MK_ICONS = [[/سياح|معسكر|زائر|رحل/, 'flag'], [/أخرى|اهتمام المشترك/, 'link'], [/مجتمع|تطوع|متطوع|شباب|أسر/, 'users'], [/دراس|بحث|بحوث|ابتكار|تقني|حلول/, 'search'], [/تدريب|تعليم|ورش|قدرات|معرف|خبرات/, 'award'], [/قياس|أثر|مؤشر|تقارير|بيانات/, 'chart'], [/إعلام|محتوى|نشر|أخبار|توعي/, 'news'], [/مال|استثمار|تمويل|رعاي/, 'star'], [/مياه|سيول/, 'layers'], [/نبات|غطاء|تشجير|شجر|بيئ|موائل|أحيائ|تصحر|مناخ|زراع/, 'leaf']];
+/* بطاقات البنود (مجالات التعاون، والمخرجات، والأثر): عنوان قصير وأيقونة ووصف موجز */
+function mkCardsHTML(items, startN, total, label) {
+  const n = items.length;
+  return `<div class="px-co2 n${n}">${items.map((raw, i) => { const sp = mkSplit(raw); return `<article style="--i:${i}"><span class="px-co2-n">${String(startN + i + 1).padStart(2, '0')}</span><div class="px-co2-h"><i class="px-co2-ic">${icon(mkIconFor(sp.t, raw))}</i><b>${esc(mkClip(sp.t, sp.d ? (n <= 4 ? 90 : 62) : 140))}</b></div>${sp.d ? `<p>${esc(mkClip(sp.d, n <= 3 ? 230 : 120))}</p>` : ''}</article>`; }).join('')}</div>`;
+}
+const mkCardsHead = (h, count, noun, page, pages, sub) => `<div class="px-co2-head"><h2 class="mx-h">${h}</h2><div class="px-co2-sum"><b>${nf(count)}</b><span>${noun}${pages > 1 ? `<small>الصفحة ${page} من ${pages}</small>` : sub ? `<small>${esc(sub)}</small>` : ''}</span></div></div>`;
+const mkIconFor = (t, full) => (MK_ICONS.find(([re]) => re.test(t)) || MK_ICONS.find(([re]) => re.test(full || '')) || [, 'link'])[1];
+
 /* تقرير تسويقي لشراكة واحدة: كل شريحة تُبنى من بيانات الشراكة نفسها، وتُحذف إن لم تتوفر بياناتها */
 function mkSlidesOne(p) {
   const org = D.settings.org, pr = partnerById(p.partnerId) || null, name = partnerName(p), P = pProfile(p), st = pStatus(p);
@@ -23045,7 +23155,7 @@ function mkSlidesOne(p) {
       <div class="px-meta">${[p.classification, pSector(p), p.ptype, s0 ? `${fmtDate(p.startDate)}${e0 ? ' – ' + fmtDate(p.endDate) : ''}` : ''].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join('')}<span class="st st-${st}">${esc(statusLabel(st))}</span></div>
     </div>`]);
   /* 2. الملخص */
-  const lineDef = `${s0 ? `منذ ${fmtDate(p.startDate)} ` : ''}تجمع ${p.classification || 'شراكة'} بين ${org.name} و${name}${goal ? `، في ${goal.slice(0, 90)}` : ''}.`;
+  const lineDef = `${s0 ? `منذ ${fmtDate(p.startDate)} ` : ''}تجمع ${p.classification || 'شراكة'} بين ${org.name} و${name}${goal ? `، في ${mkClip(mkSplit(goal).t, 110)}` : ''}.`;
   const line = rptVal('mk.' + k('ln'), lineDef);
   S.push(['line', 'paper', 'الملخص', `
     <span class="mx-qm" aria-hidden="true">“</span>
@@ -23071,22 +23181,24 @@ function mkSlidesOne(p) {
       <div class="px-pp-lg">${logoOrMono(pr, name)}</div>
       <div class="px-pp-b"><h2>${esc(pr.name)}</h2>
         <div class="px-pp-tags">${[pr.sector || pSector(p), pr.domain, pr.type].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join('')}</div>
-        <p>${mkE(k('pp.s'), trimP(pr.notes || '').slice(0, 260) || `${pr.name} شريك ${org.name} في ${pSector(p) ? 'القطاع ' + pSector(p) : 'هذه الشراكة'}.`)}</p>
+        <p>${mkE(k('pp.s'), mkClip(trimP(pr.notes || ''), 260) || `${pr.name} شريك ${org.name} في ${pSector(p) ? 'القطاع ' + pSector(p) : 'هذه الشراكة'}.`)}</p>
+        <dl class="px-pp-facts">${[['القطاع', pr.sector || pSector(p)], ['مجال العمل', pr.domain], ['نوع الشراكة', p.classification], ['تصنيف الشراكة', p.ptype], ['بداية الشراكة', s0 ? fmtDate(p.startDate) : ''], ['المدة', dur ? `${nf(dur[0])} ${dur[1]}` : ''], ['مجالات التعاون', coop.length ? nf(coop.length) : ''], ['الحالة', statusLabel(st)]].filter(([, v]) => v).slice(0, 6).map(([l, v], i) => `<div style="--i:${i}"><dt>${esc(l)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
         ${others.length ? `<div class="px-pp-others"><small>شراكات أخرى مع الجهة</small>${others.slice(0, 4).map((o) => `<span>${esc(o.title || o.code || '')}<em>${esc(statusLabel(pStatus(o)))}</em></span>`).join('')}</div>` : ''}
       </div></div>`]);
   /* 5. مجالات التعاون — كلها، ست بطاقات في كل شريحة */
   const pages = (arr, n) => { const o = []; for (let i = 0; i < arr.length; i += n) o.push(arr.slice(i, i + n)); return o; };
   pages(coop, 6).forEach((part, pi, all) => S.push(['pcoop', 'paper', 'مجالات التعاون', `
-    <h2 class="mx-h">${mkE(k('co.h' + (pi || '')), 'مجالات التعاون' + (all.length > 1 ? ` (${pi + 1}/${all.length})` : ''))}</h2>
-    <div class="px-coop n${part.length}">${part.map((c, i) => `<article style="--i:${i}"><em>${String(pi * 6 + i + 1).padStart(2, '0')}</em><b>${esc(trimP(c.t || c.x).slice(0, 90))}</b>${c.t && c.x ? `<p>${esc(trimP(c.x).slice(0, 150))}</p>` : ''}</article>`).join('')}</div>`]));
+    <div class="px-co2-head"><h2 class="mx-h">${mkE(k('co.h' + (pi || '')), 'مجالات التعاون')}</h2>
+      <div class="px-co2-sum"><b>${nf(coop.length)}</b><span>${coop.length === 1 ? 'مجال تعاون' : 'مجالات تعاون'}${all.length > 1 ? `<small>الصفحة ${pi + 1} من ${all.length}</small>` : `<small>بين ${esc(org.name)} و${esc(name)}</small>`}</span></div></div>
+    <div class="px-co2 n${part.length}">${part.map((c, i) => { const sp = c.t ? { t: trimP(c.t), d: trimP(c.x) } : mkSplit(c.x); const all_ = (c.t || '') + ' ' + c.x; return `<article style="--i:${i}"><span class="px-co2-n">${String(pi * 6 + i + 1).padStart(2, '0')}</span><div class="px-co2-h"><i class="px-co2-ic">${icon(mkIconFor(sp.t, all_))}</i><b>${esc(mkClip(sp.t, sp.d ? (part.length <= 4 ? 90 : 62) : 140))}</b></div>${sp.d ? `<p>${esc(mkClip(sp.d, part.length <= 3 ? 230 : 120))}</p>` : ''}</article>`; }).join('')}</div>`]));
   /* 6. المخرجات — كلها */
   pages(outs, 6).forEach((part, pi, all) => S.push(['pout', 'night', 'المخرجات', `
-    <h2 class="mx-h">${mkE(k('ou.h' + (pi || '')), 'المخرجات المستهدفة' + (all.length > 1 ? ` (${pi + 1}/${all.length})` : ''))}</h2>
-    <div class="px-out one"><div class="px-out-l"><small>إسناد مشاريع وبناء مبادرات</small><ol start="${pi * 6 + 1}" style="counter-reset:o ${pi * 6}">${part.map((o, i) => `<li style="--i:${i}">${esc(o.slice(0, 160))}</li>`).join('')}</ol></div></div>`]));
+    ${mkCardsHead(mkE(k('ou.h' + (pi || '')), 'المخرجات المستهدفة'), outs.length, outs.length === 1 ? 'مخرج مستهدف' : 'مخرجات مستهدفة', pi + 1, all.length, 'إسناد مشاريع وبناء مبادرات')}
+    ${mkCardsHTML(part, pi * 6, outs.length)}`]));
   /* 6ب. الأثر المتوقع — كله */
-  pages(imps, 4).forEach((part, pi, all) => S.push(['pimp', 'deep', 'الأثر المتوقع', `
-    <h2 class="mx-h">${mkE(k('im.h' + (pi || '')), 'الأثر المتوقع وكيف يخدم المؤسسة' + (all.length > 1 ? ` (${pi + 1}/${all.length})` : ''))}</h2>
-    <div class="px-imp n${part.length}">${part.map((o, i) => { const m = o.match(/^([^:：]{3,60})[:：]\s*(.+)$/); return `<article style="--i:${i}"><i>${icon('leaf')}</i>${m ? `<b>${esc(m[1])}</b><p>${esc(m[2].slice(0, 170))}</p>` : `<p>${esc(o.slice(0, 200))}</p>`}</article>`; }).join('')}</div>`]));
+  pages(imps, 6).forEach((part, pi, all) => S.push(['pimp', 'deep', 'الأثر المتوقع', `
+    ${mkCardsHead(mkE(k('im.h' + (pi || '')), 'الأثر المتوقع'), imps.length, imps.length === 1 ? 'أثر متوقع' : 'آثار متوقعة', pi + 1, all.length, 'وكيف يخدم المؤسسة')}
+    ${mkCardsHTML(part, pi * 6, imps.length)}`]));
   /* 6ج. شبكة الشراكة: الشراكة في المركز، وفريق إدارة الشراكات يمينًا، والإدارات يسارًا، والتفعيل أسفلها */
   const own = p.owners || [], deps = p.departments || [];
   if (own.length || deps.length || p.activation) {
@@ -23158,7 +23270,8 @@ function mkSlidesOne(p) {
     S.push(['pwf', 'paper', 'مسار المذكرة', `
       <h2 class="mx-h">${mkE(k('wf.h'), 'مسار المذكرة حتى الأثر')}</h2>
       <p class="mx-sub">${W.cur ? `الخطوة الحالية: ${W.cur.n}. ${esc(W.cur.t)}` : W.closed ? 'أُغلق الطلب' : 'اكتملت خطوات المسار'} — ${done} من ${WF_STEPS.length} خطوة مكتملة.</p>
-      <div class="px-wf">${WF_PHASES.map((ph, pi) => { const st = WF_STEPS.filter((x) => x.ph === ph.id); const d = st.filter((x) => W.S[x.id] && W.S[x.id].status === 'done').length; const cur = W.cur && st.some((x) => x.id === W.cur.id); return `<div class="px-ph ${d === st.length ? 'd' : cur ? 'c' : ''}" style="--i:${pi}"><em>${String(pi + 1).padStart(2, '0')}</em><b>${esc(ph.t)}</b><span class="px-ph-bar"><i style="width:${Math.round(d / st.length * 100)}%"></i></span><small>${d}/${st.length}</small></div>`; }).join('')}</div>`]);
+      <div class="px-wf">${WF_PHASES.map((ph, pi) => { const st = WF_STEPS.filter((x) => x.ph === ph.id); const d = st.filter((x) => W.S[x.id] && W.S[x.id].status === 'done').length; const cur = W.cur && st.some((x) => x.id === W.cur.id); return `<div class="px-ph ${d === st.length ? 'd' : cur ? 'c' : ''}" style="--i:${pi}"><em>${String(pi + 1).padStart(2, '0')}</em><b>${esc(ph.t)}</b><span class="px-ph-bar"><i style="width:${Math.round(d / st.length * 100)}%"></i></span><small>${d}/${st.length}</small></div>`; }).join('')}</div>      <ol class="px-wf-steps">${WF_STEPS.map((x, si) => { const r = W.S[x.id] || {}, dn = r.status === 'done', cu = W.cur && W.cur.id === x.id; return `<li class="${dn ? 'd' : cu ? 'c' : ''}" style="--i:${si}"><em>${dn ? '✓' : x.n}</em><span><b>${esc(x.t)}</b><small>${dn ? (r.at && !r.legacy ? fmtDate(String(r.at).slice(0, 10)) : 'مكتملة') : cu ? 'الخطوة الحالية — ' + esc(wfActorName(x.actor)) : esc(wfActorName(x.actor))}</small></span></li>`; }).join('')}</ol>
+`]);
   } catch (_) { /* المسار اختياري */ }
   /* 8ج. الوثائق والصور: صور الشراكة الفعلية وقائمة المستندات بتصنيفاتها */
   const atts = (p.attachments || []).filter((a2) => a2.fileId);
