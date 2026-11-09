@@ -269,7 +269,7 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
       ['الظهور في الواجهة التعريفية', p.public ? 'منشورة' : 'غير منشورة'], ['العرض المميز في الرئيسية', featured ? 'ضمن الشراكات المختارة' : 'لا'],
       ['أُنشئ', `${fmtDT(p.createdAt)} — ${esc(p.createdBy || '')}`], ['آخر تحديث', `${fmtDT(p.updatedAt)} — ${esc(p.updatedBy || '')}`], p.source && ['المصدر', esc(p.source), true]])}
       ${(p.importNotes || []).length ? `<h3 class="ds-h3">ملاحظات الاستيراد</h3><ul class="ds-news">${p.importNotes.map((x) => `<li><span class="d">${x.confirmed ? '✓ مؤكدة' : 'بانتظار التأكيد'}</span><div><b>${esc(x.field || '')}</b><p>${esc(x.msg || '')}</p></div></li>`).join('')}</ul>` : ''}
-      ${p.importRaw ? `<h3 class="ds-h3">البيانات كما وردت في ملف الحصر (الصف ${esc(String(p.seq || ''))})</h3><table class="ds-kv">${p.importRaw.map((c) => `<tr><th>${esc(c.h)}</th><td>${esc(c.v) || '<span class="ds-faint">فارغ</span>'}</td></tr>`).join('')}</table>` : ''}`);
+      ${p.importRaw ? `<h3 class="ds-h3">البيانات كما وردت في ملف الحصر (الصف ${esc(String(p.seq || ''))})</h3><table class="ds-kv">${p.importRaw.map((c) => `<tr><th>${esc(c.h)}</th><td>${esc(c.v) || '<span class="ds-faint">—</span>'}</td></tr>`).join('')}</table>` : ''}`);
   }
   if (has('log') && logs.length) chap('log', 'سجل التغييرات', `<table class="ds-tbl"><thead><tr><th>الإجراء</th><th>التفاصيل</th><th>التاريخ</th><th>المستخدم</th></tr></thead><tbody>${logs.map((l) => `<tr><td>${esc(AUDIT_LABELS[l.action] || l.action)}</td><td class="ds-sm">${esc(l.details || '')}</td><td class="ds-sm">${fmtDT(l.at)}</td><td class="ds-sm">${esc(l.user || '')}</td></tr>`).join('')}</tbody></table>`);
 

@@ -82,19 +82,19 @@ function initialEvalDocHTML(kind, rec) {
 function alignmentDocHTML(kind, rec) {
   const key = 'alignment', F = FORMS[key], R = fRecInfo(kind, rec), st = formOf(rec, key) || {}, d = st.data || {};
   const goals = goalCodes(), cl = (d.clauses || []).map((c) => (typeof c === 'string' ? { text: c, goals: [] } : c));
-  const linked = cl.filter((c) => (c.goals || []).length).length;
+  const linked = cl.filter((c) => (c.goals || []).some((g) => g !== 'N/A')).length, na = cl.filter((c) => (c.goals || []).includes('N/A')).length;
   const cover = goals.map((g) => ({ ...g, n: cl.filter((c) => (c.goals || []).includes(g.k)).length }));
   const covered = cover.filter((g) => g.n).length;
   const resOpts = fdOpts(fdField(F, R, rec, 'result')), ri = resOpts.indexOf(d.result);
   const tone = ri < 0 ? 'na' : ri === 0 ? 'ex' : ri === resOpts.length - 1 ? 'lo' : 'gd';
   const maxN = Math.max(1, ...cover.map((g) => g.n));
-  const matrix = `<table class="ev-tbl fx-mx"><thead><tr><th>م</th><th>بند المذكرة</th>${goals.map((g) => `<th class="g" title="${esc(g.t)}">${esc(g.k)}</th>`).join('')}<th>ملاحظات</th></tr></thead>
-    <tbody>${cl.length ? cl.map((c, i) => `<tr><td class="fx-ix">${i + 1}</td><td class="fx-cl">${esc(c.text || '').replace(/\n/g, '<br>')}</td>${goals.map((g) => `<td class="g">${(c.goals || []).includes(g.k) ? '<i class="fx-dot"></i>' : ''}</td>`).join('')}<td class="fx-nt2">${esc(c.note || '')}</td></tr>`).join('') : `<tr><td colspan="${goals.length + 3}" class="fx-empty">لم تُسجَّل بنود.</td></tr>`}</tbody>
-    <tfoot><tr><td></td><td>عدد البنود المرتبطة بكل هدف</td>${cover.map((g) => `<td class="g"><b>${g.n}</b></td>`).join('')}<td></td></tr></tfoot></table>`;
+  const matrix = `<table class="ev-tbl fx-mx"><thead><tr><th>م</th><th>بند المذكرة</th>${goals.map((g) => `<th class="g" title="${esc(g.t)}">${esc(g.k)}</th>`).join('')}${na ? '<th class="g na" title="لا ينطبق">N/A</th>' : ''}<th>ملاحظات</th></tr></thead>
+    <tbody>${cl.length ? cl.map((c, i) => `<tr><td class="fx-ix">${i + 1}</td><td class="fx-cl">${esc(c.text || '').replace(/\n/g, '<br>')}</td>${goals.map((g) => `<td class="g">${(c.goals || []).includes(g.k) ? `<i class="fx-gp">${esc(g.k)}</i>` : ''}</td>`).join('')}${na ? `<td class="g na">${(c.goals || []).includes('N/A') ? '<i class="fx-na">—</i>' : ''}</td>` : ''}<td class="fx-nt2">${esc(c.note || '')}</td></tr>`).join('') : `<tr><td colspan="${goals.length + 3}" class="fx-empty">لم تُسجَّل بنود.</td></tr>`}</tbody>
+    <tfoot><tr><td></td><td>عدد البنود المرتبطة بكل هدف</td>${cover.map((g) => `<td class="g"><b>${g.n}</b></td>`).join('')}${na ? `<td class="g na"><b>${na}</b></td>` : ''}<td></td></tr></tfoot></table>`;
   const legend = `<div class="fx-goals">${cover.map((g) => `<div class="${g.n ? 'on' : ''}"><em>${esc(g.k)}</em><span>${esc(g.t.replace(/^[A-Z]{1,3}\d?\s*[:：]\s*/, ''))}</span><i><b style="width:${g.n / maxN * 100}%"></b></i><small>${g.n}</small></div>`).join('')}</div>`;
   const body = `
     ${fdSec(1, 'الغرض العام من المذكرة', '', fdQ(d.purpose, 'لم يُكتب الغرض.'))}
-    ${fdSec(2, 'مصفوفة المواءمة مع الأهداف الاستراتيجية', `${linked} من ${cl.length} بنود مرتبطة · ${covered} من ${goals.length} أهداف مغطاة`, matrix + legend)}
+    ${fdSec(2, 'مصفوفة المواءمة مع الأهداف الاستراتيجية', `${linked} من ${cl.length} بنود مرتبطة · ${covered} من ${goals.length} أهداف مغطاة`, matrix + legend, 'fx-flow')}
     ${fdSec(3, 'رأي الإدارة الاستراتيجية', '', `<div class="fx-grid2 fx-op"><div>${fdChoice(resOpts, d.result, Object.fromEntries(resOpts.map((o, i) => [o, i === 0 ? 'check' : i === resOpts.length - 1 ? 'x' : 'alert'])))}</div><div>${fdQ(d.notes, 'لا توجد ملاحظات.')}</div></div>`)}`;
   return fdShell({ kind, rec, key, tone, st,
     ring: { pct: goals.length ? covered / goals.length : 0, big: covered, small: '/' + goals.length, label: 'أهداف مغطاة' },

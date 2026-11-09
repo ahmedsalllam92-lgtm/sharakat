@@ -60,7 +60,7 @@ const IMG_DEFAULTS = {
   stories: { 'شركة الأفق الأخضر للتطوير العمراني': 'afforest', 'جمعية أصداء للتوعية البيئية': 'mangrove', 'هيئة تطوير الواحات الشمالية': 'terraces', 'مؤسسة غرس الخيرية': 'nursery', 'مجموعة سنابل الوادي الغذائية': 'pivots' },
 };
 /* الصور الفعلية المرفوعة من إدارة الشراكات (مضمّنة في الملف) */
-const REAL_PHOTOS = { 'المديرية العامة لحرس الحدود': 'border-guard-signing', 'وقف الأمير صيته بنت عبدالعزيز': 'waqf-saitah-signing' };
+const REAL_PHOTOS = { 'المديرية العامة لحرس الحدود': 'border-guard-signing', 'وقف الأمير صيته بنت عبدالعزيز': 'waqf-saitah-signing', 'مؤسسة عبدالقادر المهيدب الخيرية': 'muhaidib-meet' };
 /* ملف الحصر الفعلي (الإصدار 2): يحدّث الشراكات الموجودة بمطابقة الاسم ويضيف الجديدة والجهات المستهدفة.
    لا يمس الصور والمرفقات والتقييمات وحالة المسار؛ والمعرّفات ثابتة (من رقم الصف) فلا تتكرر السجلات إن طُبّق من جهازين. */
 function applyRealV2() {
@@ -108,7 +108,14 @@ function applyRealV2() {
   applyRealPhotos();
   return true;
 }
+/* شعارات الجهات الفعلية المرفقة من الإدارة (تُطبق إن لم يكن للجهة شعار) */
+const REAL_LOGOS = { 'مؤسسة عبدالقادر المهيدب الخيرية': 'amsf-logo' };
 function applyRealPhotos() {
+  for (const [title, key] of Object.entries(REAL_LOGOS)) {
+    if (!ASSET_IMG[key]) continue;
+    const p = D.partnerships.find((x) => !x.demo && x.title === title); const pr = p && partnerById(p.partnerId);
+    if (pr && !pr.logoFileId) pr.logoFileId = 'asset:' + key;
+  }
   for (const [title, key] of Object.entries(REAL_PHOTOS)) {
     if (!ASSET_IMG[key]) continue;
     const p = D.partnerships.find((x) => !x.demo && x.title === title); if (!p) continue;

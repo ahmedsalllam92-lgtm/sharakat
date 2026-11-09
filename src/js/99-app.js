@@ -373,6 +373,7 @@ function migrate() {
   if (!s.wfDepts) { s.wfDepts = { ...WF_DEPT_DEFAULTS }; changed = true; }
   if (!s.wfTemplates) { s.wfTemplates = {}; changed = true; }
   if ((s.realV || 1) < 2 && applyRealV2()) { s.realV = 2; changed = true; }
+  if ((s.realV || 1) === 2) { applyRealPhotos(); s.realV = 3; changed = true; } // صور الشراكات الفعلية المضافة لاحقًا (المهيدب)
   if (s.schema < 5) {
     if (!s.org.platform || s.org.platform === 'منصة الشراكات') s.org.platform = 'منظومة الشراكات';
     if (!s.alertDays) s.alertDays = 30;

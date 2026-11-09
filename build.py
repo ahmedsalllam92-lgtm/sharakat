@@ -50,7 +50,7 @@ lib = {}
 for key, title, _fn in _LIB:
     pth = os.path.join(ROOT, 'assets/img', key + '.jpg')
     lib[key] = {'title': title, 'src': 'data:image/jpeg;base64,' + base64.b64encode(open(pth, 'rb').read()).decode()}
-ASSETS = [('splash-bond', 'فجر الشراكة: نهران من الضوء يلتقيان عند الأفق'), ('splash-aerial', 'صورة جوية للغطاء النباتي'), ('splash-forest', 'غابة ومسطحات خضراء'), ('murooj-logo-white', 'شعار مؤسسة مروج الأهلية — أبيض'), ('border-guard-signing', 'توقيع مذكرة التعاون مع المديرية العامة لحرس الحدود'), ('waqf-saitah-signing', 'توقيع الشراكة مع وقف الأمير صيته بنت عبدالعزيز'), ('murooj-logo', 'شعار مؤسسة مروج الأهلية'), ('murooj-logo-dark', 'شعار مؤسسة مروج الأهلية — للخلفية الداكنة')]
+ASSETS = [('splash-bond', 'فجر الشراكة: نهران من الضوء يلتقيان عند الأفق'), ('splash-aerial', 'صورة جوية للغطاء النباتي'), ('splash-forest', 'غابة ومسطحات خضراء'), ('murooj-logo-white', 'شعار مؤسسة مروج الأهلية — أبيض'), ('border-guard-signing', 'توقيع مذكرة التعاون مع المديرية العامة لحرس الحدود'), ('waqf-saitah-signing', 'توقيع الشراكة مع وقف الأمير صيته بنت عبدالعزيز'), ('muhaidib-meet', 'مؤسسة مروج الأهلية ومؤسسة عبدالقادر المهيدب لخدمة المجتمع'), ('amsf-logo', 'شعار مؤسسة عبدالقادر المهيدب لخدمة المجتمع'), ('murooj-logo', 'شعار مؤسسة مروج الأهلية'), ('murooj-logo-dark', 'شعار مؤسسة مروج الأهلية — للخلفية الداكنة')]
 assets = {}
 for key, title in ASSETS:
     for ext, mime in (('.jpg', 'image/jpeg'), ('.png', 'image/png')):

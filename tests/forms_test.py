@@ -70,7 +70,7 @@ async def main():
         await E(f"(()=>{{const p=D.partnerships.find(x=>x.id==='{ptid}');p.wf.steps.meeting={{status:'done',at:nowISO(),by:'اختبار'}};p.wf.steps.draft={{status:'done',at:nowISO(),by:'اختبار'}};p.wf.steps.depts={{status:'done',at:nowISO(),by:'اختبار'}};p.cooperationAreas='1. الاستشارات البيئية.\\n2. بناء القدرات.';return Repo.save('partnerships',p)}})()")
         await acc('dept:الإدارة العامة للاستراتيجية'); await go(f'#/partnerships/{ptid}')
         await pg.click('[data-wfopen="strategy"]'); await pg.wait_for_selector('.wf-modal'); await pg.click('[data-wffill="alignment"]'); await pg.wait_for_selector('.ff-modal')
-        ok('alignment form: owner department, participating departments, goals legend', await E("document.querySelector('[data-fk=owner] .ff-chip.on').dataset.chip") == 'الإدارة العامة للمشاريع' and await E("document.querySelectorAll('.ff-legend div').length") == 5)
+        ok('alignment form: owner department, participating departments, goals legend', await E("document.querySelector('#ff_owner').value") == 'الإدارة العامة للمشاريع' and await E("document.querySelectorAll('.ff-legend div').length") == 5)
         ok('clauses prefilled from cooperation areas', await E("document.querySelectorAll('.ff-cl tbody tr').length") == 2)
         await chip('result', 'متوائمة'); await pg.click('[data-ffsave="done"]'); await pg.wait_for_timeout(300)
         ok('each clause must link to a strategic objective', await E("!!document.querySelector('[data-fk=clauses].invalid')"))

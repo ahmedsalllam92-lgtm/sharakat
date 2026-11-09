@@ -315,8 +315,8 @@ function boStats(list) {
   const score = Math.round(health.reduce((t, h) => t + h.v, 0) / health.length);
   return { nd, signed, act, soon, up, ended, pipe, partners, secMap, complete, activated, props, inProc, ser, trend, health, score };
 }
-const boChHead = (i, extra = '') => { if (typeof i === 'string') i = BO_CH.findIndex((c) => c.id === i); const c = BO_CH[i]; return `<header class="bo-chh"><span class="bo-chn">${boIdx(i + 1)}</span><div><h2>${c.t}</h2><p>${c.s}</p></div>${extra}</header>`; };
-const boInsight = (html) => `<div class="bo-ins"><span class="bo-ins-k">${icon('flag')}الخلاصة</span><p>${html}</p></div>`;
+const boChHead = (i, extra = '') => { if (typeof i === 'string') i = BO_CH.findIndex((c) => c.id === i); const c = BO_CH[i]; return `<header class="bo-chh"><span class="bo-chn" style="--p:${((i + 1) / BO_CH.length * 100).toFixed(1)}%"><small>الفصل</small><b>${boIdx(i + 1)}</b><em>من ${boIdx(BO_CH.length)}</em><i></i></span><div><h2>${c.t}</h2><p>${c.s}</p></div>${extra}</header>`; };
+const boInsight = () => ''; /* أُزيلت صناديق «الخلاصة» من اللوحة المفصلة بطلب الإدارة */
 const boB = (n) => `<b>${n}</b>`;
 
 function boBody(list) {

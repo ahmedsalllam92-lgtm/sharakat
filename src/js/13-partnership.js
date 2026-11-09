@@ -81,7 +81,7 @@ function renderPartnership(el, r) {
         ${kv('أبرز نتيجة للعرض', p.highlight && p.highlight.value ? `<b>${esc(p.highlight.value)}</b> ${esc(p.highlight.label || '')}${p.highlight.text ? ' — ' + esc(p.highlight.text) : ''}` : '', true)}
         ${kv('أُنشئ', `${fmtDT(p.createdAt)} — ${esc(p.createdBy || '')}`)}${kv('آخر تحديث', `${fmtDT(p.updatedAt)} — ${esc(p.updatedBy || '')}`)}
         ${p.source ? kv('المصدر', esc(p.source)) : ''}</dl>
-      ${p.importRaw ? `<details class="raw" style="margin-top:16px"><summary>${icon('table')} البيانات كما وردت في ملف الحصر (الصف ${p.seq})</summary><table>${p.importRaw.map((c) => `<tr><td>${esc(c.h)}</td><td>${esc(c.v) || '<span class="faint">فارغ</span>'}</td></tr>`).join('')}</table></details>` : ''}</section>` : ''}
+      ${p.importRaw ? `<details class="raw" style="margin-top:16px"><summary>${icon('table')} البيانات كما وردت في ملف الحصر (الصف ${p.seq})</summary><table>${p.importRaw.map((c) => `<tr><td>${esc(c.h)}</td><td>${esc(c.v) || '<span class="faint">—</span>'}</td></tr>`).join('')}</table></details>` : ''}</section>` : ''}
     ${internal ? `<section class="dsec" id="log"><h2>سجل التغييرات</h2>${logs.length ? `<ul class="history">${logs.map((l) => `<li><div>${esc(AUDIT_LABELS[l.action] || l.action)}${l.details ? ` — <span class="muted">${esc(l.details)}</span>` : ''}</div><div class="w">${fmtDT(l.at)} — ${esc(l.user)}</div></li>`).join('')}</ul>` : '<p class="muted small">لا توجد تغييرات مسجلة على هذا السجل منذ إنشائه.</p>'}</section>` : ''}
   </div>
   <aside class="dside">

@@ -89,7 +89,7 @@ const FORMS = {
       { t: 'معلومات أساسية', fields: [
         { k: 'partner', l: 'اسم الجهة الشريكة', type: 'text', def: R.name, req: true },
         { k: 'sector', l: 'نوع الجهة (القطاع)', type: 'chips', list: 'formSectors', opts: L('formSectors'), def: R.sector, req: true },
-        { k: 'owner', l: 'الإدارة المالكة', type: 'chips', opts: L('departments'), def: R.owner, req: true },
+        { k: 'owner', l: 'الإدارة المالكة', type: 'select', opts: L('departments'), def: R.owner, req: true },
         { k: 'depts', l: 'الإدارات المشاركة', type: 'multi', opts: L('departments'), def: R.depts },
         { k: 'purpose', l: 'الغرض العام من المذكرة', type: 'textarea', def: R.purpose, req: true },
       ] },
@@ -101,8 +101,8 @@ const FORMS = {
         { k: 'date', l: 'التاريخ', type: 'date', def: isoDate(today()), req: true },
       ] },
     ],
-    out: (rec, d) => { rec.goalsLinked = [...new Set((d.clauses || []).flatMap((c) => c.goals || []))]; },
-    score: (d) => { const c = d.clauses || []; const g = new Set(c.flatMap((x) => x.goals || [])); return c.length ? `${c.length} بنود مرتبطة بـ${g.size} ${g.size === 1 ? 'هدف' : 'أهداف'}` : ''; },
+    out: (rec, d) => { rec.goalsLinked = [...new Set((d.clauses || []).flatMap((c) => c.goals || []))].filter((g) => g !== 'N/A'); },
+    score: (d) => { const c = d.clauses || []; const g = new Set(c.flatMap((x) => x.goals || []).filter((x) => x !== 'N/A')); return c.length ? `${c.length} بنود مرتبطة بـ${g.size} ${g.size === 1 ? 'هدف' : 'أهداف'}` : ''; },
   },
   letter: {
     no: 'LTR', title: 'خطاب طلب موافقة المعالي', step: 'legal', ic: 'mail', letter: true,
@@ -267,7 +267,7 @@ function fFieldHTML(f, v, ro) {
     case 'scores': return `<div class="field ff full" data-fk="${f.k}"><table class="ff-tbl ff-sc"><thead><tr><th>المعيار</th><th>الوزن</th><th>التقييم</th><th>ملاحظات</th></tr></thead><tbody>
       ${f.items.map((c) => { const x = (v || {})[c.k] || {}; return `<tr data-row="${c.k}"><td><b>${esc(c.l)}</b><small>${esc(c.d)}</small></td><td class="c">${c.w}%</td><td class="c"><div class="ff-stars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" class="ff-st ${+x.v >= n ? 'on' : ''}" data-score="${n}" ${dis} aria-label="${n}">${n}</button>`).join('')}</div></td><td><input class="in sm" data-note value="${esc(x.n || '')}" ${dis}></td></tr>`; }).join('')}</tbody></table><div class="ff-total" id="ffTotal"></div></div>`;
     case 'clauses': {
-      const G = goalCodes();
+      const G = [...goalCodes(), { k: 'N/A', t: 'لا ينطبق: البند لا يرتبط بهدف استراتيجي' }];
       const rows = (v && v.length ? v : [{ text: '', goals: [] }]);
       return `<div class="field ff full" data-fk="${f.k}"><table class="ff-tbl ff-cl"><thead><tr><th>البند</th><th>الهدف الاستراتيجي المرتبط</th><th>ملاحظات</th>${ro ? '' : '<th></th>'}</tr></thead><tbody>
         ${rows.map((r, i) => `<tr data-row="${i}"><td><textarea class="in sm" data-cltext rows="3" ${dis}>${esc(typeof r === 'string' ? r : r.text || '')}</textarea></td><td><div class="ff-goals">${G.map((g) => `<button type="button" class="ff-chip sm ${(r.goals || []).includes(g.k) ? 'on' : ''}" data-goal="${esc(g.k)}" title="${esc(g.t)}" ${dis}>${esc(g.k)}</button>`).join('')}</div></td><td><input class="in sm" data-note value="${esc(r.note || '')}" ${dis}></td>${ro ? '' : `<td class="c"><button type="button" class="icon-btn" data-clrm aria-label="حذف البند">${icon('trash')}</button></td>`}</tr>`).join('')}

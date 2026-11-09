@@ -59,8 +59,7 @@ function rqDemo(f, doc) {
 function rqScenes() {
   const req = rqRequesterDept();
   const fin = wfFinal();
-  const upto = fin ? WF_STEPS.indexOf(fin) : WF_STEPS.length - 1;
-  const steps = WF_STEPS.slice(0, upto + 1);
+  const steps = WF_STEPS.slice();
   const first = steps[0];
   const sc = [];
   sc.push({ k: 'intro', stage: first && first.id, t: 'مسار طلب الشراكة', run: rqIntro });
@@ -73,6 +72,7 @@ function rqScenes() {
     if (s === fin) sc.push({ k: 'final', stage: s.id, step: s, t: s.t, run: rqFinal });
     else sc.push({ k: 'step:' + s.id, stage: s.id, step: s, t: s.t, run: rqStep });
   });
+  sc.push({ k: 'end', stage: (steps[steps.length - 1] || {}).id, t: 'الخلاصة', run: rqEnd });
   sc.forEach((x, i) => { x.i = i; });
   RQ.req = req;
   return sc;
@@ -416,11 +416,75 @@ async function rqConvert() {
   await rqPoint(sd, '#wf', { step: 'تحويل الطلب', t: 'سجل الشراكة ' + (p.code || ''), b: '<p>أُنشئ السجل بمرحلة «قيد الإعداد»، ويظهر فيه مسار المذكرة كاملًا.</p>' }, 2800);
   await rqSync('l', 'r', { title: 'إشعار للجهة الطالبة' });
 }
+/* — نماذج الخطوة: يُفتح النموذج للتعبئة، ثم يظهر مستنده المكتمل بتصميم المنظومة (داخل النسخة المعزولة) — */
+const rqG = (w, name) => w.eval(name); // ثوابت النسخة المعزولة (const لا تظهر على window)
+const RQ_TXT = {
+  m1: 'دعم مشروعات التشجير وتنمية الغطاء النباتي بخبرات فنية وتطوعية.', m2: 'للجهة برامج مجتمعية وبيئية قائمة تتوافق مع أهداف المؤسسة.', m3: 'فريق فني متخصص ومتطوعون مدرَّبون.',
+  m4: 'رفع أعداد المتطوعين، وتوسيع أثر التشجير، ونقل المعرفة.', m5: 'عُقد اجتماع تنسيقي لتحديد المجالات ذات الأولوية.', m6: 'برامج تشجير مشتركة، وتطوع، وتوعية مجتمعية.',
+  m7: 'إعداد المذكرة ومراجعتها من الإدارات المعنية والقانونية.', m8: 'خطة تفعيل بمبادرات ربعية ومؤشرات قياس.', purpose: 'تعزيز التعاون في التشجير والتوعية البيئية والعمل التطوعي.',
+  impact: 'زيادة الغطاء النباتي ورفع مشاركة المجتمع في المبادرات البيئية.', recNote: 'الجهة ذات سمعة جيدة وبرامجها متوافقة مع رسالة المؤسسة.', notes: 'لا ملاحظات جوهرية.',
+};
+function rqFormData(w, kind, rec, key) {
+  const F = rqG(w, 'FORMS')[key], R = w.fRecInfo(kind, rec), d = {};
+  const opts = (f) => (typeof f.opts === 'function' ? f.opts() : f.opts) || [];
+  F.sections(R, rec).forEach((sec) => sec.fields.forEach((f) => {
+    const def = typeof f.def === 'function' ? f.def() : f.def;
+    if (def !== undefined && def !== '' && !(Array.isArray(def) && !def.length)) { d[f.k] = def; return; }
+    const o = opts(f);
+    if (f.type === 'checklist') d[f.k] = Object.fromEntries(f.items.map((_, i) => [i, { v: (f.opts[0] || [])[0] }]));
+    else if (f.type === 'scores') d[f.k] = Object.fromEntries(f.items.map((c) => [c.k, { v: 4 }]));
+    else if (f.type === 'clauses') { const G = rqG(w, 'goalCodes')(); d[f.k] = (R.coop.length ? R.coop : ['برامج تشجير مشتركة', 'التوعية البيئية والعمل التطوعي']).map((t, i) => ({ text: t, goals: G.length ? [G[i % G.length].k] : [], note: '' })); }
+    else if (f.type === 'multi') d[f.k] = o.slice(0, 2);
+    else if (f.type === 'chips' || f.type === 'select') { if (f.auto) return; d[f.k] = o[0] || ''; }
+    else if (f.type === 'date') d[f.k] = new Date().toISOString().slice(0, 10);
+    else if (f.type === 'number') d[f.k] = f.req ? 250000 : '';
+    else if (f.type === 'textarea' || f.type === 'text') d[f.k] = RQ_TXT[f.k] || (f.req ? (f.type === 'text' ? rqG(w, 'Session').userName() : 'بيانات للاستعراض.') : '');
+  }));
+  if (key === 'initialEval') { const sc = w.ievScore(d); d.rec = w.ievResult(sc); }
+  return d;
+}
+async function rqForms(sd, s) {
+  const w = rqW(sd), d = rqDoc(sd);
+  for (const doc of s.docs.filter((x) => x.form && rqG(w, 'FORMS')[x.form])) {
+    const key = doc.form, F = rqG(w, 'FORMS')[key];
+    const [kind, rec] = w.wfFormOwner ? w.wfFormOwner(RQ.kind, rqRecOf(sd), key) : [RQ.kind, rqRecOf(sd)];
+    if (((rec.forms || {})[key] || {}).status === 'done') continue;
+    /* 1) نافذة التعبئة كما يراها المسؤول */
+    w.openForm(kind, rec, key, { onDone: () => {} });
+    const m = await rqWaitFor(sd, '.modal-bg .modal');
+    if (m) {
+      await rqPoint(sd, m, { step: rqStepLbl(s), t: F.title, b: `<p>${esc(doc.l)} يُعبّأ داخل المنظومة في هذه المرحلة${doc.req ? ' (مستند إلزامي)' : ''}.</p><p class="small">الحقول تأتي معبأة من بيانات الطلب والشراكة قدر الإمكان، ويكمل المسؤول الباقي ثم «إتمام النموذج».</p>` }, 3600);
+      const body = m.querySelector('.modal-b, .modal-body'); if (body) { body.scrollTo({ top: body.scrollHeight / 2, behavior: 'smooth' }); await rqSleep(1300); }
+    }
+    d.querySelectorAll('.modal-bg').forEach((x) => x.remove());
+    /* 2) حفظ النموذج مكتملًا ثم عرض مستنده المصمم */
+    const data = rqFormData(w, kind, rec, key);
+    rec.forms = rec.forms || {};
+    rec.forms[key] = { data, status: 'done', at: new Date().toISOString(), by: rqG(w, 'Session').userName(), byDept: D.settings.org.dept, no: w.formNumber(key) };
+    if (F.out) F.out(rec, data, kind);
+    w.formPreview(kind, rec, key);
+    const pv = await rqWaitFor(sd, '.fdoc-modal .modal, .modal-bg .modal');
+    if (pv) {
+      await rqPoint(sd, pv, { step: rqStepLbl(s), t: F.title + ' — بعد الإتمام', b: `<p>هذا مستند النموذج كما يُحفظ في ملف ${RQ.kind === 'proposal' ? 'الطلب' : 'الشراكة'} برقم <b dir="ltr">${esc(rec.forms[key].no)}</b>، بتصميم نماذج المنظومة.</p><p class="small">يُطبع أو يُنزّل Word من النافذة نفسها، ويظهر في «الملف الشامل».</p>` }, 3000);
+      const b2 = pv.querySelector('.fdoc-prev, .modal-b'); if (b2) { b2.scrollTo({ top: b2.scrollHeight, behavior: 'smooth' }); await rqSleep(2200); }
+    }
+    d.querySelectorAll('.modal-bg').forEach((x) => x.remove());
+  }
+}
+/* مشهد الختام بعد التفعيل */
+async function rqEnd() {
+  const rec = rqRecOf('l') || rqRecOf('r'); RQ.ended = true; rqActive(null);
+  const forms = Object.keys((rec && rec.forms) || {}).concat(Object.keys(((rqW('l').sbxD().proposals.find((x) => rec && x.id === rec.proposalId) || {}).forms) || {}));
+  rqCard({ step: 'نهاية الاستعراض', t: 'اكتمل المسار من الطلب إلى التفعيل', wide: true, b: `<p>مرّ الطلب بـ${WF_STEPS.length} مرحلة: من «شارك» إلى التقييم والمذكرة والاعتماد والتوقيع، ثم خطة التفعيل وتقارير الإدارات.</p>
+    ${forms.length ? `<p class="small"><b>النماذج التي عُبّئت في المسار:</b> ${[...new Set(forms)].map((k) => esc((FORMS[k] || {}).short || (FORMS[k] || {}).title || k)).join('، ')}.</p>` : ''}
+    <p class="small muted">كل ما جرى كان في نسخة معزولة؛ بيانات المنصة وإشعاراتها كما هي.</p><div class="row" style="gap:8px;margin-top:12px"><button class="btn" type="button" data-rqreplay>${icon('history')} إعادة الاستعراض</button><button class="btn primary" type="button" data-rq="end">إنهاء</button></div>` });
+  rqPlace();
+}
 /* تجهيز مستندات المثال المطلوبة للخطوة (داخل النسخة المعزولة فقط) */
 function rqDocs(sd, s) {
   const w = rqW(sd), rec = rqRecOf(sd), sess = w.sbxSession();
   rec.attachments = rec.attachments || [];
-  s.docs.filter((d) => d.req && !rec.attachments.some((a) => a.doc === d.k && (s.kind !== 'multi' || a.byDept === sess.dept))).forEach((d) => rec.attachments.push({ id: 'sbx-' + Math.random().toString(36).slice(2), fileId: 'sbx:' + d.k, name: d.l + '.pdf', type: 'application/pdf', size: 120000, category: WF_CAT, wf: s.id, doc: d.k, byDept: sess.role === 'dept' ? sess.dept : D.settings.org.dept, addedAt: new Date().toISOString(), by: 'استعراض' }));
+  s.docs.filter((d) => d.req && !d.form && !rec.attachments.some((a) => a.doc === d.k && (s.kind !== 'multi' || a.byDept === sess.dept))).forEach((d) => rec.attachments.push({ id: 'sbx-' + Math.random().toString(36).slice(2), fileId: 'sbx:' + d.k, name: d.l + '.pdf', type: 'application/pdf', size: 120000, category: WF_CAT, wf: s.id, doc: d.k, byDept: sess.role === 'dept' ? sess.dept : D.settings.org.dept, addedAt: new Date().toISOString(), by: 'استعراض' }));
 }
 function rqFill(sd, s) {
   const d = rqDoc(sd), today_ = new Date(), iso = (dt) => dt.toISOString().slice(0, 10);
@@ -443,6 +507,7 @@ async function rqOpenStep(sd, s, intro) {
     const docs = s.docs.filter((d) => d.req).map((d) => d.l);
     await rqPoint(sd, row || '#wf', { step: rqStepLbl(s), t: s.t, b: `<p>${esc(wfDesc(s))}</p><p class="small"><b>المسؤول:</b> ${esc(wfActorName(s.actor))}${docs.length ? `<br><b>المطلوب:</b> ${docs.map(esc).join('، ')}` : ''}</p>` }, 4200);
   }
+  if (intro !== false) await rqForms(sd, s);
   rqDocs(sd, s);
   w.wfStepDialog(RQ.kind, rqRecOf(sd), s.id, () => w.route());
   await rqWaitFor(sd, '.wf-modal');
@@ -528,6 +593,11 @@ async function rqFinal(sc) {
   await rqSync(sd, 'r', { title: choice === 'reject' ? 'إشعار الرفض للجهة الطالبة' : 'إشعار الاعتماد للجهة الطالبة' });
   const rec = rqRecOf('r');
   const after = WF_STEPS.slice(WF_STEPS.indexOf(s) + 1);
+  if (choice !== 'reject' && after.length) {
+    rqActive(null);
+    rqCard({ step: rqStepLbl(s), t: 'اعتُمدت المذكرة', wide: true, b: `<p>نكمل ما بعد الاعتماد: ${after.map((x) => esc(x.t)).join(' ← ')}.</p>` });
+    rqPlace(); await rqSleep(3200); return;
+  }
   rqActive(null); RQ.ended = true;
   rqCard({ step: 'نهاية الاستعراض', t: choice === 'reject' ? 'أُغلق الطلب بالرفض' : 'اعتُمدت الشراكة', wide: true, b: choice === 'reject'
     ? `<p>الحالة النهائية: <b>${esc(stageLabel(rec.stage))}</b>. السبب: ${esc(rec.closedReason || '')}</p><p class="small">وصل إشعار بالسبب إلى ${esc(RQ.req)} وإلى ${esc(wfActorName('partnerships'))}.</p>`

@@ -11,6 +11,13 @@ function pkgFindPartnership(m) {
   return D.partnerships.find((p) => !p.demo && (keys.includes(nk(p.title)) || keys.includes(nk(partnerName(p)))))
     || D.partnerships.find((p) => !p.demo && keys.some((k) => k.length > 6 && (nk(p.title).includes(k) || nk(partnerName(p)).includes(k))));
 }
+/* مطابقة قيمة من الحزمة بخيارات القائمة في هذه المنصة (مثل «الإدارة العامة للمشاريع» ↔ «إدارة المشاريع») */
+function pkgFit(v, opts) {
+  if (!v || !opts || !opts.length || opts.includes(v)) return v;
+  const core = (x) => String(x).replace(/[ً-ْـ]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/^(قطاع\s+)/, '').replace(/^(الاداره\s+العامه\s+|اداره\s+|الاداره\s+)/, '').replace(/^(لل|ال)/, '').replace(/\s+/g, ' ').trim();
+  const c = core(v);
+  return opts.find((o) => core(o) === c) || opts.find((o) => core(o).includes(c) || c.includes(core(o))) || v;
+}
 async function importPartnerPackage(file, onStep) {
   let P;
   try { P = JSON.parse(await file.text()); } catch (_) { throw new Error('تعذّرت قراءة الملف: ليس حزمة شراكة صالحة.'); }
@@ -35,13 +42,34 @@ async function importPartnerPackage(file, onStep) {
     if (!FORMS[k] || (p.forms[k] && p.forms[k].status === 'done')) continue;
     /* الحقول غير الواردة في الحزمة تأخذ نصوص النموذج الافتراضية، فتُحفظ كاملة */
     const defs = Object.fromEntries(FORMS[k].sections(fRecInfo('partnership', p), p).flatMap((x) => x.fields).filter((x) => x.def !== undefined && typeof x.def !== 'function').map((x) => [x.k, x.def]));
-    const t = p.forms[k] = { ...(p.forms[k] || {}), data: { ...defs, ...(f.data || {}) }, status: f.status === 'done' ? 'done' : 'draft', at: nowISO(), by: Session.userName(), byDept: D.settings.org.dept };
+    const data = { ...defs, ...(f.data || {}) };
+    FORMS[k].sections(fRecInfo('partnership', p), p).flatMap((x) => x.fields).forEach((fd) => {
+      const opts = typeof fd.opts === 'function' ? fd.opts() : fd.opts;
+      if (!Array.isArray(opts) || !opts.length || typeof opts[0] !== 'string') return;
+      if (fd.type === 'multi' && Array.isArray(data[fd.k])) data[fd.k] = data[fd.k].map((v) => pkgFit(v, opts));
+      else if (typeof data[fd.k] === 'string') data[fd.k] = pkgFit(data[fd.k], opts);
+    });
+    const t = p.forms[k] = { ...(p.forms[k] || {}), data, status: f.status === 'done' ? 'done' : 'draft', at: f.at || nowISO(), by: f.by || Session.userName(), byDept: f.byDept || D.settings.org.dept };
     if (!t.no) t.no = formNumber(k);
     if (t.status === 'done' && FORMS[k].out) FORMS[k].out(p, t.data, 'partnership');
     forms++;
   }
+  /* حقول السجل الفارغة فقط (لا يُستبدل ما أدخلته الإدارة) */
+  for (const [k, v] of Object.entries(P.fields || {})) {
+    const cur = p[k]; if (Array.isArray(cur) ? cur.length : cur) continue;
+    p[k] = k === 'departments' && Array.isArray(v) ? v.map((x) => pkgFit(x, L('departments'))) : v;
+  }
+  /* موضع الشراكة في المسار: الخطوات حتى «upto» مكتملة (سابقة لاعتماد المسار في المنصة) */
+  let steps = 0;
+  if (P.wf && P.wf.upto && typeof WF_STEPS !== 'undefined') {
+    const upto = WF_STEPS.findIndex((x) => x.id === P.wf.upto);
+    p.wf = p.wf || { steps: {} }; p.wf.steps = p.wf.steps || {};
+    WF_STEPS.slice(0, upto + 1).forEach((x) => { const c = p.wf.steps[x.id]; if (!(c && c.status === 'done')) { p.wf.steps[x.id] = { status: 'done', legacy: true, at: nowISO(), by: Session.userName(), decision: x.kind === 'decision' || x.final ? 'yes' : undefined }; steps++; } });
+    const sign = WF_STEPS.findIndex((x) => x.id === 'signed');
+    if (p.stage === 'prep' && upto >= sign - 3) p.stage = 'sign';
+  }
   await Repo.saveSettings();
   await Repo.save('partnerships', p);
   await Repo.log('package.import', 'partnership', p.id, p.code, `استيراد حزمة: ${added} مرفق${forms ? ` و${forms} نموذج` : ''}`);
-  return { p, added, skipped, forms };
+  return { p, added, skipped, forms, steps };
 }

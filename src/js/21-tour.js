@@ -57,7 +57,7 @@ function tourSteps() {
     ] });
   }
   S.push({ key: 'register', title: 'سجل الشراكات', route: '#/partnerships', parts: [
-    { sel: ['.reg-tools .searchbox', '[data-tour="reg-tools"]'], h: 'البحث الذكي', what: 'بحث فوري باسم الجهة أو الرمز أو أي نص في الشراكة، يتجاهل فروق الهمزات والتاء المربوطة.', why: 'يصل المستخدم إلى أي شراكة في ثوانٍ.', how: 'شاهد: نكتب «حرس» فتظهر النتائج المطابقة فورًا.', act: async () => { await TA.type('.reg-tools .searchbox input', 'حرس'); await TA.clear('.reg-tools .searchbox input'); } },
+    { sel: ['.reg-tools .searchbox', '[data-tour="reg-tools"]'], h: 'البحث الذكي', what: 'بحث فوري باسم الجهة أو الرمز أو أي نص في الشراكة، يتجاهل فروق الهمزات والتاء المربوطة. ومن أي صفحة: Ctrl+K للوصول السريع إلى أي شراكة أو جهة أو أمر.', why: 'يصل المستخدم إلى أي شراكة في ثوانٍ.', how: 'شاهد: نكتب «حرس» فتظهر النتائج المطابقة فورًا.', act: async () => { await TA.type('.reg-tools .searchbox input', 'حرس'); await TA.clear('.reg-tools .searchbox input'); } },
     { sel: ['#regF'], h: 'الفلاتر المتعددة', what: 'فلاتر بالحالة والتصنيف والقطاع والإدارة والمسؤول وسنة البدء، وكل فلتر يقبل أكثر من اختيار.', why: 'تكوين أي قائمة مطلوبة: «السارية في القطاع الحكومي» أو «المنتهية هذا العام».', how: 'شاهد: نختار «سارية» من فلتر الحالة.', act: async () => { const fb = $('#regF'); if (fb) { window.scrollTo({ top: Math.max(0, fb.getBoundingClientRect().top + scrollY - 150) }); await TA.wait(250); } await TA.click('#regF .fbtn[data-dim="status"]'); const o = TA.find('#regF .fpop .fo', 'سارية'); if (o) await TA.click(o.querySelector('input') || o); const d = TA.q('#regF [data-done]'); if (d) await TA.click(d); await TA.wait(1200); TA.hide(); await tourGo('#/partnerships'); } },
     { sel: ['.reg-meta .seg', '.seg'], h: 'طرق العرض', what: 'جدول عملي للمراجعة، أو بطاقات بصرية بالصور.', why: 'الجدول للعمل اليومي والتصدير، والبطاقات للعرض على القيادات.', how: 'شاهد: نبدّل طريقة العرض ثم نعود.', act: async () => { const b = $$('.reg-meta .seg [data-view], .seg [data-view]'); const on = b.find((x) => x.classList.contains('on')), off = b.find((x) => !x.classList.contains('on')); if (off) { await TA.click(off); await TA.wait(900); } if (on) await TA.click(on); } },
     { sel: ['#regBody tbody tr:first-child', '#regBody .pc:first-child', '.st-reg .st-card:first-child', '.cm-detail', '#regBody .pcard:first-child'], h: design() === 'command' ? 'القائمة والتفاصيل والمقارنة' : 'كل شراكة في سطر واضح', what: design() === 'command' ? 'اختيار أي سجل يعرض تفاصيله جانبًا، ويمكن تحديد حتى 3 شراكات ومقارنتها.' : 'الحالة محسوبة من التواريخ، مع الفترة والمتبقي والمسؤول وتنبيه الانتهاء.', why: 'قراءة سريعة لوضع كل شراكة دون فتحها.', how: 'اضغط السجل لفتح صفحته الكاملة، أو نزّل القائمة Excel أو أصدر لها تقريرًا.' },
@@ -66,6 +66,8 @@ function tourSteps() {
     { sel: ['.dhead-in', '[data-tour="detail-head"]'], h: 'صفحة الشراكة', what: 'الجهة والتصنيف والحالة المحسوبة، مع صور الشراكة في الغلاف.', why: 'كل ما يخص الشراكة في مكان واحد منظم.', how: 'تنقّل بين الأقسام من الشريط أسفل الغلاف.' },
     can('view.internal') ? { sel: ['.fcat.wide', '.fcat', '[data-tour="detail-files"]'], tab: 'files', h: 'الملفات والصور', what: 'الاتفاقية وتقارير الشراكة وتقييمها وصورها، مصنفة في بطاقات.', why: 'المستندات محفوظة مع سجلها، وتبقى داخلية لا تظهر في الواجهة التعريفية.', how: 'اضغط «رفع» أو اسحب الملف إلى تصنيفه، واختر أي صورة غلافًا للشراكة.' } : null,
     { sel: ['.dside'], tab: 'ov', h: 'الفترة والمسؤولون', what: 'شريط مدة الشراكة والمتبقي، والمسؤولون من إدارة الشراكات، واكتمال البيانات.', why: 'يعرف كل مسؤول ما عليه متابعته ومتى يحين التجديد.', how: 'أكمل البيانات الناقصة من زر «استكمال البيانات».' },
+    can('view.internal') ? { sel: ['#wf .wf-phases', '#wf'], tab: 'wf', h: 'مسار المذكرة ونماذجه', what: `${WF_STEPS.length} مرحلة معتمدة من الطلب إلى تقارير التفعيل، ولكل مرحلة مسؤولها ومستنداتها ونماذجها (المنهجية، والتقييم المبدئي، والمذكرة، والمواءمة، والخطاب، ومراجعة الخطابات).`, why: 'يعرف كل طرف أين تقف المذكرة ومن عليه الدور الآن، وتُحفظ النماذج المكتملة في ملف الشراكة.', how: 'زر الخطوة الحالية يفتح نافذة التنفيذ: تعبئة النموذج أو رفع المستند ثم الاعتماد أو الإعادة بملاحظات.' } : null,
+    can('view.internal') ? { sel: ['[data-tour="detail-dossier"]', '.dbar-acts'], h: 'الملف الشامل', what: 'ملف واحد للطباعة أو PDF يجمع بيانات الشراكة ونماذجها ومستنداتها وصورها بغلاف وفهرس.', why: 'يُرفع للقيادات أو يُحفظ كأرشيف دون تجميع يدوي.', how: 'اضغط «الملف الشامل» واختر ما يدخل فيه.' } : null,
     can('view.reports') ? { sel: ['[data-tour="detail-report"]'], h: 'تقرير بضغطة', what: 'زر يفتح تقرير هذه الشراكة جاهزًا في قسم التقارير.', why: 'لا حاجة لتجميع البيانات يدويًا عند طلب تقرير عن شراكة.', how: 'اضغط «تقرير»، ثم نزّله PowerPoint أو PDF أو اعرضه بملء الشاشة.' } : null,
   ].filter(Boolean) });
   if (can('view.partners')) S.push({ key: 'partners', title: 'الجهات الشريكة', route: '#/partners', parts: [
@@ -87,11 +89,38 @@ function tourSteps() {
     { sel: ['#rpDD'], h: 'مكونات التقرير', what: `${RPT_SECTIONS.length} مكوّنًا: فهرس، ولمحة بالرسوم، وملخص تنفيذي، وبيانات، وتعاون، وأثر، وفريق، وملفات، وصور…`, why: 'كل تقرير على مقاس الحاجة، والتغيير يظهر في المعاينة فورًا.', how: 'شاهد: نزيل «صور الشراكة» ثم نعيدها.', act: async () => { await TA.click('[data-rdd]'); if (TA.q('[data-rsec="photos"]')) { await TA.click('[data-rsec="photos"]'); await TA.wait(700); await TA.click('[data-rsec="photos"]'); } await TA.click('[data-rdd]'); } },
     { sel: ['.rs-frame'], h: 'معاينة قابلة للتعديل', what: 'شرائح التقرير كما ستُنزَّل، بثيم اتجاه التصميم الحالي ومن اليمين إلى اليسار.', why: 'تعدّل أي نص مباشرة قبل التنزيل دون تغيير سجلات الشراكة.', how: 'اضغط أي نص واكتب، ثم نزّل PowerPoint أو PDF، أو اعرضه بملء الشاشة.' },
   ] });
+  /* — صفحات العمل اليومي والعرض: تُضاف حسب صلاحية الحساب — */
+  if (Session.role() !== 'viewer') S.push({ key: 'tasks', title: 'مهامي', route: '#/tasks', parts: [
+    { sel: ['.tk-sum', '.tk-list', '#main .ph'], h: 'مهامي', what: 'كل ما على حسابك الآن: خطوات المسار المسندة لإدارتك، والمستندات المطلوبة، والمتأخر منها.', why: 'لا ينتظر الطلب أحدًا دون أن يعرف؛ كل مهمة تفتح الخطوة مباشرة.', how: 'اضغط المهمة لتنتقل إلى الخطوة وتنفذها من نافذتها.' },
+  ] });
+  if (can('view.internal')) S.push({ key: 'process', title: 'مخطط مسار الشراكة', route: '#/process', parts: [
+    { sel: ['.pr-map', '.pr-cols', '#main .page'], h: 'المخطط الكامل للإجراء', what: 'خريطة المراحل حسب الإدارات: من يبدأ، ومن يراجع، ومن يعتمد، ومسارات الإعادة بملاحظات.', why: 'مرجع واحد يشرح الإجراء المعتمد لأي إدارة جديدة.', how: 'مرّر للأسفل لتبقى رؤوس الإدارات ثابتة، واطبع المخطط A4 بالعرض.' },
+  ] });
+  if (can('view.reports')) S.push({ key: 'marketing', title: 'التقرير التسويقي', route: '#/reports/marketing', parts: [
+    { sel: ['.mk-head', '.mk-scope'], h: 'تقرير تسويقي جاهز', what: 'شرائح تُبنى من البيانات لكل الشراكات أو لشراكة واحدة: الجهة، والتعاون، والفريق، والمسار الزمني، والصور والوثائق.', why: 'عرض للعملاء والقيادات دون تصميم يدوي، ويتحدث مع كل تعديل في السجلات.', how: 'اختر النطاق أو الشراكة، ثم «عرض» بملء الشاشة أو PDF مع المستندات.' },
+  ] });
+  S.push({ key: 'stories', title: 'الإنجازات وقصص الأثر', route: '#/stories', parts: [
+    { sel: ['#main .cards', '#main .ph'], h: 'قصص الأثر', what: 'إنجازات موثقة بالصور والأرقام ومربوطة بشراكاتها.', why: 'تحوّل نتائج الشراكات إلى قصص تظهر في الرئيسية والتقارير.', how: 'أضف إنجازًا من صفحة الشراكة أو من هنا، وحدد رقمه البارز وصوره.' },
+  ] });
+  if (can('view.internal')) S.push({ key: 'media', title: 'مركز الصور', route: '#/media', parts: [
+    { sel: ['.m-tools', '#mStats', '#main .ph'], h: 'مكتبة الصور والملفات', what: 'كل صور الشراكات والإنجازات في مكان واحد، مع البحث والتصفية حسب المصدر.', why: 'إعادة استخدام الصور في التقارير والعروض دون البحث في المجلدات.', how: 'ارفع الصور واربطها بالشراكة، وتُضغط تلقائيًا للحفاظ على المساحة.' },
+  ] });
+  S.push({ key: 'gallery', title: 'معرض الأثر', route: '#/gallery', parts: [
+    { sel: ['.gal-hero', '.gal'], h: 'معرض الأثر', what: 'واجهة عرض بصرية للصور والقصص بملء الشاشة.', why: 'مناسبة للعرض في الاجتماعات والمعارض.', how: 'اختر شراكة أو قصة لتنتقل بين صورها.' },
+  ] });
+  if (can('manage.content')) S.push({ key: 'content', title: 'إدارة المحتوى', route: '#/content', parts: [
+    { sel: ['.inbox-tabs', '#cbody', '#main .ph'], h: 'إدارة المحتوى', what: 'ما يظهر في الرئيسية والعروض: الشراكات المميزة، والأخبار، والإنجازات المنشورة.', why: 'تتحكم الإدارة في الواجهة العامة دون المساس بالسجلات.', how: 'انشر أو أخفِ أي عنصر، ورتّب الشراكات الذهبية.' },
+  ] });
+  if (can('view.dashboard')) S.push({ key: 'dashalt', title: 'اللوحة المفصلة للمجلس', route: '#/dashboard?v=alt', parts: [
+    { sel: ['.bo-ch', '#obBody > section', '#main .page'], h: 'إحاطة بفصول مرقّمة', what: 'العرض المفصل: الخلاصة، والأثر، والتقييم، وسير الإجراءات، ومنظومة الشركاء، والقرارات المطلوبة.', why: 'تُعرض على المجلس مباشرة أو تُطبع، وكل رقم فيها محسوب من السجلات.', how: 'بدّل بين «مختصر» و«مفصّل» أعلى اللوحة، واستخدم ملء الشاشة للعرض.' },
+  ] });
   S.push({ key: 'settings', title: 'تخصيص المنصة', route: '#/settings/design', parts: [
     { sel: ['.dcard.on', '.dcard'], h: 'اتجاه التصميم والإعدادات', what: 'ثلاثة اتجاهات تصميم، ومحتوى الرئيسية، والقوائم والتصنيفات، والأدوار، والنسخ الاحتياطي.', why: 'تتحكم الإدارة في ما يُعرض وكيف يُعرض دون تعديل برمجي.', how: can('manage.lists') ? 'بدّل الاتجاه من هنا أو بالاختصارات Alt+1 وAlt+2 وAlt+3، وتتغير معه التقارير أيضًا.' : 'يمكن لكل مستخدم اختيار اتجاه التصميم.' },
   ] });
   S.push({ key: 'end', title: 'الخلاصة', route: null, parts: [{ sel: null, h: 'منظومة واحدة لدورة الشراكة كاملة' }] });
-  return S;
+  /* ترتيب الاستخدام: الواجهة، ثم العمل اليومي، ثم الشراكة ومسارها، ثم المقترحات، ثم العرض والتقارير، ثم الإدارة */
+  const ORDER = ['intro', 'home', 'search', 'dash', 'dashalt', 'actions', 'tasks', 'register', 'detail', 'process', 'partners', 'share', 'proposals', 'reports', 'marketing', 'stories', 'media', 'gallery', 'content', 'settings', 'end'];
+  return S.sort((a, b) => ORDER.indexOf(a.key) - ORDER.indexOf(b.key));
 }
 function startTour() {
   if (App.tour) return;

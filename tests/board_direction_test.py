@@ -35,7 +35,7 @@ async def main():
         ok('board briefing cover with classification and Hijri date', await E("!!document.querySelector('.bo-cover h1') && /هـ/.test(document.querySelector('.bo-cover-meta').textContent)"))
         ok('eight numbered chapters', await E("[...document.querySelectorAll('.bo-ch')].map(c=>c.dataset.ch).join(',')") == 'sum,impact,eval,proc,net,flow,time,dec')
         ok('table of contents with eight entries', await E("document.querySelectorAll('.bo-toc a').length") == 8)
-        ok('every chapter ends with an auto-written insight', await E("[...document.querySelectorAll('.bo-ch')].every(c=>c.querySelector('.bo-ins p') && c.querySelector('.bo-ins p').textContent.trim().length>20)"))
+        ok('no conclusion boxes in the detailed board (removed by request)', await E("document.querySelectorAll('.bo-ch .bo-ins').length===0 && document.querySelectorAll('.bo-ch .bo-chn b').length===8"))
         ok('three key messages', await E("document.querySelectorAll('.bo-msg').length") == 3)
         sc = await E("boStats(applyFilters(visiblePartnerships(), App.dashF)).score")
         ok('portfolio health index 0..100 with four components', 0 <= sc <= 100 and await E("document.querySelectorAll('[data-ch=sum] .bo-hl li').length") == 4, sc)

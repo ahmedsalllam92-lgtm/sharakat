@@ -24,9 +24,9 @@ async def main():
                 ok(f'[{label}/{d}] tour started', await E("App.tour && !!document.querySelector('#tour')"))
                 ok(f'[{label}/{d}] tour UI follows design', await E(f"document.documentElement.dataset.design==='{d}' && document.querySelector('.tour-design').textContent===DESIGNS['{d}'].name"))
                 n = await E("TOUR.steps.length")
-                ok(f'[{label}/{d}] 12 steps for admin (incl. reports)', n == 12 and 'reports' in await E("TOUR.steps.map(s=>s.key)"), n)
+                ok(f'[{label}/{d}] 20 steps for admin (incl. reports)', n == 20 and 'reports' in await E("TOUR.steps.map(s=>s.key)"), n)
                 txt = await E("document.querySelector('.tb-txt').textContent")
-                ok(f'[{label}/{d}] progress label', txt.startswith('الخطوة 1 من 12'), txt)
+                ok(f'[{label}/{d}] progress label', txt.startswith('الخطوة 1 من 20'), txt)
                 await E("TOUR.playing=false; updateBar()")
                 missing=[]; overlaps=[]
                 total_parts = await E("TOUR.steps.reduce((t,s)=>t+s.parts.length,0)")
