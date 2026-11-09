@@ -18,32 +18,22 @@ function goldBurst(btn) {
   btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
   setTimeout(() => fx.remove(), 1100);
 }
-/* كشاف مسرح: يُطفأ المسرح تدريجيًا، ثم يضيء كشاف من الأعلى ويتأرجح حتى يستقر على الشراكة ببقعة ضوء ناعمة الحواف،
-   ويبقى لحظة ثم يخفت كل شيء بهدوء. الشعاع مرسوم بتمويه SVG فحوافه ناعمة. */
+/* تمييز رسمي عند إضافة شراكة ذهبية: يخفت ما حولها قليلًا، ويُرسم إطار ذهبي رفيع حولها، وتعبر لمعة ذهبية فوق اسمها ثم يعود كل شيء */
 function goldSpotlight(btn) {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const tgt = (btn && (btn.closest('.gcard, .pc, .pcard, .st-card, .bo-card, .sh-card, tr') || ((document.querySelector('#main .dhead h1') || {}).parentElement || document.querySelector('#main .dhead-in, #main .dhead')))) || btn;
   if (!tgt) return;
   const old = document.querySelector('.gspot'); if (old) old.remove();
-  const r = tgt.getBoundingClientRect(), W = innerWidth, H = innerHeight;
-  const cx = Math.min(W - 40, Math.max(40, r.left + r.width / 2)), cy = Math.min(H - 40, Math.max(70, r.top + r.height / 2));
-  const rx = Math.max(180, Math.min(W * 0.42, r.width * 0.6)), ry = Math.max(110, Math.min(H * 0.32, r.height * 0.7));
-  const sx = cx < W / 2 ? Math.min(W - 80, cx + W * 0.18) : Math.max(80, cx - W * 0.18), sy = -60;
-  const ang = Math.atan2(cx - sx, cy - sy) * 180 / Math.PI;
-  const el = document.createElement('div'); el.className = 'gspot'; el.setAttribute('aria-hidden', 'true');
-  el.style.cssText = `--x:${cx}px;--y:${cy}px;--rx:${rx}px;--ry:${ry}px;--sx:${sx}px;--sy:${sy}px;--ang:${(-ang).toFixed(1)}deg`;
-  const len = Math.hypot(cx - sx, cy - sy) + ry * 0.4, half = rx * 0.92;
-  el.innerHTML = `<i class="gspot-veil"></i>
-    <svg class="gspot-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs>
-      <filter id="gsBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter><filter id="gsBlur2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${Math.round(rx * 0.07)}"/></filter>
-      <linearGradient id="gsBeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF6E0" stop-opacity=".9"/><stop offset=".55" stop-color="#FFEAB8" stop-opacity=".45"/><stop offset="1" stop-color="#FFE6B0" stop-opacity=".12"/></linearGradient>
-      <radialGradient id="gsPool"><stop offset="0" stop-color="#FFF1D2" stop-opacity=".7"/><stop offset=".55" stop-color="#FFE3A8" stop-opacity=".22"/><stop offset="1" stop-color="#FFE3A8" stop-opacity="0"/></radialGradient></defs>
-      <g class="gspot-cone" style="transform-origin:${sx}px ${sy}px"><polygon points="${sx - 14},${sy} ${sx + 14},${sy} ${sx + half},${sy + len} ${sx - half},${sy + len}" fill="url(#gsBeam)" filter="url(#gsBlur)" transform="rotate(${(-ang).toFixed(1)} ${sx} ${sy})"/></g>
-      <ellipse class="gspot-pool" cx="${cx}" cy="${cy}" rx="${rx * 1.05}" ry="${ry * 1.05}" fill="url(#gsPool)" filter="url(#gsBlur2)"/>
-      <circle cx="${sx}" cy="${sy + 24}" r="26" class="gspot-src" fill="#FFF6E0" filter="url(#gsBlur)"/></svg>
-    ${Array.from({ length: 18 }, () => { const t = 0.15 + Math.random() * 0.8, x = sx + (cx - sx) * t + (Math.random() - 0.5) * half * t * 1.4, y = sy + (cy - sy) * t; return `<b class="gspot-dust" style="left:${x.toFixed(0)}px;top:${y.toFixed(0)}px;--d:${(0.9 + Math.random() * 0.9).toFixed(2)}s"></b>`; }).join('')}`;
+  const r = tgt.getBoundingClientRect(), pad = 14;
+  const x = r.left - pad, y = r.top - pad, w = r.width + pad * 2, h = r.height + pad * 2, rad = 18;
+  const el = document.createElement('div'); el.className = 'gspot gspot-formal'; el.setAttribute('aria-hidden', 'true');
+  el.style.cssText = `--x:${x + w / 2}px;--y:${y + h / 2}px;--w:${w}px;--h:${h}px`;
+  el.innerHTML = `<i class="gsf-veil"></i>
+    <svg class="gsf-svg" width="${innerWidth}" height="${innerHeight}"><defs><linearGradient id="gsfG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3DFA6"/><stop offset=".5" stop-color="#C9A24F"/><stop offset="1" stop-color="#F3DFA6"/></linearGradient></defs>
+      <rect class="gsf-frame" x="${x}" y="${y}" width="${w}" height="${h}" rx="${rad}" pathLength="1" fill="none" stroke="url(#gsfG)" stroke-width="2"/></svg>
+    <span class="gsf-sheen" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${rad}px"><i></i></span>`;
   document.body.appendChild(el);
-  setTimeout(() => el.remove(), 3300);
+  setTimeout(() => el.remove(), 2200);
 }
 async function toggleGolden(p, btn) {
   const on = !p.golden;
