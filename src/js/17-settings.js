@@ -256,6 +256,9 @@ function setData(b) {
       <p class="small muted" style="margin-bottom:12px">ملف حزمة (.json) يضم مستندات شراكة ونماذجها جاهزة. تُضاف المرفقات إلى ملف الشراكة في مراحل مسارها، وتُنشأ النماذج بتصميم المنظومة. الاستيراد آمن للتكرار: لا يتكرر ملف موجود ولا يُستبدل نموذج مكتمل.</p>
       <label class="btn">${icon('upload')} اختيار ملف الحزمة<input type="file" accept=".json,application/json" hidden id="dPkgImp"></label>
       <span class="small muted" id="dPkgStat" style="margin-inline-start:10px"></span></div></div>` : ''}
+    <div class="panel" style="margin-top:18px" id="dAppDl"><div class="panel-h"><h3>نسخة المنصة على جهازك</h3><span class="sub">ملف واحد يعمل من الجهاز مباشرة</span></div><div class="panel-b">
+      <p class="small muted" style="margin-bottom:12px">ينزّل المنصة نفسها في ملف HTML واحد يُفتح بأي متصفح دون تثبيت. ${Cloud.on ? 'عند فتحه وتسجيل الدخول يتصل بالبيانات المشتركة نفسها (يحتاج إنترنت)، ويعرض آخر نسخة محفوظة على الجهاز عند انقطاع الاتصال.' : 'يعمل دون إنترنت، وبياناته تُحفظ في المتصفح الذي يُفتح فيه.'} الملف لا يحتوي بيانات الشراكات ولا كلمات المرور؛ للاحتفاظ بنسخة من البيانات استخدم «تصدير نسخة احتياطية».</p>
+      <button class="btn" type="button" id="dAppSave">${icon('download')} تنزيل نسخة المنصة (HTML)</button></div></div>
     <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>النسخ الاحتياطي والاستعادة</h3></div><div class="panel-b">
       <p class="small muted" style="margin-bottom:14px">${Cloud.on ? 'البيانات محفوظة على خادم المنصة المشتركة، مع نسخة على هذا الجهاز للعرض السريع. صدّر نسخة احتياطية دورية للاحتفاظ بها خارج المنصة.' : `تُحفظ البيانات والمرفقات في متصفح هذا الجهاز (${Store.mode === 'idb' ? 'IndexedDB' : 'ذاكرة مؤقتة — لن تبقى بعد إغلاق الصفحة'}). صدّر نسخة احتياطية دورية، أو لنقل البيانات إلى جهاز آخر.`}</p>
       <div class="row wrap"><button class="btn primary" id="dExp">${icon('download')} تصدير نسخة احتياطية (JSON مع المرفقات)</button>
@@ -307,6 +310,11 @@ function setData(b) {
       const ids = new Set(D.partnerships.map((p) => p.id)); D.settings.home.featured = (D.settings.home.featured || []).filter((x) => ids.has(x));
       const sids = new Set(D.achievements.map((p) => p.id)); D.settings.home.stories = (D.settings.home.stories || []).filter((x) => sids.has(x));
       await saveSet('حذف البيانات التجريبية'); toast('حُذفت البيانات التجريبية'); renderShell(); setData(b);
+    }
+    if (e.target.closest('#dAppSave')) {
+      if (!window.__APP_SRC) return toast('تعذّر تجهيز نسخة المنصة في هذا المتصفح.', 'err');
+      download(`${D.settings.org.platform || 'منظومة الشراكات'} — نسخة محلية.html`, new Blob(['<!DOCTYPE html>\n' + window.__APP_SRC], { type: 'text/html;charset=utf-8' }));
+      toast('نُزّلت نسخة المنصة'); return;
     }
     if (e.target.closest('#dSync')) { await cloudTick(); toast(cloudStateText(), Cloud.state === 'ok' ? '' : 'err'); setData(b); return; }
     if (e.target.closest('#dMergeOld')) { if (await confirmDlg('رفع البيانات القديمة المحفوظة في هذا المتصفح إلى المنصة المشتركة؟ يُضاف ما ليس موجودًا ويُحدَّث الأقدم فقط، ولا يُحذف شيء.', { title: 'دمج بيانات المتصفح', ok: 'دمج' })) { await cloudMergeOldLocal(); setData(b); } return; }
