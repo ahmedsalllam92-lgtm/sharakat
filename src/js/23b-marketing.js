@@ -138,9 +138,17 @@ function mkSplit(text) {
 }
 const MK_ICONS = [[/سياح|معسكر|زائر|رحل/, 'flag'], [/أخرى|اهتمام المشترك/, 'link'], [/مجتمع|تطوع|متطوع|شباب|أسر/, 'users'], [/دراس|بحث|بحوث|ابتكار|تقني|حلول/, 'search'], [/تدريب|تعليم|ورش|قدرات|معرف|خبرات/, 'award'], [/قياس|أثر|مؤشر|تقارير|بيانات/, 'chart'], [/إعلام|محتوى|نشر|أخبار|توعي/, 'news'], [/مال|استثمار|تمويل|رعاي/, 'star'], [/مياه|سيول/, 'layers'], [/نبات|غطاء|تشجير|شجر|بيئ|موائل|أحيائ|تصحر|مناخ|زراع/, 'leaf']];
 /* بطاقات البنود (مجالات التعاون، والمخرجات، والأثر): عنوان قصير وأيقونة ووصف موجز */
+function mkFitText(root) {
+  (root || document).querySelectorAll('.px-co2 article, .hz-c, .px-pp-b').forEach((a) => {
+    let k = 1; a.style.setProperty('--fs', '1');
+    /* المحتوى الفعلي (لا الزخارف المطلقة) مقابل المساحة الداخلية للبطاقة */
+    const over = () => { const R = a.getBoundingClientRect(), sc = R.height / (a.offsetHeight || 1), pb = parseFloat(getComputedStyle(a).paddingBottom) || 0; const kids = [...a.children].filter((x) => getComputedStyle(x).position !== 'absolute'); if (!kids.length || !R.height) return false; return Math.max(...kids.map((x) => x.getBoundingClientRect().bottom)) > R.bottom - pb * sc * 0.4 + 1; };
+    while (over() && k > 0.62) { k = +(k - 0.04).toFixed(2); a.style.setProperty('--fs', String(k)); }
+  });
+}
 function mkCardsHTML(items, startN, total, label) {
   const n = items.length;
-  return `<div class="px-co2 n${n}">${items.map((raw, i) => { const sp = mkSplit(raw); return `<article style="--i:${i}"><span class="px-co2-n">${String(startN + i + 1).padStart(2, '0')}</span><div class="px-co2-h"><i class="px-co2-ic">${icon(mkIconFor(sp.t, raw))}</i><b>${esc(mkClip(sp.t, sp.d ? (n <= 4 ? 90 : 62) : 140))}</b></div>${sp.d ? `<p>${esc(mkClip(sp.d, n <= 3 ? 230 : 120))}</p>` : ''}</article>`; }).join('')}</div>`;
+  return `<div class="px-co2 n${n}">${items.map((raw, i) => { const sp = mkSplit(raw); return `<article style="--i:${i}"><span class="px-co2-n">${String(startN + i + 1).padStart(2, '0')}</span><div class="px-co2-h"><i class="px-co2-ic">${icon(mkIconFor(sp.t, raw))}</i><b>${esc(sp.t)}</b></div>${sp.d ? `<p>${esc(sp.d)}</p>` : ''}</article>`; }).join('')}</div>`;
 }
 const mkCardsHead = (h, count, noun, page, pages, sub) => `<div class="px-co2-head"><h2 class="mx-h">${h}</h2><div class="px-co2-sum"><b>${nf(count)}</b><span>${noun}${pages > 1 ? `<small>الصفحة ${page} من ${pages}</small>` : sub ? `<small>${esc(sub)}</small>` : ''}</span></div></div>`;
 if (!MK.cover) { try { MK.cover = localStorage.getItem('shk_mk_cover') || 'formal'; } catch (_) { MK.cover = 'formal'; } }
@@ -174,7 +182,7 @@ function mkSlidesOne(p) {
       <div class="px-meta">${[p.classification, pSector(p), p.ptype, s0 ? `${fmtDate(p.startDate)}${e0 ? ' – ' + fmtDate(p.endDate) : ''}` : ''].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join('')}<span class="st st-${st}">${esc(statusLabel(st))}</span></div>
     </div>`]);
   /* 2. الملخص */
-  const lineDef = `${s0 ? `منذ ${fmtDate(p.startDate)} ` : ''}تجمع ${p.classification || 'شراكة'} بين ${org.name} و${name}${goal ? `، في ${mkClip(mkSplit(goal).t, 110)}` : ''}.`;
+  const lineDef = `${s0 ? `منذ ${fmtDate(p.startDate)} ` : ''}تجمع ${p.classification || 'شراكة'} بين ${org.name} و${name}${goal ? `، في ${mkSplit(goal).t}` : ''}.`;
   const line = rptVal('mk.' + k('ln'), lineDef);
   S.push(['line', 'paper', 'الملخص', `
     <span class="mx-qm" aria-hidden="true">“</span>
@@ -200,24 +208,26 @@ function mkSlidesOne(p) {
       <div class="px-pp-lg">${logoOrMono(pr, name)}</div>
       <div class="px-pp-b"><h2>${esc(pr.name)}</h2>
         <div class="px-pp-tags">${[pr.sector || pSector(p), pr.domain, pr.type].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join('')}</div>
-        <p>${mkE(k('pp.s'), mkClip(trimP(pr.notes || ''), 260) || `${pr.name} شريك ${org.name} في ${pSector(p) ? 'القطاع ' + pSector(p) : 'هذه الشراكة'}.`)}</p>
+        <p>${mkE(k('pp.s'), trimP(pr.notes || '') || `${pr.name} شريك ${org.name} في ${pSector(p) ? 'القطاع ' + pSector(p) : 'هذه الشراكة'}.`)}</p>
         <dl class="px-pp-facts">${[['القطاع', pr.sector || pSector(p)], ['مجال العمل', pr.domain], ['نوع الشراكة', p.classification], ['تصنيف الشراكة', p.ptype], ['بداية الشراكة', s0 ? fmtDate(p.startDate) : ''], ['المدة', dur ? `${nf(dur[0])} ${dur[1]}` : ''], ['مجالات التعاون', coop.length ? nf(coop.length) : ''], ['الحالة', statusLabel(st)]].filter(([, v]) => v).slice(0, 6).map(([l, v], i) => `<div style="--i:${i}"><dt>${esc(l)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
         ${others.length ? `<div class="px-pp-others"><small>شراكات أخرى مع الجهة</small>${others.slice(0, 4).map((o) => `<span>${esc(o.title || o.code || '')}<em>${esc(statusLabel(pStatus(o)))}</em></span>`).join('')}</div>` : ''}
       </div></div>`]);
   /* 5. مجالات التعاون — كلها، ست بطاقات في كل شريحة */
   const pages = (arr, n) => { const o = []; for (let i = 0; i < arr.length; i += n) o.push(arr.slice(i, i + n)); return o; };
-  pages(coop, 6).forEach((part, pi, all) => S.push(['pcoop', 'paper', 'مجالات التعاون', `
+  /* عدد البنود في الشريحة حسب طولها حتى يظهر النص كاملًا بخط مقروء */
+  const per = (arr) => { const len = (x) => String(typeof x === 'string' ? x : (x.t || '') + ' ' + (x.x || '')).length; const avg = arr.length ? arr.reduce((t, x) => t + len(x), 0) / arr.length : 0; return avg > 300 ? 3 : avg > 170 ? 4 : 6; };
+  const pc = per(coop); pages(coop, pc).forEach((part, pi, all) => S.push(['pcoop', 'paper', 'مجالات التعاون', `
     <div class="px-co2-head"><h2 class="mx-h">${mkE(k('co.h' + (pi || '')), 'مجالات التعاون')}</h2>
       <div class="px-co2-sum"><b>${nf(coop.length)}</b><span>${coop.length === 1 ? 'مجال تعاون' : 'مجالات تعاون'}${all.length > 1 ? `<small>الصفحة ${pi + 1} من ${all.length}</small>` : `<small>بين ${esc(org.name)} و${esc(name)}</small>`}</span></div></div>
-    <div class="px-co2 n${part.length}">${part.map((c, i) => { const sp = c.t ? { t: trimP(c.t), d: trimP(c.x) } : mkSplit(c.x); const all_ = (c.t || '') + ' ' + c.x; return `<article style="--i:${i}"><span class="px-co2-n">${String(pi * 6 + i + 1).padStart(2, '0')}</span><div class="px-co2-h"><i class="px-co2-ic">${icon(mkIconFor(sp.t, all_))}</i><b>${esc(mkClip(sp.t, sp.d ? (part.length <= 4 ? 90 : 62) : 140))}</b></div>${sp.d ? `<p>${esc(mkClip(sp.d, part.length <= 3 ? 230 : 120))}</p>` : ''}</article>`; }).join('')}</div>`]));
+    <div class="px-co2 n${part.length}">${part.map((c, i) => { const sp = c.t ? { t: trimP(c.t), d: trimP(c.x) } : mkSplit(c.x); const all_ = (c.t || '') + ' ' + c.x; return `<article style="--i:${i}"><span class="px-co2-n">${String(pi * pc + i + 1).padStart(2, '0')}</span><div class="px-co2-h"><i class="px-co2-ic">${icon(mkIconFor(sp.t, all_))}</i><b>${esc(sp.t)}</b></div>${sp.d ? `<p>${esc(sp.d)}</p>` : ''}</article>`; }).join('')}</div>`]));
   /* 6. المخرجات — كلها */
-  pages(outs, 6).forEach((part, pi, all) => S.push(['pout', 'night', 'المخرجات', `
+  const po = per(outs); pages(outs, po).forEach((part, pi, all) => S.push(['pout', 'night', 'المخرجات', `
     ${mkCardsHead(mkE(k('ou.h' + (pi || '')), 'المخرجات المستهدفة'), outs.length, outs.length === 1 ? 'مخرج مستهدف' : 'مخرجات مستهدفة', pi + 1, all.length, 'إسناد مشاريع وبناء مبادرات')}
-    ${mkCardsHTML(part, pi * 6, outs.length)}`]));
+    ${mkCardsHTML(part, pi * po, outs.length)}`]));
   /* 6ب. الأثر المتوقع — كله */
-  pages(imps, 6).forEach((part, pi, all) => S.push(['pimp', 'deep', 'الأثر المتوقع', `
+  const pm = per(imps); pages(imps, pm).forEach((part, pi, all) => S.push(['pimp', 'deep', 'الأثر المتوقع', `
     ${mkCardsHead(mkE(k('im.h' + (pi || '')), 'الأثر المتوقع'), imps.length, imps.length === 1 ? 'أثر متوقع' : 'آثار متوقعة', pi + 1, all.length, 'وكيف يخدم المؤسسة')}
-    ${mkCardsHTML(part, pi * 6, imps.length)}`]));
+    ${mkCardsHTML(part, pi * pm, imps.length)}`]));
   /* 6ج. شبكة الشراكة: الشراكة في المركز، وفريق إدارة الشراكات يمينًا، والإدارات يسارًا، والتفعيل أسفلها */
   const own = p.owners || [], deps = p.departments || [];
   if (own.length || deps.length || p.activation) {
@@ -452,7 +462,7 @@ function mkSlides() {
     <h2 class="mx-h">${mkE('nx.h', 'الفرص القادمة')}</h2>
     <p class="mx-sub">${mkE('nx.s', `${nf(hzCols.reduce((t, c) => t + c.n, 0))} فرصة على طاولة إدارة الشراكات الآن`)}</p>
     <div class="mx-hz2">${hzCols.map((c, ci) => `<div class="hz-c" style="--i:${ci}"><div class="hz-top"><span class="hz-ic">${icon(c.ic)}</span>${mxCnt(c.n)}</div><h3>${c.l}</h3><small class="hz-d">${c.d}</small>
-      <ul>${c.items.slice(0, 4).map(([a, b], k) => `<li style="--k:${k}"><b>${esc(mkClip(a, 34))}</b><span>${esc(b)}</span></li>`).join('') || '<li class="none"><span>لا توجد حاليًا</span></li>'}</ul>${c.items.length > 4 ? `<em class="hz-more">+${nf(c.items.length - 4)} أخرى</em>` : ''}</div>`).join('')}</div>`]);
+      <ul>${c.items.slice(0, 4).map(([a, b], k) => `<li style="--k:${k}"><b>${esc(a)}</b><span>${esc(b)}</span></li>`).join('') || '<li class="none"><span>لا توجد حاليًا</span></li>'}</ul>${c.items.length > 4 ? `<em class="hz-more">+${nf(c.items.length - 4)} أخرى</em>` : ''}</div>`).join('')}</div>`]);
   /* 11. الختام: حلقتان تتشابكان */
   S.push(['bond', 'night', 'الختام', `
     <div class="mx-grain"></div>
@@ -497,6 +507,7 @@ function renderMarketingReport(el, r) {
       <div class="mk-deck" id="mkDeck">${S.length ? S.map((s, i) => `<div class="mk-fr" data-i="${i}">${s}</div>`).join('') : `<div class="panel">${MK.scope === 'one' ? emptyHTML({ ic: 'file', title: 'اختر الشراكة', text: 'اختر من القائمة أعلاه الشراكة التي تريد تقريرها التسويقي.' }) : emptyHTML({ ic: 'file', title: 'لا توجد شراكات في هذا النطاق', text: 'اختر نطاقًا آخر.' })}</div>`}</div>`;
     hydrateFiles(el);
     fit();
+    mkFitText(el); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => mkFitText(el));
     /* كل مشهد يبدأ حركته عند ظهوره في المعاينة */
     const io = 'IntersectionObserver' in window ? new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { mkPlay(e.target); io.unobserve(e.target); } }), { threshold: 0.35 }) : null;
     $$('#mkDeck .rs2.mk', el).forEach((sl) => { sl.classList.add('mk-anim'); io ? io.observe(sl) : mkPlay(sl); });
