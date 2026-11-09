@@ -3741,3 +3741,5 @@ code.pw-user{font-size:12.5px;background:var(--paper-2);padding:2px 8px;border-r
 .mks-horizon .mx-sun{top:auto!important;bottom:-170px!important;width:620px;height:620px;margin-left:-310px;opacity:.5!important;z-index:0}
 .mk-anim.play.mks-horizon .mx-sun{animation:mxSunLow 2.4s cubic-bezier(.2,.8,.2,1) forwards}
 @keyframes mxSunLow{from{opacity:0;transform:translateY(80px) scale(.85)}to{opacity:.5;transform:none}}
+.mx-rcard{left:0;top:0}
+.mks-horizon .mx-sun{bottom:0!important;width:900px;height:430px;margin-left:-450px;border-radius:0;background:radial-gradient(ellipse 45% 75% at 50% 100%,#FFE9B8 0%,#F0C977 32%,rgba(240,201,119,0) 72%)}
