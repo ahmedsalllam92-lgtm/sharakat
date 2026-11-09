@@ -56,6 +56,10 @@ for key, title in ASSETS:
     for ext, mime in (('.jpg', 'image/jpeg'), ('.png', 'image/png')):
         pth = os.path.join(ROOT, 'assets/photos', key + ext)
         if os.path.exists(pth): assets[key] = {'title': title, 'src': f'data:{mime};base64,' + base64.b64encode(open(pth, 'rb').read()).decode()}; break
+_ic = lambda n: 'data:image/png;base64,' + base64.b64encode(open(os.path.join(ROOT, 'assets/icons', n), 'rb').read()).decode()
+icon_links = (f'<link rel="icon" type="image/png" sizes="32x32" href="{_ic("icon-32.png")}">'
+              f'<link rel="icon" type="image/png" sizes="192x192" href="{_ic("icon-192.png")}">'
+              f'<link rel="apple-touch-icon" sizes="180x180" href="{_ic("icon-180.png")}">')
 lib_js = 'const IMG_LIB = ' + _json.dumps(lib, ensure_ascii=False) + ';\nconst ASSET_IMG = ' + _json.dumps(assets, ensure_ascii=False) + ';\n'
 js_files = [os.path.join(ROOT, 'src/seed_real.js')] + ([os.path.join(ROOT, 'src/seed_real2.js')] if os.path.exists(os.path.join(ROOT, 'src/seed_real2.js')) else []) + sorted(glob.glob(os.path.join(ROOT, 'src/js/*.js')))
 js = lib_js + '\n'.join(f'/* —— {os.path.basename(f)} —— */\n' + open(f, encoding='utf-8').read() for f in js_files)
@@ -78,7 +82,9 @@ html = f"""<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>منظومة الشراكات — نسخة محلية</title>
+<title>منظومة الشراكات — مؤسسة مروج الأهلية</title>
+{icon_links}
+<meta name="theme-color" content="#0F4433">
 <style>{''.join(faces)}</style>
 <style>{css}</style>
 </head>
