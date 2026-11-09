@@ -4,12 +4,12 @@
    مستخرجة من الصلاحيات المطبقة نفسها
    ===================================================================== */
 const PR_LANES = [
-  { id: 'requester', t: 'الإدارة الطالبة', s: 'تقدّم الطلب وتحضر الاجتماع', ic: 'send' },
-  { id: 'partnerships', t: 'إدارة الشراكات', s: 'تدير المسار حتى التوقيع', ic: 'users' },
-  { id: 'concerned', t: 'الإدارات المعنية', s: 'ملاحظات وتقارير تفعيل', ic: 'building' },
-  { id: 'strategy', t: 'الإدارة الاستراتيجية', s: 'المواءمة الاستراتيجية', ic: 'chart' },
+  { id: 'requester', t: 'الإدارة الطالبة', s: 'تقدّم الطلب', ic: 'send' },
+  { id: 'partnerships', t: 'إدارة الشراكات', s: 'تدير المسار', ic: 'users' },
+  { id: 'concerned', t: 'الإدارات المعنية', s: 'الملاحظات والتقارير', ic: 'building' },
+  { id: 'strategy', t: 'الإدارة الاستراتيجية', s: 'المواءمة', ic: 'chart' },
   { id: 'legal', t: 'الإدارة القانونية', s: 'مراجعة الخطابات', ic: 'file' },
-  { id: 'excellency', t: 'مكتب المعالي', s: 'الموافقة بخطاب — خارج المنصة', ic: 'mail' },
+  { id: 'excellency', t: 'مكتب المعالي', s: 'الموافقة بخطاب', ic: 'mail' },
   { id: 'bizdev', t: 'إدارة تطوير الأعمال', s: 'خطة التفعيل', ic: 'leaf' },
 ];
 const PR_PHASES = WF_PHASES.map((ph) => { const ns = WF_STEPS.filter((s) => s.ph === ph.id).map((s) => s.n - 1); return { t: ph.t, from: Math.min(...ns), to: Math.max(...ns) }; });

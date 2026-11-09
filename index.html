@@ -7233,6 +7233,27 @@ code.pw-user{font-size:12.5px;background:var(--paper-2);padding:2px 8px;border-r
 .px-co2.n4 article p{font-size:calc(15.5px * var(--fs,1))}
 .hz-c li{align-items:flex-start}.hz-c li b{white-space:normal;font-size:calc(14px * var(--fs,1));line-height:1.4}.hz-c li span{font-size:calc(12px * var(--fs,1))}
 .px-pp-b p{font-size:calc(16px * var(--fs,1))}
+/* مخطط المسار: عنوان كل إدارة بلونها، وخلفية خفيفة من اللون نفسه */
+.pm-lh{background:linear-gradient(180deg,color-mix(in srgb,var(--lc) 9%,var(--paper)),var(--paper))}
+.pm-lh b{color:var(--lc)!important}
+.pm-lh::after{opacity:.9;height:3px}
+.pm-lic{background:var(--lc);color:#fff}
+.pm-lh small{-webkit-line-clamp:unset!important;display:block;white-space:nowrap;overflow:visible}
+:root[data-theme="dark"] .pm-lh b{color:color-mix(in srgb,var(--lc) 70%,#fff)!important}
+/* كشاف المسرح (نسخة أنعم): إطفاء تدريجي ← كشاف يتأرجح ويستقر ← بقعة ضوء ← خفوت */
+.gspot{animation:none!important}
+.gspot-veil{position:absolute;inset:0;background:radial-gradient(ellipse calc(var(--rx) * 1.15) calc(var(--ry) * 1.25) at var(--x) var(--y),rgba(3,9,7,0) 42%,rgba(3,9,7,.45) 70%,rgba(3,9,7,.78) 100%);opacity:0;animation:gsVeil 3.2s cubic-bezier(.4,0,.2,1) forwards}
+.gspot-svg{position:absolute;inset:0;mix-blend-mode:screen;overflow:visible}
+.gspot-cone{opacity:0;animation:gsCone 3.2s cubic-bezier(.33,0,.2,1) forwards}
+.gspot-pool{opacity:0;animation:gsPool 3.2s ease forwards}
+.gspot-src{opacity:0;animation:gsSrc 3.2s ease forwards}
+.gspot-dust{opacity:0;animation:gsDust 1.6s ease-in-out var(--d) forwards}
+@keyframes gsVeil{0%{opacity:0}18%{opacity:1}78%{opacity:1}100%{opacity:0}}
+@keyframes gsCone{0%{opacity:0;transform:rotate(-16deg)}14%{opacity:.35;transform:rotate(-16deg)}17%{opacity:.08}20%{opacity:.7}23%{opacity:.4}26%{opacity:1;transform:rotate(-14deg)}48%{transform:rotate(3deg)}58%{transform:rotate(-1.2deg)}66%{transform:rotate(0)}80%{opacity:1}100%{opacity:0;transform:rotate(0)}}
+@keyframes gsPool{0%,40%{opacity:0;transform:scale(.8)}62%{opacity:1;transform:none}82%{opacity:1}100%{opacity:0}}
+@keyframes gsSrc{0%,12%{opacity:0}26%{opacity:.9}80%{opacity:.9}100%{opacity:0}}
+@keyframes gsDust{0%{opacity:0;transform:translateY(-8px)}40%{opacity:.85}100%{opacity:0;transform:translateY(22px)}}
+.gspot-pool{transform-box:fill-box;transform-origin:center}
 </style>
 </head>
 <body>
@@ -17030,20 +17051,32 @@ function goldBurst(btn) {
   btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
   setTimeout(() => fx.remove(), 1100);
 }
-/* كشاف مسرح: ثانيتان يُسلَّط فيهما ضوء دافئ من الأعلى على الشراكة، ويخفت ما حولها ثم يعود */
+/* كشاف مسرح: يُطفأ المسرح تدريجيًا، ثم يضيء كشاف من الأعلى ويتأرجح حتى يستقر على الشراكة ببقعة ضوء ناعمة الحواف،
+   ويبقى لحظة ثم يخفت كل شيء بهدوء. الشعاع مرسوم بتمويه SVG فحوافه ناعمة. */
 function goldSpotlight(btn) {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const tgt = (btn && (btn.closest('.gcard, .pc, .pcard, .st-card, .bo-card, .sh-card, tr') || document.querySelector('#main .dhead-in, #main .dhead'))) || btn;
+  const tgt = (btn && (btn.closest('.gcard, .pc, .pcard, .st-card, .bo-card, .sh-card, tr') || ((document.querySelector('#main .dhead h1') || {}).parentElement || document.querySelector('#main .dhead-in, #main .dhead')))) || btn;
   if (!tgt) return;
+  const old = document.querySelector('.gspot'); if (old) old.remove();
   const r = tgt.getBoundingClientRect(), W = innerWidth, H = innerHeight;
-  const cx = Math.min(W - 40, Math.max(40, r.left + r.width / 2)), cy = Math.min(H - 40, Math.max(60, r.top + r.height / 2));
-  const rx = Math.max(170, Math.min(W * 0.45, r.width * 0.62)), ry = Math.max(120, Math.min(H * 0.42, r.height * 0.8));
-  const top = Math.max(0, cx - W * 0.08), el = document.createElement('div'); el.className = 'gspot'; el.setAttribute('aria-hidden', 'true');
-  const src = Math.min(W - 60, Math.max(60, cx + (cx < W / 2 ? 120 : -120)));
-  el.style.cssText = `--x:${cx}px;--y:${cy}px;--rx:${rx}px;--ry:${ry}px`;
-  el.innerHTML = `<i class="gspot-veil"></i><i class="gspot-beam" style="clip-path:polygon(${src - 30}px -2%, ${src + 30}px -2%, ${cx + rx * 0.95}px ${cy + ry * 0.7}px, ${cx - rx * 0.95}px ${cy + ry * 0.7}px);-webkit-mask-image:linear-gradient(180deg,#000 0,#000 ${Math.max(0, cy - ry * 0.6)}px,transparent ${cy + ry * 0.7}px);mask-image:linear-gradient(180deg,#000 0,#000 ${Math.max(0, cy - ry * 0.6)}px,transparent ${cy + ry * 0.7}px)"></i><i class="gspot-pool"></i>${Array.from({ length: 14 }, (_, i) => { const t = Math.random(), x = src + (cx - src) * t + (Math.random() - 0.5) * rx * t * 1.6, y = cy * t; return `<b class="gspot-dust" style="left:${x.toFixed(0)}px;top:${y.toFixed(0)}px;--d:${(Math.random() * 0.8).toFixed(2)}s"></b>`; }).join('')}`;
+  const cx = Math.min(W - 40, Math.max(40, r.left + r.width / 2)), cy = Math.min(H - 40, Math.max(70, r.top + r.height / 2));
+  const rx = Math.max(180, Math.min(W * 0.42, r.width * 0.6)), ry = Math.max(110, Math.min(H * 0.32, r.height * 0.7));
+  const sx = cx < W / 2 ? Math.min(W - 80, cx + W * 0.18) : Math.max(80, cx - W * 0.18), sy = -60;
+  const ang = Math.atan2(cx - sx, cy - sy) * 180 / Math.PI;
+  const el = document.createElement('div'); el.className = 'gspot'; el.setAttribute('aria-hidden', 'true');
+  el.style.cssText = `--x:${cx}px;--y:${cy}px;--rx:${rx}px;--ry:${ry}px;--sx:${sx}px;--sy:${sy}px;--ang:${(-ang).toFixed(1)}deg`;
+  const len = Math.hypot(cx - sx, cy - sy) + ry * 0.4, half = rx * 0.92;
+  el.innerHTML = `<i class="gspot-veil"></i>
+    <svg class="gspot-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs>
+      <filter id="gsBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter><filter id="gsBlur2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${Math.round(rx * 0.07)}"/></filter>
+      <linearGradient id="gsBeam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF6E0" stop-opacity=".9"/><stop offset=".55" stop-color="#FFEAB8" stop-opacity=".45"/><stop offset="1" stop-color="#FFE6B0" stop-opacity=".12"/></linearGradient>
+      <radialGradient id="gsPool"><stop offset="0" stop-color="#FFF1D2" stop-opacity=".7"/><stop offset=".55" stop-color="#FFE3A8" stop-opacity=".22"/><stop offset="1" stop-color="#FFE3A8" stop-opacity="0"/></radialGradient></defs>
+      <g class="gspot-cone" style="transform-origin:${sx}px ${sy}px"><polygon points="${sx - 14},${sy} ${sx + 14},${sy} ${sx + half},${sy + len} ${sx - half},${sy + len}" fill="url(#gsBeam)" filter="url(#gsBlur)" transform="rotate(${(-ang).toFixed(1)} ${sx} ${sy})"/></g>
+      <ellipse class="gspot-pool" cx="${cx}" cy="${cy}" rx="${rx * 1.05}" ry="${ry * 1.05}" fill="url(#gsPool)" filter="url(#gsBlur2)"/>
+      <circle cx="${sx}" cy="${sy + 24}" r="26" class="gspot-src" fill="#FFF6E0" filter="url(#gsBlur)"/></svg>
+    ${Array.from({ length: 18 }, () => { const t = 0.15 + Math.random() * 0.8, x = sx + (cx - sx) * t + (Math.random() - 0.5) * half * t * 1.4, y = sy + (cy - sy) * t; return `<b class="gspot-dust" style="left:${x.toFixed(0)}px;top:${y.toFixed(0)}px;--d:${(0.9 + Math.random() * 0.9).toFixed(2)}s"></b>`; }).join('')}`;
   document.body.appendChild(el);
-  setTimeout(() => el.remove(), 2300);
+  setTimeout(() => el.remove(), 3300);
 }
 async function toggleGolden(p, btn) {
   const on = !p.golden;
@@ -26309,12 +26342,12 @@ FORM_DOCS.mou = mouDocHTML;
    مستخرجة من الصلاحيات المطبقة نفسها
    ===================================================================== */
 const PR_LANES = [
-  { id: 'requester', t: 'الإدارة الطالبة', s: 'تقدّم الطلب وتحضر الاجتماع', ic: 'send' },
-  { id: 'partnerships', t: 'إدارة الشراكات', s: 'تدير المسار حتى التوقيع', ic: 'users' },
-  { id: 'concerned', t: 'الإدارات المعنية', s: 'ملاحظات وتقارير تفعيل', ic: 'building' },
-  { id: 'strategy', t: 'الإدارة الاستراتيجية', s: 'المواءمة الاستراتيجية', ic: 'chart' },
+  { id: 'requester', t: 'الإدارة الطالبة', s: 'تقدّم الطلب', ic: 'send' },
+  { id: 'partnerships', t: 'إدارة الشراكات', s: 'تدير المسار', ic: 'users' },
+  { id: 'concerned', t: 'الإدارات المعنية', s: 'الملاحظات والتقارير', ic: 'building' },
+  { id: 'strategy', t: 'الإدارة الاستراتيجية', s: 'المواءمة', ic: 'chart' },
   { id: 'legal', t: 'الإدارة القانونية', s: 'مراجعة الخطابات', ic: 'file' },
-  { id: 'excellency', t: 'مكتب المعالي', s: 'الموافقة بخطاب — خارج المنصة', ic: 'mail' },
+  { id: 'excellency', t: 'مكتب المعالي', s: 'الموافقة بخطاب', ic: 'mail' },
   { id: 'bizdev', t: 'إدارة تطوير الأعمال', s: 'خطة التفعيل', ic: 'leaf' },
 ];
 const PR_PHASES = WF_PHASES.map((ph) => { const ns = WF_STEPS.filter((s) => s.ph === ph.id).map((s) => s.n - 1); return { t: ph.t, from: Math.min(...ns), to: Math.max(...ns) }; });
