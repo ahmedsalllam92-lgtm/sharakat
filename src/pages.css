@@ -3314,3 +3314,8 @@ input.ph-bad{animation:phBad .4s}
 #rptPrint .mk-app-flow img{max-width:100%}
 @media print{#rptPrint .mk-app-pg,#rptPrint .mk-app-cover,#rptPrint .mk-app-note{break-after:page;page-break-after:always}}
 @media print{#rptPrint .mk-app-flow{break-after:page;page-break-after:always}#rptPrint .mk-app-cover{break-before:page;page-break-before:always}}
+/* أزرار إجراء المقترح: تلتف داخل الصندوق مهما ضاق ولا تخرج عنه */
+.review-box{overflow:hidden}
+.review-box .acts2{display:flex!important;flex-wrap:wrap;gap:8px}
+.review-box .acts2 .btn{flex:1 1 150px;min-width:0;width:auto;white-space:normal;line-height:1.4;text-align:center;justify-content:center;padding-block:9px}
+.review-box .acts2 .btn.primary{flex-basis:100%}
