@@ -360,6 +360,7 @@ function migrate() {
   }
   if (s.splash && s.splash.bg === 'splash-aerial' && !s.splash.bgV2) { s.splash.bg = 'signings'; s.splash.bgV2 = true; changed = true; }
   if (s.splash && s.splash.bg === 'signings' && !s.splash.bgV3) { s.splash.bg = 'splash-bond'; s.splash.bgV3 = true; changed = true; }
+  if (s.splash && s.splash.bg === 'splash-bond' && !s.splash.bgV4) { s.splash.bg = 'calm'; s.splash.bgV4 = true; changed = true; }
   if (!s.splash) { s.splash = { on: true, text: SPLASH_DEF.text, sub: SPLASH_DEF.sub, bg: SPLASH_DEF.bg, stats: true, dur: SPLASH_DEF.dur }; changed = true; }
   if (s.design && !['classic', 'board'].includes(s.design)) { s.design = ['show', 'brand'].includes(s.design) ? 'board' : 'classic'; changed = true; }
   if (!s.deptsV2) { applyOfficialDepartments(); s.deptsV2 = true; changed = true; }

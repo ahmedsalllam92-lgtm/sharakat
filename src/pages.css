@@ -3492,3 +3492,16 @@ input.ph-bad{animation:phBad .4s}
 .fxdoc .fx-na{font-style:normal;color:#8A928D;font-weight:700}
 .fxdoc .fx-mx tbody tr:nth-child(even) td{background:#FBFAF6}
 @media print{.fxdoc .fx-gp{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* الشاشة الافتتاحية «هادئ»: لون المؤسسة بإضاءة خفيفة، بلا صور ولا رسومات */
+#shkSplash.sp-min{background:radial-gradient(1100px 680px at 50% 40%,#13493D 0%,#0B3830 42%,#062019 100%)}
+#shkSplash.sp-min .sp-veil{background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.25))}
+#shkSplash.sp-min::after,#shkLogin .lg-veil.lg-calm::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+#shkSplash .sp-glow{position:absolute;width:min(70vmin,620px);height:min(70vmin,620px);border-radius:50%;background:radial-gradient(circle,rgba(230,199,134,.16),rgba(230,199,134,0) 62%);opacity:0;animation:spGlow 1.6s .1s ease-out forwards,spBreath 6s 1.7s ease-in-out infinite}
+#shkSplash.sp-min.dk{background:radial-gradient(1100px 680px at 50% 40%,#17303A 0%,#0F1D24 55%,#080F13 100%)}
+#shkSplash.sp-min .sp-stats span{background:rgba(255,255,255,.05);border-color:rgba(230,199,134,.25)}
+@keyframes spGlow{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+@keyframes spBreath{50%{transform:scale(1.06);opacity:.8}}
+#shkLogin .lg-bg.lg-calm{background:radial-gradient(1100px 680px at 50% 35%,#13493D 0%,#0B3830 42%,#062019 100%);transform:none}
+#shkLogin .lg-veil.lg-calm{background:radial-gradient(circle at 50% 38%,rgba(230,199,134,.12),rgba(230,199,134,0) 45%)}
+#shkSplash.sp-min .sp-geo{display:none!important}

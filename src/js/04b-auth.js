@@ -112,7 +112,7 @@ function showLogin(done) {
   const img = (k) => ((typeof ASSET_IMG !== 'undefined' && ASSET_IMG[k]) || {}).src || '';
   const o = D.settings.org;
   const el = document.createElement('div'); el.id = 'shkLogin';
-  el.innerHTML = `<div class="lg-bg" style="background-image:url('${img('splash-aerial')}')"></div><div class="lg-veil"></div>
+  el.innerHTML = `<div class="lg-bg lg-calm"></div><div class="lg-veil lg-calm"></div>
     <form class="lg-card" autocomplete="off" novalidate>
       ${img('murooj-logo-white') ? `<img class="lg-logo" src="${img('murooj-logo-white')}" alt="${esc(o.name)}">` : ''}
       <h1>${esc(o.platform)}</h1><p class="lg-sub">${esc(o.name)}</p>

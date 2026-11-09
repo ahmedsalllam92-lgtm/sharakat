@@ -12,7 +12,7 @@ async def main():
         pg.on('pageerror', lambda e: errs.append(str(e)))
         await pg.goto(URL); await pg.wait_for_timeout(400)
         ok('splash shows on first open', await pg.evaluate("!!document.getElementById('shkSplash')"))
-        ok('default sentence, logo, image and graphics', await pg.evaluate("(()=>{const s=document.getElementById('shkSplash'); return s.querySelector('h1').textContent.includes('نبني شراكات') && !!s.querySelector('.sp-logo') && getComputedStyle(s.querySelector('.sp-bg')).backgroundImage.startsWith('url(') && s.querySelectorAll('.ring').length===4 && s.querySelectorAll('.bond circle').length===4 && s.querySelectorAll('.sp-bg').length===1 && !!s.querySelector('.sp-veil.art')})()"))
+        ok('default calm style: sentence and logo, no image or drawings', await pg.evaluate("(()=>{const s=document.getElementById('shkSplash'); return s.querySelector('h1').textContent.includes('نبني شراكات') && !!s.querySelector('.sp-logo') && s.classList.contains('sp-min') && !s.querySelector('.sp-bg') && getComputedStyle(s.querySelector('.sp-geo')).display==='none' && !!s.querySelector('.sp-glow')})()"))
         await pg.wait_for_selector('#main .page'); await pg.wait_for_timeout(900)
         T = await pg.evaluate("(()=>{const nd=visiblePartnerships().filter(p=>!p.isDraft); return [nd.filter(p=>['active','soon'].includes(pStatus(p))).length, new Set(nd.map(p=>p.partnerId)).size]})()")
         shown = await pg.evaluate("[...document.querySelectorAll('#shkSplash .sp-stats b')].map(b=>+b.dataset.to)")

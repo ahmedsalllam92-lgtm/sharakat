@@ -6954,6 +6954,19 @@ input.ph-bad{animation:phBad .4s}
 .fxdoc .fx-na{font-style:normal;color:#8A928D;font-weight:700}
 .fxdoc .fx-mx tbody tr:nth-child(even) td{background:#FBFAF6}
 @media print{.fxdoc .fx-gp{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* الشاشة الافتتاحية «هادئ»: لون المؤسسة بإضاءة خفيفة، بلا صور ولا رسومات */
+#shkSplash.sp-min{background:radial-gradient(1100px 680px at 50% 40%,#13493D 0%,#0B3830 42%,#062019 100%)}
+#shkSplash.sp-min .sp-veil{background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.25))}
+#shkSplash.sp-min::after,#shkLogin .lg-veil.lg-calm::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+#shkSplash .sp-glow{position:absolute;width:min(70vmin,620px);height:min(70vmin,620px);border-radius:50%;background:radial-gradient(circle,rgba(230,199,134,.16),rgba(230,199,134,0) 62%);opacity:0;animation:spGlow 1.6s .1s ease-out forwards,spBreath 6s 1.7s ease-in-out infinite}
+#shkSplash.sp-min.dk{background:radial-gradient(1100px 680px at 50% 40%,#17303A 0%,#0F1D24 55%,#080F13 100%)}
+#shkSplash.sp-min .sp-stats span{background:rgba(255,255,255,.05);border-color:rgba(230,199,134,.25)}
+@keyframes spGlow{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+@keyframes spBreath{50%{transform:scale(1.06);opacity:.8}}
+#shkLogin .lg-bg.lg-calm{background:radial-gradient(1100px 680px at 50% 35%,#13493D 0%,#0B3830 42%,#062019 100%);transform:none}
+#shkLogin .lg-veil.lg-calm{background:radial-gradient(circle at 50% 38%,rgba(230,199,134,.12),rgba(230,199,134,0) 45%)}
+#shkSplash.sp-min .sp-geo{display:none!important}
 </style>
 </head>
 <body>
@@ -13989,9 +14002,9 @@ const REAL_V2 = {
    وجملة تُعدَّل من الإعدادات، وأرقام حية من آخر جلسة تُحدَّث فور تحميل البيانات.
    ملف مستقل لا يعتمد على بقية الشيفرة لأنه يعمل قبل تحميل البيانات.
    ===================================================================== */
-const SPLASH_DEF = { on: true, text: 'نبني شراكات… تصنع أثرًا يبقى', sub: 'منظومة الشراكات — مؤسسة مروج الأهلية', bg: 'splash-bond', stats: true, dur: 3.4 };
-const SPLASH_BGS = [['splash-bond', 'فجر الشراكة — لوحة فنية (نهران من الضوء يلتقيان)'], ['signings', 'لحظات توقيع الشراكات (صور متتابعة)'], ['splash-aerial', 'صورة جوية للغطاء النباتي'], ['splash-forest', 'غابة ومسطحات خضراء'], ['border-guard-signing', 'صورة توقيع مذكرة'], ['waqf-saitah-signing', 'صورة توقيع شراكة']];
-function splashCfg() { let c = {}; try { c = JSON.parse(localStorage.getItem('shk_splash') || '{}') || {}; } catch (e) { c = {}; } return { ...SPLASH_DEF, ...c }; }
+const SPLASH_DEF = { on: true, text: 'نبني شراكات… تصنع أثرًا يبقى', sub: 'منظومة الشراكات — مؤسسة مروج الأهلية', bg: 'calm', stats: true, dur: 3.4 };
+const SPLASH_BGS = [['calm', 'هادئ — لون المؤسسة بإضاءة خفيفة، بلا صور أو رسومات'], ['splash-bond', 'فجر الشراكة — لوحة فنية (نهران من الضوء يلتقيان)'], ['signings', 'لحظات توقيع الشراكات (صور متتابعة)'], ['splash-aerial', 'صورة جوية للغطاء النباتي'], ['splash-forest', 'غابة ومسطحات خضراء'], ['border-guard-signing', 'صورة توقيع مذكرة'], ['waqf-saitah-signing', 'صورة توقيع شراكة']];
+function splashCfg() { let c = {}; try { c = JSON.parse(localStorage.getItem('shk_splash') || '{}') || {}; } catch (e) { c = {}; } if (c.bg === 'splash-bond' && !c.bgV4) c.bg = 'calm'; return { ...SPLASH_DEF, ...c }; }
 function splashShow(force) {
   if (window.__SBX) return null;
   const cfg = splashCfg();
@@ -14011,9 +14024,11 @@ function splashShow(force) {
   const stats = cfg.stats && S ? [[S.act, 'شراكة سارية'], [S.partners, 'جهة شريكة'], [S.sectors, 'قطاعات']].filter((x) => x[0] != null) : [];
   /* «لحظات التوقيع»: صور توقيع الشراكات الحقيقية تتعاقب ببطء، وفوقها حلقتان ذهبيتان تقتربان حتى تتشابكا (رمز الشراكة) */
   const SIGN = ['waqf-saitah-signing', 'border-guard-signing'].map(img).filter(Boolean);
-  const bgs = cfg.bg === 'signings' && SIGN.length ? SIGN : [img(cfg.bg) || img('splash-aerial')];
+  const calm = cfg.bg === 'calm';
+  if (calm) el.classList.add('sp-min');
+  const bgs = calm ? [] : cfg.bg === 'signings' && SIGN.length ? SIGN : [img(cfg.bg) || img('splash-aerial')];
   el.innerHTML = `${bgs.map((u, i) => `<div class="sp-bg ${bgs.length > 1 ? 'xf' : ''}" style="background-image:url('${u}');--k:${i};--n:${bgs.length}"></div>`).join('')}<div class="sp-veil ${bgs.length > 1 ? 'warm' : ''} ${cfg.bg === 'splash-bond' ? 'art' : ''}"></div>
-    <svg class="sp-geo" viewBox="-300 -300 600 600" aria-hidden="true">
+    ${calm ? '<div class="sp-glow" aria-hidden="true"></div>' : ''}<svg class="sp-geo" ${calm ? 'hidden' : ''} viewBox="-300 -300 600 600" aria-hidden="true">
       ${[110, 165, 220, 275].map((r, i) => `<circle r="${r}" class="ring" style="--i:${i}"/>`).join('')}
       <g class="bond"><circle class="b1" r="118"/><circle class="b2" r="118"/><circle class="knot" cy="-100" r="6"/><circle class="knot" cy="100" r="6"/></g>
       ${Array.from({ length: 12 }, (_, i) => { const a = i / 12 * Math.PI * 2; return `<circle class="dot" r="3" cx="${(Math.cos(a) * 220).toFixed(1)}" cy="${(Math.sin(a) * 220).toFixed(1)}" style="--i:${i}"/>`; }).join('')}
@@ -15872,7 +15887,7 @@ function showLogin(done) {
   const img = (k) => ((typeof ASSET_IMG !== 'undefined' && ASSET_IMG[k]) || {}).src || '';
   const o = D.settings.org;
   const el = document.createElement('div'); el.id = 'shkLogin';
-  el.innerHTML = `<div class="lg-bg" style="background-image:url('${img('splash-aerial')}')"></div><div class="lg-veil"></div>
+  el.innerHTML = `<div class="lg-bg lg-calm"></div><div class="lg-veil lg-calm"></div>
     <form class="lg-card" autocomplete="off" novalidate>
       ${img('murooj-logo-white') ? `<img class="lg-logo" src="${img('murooj-logo-white')}" alt="${esc(o.name)}">` : ''}
       <h1>${esc(o.platform)}</h1><p class="lg-sub">${esc(o.name)}</p>
@@ -26377,6 +26392,7 @@ function migrate() {
   }
   if (s.splash && s.splash.bg === 'splash-aerial' && !s.splash.bgV2) { s.splash.bg = 'signings'; s.splash.bgV2 = true; changed = true; }
   if (s.splash && s.splash.bg === 'signings' && !s.splash.bgV3) { s.splash.bg = 'splash-bond'; s.splash.bgV3 = true; changed = true; }
+  if (s.splash && s.splash.bg === 'splash-bond' && !s.splash.bgV4) { s.splash.bg = 'calm'; s.splash.bgV4 = true; changed = true; }
   if (!s.splash) { s.splash = { on: true, text: SPLASH_DEF.text, sub: SPLASH_DEF.sub, bg: SPLASH_DEF.bg, stats: true, dur: SPLASH_DEF.dur }; changed = true; }
   if (s.design && !['classic', 'board'].includes(s.design)) { s.design = ['show', 'brand'].includes(s.design) ? 'board' : 'classic'; changed = true; }
   if (!s.deptsV2) { applyOfficialDepartments(); s.deptsV2 = true; changed = true; }
