@@ -501,7 +501,7 @@ function formDocHTML(kind, rec, key, evalIdx = null, forWord = false) {
   }).join('');
   return `<article class="fdoc" dir="rtl">${head}<h1 class="fd-title">${esc(F.title)}</h1>${body}
     <div class="fd-sigs"><div><span>أعدّه</span><b>${esc((st && st.by) || '')}</b><small>${esc((st && st.byDept) || '')}</small></div><div><span>الحالة</span><b>${st && st.status === 'done' ? 'مكتمل ومعتمد في المنظومة' : 'مسودة'}</b><small>${st && st.at ? fmtDT(st.at) : ''}</small></div></div>
-    <footer class="fd-foot">${esc(D.settings.org.name)} · ${esc(D.settings.org.platform)} · ${esc(F.title)}</footer></article>`;
+    <footer class="fd-foot">${esc(D.settings.org.name)} · ${esc(D.settings.org.platform)} · ${esc(F.title)}${st && st.auto ? ' · أُنشئ من بيانات السجل لمرحلة مكتملة' : ''}</footer></article>`;
 }
 /* عرض النموذج المكتمل بنفس تصميم المستند المطبوع، مع الطباعة وWord */
 function formPreview(kind, rec, key, evalIdx = null, onEdit = null) {

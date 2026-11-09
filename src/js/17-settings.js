@@ -1,7 +1,7 @@
 /* ===== الإعدادات ===== */
 const SET_TABS = [
   { id: 'general', t: 'عام', perm: 'manage.lists' },
-  { id: 'design', t: 'اتجاه تصميم المنصة', perm: null },
+  { id: 'design', t: 'شكل المنصة', perm: null },
   { id: 'tour', t: 'استعراض المنصة', perm: null },
   { id: 'home', t: 'محتوى الرئيسية', perm: 'manage.content' },
   { id: 'lists', t: 'القوائم', perm: 'manage.lists' },

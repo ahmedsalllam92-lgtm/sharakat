@@ -71,6 +71,33 @@ function wfLegacyIdx(p) {
   if (p.stage === 'sign') return 8;
   return 3;
 }
+/* — كل مرحلة مكتملة لها نموذج محفوظ: إن اكتملت المرحلة دون نموذجها (سجل قديم، أو تسجيل مباشر، أو حزمة)
+   يُنشأ النموذج من بيانات السجل ويُحفظ مكتملًا، فيظهر في بطاقة المرحلة وفي الملف الشامل. لا يُستبدل نموذج موجود. — */
+function wfAutoFormData(kind, rec, key, st) {
+  const F = FORMS[key], R = fRecInfo(kind, rec), d = {};
+  F.sections(R, rec).forEach((s) => s.fields.forEach((f) => { const v = typeof f.def === 'function' ? f.def() : f.def; if (v !== undefined && v !== '' && !(Array.isArray(v) && !v.length)) d[f.k] = v; }));
+  const S = st.S;
+  if (key === 'initialEval') d.rec = (S.eval && S.eval.decision === 'no') ? IEV_RES[2] : IEV_RES[0];
+  if (key === 'alignment') { d.result = 'متوائمة'; d.clauses = (R.coop || []).map((t) => ({ text: t, goals: [], note: '' })); }
+  if (key === 'letterReview') { d.r1rec = 'استكمال المراجعة'; d.r2rec = 'مناسب'; }
+  return d;
+}
+function wfEnsureForms(kind, rec) {
+  if (!rec || typeof FORMS === 'undefined') return false;
+  const st = wfStateOf(kind, rec); let n = 0;
+  WF_STEPS.forEach((s) => {
+    const r = st.S[s.id]; if (!(r && r.status === 'done')) return;
+    if (kind === 'proposal' && s.on !== 'proposal') return;
+    s.docs.filter((x) => x.form && FORMS[x.form]).forEach((x) => {
+      if (wfForm(kind, rec, x.form)) return;
+      if (wfDocsOf(kind, rec, s.id).some((a) => a.doc === x.k)) return; // المستند مرفوع ملفًا بدل النموذج
+      rec.forms = rec.forms || {};
+      rec.forms[x.form] = { data: wfAutoFormData(kind, rec, x.form, st), status: 'done', auto: true, at: r.at || nowISO(), by: r.by || D.settings.org.dept, byDept: D.settings.org.dept, no: formNumber(x.form) };
+      n++;
+    });
+  });
+  return n > 0;
+}
 function wfStateOf(kind, rec) {
   const saved = (rec.wf && rec.wf.steps) || {};
   const S = {};
@@ -166,7 +193,7 @@ function wfSectionHTML(kind, rec) {
       <span class="wf-dot">${done ? icon(r.decision === 'no' || r.decision === 'reject' ? 'x' : 'check') : s.n}</span>
       <div class="wf-b"><div class="wf-h"><b>${esc(s.t)}</b>${s.ref ? `<span class="wf-ref" title="رقم البند في إجراء المذكرات">البند ${s.ref}</span>` : ''}</div>
         <div class="wf-m"><span class="wf-who">${icon('users')}${esc(wfActorName(s.actor))}</span>
-          ${done ? `<span>${r.direct ? `تُجووزت بالتسجيل المباشر${r.at ? ' — ' + fmtDT(r.at) : ''}` : r.legacy ? 'مكتملة قبل اعتماد المسار في المنصة' : `${r.decision === 'no' ? (s.no || 'غير مناسبة') : r.decision === 'reject' ? s.reject : r.decision === 'yes' && s.yes ? s.yes : 'اكتملت'} ${r.at ? '— ' + fmtDT(r.at) : ''}${r.by ? ' — ' + esc(r.by) : ''}`}</span>` : cur ? `<span class="wf-now">${ret ? 'أُعيدت بملاحظات' : lock ? 'الخطوة التالية — تبدأ بعد تحويل الطلب إلى شراكة' : 'الخطوة الحالية'}</span>` : lock ? '<span>بعد التحويل إلى شراكة</span>' : ''}
+          ${done ? `<span>${r.direct ? `تُجووزت بالتسجيل المباشر${r.at ? ' — ' + fmtDT(r.at) : ''}` : r.legacy ? 'مكتملة' : `${r.decision === 'no' ? (s.no || 'غير مناسبة') : r.decision === 'reject' ? s.reject : r.decision === 'yes' && s.yes ? s.yes : 'اكتملت'} ${r.at ? '— ' + fmtDT(r.at) : ''}${r.by ? ' — ' + esc(r.by) : ''}`}</span>` : cur ? `<span class="wf-now">${ret ? 'أُعيدت بملاحظات' : lock ? 'الخطوة التالية — تبدأ بعد تحويل الطلب إلى شراكة' : 'الخطوة الحالية'}</span>` : lock ? '<span>بعد التحويل إلى شراكة</span>' : ''}
           ${s.kind === 'multi' && kind === 'partnership' && (cur || done) ? `<span class="wf-multi">${multi} من ${need} ${s.id === 'reports' ? 'تقارير' : 'إدارات'}</span>` : ''}</div>
         ${ret && r.note ? `<div class="wf-note">${icon('msg')}${esc(r.note)}</div>` : ''}
         ${(() => { const fs = s.docs.filter((d) => d.form && wfForm(kind, rec, d.form)); return fs.length ? `<div class="wf-docs">${fs.map((d) => { const f = wfForm(kind, rec, d.form); return `<button type="button" class="wf-doc form ${f.status}" data-wfform="${d.form}" title="${esc(FORMS[d.form].title)}">${icon(f.status === 'done' ? 'check' : 'edit')}<span>${esc(FORMS[d.form].short || FORMS[d.form].title)}</span><small>${esc(f.no || '')}${f.status === 'done' ? '' : ' — مسودة'}</small></button>`; }).join('')}</div>` : ''; })()}

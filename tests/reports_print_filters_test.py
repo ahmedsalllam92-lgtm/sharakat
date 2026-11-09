@@ -170,7 +170,7 @@ async def main():
         await pg.click('.topbar [data-tourmenu]'); await pg.wait_for_timeout(300); await pg.click('#tourMenu [data-tour-start]'); await pg.wait_for_timeout(900)
         ok('tour button in top bar starts the tour', await E("App.tour === true"))
         await E("endTour()"); await pg.wait_for_timeout(600)
-        ok('plain design names', await E("Object.keys(DESIGNS).map(k=>DESIGNS[k].name).join('|')") == 'المؤسسي|المجلس')
+        ok('plain design names', await E("Object.keys(DESIGNS).map(k=>DESIGNS[k].name).join('|')") == 'القائمة الجانبية|القائمة العلوية')
         ok('no page errors', not errs, errs[:3])
         await b.close()
     print('SUMMARY', sum(R), '/', len(R))

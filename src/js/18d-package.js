@@ -68,6 +68,7 @@ async function importPartnerPackage(file, onStep) {
     const sign = WF_STEPS.findIndex((x) => x.id === 'signed');
     if (p.stage === 'prep' && upto >= sign - 3) p.stage = 'sign';
   }
+  wfEnsureForms('partnership', p);
   await Repo.saveSettings();
   await Repo.save('partnerships', p);
   await Repo.log('package.import', 'partnership', p.id, p.code, `استيراد حزمة: ${added} مرفق${forms ? ` و${forms} نموذج` : ''}`);

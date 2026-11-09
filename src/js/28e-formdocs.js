@@ -29,7 +29,7 @@ function fdShell({ kind, rec, key, tone, ring, facts, kpis, body, st }) {
     <section class="ev-kpis">${kpis.map(([l, v, cls]) => `<div class="${cls || ''}"><span>${esc(l)}</span><b>${v}</b></div>`).join('')}</section>
     ${body}
     <section class="ev-sigs"><div><span>أعدّه</span><b>${esc((st && st.by) || '')}</b><small>${esc((st && st.byDept) || '')}</small></div><div><span>الاعتماد</span><b>${st && st.status === 'done' ? 'معتمد إلكترونيًا في المنظومة' : 'مسودة — لم يُعتمد'}</b><small>${st && st.at ? fmtDT(st.at) : ''}</small></div><div><span>التوقيع</span><b class="ln"></b></div></section>
-    <footer class="fd-foot">${esc(D.settings.org.name)} · ${esc(D.settings.org.platform)} · ${esc(F.title)} ${esc((st && st.no) || '')}</footer></article>`;
+    <footer class="fd-foot">${esc(D.settings.org.name)} · ${esc(D.settings.org.platform)} · ${esc(F.title)} ${esc((st && st.no) || '')}${st && st.auto ? ' · أُنشئ من بيانات السجل لمرحلة مكتملة' : ''}</footer></article>`;
 }
 const fdSec = (n, t, sub, inner, cls) => `<section class="ev-sec ${cls || ''}"><h3><em>${String(n).padStart(2, '0')}</em>${esc(t)}${sub ? `<small>${esc(sub)}</small>` : ''}</h3>${inner}</section>`;
 

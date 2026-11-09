@@ -1,9 +1,9 @@
 /* ===== اتجاها التصميم: المؤسسي والمجلس ===== */
 const DESIGNS = {
-  classic: { name: 'المؤسسي', short: 'المؤسسي', tag: 'قائمة جانبية وألوان المؤسسة',
+  classic: { name: 'القائمة الجانبية', short: 'جانبية', tag: 'القوائم على الجانب — مناسب للعمل اليومي',
     desc: 'التصميم الحالي: قائمة جانبية، وواجهة بصورة وأرقام، ولوحة مؤشرات في بطاقات.',
     traits: ['قائمة جانبية قابلة للطي', 'خط IBM Plex Sans Arabic', 'لوحات وبطاقات بحواف ناعمة'] },
-  board: { name: 'المجلس', short: 'المجلس', tag: 'رسمي للعرض على مجالس الإدارة والقيادات',
+  board: { name: 'القائمة العلوية', short: 'علوية', tag: 'القوائم في الأعلى بمساحة أعرض — مناسب للعرض على القيادات',
     desc: 'واجهة رسمية بخلفية عاجية وأخضر مروج وخطوط ذهبية، وعناوين بخط النسخ، ولوحة «إحاطة المجلس» بفصول مرقّمة: رسائل رئيسية، وأثر بالرموز، وشبكة الشركاء، وتدفق المحفظة، ومسار زمني، وقرارات مطلوبة، مع وضع عرض تقديمي.',
     traits: ['ترويسة رسمية بالتاريخين الهجري والميلادي', 'إحاطة بفصول مرقّمة وعرض تقديمي', 'رسوم تروي القصة: رموز وشبكة وتدفق ومسار زمني'] },
 };
@@ -31,7 +31,7 @@ function designPreviewSVG(k) {
 /* تبديل الاتجاه مع الحفاظ على الصفحة والفلاتر والدور */
 async function applyDesign(id) {
   if (!DESIGNS[id] || id === design()) return;
-  if (App.dirty && !(await confirmDlg('في النموذج تعديلات لم تُحفظ. تبديل اتجاه التصميم سيعيد عرض الصفحة وتُفقد هذه التعديلات.', { title: 'تعديلات غير محفوظة', ok: 'تبديل الاتجاه', danger: true }))) return;
+  if (App.dirty && !(await confirmDlg('في النموذج تعديلات لم تُحفظ. تبديل شكل المنصة سيعيد عرض الصفحة وتُفقد هذه التعديلات.', { title: 'تعديلات غير محفوظة', ok: 'تبديل الاتجاه', danger: true }))) return;
   App.dirty = false;
   const ratio = (scrollY || 0) / Math.max(1, document.documentElement.scrollHeight - innerHeight);
   D.settings.design = id;
@@ -45,8 +45,8 @@ async function applyDesign(id) {
   if (document.startViewTransition && !reduce) { try { document.startViewTransition(run); } catch (_) { run(); } }
   else { document.documentElement.classList.add('design-swap'); run(); setTimeout(() => document.documentElement.classList.remove('design-swap'), 450); }
   await Repo.saveSettings();
-  await Repo.log('settings.update', 'settings', 'design', 'اتجاه تصميم المنصة', DESIGNS[id].name);
-  toast(`اتجاه التصميم: ${DESIGNS[id].name}`);
+  await Repo.log('settings.update', 'settings', 'design', 'شكل المنصة', DESIGNS[id].name);
+  toast(`شكل المنصة: ${DESIGNS[id].name}`);
 }
 function renderDesignSwitcher() {
   let el = $('#dsw');
@@ -60,10 +60,10 @@ function renderDesignSwitcher() {
     });
     document.addEventListener('mousedown', (e) => { if (!e.target.closest('#dsw')) el.classList.remove('open'); });
   }
-  el.innerHTML = `<button class="dsw-fab" data-dsw-toggle type="button" title="اتجاه التصميم — Alt+1 / Alt+2" aria-label="تبديل اتجاه التصميم">${icon('palette')}<span>${DESIGNS[design()].short}</span></button>
-    <div class="dsw-pop" role="menu" aria-label="اتجاهات التصميم"><div class="dsw-h">اتجاه تصميم المنصة</div>
+  el.innerHTML = `<button class="dsw-fab" data-dsw-toggle type="button" title="شكل المنصة — Alt+1 / Alt+2" aria-label="تبديل شكل المنصة">${icon('palette')}<span>${DESIGNS[design()].short}</span></button>
+    <div class="dsw-pop" role="menu" aria-label="شكل المنصة"><div class="dsw-h">شكل المنصة</div>
       ${Object.entries(DESIGNS).map(([k, d], i) => `<button class="dsw-o ${k === design() ? 'on' : ''}" data-dsw="${k}" type="button" role="menuitemradio" aria-checked="${k === design()}"><span class="dsw-sw dsw-${k}"></span><span class="grow"><b>${d.name}</b><small>${d.tag}</small></span><kbd>Alt+${i + 1}</kbd></button>`).join('')}
-      <div class="dsw-sep"></div><button class="dsw-o" data-tour-start type="button"><span class="dsw-sw dsw-tour">${icon('play')}</span><span class="grow"><b>استعراض المنصة</b><small>جولة تعريفية في الاتجاه الحالي</small></span><kbd>Alt+T</kbd></button><button class="dsw-o" data-rqtour-start type="button"><span class="dsw-sw dsw-tour">${icon('convert')}</span><span class="grow"><b>مسار طلب الشراكة</b><small>من «شارك» حتى القرار</small></span></button></div>`;
+      <div class="dsw-sep"></div><button class="dsw-o" data-tour-start type="button"><span class="dsw-sw dsw-tour">${icon('play')}</span><span class="grow"><b>استعراض المنصة</b><small>جولة تعريفية في الشكل الحالي</small></span><kbd>Alt+T</kbd></button><button class="dsw-o" data-rqtour-start type="button"><span class="dsw-sw dsw-tour">${icon('convert')}</span><span class="grow"><b>مسار طلب الشراكة</b><small>من «شارك» حتى القرار</small></span></button></div>`;
 }
 document.addEventListener('keydown', (e) => {
   if (!e.altKey || e.ctrlKey || e.metaKey) return;
@@ -125,11 +125,11 @@ function initHeroFX(box, positions) {
 /* ===== الرئيسية — حكاية الأثر ===== */
 function setDesignTab(b) {
   const cur = design();
-  b.innerHTML = `<div class="panel" data-tour="settings-design"><div class="panel-h"><h3>اتجاه تصميم المنصة</h3><span class="sub">يُطبَّق على المنصة كلها ويُحفظ في هذا المتصفح</span></div><div class="panel-b">
+  b.innerHTML = `<div class="panel" data-tour="settings-design"><div class="panel-h"><h3>شكل المنصة</h3><span class="sub">يُطبَّق على المنصة كلها ويُحفظ في هذا المتصفح</span></div><div class="panel-b">
       <div class="dcards">${Object.entries(DESIGNS).map(([k, d], i) => `<div class="dcard ${k === cur ? 'on' : ''}" data-dk="${k}">
         <div class="dcard-prev">${designPreviewSVG(k)}${k === cur ? `<span class="dcard-on">${icon('check')} مفعّل</span>` : ''}</div>
         <div class="dcard-b"><h4>${i + 1}. ${d.name}</h4><p>${d.desc}</p><ul>${d.traits.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
-          <button class="btn ${k === cur ? '' : 'primary'}" data-pickdesign="${k}" type="button" ${k === cur ? 'disabled' : ''}>${k === cur ? 'الاتجاه المفعّل' : 'اختيار هذا الاتجاه'}</button></div></div>`).join('')}</div>
+          <button class="btn ${k === cur ? '' : 'primary'}" data-pickdesign="${k}" type="button" ${k === cur ? 'disabled' : ''}>${k === cur ? 'الشكل الحالي' : 'اختيار هذا الشكل'}</button></div></div>`).join('')}</div>
       <div class="note" style="margin-top:16px">${icon('info')}<span>يحتفظ التبديل بالصفحة الحالية والفلاتر والدور، والبيانات مشتركة بين الاتجاهات. للتبديل السريع أثناء العرض استخدم زر «اتجاه التصميم» أسفل الشاشة، أو الاختصارات Alt+1 وAlt+2 وAlt+3.</span></div></div></div>`;
   b.onclick = (e) => { const k = e.target.closest('[data-pickdesign]'); if (k) applyDesign(k.dataset.pickdesign); };
 }

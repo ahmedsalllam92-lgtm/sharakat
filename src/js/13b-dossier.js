@@ -186,7 +186,7 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
         const docs = wfDocsOf('partnership', p, s_.id).map((a) => esc((s_.docs.find((d) => d.k === a.doc) || {}).l || a.name));
         const fs = s_.docs.filter((d) => d.form && wfForm('partnership', p, d.form)).map((d) => esc(FORMS[d.form].title) + (wfForm('partnership', p, d.form).status === 'done' ? ' ✓' : ' (مسودة)'));
         return `<li class="${done ? 'done' : isCur ? 'cur' : ''}"><span class="ds-sd">${done ? '✓' : s_.n}</span><div><b>${esc(s_.t)}</b>${s_.ref ? `<small class="ref">البند ${s_.ref}</small>` : ''}
-          <small>${esc(wfActorName(s_.actor))} · <span class="ds-st ${done ? 'ok' : isCur ? 'cur' : ''}">${stx}</span>${r.legacy ? ' · قبل اعتماد المسار' : [r.at ? fmtDT(r.at) : '', esc(r.by || '')].filter(Boolean).map((x) => ' · ' + x).join('')}</small>
+          <small>${esc(wfActorName(s_.actor))} · <span class="ds-st ${done ? 'ok' : isCur ? 'cur' : ''}">${stx}</span>${r.legacy ? '' : [r.at ? fmtDT(r.at) : '', esc(r.by || '')].filter(Boolean).map((x) => ' · ' + x).join('')}</small>
           ${r.note ? `<small class="ds-note">${esc(r.note)}</small>` : ''}${[...fs, ...docs].length ? `<div class="ds-chips">${[...fs, ...docs].map((x) => `<span class="ds-chip">${x}</span>`).join('')}</div>` : ''}</div></li>`;
       }).join('')}</ol></div>`).join('')}</div>`);
   }

@@ -13,7 +13,7 @@ async def main():
         # — الاتجاه —
         await E("document.activeElement && document.activeElement.blur()"); await pg.keyboard.press('Alt+2'); await pg.wait_for_timeout(1300)
         ok('Alt+2 switches to the board direction', await E("design()") == 'board')
-        ok('named «المجلس» in the switcher', await E("DESIGNS.board.name") == 'المجلس' and 'Alt+2' in await E("document.querySelector('#dsw').textContent"))
+        ok('named «القائمة العلوية» in the switcher', await E("DESIGNS.board.name") == 'القائمة العلوية' and 'Alt+2' in await E("document.querySelector('#dsw').textContent"))
         ok('opens light by default (ivory paper)', await E("document.documentElement.dataset.theme") == 'light')
         ok('formal Naskh font for headings', 'Noto Naskh Arabic' in await E("getComputedStyle(document.querySelector('.bo-hero-t h1')).fontFamily"))
         # — الترويسة —

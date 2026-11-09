@@ -376,6 +376,7 @@ function migrate() {
   if ((s.realV || 1) < 2 && applyRealV2()) { s.realV = 2; changed = true; }
   if ((s.realV || 1) === 2) { applyRealPhotos(); s.realV = 3; changed = true; }
   /* إصلاح: سجلات ملف الحصر التي طُبّقت على نسخة الجهاز قبل الاتصال بالخادم ولم تُرفع — تُضاف الناقصة فقط، بعد سحب بيانات الخادم */
+  if (!s.wfAutoForms1 && (!Cloud.on || Cloud.ready)) { D.partnerships.forEach((p) => wfEnsureForms('partnership', p)); D.proposals.forEach((x) => wfEnsureForms('proposal', x)); s.wfAutoForms1 = true; changed = true; Store.putMany('proposals', D.proposals); }
   if (!s.realFix1 && (!Cloud.on || Cloud.ready)) { const n = applyRealV2({ onlyMissing: true }); s.realFix1 = true; changed = true; if (n && Cloud.on) setTimeout(() => toast(`استُكملت ${n} شراكة من ملف الحصر على المنصة المشتركة`), 1500); } // صور الشراكات الفعلية المضافة لاحقًا (المهيدب)
   if (s.schema < 5) {
     if (!s.org.platform || s.org.platform === 'منصة الشراكات') s.org.platform = 'منظومة الشراكات';

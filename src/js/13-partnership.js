@@ -5,6 +5,7 @@ function renderPartnership(el, r) {
     el.innerHTML = emptyHTML({ ic: 'search', title: 'لم يُعثر على الشراكة', text: 'قد تكون حُذفت، أو أنها مسودة لا تظهر لدورك الحالي، أو بيانات تجريبية مخفية.', actions: '<a class="btn" href="#/partnerships">العودة إلى السجل</a>' });
     return;
   }
+  if (can('edit.partnership') && wfEnsureForms('partnership', p)) { Repo.saveSettings(); Repo.save('partnerships', p); } // نماذج المراحل المكتملة تُحفظ تلقائيًا
   const pr = partnerById(p.partnerId);
   const internal = can('view.internal'), canEdit = can('edit.partnership');
   const st = pStatus(p), tp = termProgress(p), dl = daysLeft(p);

@@ -18674,6 +18674,7 @@ function renderPartnership(el, r) {
     el.innerHTML = emptyHTML({ ic: 'search', title: 'لم يُعثر على الشراكة', text: 'قد تكون حُذفت، أو أنها مسودة لا تظهر لدورك الحالي، أو بيانات تجريبية مخفية.', actions: '<a class="btn" href="#/partnerships">العودة إلى السجل</a>' });
     return;
   }
+  if (can('edit.partnership') && wfEnsureForms('partnership', p)) { Repo.saveSettings(); Repo.save('partnerships', p); } // نماذج المراحل المكتملة تُحفظ تلقائيًا
   const pr = partnerById(p.partnerId);
   const internal = can('view.internal'), canEdit = can('edit.partnership');
   const st = pStatus(p), tp = termProgress(p), dl = daysLeft(p);
@@ -19322,7 +19323,7 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
         const docs = wfDocsOf('partnership', p, s_.id).map((a) => esc((s_.docs.find((d) => d.k === a.doc) || {}).l || a.name));
         const fs = s_.docs.filter((d) => d.form && wfForm('partnership', p, d.form)).map((d) => esc(FORMS[d.form].title) + (wfForm('partnership', p, d.form).status === 'done' ? ' ✓' : ' (مسودة)'));
         return `<li class="${done ? 'done' : isCur ? 'cur' : ''}"><span class="ds-sd">${done ? '✓' : s_.n}</span><div><b>${esc(s_.t)}</b>${s_.ref ? `<small class="ref">البند ${s_.ref}</small>` : ''}
-          <small>${esc(wfActorName(s_.actor))} · <span class="ds-st ${done ? 'ok' : isCur ? 'cur' : ''}">${stx}</span>${r.legacy ? ' · قبل اعتماد المسار' : [r.at ? fmtDT(r.at) : '', esc(r.by || '')].filter(Boolean).map((x) => ' · ' + x).join('')}</small>
+          <small>${esc(wfActorName(s_.actor))} · <span class="ds-st ${done ? 'ok' : isCur ? 'cur' : ''}">${stx}</span>${r.legacy ? '' : [r.at ? fmtDT(r.at) : '', esc(r.by || '')].filter(Boolean).map((x) => ' · ' + x).join('')}</small>
           ${r.note ? `<small class="ds-note">${esc(r.note)}</small>` : ''}${[...fs, ...docs].length ? `<div class="ds-chips">${[...fs, ...docs].map((x) => `<span class="ds-chip">${x}</span>`).join('')}</div>` : ''}</div></li>`;
       }).join('')}</ol></div>`).join('')}</div>`);
   }
@@ -20134,7 +20135,7 @@ function newsDialog(n) {
 /* ===== الإعدادات ===== */
 const SET_TABS = [
   { id: 'general', t: 'عام', perm: 'manage.lists' },
-  { id: 'design', t: 'اتجاه تصميم المنصة', perm: null },
+  { id: 'design', t: 'شكل المنصة', perm: null },
   { id: 'tour', t: 'استعراض المنصة', perm: null },
   { id: 'home', t: 'محتوى الرئيسية', perm: 'manage.content' },
   { id: 'lists', t: 'القوائم', perm: 'manage.lists' },
@@ -20921,6 +20922,7 @@ async function importPartnerPackage(file, onStep) {
     const sign = WF_STEPS.findIndex((x) => x.id === 'signed');
     if (p.stage === 'prep' && upto >= sign - 3) p.stage = 'sign';
   }
+  wfEnsureForms('partnership', p);
   await Repo.saveSettings();
   await Repo.save('partnerships', p);
   await Repo.log('package.import', 'partnership', p.id, p.code, `استيراد حزمة: ${added} مرفق${forms ? ` و${forms} نموذج` : ''}`);
@@ -20930,10 +20932,10 @@ async function importPartnerPackage(file, onStep) {
 /* —— 20-designs.js —— */
 /* ===== اتجاها التصميم: المؤسسي والمجلس ===== */
 const DESIGNS = {
-  classic: { name: 'المؤسسي', short: 'المؤسسي', tag: 'قائمة جانبية وألوان المؤسسة',
+  classic: { name: 'القائمة الجانبية', short: 'جانبية', tag: 'القوائم على الجانب — مناسب للعمل اليومي',
     desc: 'التصميم الحالي: قائمة جانبية، وواجهة بصورة وأرقام، ولوحة مؤشرات في بطاقات.',
     traits: ['قائمة جانبية قابلة للطي', 'خط IBM Plex Sans Arabic', 'لوحات وبطاقات بحواف ناعمة'] },
-  board: { name: 'المجلس', short: 'المجلس', tag: 'رسمي للعرض على مجالس الإدارة والقيادات',
+  board: { name: 'القائمة العلوية', short: 'علوية', tag: 'القوائم في الأعلى بمساحة أعرض — مناسب للعرض على القيادات',
     desc: 'واجهة رسمية بخلفية عاجية وأخضر مروج وخطوط ذهبية، وعناوين بخط النسخ، ولوحة «إحاطة المجلس» بفصول مرقّمة: رسائل رئيسية، وأثر بالرموز، وشبكة الشركاء، وتدفق المحفظة، ومسار زمني، وقرارات مطلوبة، مع وضع عرض تقديمي.',
     traits: ['ترويسة رسمية بالتاريخين الهجري والميلادي', 'إحاطة بفصول مرقّمة وعرض تقديمي', 'رسوم تروي القصة: رموز وشبكة وتدفق ومسار زمني'] },
 };
@@ -20961,7 +20963,7 @@ function designPreviewSVG(k) {
 /* تبديل الاتجاه مع الحفاظ على الصفحة والفلاتر والدور */
 async function applyDesign(id) {
   if (!DESIGNS[id] || id === design()) return;
-  if (App.dirty && !(await confirmDlg('في النموذج تعديلات لم تُحفظ. تبديل اتجاه التصميم سيعيد عرض الصفحة وتُفقد هذه التعديلات.', { title: 'تعديلات غير محفوظة', ok: 'تبديل الاتجاه', danger: true }))) return;
+  if (App.dirty && !(await confirmDlg('في النموذج تعديلات لم تُحفظ. تبديل شكل المنصة سيعيد عرض الصفحة وتُفقد هذه التعديلات.', { title: 'تعديلات غير محفوظة', ok: 'تبديل الاتجاه', danger: true }))) return;
   App.dirty = false;
   const ratio = (scrollY || 0) / Math.max(1, document.documentElement.scrollHeight - innerHeight);
   D.settings.design = id;
@@ -20975,8 +20977,8 @@ async function applyDesign(id) {
   if (document.startViewTransition && !reduce) { try { document.startViewTransition(run); } catch (_) { run(); } }
   else { document.documentElement.classList.add('design-swap'); run(); setTimeout(() => document.documentElement.classList.remove('design-swap'), 450); }
   await Repo.saveSettings();
-  await Repo.log('settings.update', 'settings', 'design', 'اتجاه تصميم المنصة', DESIGNS[id].name);
-  toast(`اتجاه التصميم: ${DESIGNS[id].name}`);
+  await Repo.log('settings.update', 'settings', 'design', 'شكل المنصة', DESIGNS[id].name);
+  toast(`شكل المنصة: ${DESIGNS[id].name}`);
 }
 function renderDesignSwitcher() {
   let el = $('#dsw');
@@ -20990,10 +20992,10 @@ function renderDesignSwitcher() {
     });
     document.addEventListener('mousedown', (e) => { if (!e.target.closest('#dsw')) el.classList.remove('open'); });
   }
-  el.innerHTML = `<button class="dsw-fab" data-dsw-toggle type="button" title="اتجاه التصميم — Alt+1 / Alt+2" aria-label="تبديل اتجاه التصميم">${icon('palette')}<span>${DESIGNS[design()].short}</span></button>
-    <div class="dsw-pop" role="menu" aria-label="اتجاهات التصميم"><div class="dsw-h">اتجاه تصميم المنصة</div>
+  el.innerHTML = `<button class="dsw-fab" data-dsw-toggle type="button" title="شكل المنصة — Alt+1 / Alt+2" aria-label="تبديل شكل المنصة">${icon('palette')}<span>${DESIGNS[design()].short}</span></button>
+    <div class="dsw-pop" role="menu" aria-label="شكل المنصة"><div class="dsw-h">شكل المنصة</div>
       ${Object.entries(DESIGNS).map(([k, d], i) => `<button class="dsw-o ${k === design() ? 'on' : ''}" data-dsw="${k}" type="button" role="menuitemradio" aria-checked="${k === design()}"><span class="dsw-sw dsw-${k}"></span><span class="grow"><b>${d.name}</b><small>${d.tag}</small></span><kbd>Alt+${i + 1}</kbd></button>`).join('')}
-      <div class="dsw-sep"></div><button class="dsw-o" data-tour-start type="button"><span class="dsw-sw dsw-tour">${icon('play')}</span><span class="grow"><b>استعراض المنصة</b><small>جولة تعريفية في الاتجاه الحالي</small></span><kbd>Alt+T</kbd></button><button class="dsw-o" data-rqtour-start type="button"><span class="dsw-sw dsw-tour">${icon('convert')}</span><span class="grow"><b>مسار طلب الشراكة</b><small>من «شارك» حتى القرار</small></span></button></div>`;
+      <div class="dsw-sep"></div><button class="dsw-o" data-tour-start type="button"><span class="dsw-sw dsw-tour">${icon('play')}</span><span class="grow"><b>استعراض المنصة</b><small>جولة تعريفية في الشكل الحالي</small></span><kbd>Alt+T</kbd></button><button class="dsw-o" data-rqtour-start type="button"><span class="dsw-sw dsw-tour">${icon('convert')}</span><span class="grow"><b>مسار طلب الشراكة</b><small>من «شارك» حتى القرار</small></span></button></div>`;
 }
 document.addEventListener('keydown', (e) => {
   if (!e.altKey || e.ctrlKey || e.metaKey) return;
@@ -21055,11 +21057,11 @@ function initHeroFX(box, positions) {
 /* ===== الرئيسية — حكاية الأثر ===== */
 function setDesignTab(b) {
   const cur = design();
-  b.innerHTML = `<div class="panel" data-tour="settings-design"><div class="panel-h"><h3>اتجاه تصميم المنصة</h3><span class="sub">يُطبَّق على المنصة كلها ويُحفظ في هذا المتصفح</span></div><div class="panel-b">
+  b.innerHTML = `<div class="panel" data-tour="settings-design"><div class="panel-h"><h3>شكل المنصة</h3><span class="sub">يُطبَّق على المنصة كلها ويُحفظ في هذا المتصفح</span></div><div class="panel-b">
       <div class="dcards">${Object.entries(DESIGNS).map(([k, d], i) => `<div class="dcard ${k === cur ? 'on' : ''}" data-dk="${k}">
         <div class="dcard-prev">${designPreviewSVG(k)}${k === cur ? `<span class="dcard-on">${icon('check')} مفعّل</span>` : ''}</div>
         <div class="dcard-b"><h4>${i + 1}. ${d.name}</h4><p>${d.desc}</p><ul>${d.traits.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
-          <button class="btn ${k === cur ? '' : 'primary'}" data-pickdesign="${k}" type="button" ${k === cur ? 'disabled' : ''}>${k === cur ? 'الاتجاه المفعّل' : 'اختيار هذا الاتجاه'}</button></div></div>`).join('')}</div>
+          <button class="btn ${k === cur ? '' : 'primary'}" data-pickdesign="${k}" type="button" ${k === cur ? 'disabled' : ''}>${k === cur ? 'الشكل الحالي' : 'اختيار هذا الشكل'}</button></div></div>`).join('')}</div>
       <div class="note" style="margin-top:16px">${icon('info')}<span>يحتفظ التبديل بالصفحة الحالية والفلاتر والدور، والبيانات مشتركة بين الاتجاهات. للتبديل السريع أثناء العرض استخدم زر «اتجاه التصميم» أسفل الشاشة، أو الاختصارات Alt+1 وAlt+2 وAlt+3.</span></div></div></div>`;
   b.onclick = (e) => { const k = e.target.closest('[data-pickdesign]'); if (k) applyDesign(k.dataset.pickdesign); };
 }
@@ -21154,7 +21156,7 @@ function tourSteps() {
   if (can('view.reports')) S.push({ key: 'reports', title: 'التقارير', route: '#/reports', prep: () => { if (!App.ui.rpt.ids.length && real) App.ui.rpt.ids = [real.id]; }, parts: [
     { sel: ['#rpPD'], h: 'اختيار الشراكات', what: 'قائمة منسدلة بالبحث و«تحديد الكل»، مع فلاتر متعددة لاختيار مجموعة كاملة مثل الساري أو المنتهي.', why: 'تقرير عن شراكة واحدة أو عن المحفظة كلها، بغلاف لكل شراكة.', how: 'شاهد: نفتح القائمة.', act: async () => { await TA.click('[data-rpd]'); await TA.wait(1200); await TA.click('[data-rpd]'); } },
     { sel: ['#rpDD'], h: 'مكونات التقرير', what: `${RPT_SECTIONS.length} مكوّنًا: فهرس، ولمحة بالرسوم، وملخص تنفيذي، وبيانات، وتعاون، وأثر، وفريق، وملفات، وصور…`, why: 'كل تقرير على مقاس الحاجة، والتغيير يظهر في المعاينة فورًا.', how: 'شاهد: نزيل «صور الشراكة» ثم نعيدها.', act: async () => { await TA.click('[data-rdd]'); if (TA.q('[data-rsec="photos"]')) { await TA.click('[data-rsec="photos"]'); await TA.wait(700); await TA.click('[data-rsec="photos"]'); } await TA.click('[data-rdd]'); } },
-    { sel: ['.rs-frame'], h: 'معاينة قابلة للتعديل', what: 'شرائح التقرير كما ستُنزَّل، بثيم اتجاه التصميم الحالي ومن اليمين إلى اليسار.', why: 'تعدّل أي نص مباشرة قبل التنزيل دون تغيير سجلات الشراكة.', how: 'اضغط أي نص واكتب، ثم نزّل PowerPoint أو PDF، أو اعرضه بملء الشاشة.' },
+    { sel: ['.rs-frame'], h: 'معاينة قابلة للتعديل', what: 'شرائح التقرير كما ستُنزَّل، بألوان شكل المنصة الحالي ومن اليمين إلى اليسار.', why: 'تعدّل أي نص مباشرة قبل التنزيل دون تغيير سجلات الشراكة.', how: 'اضغط أي نص واكتب، ثم نزّل PowerPoint أو PDF، أو اعرضه بملء الشاشة.' },
   ] });
   /* — صفحات العمل اليومي والعرض: تُضاف حسب صلاحية الحساب — */
   if (Session.role() !== 'viewer') S.push({ key: 'tasks', title: 'مهامي', route: '#/tasks', parts: [
@@ -21182,7 +21184,7 @@ function tourSteps() {
     { sel: ['.bo-ch', '#obBody > section', '#main .page'], h: 'إحاطة بفصول مرقّمة', what: 'العرض المفصل: الخلاصة، والأثر، والتقييم، وسير الإجراءات، ومنظومة الشركاء، والقرارات المطلوبة.', why: 'تُعرض على المجلس مباشرة أو تُطبع، وكل رقم فيها محسوب من السجلات.', how: 'بدّل بين «مختصر» و«مفصّل» أعلى اللوحة، واستخدم ملء الشاشة للعرض.' },
   ] });
   S.push({ key: 'settings', title: 'تخصيص المنصة', route: '#/settings/design', parts: [
-    { sel: ['.dcard.on', '.dcard'], h: 'اتجاه التصميم والإعدادات', what: 'ثلاثة اتجاهات تصميم، ومحتوى الرئيسية، والقوائم والتصنيفات، والأدوار، والنسخ الاحتياطي.', why: 'تتحكم الإدارة في ما يُعرض وكيف يُعرض دون تعديل برمجي.', how: can('manage.lists') ? 'بدّل الاتجاه من هنا أو بالاختصارات Alt+1 وAlt+2 وAlt+3، وتتغير معه التقارير أيضًا.' : 'يمكن لكل مستخدم اختيار اتجاه التصميم.' },
+    { sel: ['.dcard.on', '.dcard'], h: 'شكل المنصة والإعدادات', what: 'شكلان للمنصة (قائمة جانبية أو علوية)، ومحتوى الرئيسية، والقوائم والتصنيفات، والأدوار، والنسخ الاحتياطي.', why: 'تتحكم الإدارة في ما يُعرض وكيف يُعرض دون تعديل برمجي.', how: can('manage.lists') ? 'بدّل الاتجاه من هنا أو بالاختصارات Alt+1 وAlt+2 وAlt+3، وتتغير معه التقارير أيضًا.' : 'يمكن لكل مستخدم اختيار اتجاه التصميم.' },
   ] });
   S.push({ key: 'end', title: 'الخلاصة', route: null, parts: [{ sel: null, h: 'منظومة واحدة لدورة الشراكة كاملة' }] });
   /* ترتيب الاستخدام: الواجهة، ثم العمل اليومي، ثم الشراكة ومسارها، ثم المقترحات، ثم العرض والتقارير، ثم الإدارة */
@@ -22241,8 +22243,8 @@ function fitSize(text, w, h, max, min = 11, lh = 1.5) {
 
 /* — الألوان والهندسة (بكسل على شريحة 1280×720) — */
 const RTHEMES = {
-  classic: { name: 'المؤسسي', page: '#F2F6F4', card: '#FFFFFF', pri: '#0B3F38', priT: '#0B3F38', petrol2: '#1F6B5C', mint: '#5FB894', mintBg: '#E3F1EA', gold: '#B08A3E', goldBg: '#F6EEDC', clay: '#C2683F', clayBg: '#F8E6DC', ink: '#16222A', ink2: '#3B4B52', mut: '#6B7F78', faint: '#9AA9A3', line: '#E1E9E5', white: '#FFFFFF', head: '#0B3F38', headOv: '#06201C', kick: '#E6C786', onHead: '#FFFFFF', onHeadMut: '#C9DDD6', cover: '#0B3F38', cover2: '#1F6B5C', coverAcc: '#5FB894', track: '#E6EDEA', font: 'IBM Plex Sans Arabic', hfont: 'IBM Plex Sans Arabic', hk: 1, cw: 0.5, band: { bg: '#0B3F38', line: '#9FD4BE', lo: 0.2, hi: '#D9B467', ho: 0.75, ink: '#FFFFFF', kick: '#E6C786', logo: '#FFFFFF', logoInk: '#0B3F38' }, coverLines: { line: '#9FD4BE', lo: 0.16, hi: '#D9B467', ho: 0.6 } },
-  board: { name: 'المجلس', page: '#F7F4EC', card: '#FFFFFF', pri: '#0F4433', priT: '#0F4433', petrol2: '#2F7A5E', mint: '#4F9A78', mintBg: '#E8EFEA', gold: '#A47C32', goldBg: '#F4EAD4', clay: '#A47C32', clayBg: '#F4EAD4', ink: '#14201B', ink2: '#2E3B35', mut: '#5C6861', faint: '#8C958E', line: '#E7E1D3', white: '#FFFFFF', head: '#0F4433', headOv: '#08241B', kick: '#D9C08A', onHead: '#FFFFFF', onHeadMut: '#C7D6CD', cover: '#0F4433', cover2: '#1A5C46', coverAcc: '#D9C08A', track: '#F1EDE2', font: 'IBM Plex Sans Arabic', hfont: 'Noto Naskh Arabic', hk: 1.12, cw: 0.5, band: { bg: '#0F4433', line: '#D9C08A', lo: 0.2, hi: '#D9C08A', ho: 0.7, ink: '#FFFFFF', kick: '#D9C08A', logo: '#D9C08A', logoInk: '#0F4433' }, coverLines: { line: '#D9C08A', lo: 0.18, hi: '#D9C08A', ho: 0.55 } },
+  classic: { name: 'القائمة الجانبية', page: '#F2F6F4', card: '#FFFFFF', pri: '#0B3F38', priT: '#0B3F38', petrol2: '#1F6B5C', mint: '#5FB894', mintBg: '#E3F1EA', gold: '#B08A3E', goldBg: '#F6EEDC', clay: '#C2683F', clayBg: '#F8E6DC', ink: '#16222A', ink2: '#3B4B52', mut: '#6B7F78', faint: '#9AA9A3', line: '#E1E9E5', white: '#FFFFFF', head: '#0B3F38', headOv: '#06201C', kick: '#E6C786', onHead: '#FFFFFF', onHeadMut: '#C9DDD6', cover: '#0B3F38', cover2: '#1F6B5C', coverAcc: '#5FB894', track: '#E6EDEA', font: 'IBM Plex Sans Arabic', hfont: 'IBM Plex Sans Arabic', hk: 1, cw: 0.5, band: { bg: '#0B3F38', line: '#9FD4BE', lo: 0.2, hi: '#D9B467', ho: 0.75, ink: '#FFFFFF', kick: '#E6C786', logo: '#FFFFFF', logoInk: '#0B3F38' }, coverLines: { line: '#9FD4BE', lo: 0.16, hi: '#D9B467', ho: 0.6 } },
+  board: { name: 'القائمة العلوية', page: '#F7F4EC', card: '#FFFFFF', pri: '#0F4433', priT: '#0F4433', petrol2: '#2F7A5E', mint: '#4F9A78', mintBg: '#E8EFEA', gold: '#A47C32', goldBg: '#F4EAD4', clay: '#A47C32', clayBg: '#F4EAD4', ink: '#14201B', ink2: '#2E3B35', mut: '#5C6861', faint: '#8C958E', line: '#E7E1D3', white: '#FFFFFF', head: '#0F4433', headOv: '#08241B', kick: '#D9C08A', onHead: '#FFFFFF', onHeadMut: '#C7D6CD', cover: '#0F4433', cover2: '#1A5C46', coverAcc: '#D9C08A', track: '#F1EDE2', font: 'IBM Plex Sans Arabic', hfont: 'Noto Naskh Arabic', hk: 1.12, cw: 0.5, band: { bg: '#0F4433', line: '#D9C08A', lo: 0.2, hi: '#D9C08A', ho: 0.7, ink: '#FFFFFF', kick: '#D9C08A', logo: '#D9C08A', logoInk: '#0F4433' }, coverLines: { line: '#D9C08A', lo: 0.18, hi: '#D9C08A', ho: 0.55 } },
 };
 const BAND_CACHE = {};
 function geoGraphic(W, H, color, op = 0.16, tile = 120) {
@@ -22671,7 +22673,7 @@ function renderReports(el, r) {
         <section class="rp-box"><header><b>2. مكونات التقرير</b></header>
           <div class="rp-dd" id="rpDD"><button class="rp-ddb" type="button" data-rdd>${icon('list')}<span id="rpDDl"></span>${icon('chevD')}</button><div class="rp-ddm" id="rpDDm"></div></div>
           <p class="hint">أزل أي مكوّن وسيختفي من المعاينة فورًا. المكوّن الذي لا تتوفر له بيانات في شراكة ما لا يُنشئ شريحة فارغة.</p>
-          <label class="rp-theme"><span>ثيم التقرير</span><select class="in" id="rpTheme"><option value="auto">حسب اتجاه التصميم (${esc(DESIGNS[design()].name)})</option>${Object.entries(RTHEMES).map(([k, t]) => `<option value="${k}">${esc(t.name)}</option>`).join('')}</select></label></section>
+          <label class="rp-theme"><span>ثيم التقرير</span><select class="in" id="rpTheme"><option value="auto">حسب شكل المنصة (${esc(DESIGNS[design()].name)})</option>${Object.entries(RTHEMES).map(([k, t]) => `<option value="${k}">${esc(t.name)}</option>`).join('')}</select></label></section>
         <section class="rp-box"><header><b>3. التنزيل</b></header>
           <button class="btn gold rp-show" data-rshow type="button">${icon('expand')} عرض التقرير بملء الشاشة</button>
           <div class="rp-exp"><button class="btn primary" data-rpptx type="button">${icon('download')} PowerPoint</button><button class="btn" data-rpdf type="button">${icon('print')} PDF</button></div>
@@ -24504,6 +24506,33 @@ function wfLegacyIdx(p) {
   if (p.stage === 'sign') return 8;
   return 3;
 }
+/* — كل مرحلة مكتملة لها نموذج محفوظ: إن اكتملت المرحلة دون نموذجها (سجل قديم، أو تسجيل مباشر، أو حزمة)
+   يُنشأ النموذج من بيانات السجل ويُحفظ مكتملًا، فيظهر في بطاقة المرحلة وفي الملف الشامل. لا يُستبدل نموذج موجود. — */
+function wfAutoFormData(kind, rec, key, st) {
+  const F = FORMS[key], R = fRecInfo(kind, rec), d = {};
+  F.sections(R, rec).forEach((s) => s.fields.forEach((f) => { const v = typeof f.def === 'function' ? f.def() : f.def; if (v !== undefined && v !== '' && !(Array.isArray(v) && !v.length)) d[f.k] = v; }));
+  const S = st.S;
+  if (key === 'initialEval') d.rec = (S.eval && S.eval.decision === 'no') ? IEV_RES[2] : IEV_RES[0];
+  if (key === 'alignment') { d.result = 'متوائمة'; d.clauses = (R.coop || []).map((t) => ({ text: t, goals: [], note: '' })); }
+  if (key === 'letterReview') { d.r1rec = 'استكمال المراجعة'; d.r2rec = 'مناسب'; }
+  return d;
+}
+function wfEnsureForms(kind, rec) {
+  if (!rec || typeof FORMS === 'undefined') return false;
+  const st = wfStateOf(kind, rec); let n = 0;
+  WF_STEPS.forEach((s) => {
+    const r = st.S[s.id]; if (!(r && r.status === 'done')) return;
+    if (kind === 'proposal' && s.on !== 'proposal') return;
+    s.docs.filter((x) => x.form && FORMS[x.form]).forEach((x) => {
+      if (wfForm(kind, rec, x.form)) return;
+      if (wfDocsOf(kind, rec, s.id).some((a) => a.doc === x.k)) return; // المستند مرفوع ملفًا بدل النموذج
+      rec.forms = rec.forms || {};
+      rec.forms[x.form] = { data: wfAutoFormData(kind, rec, x.form, st), status: 'done', auto: true, at: r.at || nowISO(), by: r.by || D.settings.org.dept, byDept: D.settings.org.dept, no: formNumber(x.form) };
+      n++;
+    });
+  });
+  return n > 0;
+}
 function wfStateOf(kind, rec) {
   const saved = (rec.wf && rec.wf.steps) || {};
   const S = {};
@@ -24599,7 +24628,7 @@ function wfSectionHTML(kind, rec) {
       <span class="wf-dot">${done ? icon(r.decision === 'no' || r.decision === 'reject' ? 'x' : 'check') : s.n}</span>
       <div class="wf-b"><div class="wf-h"><b>${esc(s.t)}</b>${s.ref ? `<span class="wf-ref" title="رقم البند في إجراء المذكرات">البند ${s.ref}</span>` : ''}</div>
         <div class="wf-m"><span class="wf-who">${icon('users')}${esc(wfActorName(s.actor))}</span>
-          ${done ? `<span>${r.direct ? `تُجووزت بالتسجيل المباشر${r.at ? ' — ' + fmtDT(r.at) : ''}` : r.legacy ? 'مكتملة قبل اعتماد المسار في المنصة' : `${r.decision === 'no' ? (s.no || 'غير مناسبة') : r.decision === 'reject' ? s.reject : r.decision === 'yes' && s.yes ? s.yes : 'اكتملت'} ${r.at ? '— ' + fmtDT(r.at) : ''}${r.by ? ' — ' + esc(r.by) : ''}`}</span>` : cur ? `<span class="wf-now">${ret ? 'أُعيدت بملاحظات' : lock ? 'الخطوة التالية — تبدأ بعد تحويل الطلب إلى شراكة' : 'الخطوة الحالية'}</span>` : lock ? '<span>بعد التحويل إلى شراكة</span>' : ''}
+          ${done ? `<span>${r.direct ? `تُجووزت بالتسجيل المباشر${r.at ? ' — ' + fmtDT(r.at) : ''}` : r.legacy ? 'مكتملة' : `${r.decision === 'no' ? (s.no || 'غير مناسبة') : r.decision === 'reject' ? s.reject : r.decision === 'yes' && s.yes ? s.yes : 'اكتملت'} ${r.at ? '— ' + fmtDT(r.at) : ''}${r.by ? ' — ' + esc(r.by) : ''}`}</span>` : cur ? `<span class="wf-now">${ret ? 'أُعيدت بملاحظات' : lock ? 'الخطوة التالية — تبدأ بعد تحويل الطلب إلى شراكة' : 'الخطوة الحالية'}</span>` : lock ? '<span>بعد التحويل إلى شراكة</span>' : ''}
           ${s.kind === 'multi' && kind === 'partnership' && (cur || done) ? `<span class="wf-multi">${multi} من ${need} ${s.id === 'reports' ? 'تقارير' : 'إدارات'}</span>` : ''}</div>
         ${ret && r.note ? `<div class="wf-note">${icon('msg')}${esc(r.note)}</div>` : ''}
         ${(() => { const fs = s.docs.filter((d) => d.form && wfForm(kind, rec, d.form)); return fs.length ? `<div class="wf-docs">${fs.map((d) => { const f = wfForm(kind, rec, d.form); return `<button type="button" class="wf-doc form ${f.status}" data-wfform="${d.form}" title="${esc(FORMS[d.form].title)}">${icon(f.status === 'done' ? 'check' : 'edit')}<span>${esc(FORMS[d.form].short || FORMS[d.form].title)}</span><small>${esc(f.no || '')}${f.status === 'done' ? '' : ' — مسودة'}</small></button>`; }).join('')}</div>` : ''; })()}
@@ -25356,7 +25385,7 @@ function formDocHTML(kind, rec, key, evalIdx = null, forWord = false) {
   }).join('');
   return `<article class="fdoc" dir="rtl">${head}<h1 class="fd-title">${esc(F.title)}</h1>${body}
     <div class="fd-sigs"><div><span>أعدّه</span><b>${esc((st && st.by) || '')}</b><small>${esc((st && st.byDept) || '')}</small></div><div><span>الحالة</span><b>${st && st.status === 'done' ? 'مكتمل ومعتمد في المنظومة' : 'مسودة'}</b><small>${st && st.at ? fmtDT(st.at) : ''}</small></div></div>
-    <footer class="fd-foot">${esc(D.settings.org.name)} · ${esc(D.settings.org.platform)} · ${esc(F.title)}</footer></article>`;
+    <footer class="fd-foot">${esc(D.settings.org.name)} · ${esc(D.settings.org.platform)} · ${esc(F.title)}${st && st.auto ? ' · أُنشئ من بيانات السجل لمرحلة مكتملة' : ''}</footer></article>`;
 }
 /* عرض النموذج المكتمل بنفس تصميم المستند المطبوع، مع الطباعة وWord */
 function formPreview(kind, rec, key, evalIdx = null, onEdit = null) {
@@ -25589,7 +25618,7 @@ function fdShell({ kind, rec, key, tone, ring, facts, kpis, body, st }) {
     <section class="ev-kpis">${kpis.map(([l, v, cls]) => `<div class="${cls || ''}"><span>${esc(l)}</span><b>${v}</b></div>`).join('')}</section>
     ${body}
     <section class="ev-sigs"><div><span>أعدّه</span><b>${esc((st && st.by) || '')}</b><small>${esc((st && st.byDept) || '')}</small></div><div><span>الاعتماد</span><b>${st && st.status === 'done' ? 'معتمد إلكترونيًا في المنظومة' : 'مسودة — لم يُعتمد'}</b><small>${st && st.at ? fmtDT(st.at) : ''}</small></div><div><span>التوقيع</span><b class="ln"></b></div></section>
-    <footer class="fd-foot">${esc(D.settings.org.name)} · ${esc(D.settings.org.platform)} · ${esc(F.title)} ${esc((st && st.no) || '')}</footer></article>`;
+    <footer class="fd-foot">${esc(D.settings.org.name)} · ${esc(D.settings.org.platform)} · ${esc(F.title)} ${esc((st && st.no) || '')}${st && st.auto ? ' · أُنشئ من بيانات السجل لمرحلة مكتملة' : ''}</footer></article>`;
 }
 const fdSec = (n, t, sub, inner, cls) => `<section class="ev-sec ${cls || ''}"><h3><em>${String(n).padStart(2, '0')}</em>${esc(t)}${sub ? `<small>${esc(sub)}</small>` : ''}</h3>${inner}</section>`;
 
@@ -26133,18 +26162,18 @@ function palActions() {
     can('edit.partnership') && { t: 'شراكة جديدة', s: 'إضافة سجل شراكة', ic: 'plus', kw: 'اضافة جديد سجل', run: () => go('#/partnerships/new') },
     can('proposal.create') && { t: 'مقترح شراكة جديد', s: 'من خدمة «شارك»', ic: 'send', kw: 'اقتراح شارك جديد', run: () => go('#/share/new') },
     can('edit.partnership') && { t: 'رفع صور', s: 'إلى شراكة في مركز الصور', ic: 'upload', kw: 'صور رفع مرفقات', run: async () => { go('#/media'); await sleep(250); if (await mediaUploadDlg('')) route(); } },
-    can('view.dashboard') && { t: 'عرض إحاطة المجلس تقديميًا', s: 'كل فصل شريحة بملء الشاشة', ic: 'play', kw: 'عرض تقديمي مجلس شرائح', run: async () => { if (design() !== 'board') { go('#/dashboard'); await sleep(300); return togglePresent(); } go('#/dashboard'); await sleep(450); boPresent(true); } },
+    can('view.dashboard') && { t: 'عرض اللوحة المفصلة تقديميًا', s: 'كل فصل شريحة بملء الشاشة', ic: 'play', kw: 'عرض تقديمي مجلس شرائح', run: async () => { if (design() !== 'board') { go('#/dashboard'); await sleep(300); return togglePresent(); } go('#/dashboard'); await sleep(450); boPresent(true); } },
     can('view.reports') && { t: 'إنشاء تقرير', s: 'PowerPoint أو PDF', ic: 'file', kw: 'تقرير عرض باوربوينت', run: () => go('#/reports') },
     can('export') && { t: 'تصدير سجل الشراكات إلى Excel', s: 'كل السجلات المتاحة لدورك', ic: 'download', kw: 'اكسل تصدير', run: () => exportPartnershipsXlsx(visiblePartnerships(), 'سجل-الشراكات') },
     Session.role() !== 'viewer' && { t: 'مهامي', s: (() => { const n = wfTasks().filter((t) => !t.follow).length; return n ? `${n} بانتظارك` : 'لا مهام الآن'; })(), ic: 'flag', kw: 'مهام مهمة انتظار مسار', run: () => go('#/tasks') },
     { t: 'حسابي', s: accountLabel(), ic: 'users', kw: 'حساب كلمة مرور خروج', run: () => accountMenu() },
     { t: 'تسجيل الخروج', s: accountLabel(), ic: 'x', kw: 'خروج تسجيل', run: () => authLogout() },
     { t: 'مسار الشراكة والصلاحيات', s: 'من المقترح إلى الإغلاق', ic: 'convert', kw: 'مسار عملية صلاحيات', run: () => go('#/process') },
-    { t: 'تبديل الوضع النهاري والليلي', s: 'حسب الاتجاه الحالي', ic: 'moon', kw: 'ليلي نهاري داكن فاتح', run: () => { const b = $('[data-themetoggle]'); b && b.click(); } },
+    { t: 'تبديل الوضع النهاري والليلي', s: 'حسب الشكل الحالي', ic: 'moon', kw: 'ليلي نهاري داكن فاتح', run: () => { const b = $('[data-themetoggle]'); b && b.click(); } },
     { t: 'استعراض المنصة', s: 'جولة تعريفية تفاعلية', ic: 'play', kw: 'جولة شرح', run: () => startTour() },
     { t: 'استعراض مسار طلب الشراكة', s: 'من «شارك» حتى الاعتماد أو الرفض', ic: 'convert', kw: 'جولة مسار طلب اعتماد رفض', run: () => startReqTour() },
     (isSysAdmin() || AUTH.dev) && { t: 'الدخول بحساب آخر للمعاينة', s: 'لمدير النظام', ic: 'user', kw: 'دور صلاحية مستخدم حساب', run: () => roleDialog() },
-    ...Object.entries(DESIGNS).filter(([k]) => k !== design()).map(([k, d]) => ({ t: `اتجاه التصميم: ${d.name}`, s: d.tag, ic: 'palette', kw: 'تصميم اتجاه شكل', run: () => applyDesign(k) })),
+    ...Object.entries(DESIGNS).filter(([k]) => k !== design()).map(([k, d]) => ({ t: `شكل المنصة: ${d.name}`, s: d.tag, ic: 'palette', kw: 'تصميم اتجاه شكل', run: () => applyDesign(k) })),
   ];
   return A.filter(Boolean);
 }
@@ -26596,6 +26625,7 @@ function migrate() {
   if ((s.realV || 1) < 2 && applyRealV2()) { s.realV = 2; changed = true; }
   if ((s.realV || 1) === 2) { applyRealPhotos(); s.realV = 3; changed = true; }
   /* إصلاح: سجلات ملف الحصر التي طُبّقت على نسخة الجهاز قبل الاتصال بالخادم ولم تُرفع — تُضاف الناقصة فقط، بعد سحب بيانات الخادم */
+  if (!s.wfAutoForms1 && (!Cloud.on || Cloud.ready)) { D.partnerships.forEach((p) => wfEnsureForms('partnership', p)); D.proposals.forEach((x) => wfEnsureForms('proposal', x)); s.wfAutoForms1 = true; changed = true; Store.putMany('proposals', D.proposals); }
   if (!s.realFix1 && (!Cloud.on || Cloud.ready)) { const n = applyRealV2({ onlyMissing: true }); s.realFix1 = true; changed = true; if (n && Cloud.on) setTimeout(() => toast(`استُكملت ${n} شراكة من ملف الحصر على المنصة المشتركة`), 1500); } // صور الشراكات الفعلية المضافة لاحقًا (المهيدب)
   if (s.schema < 5) {
     if (!s.org.platform || s.org.platform === 'منصة الشراكات') s.org.platform = 'منظومة الشراكات';

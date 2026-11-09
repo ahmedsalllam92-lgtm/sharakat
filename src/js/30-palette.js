@@ -14,18 +14,18 @@ function palActions() {
     can('edit.partnership') && { t: 'شراكة جديدة', s: 'إضافة سجل شراكة', ic: 'plus', kw: 'اضافة جديد سجل', run: () => go('#/partnerships/new') },
     can('proposal.create') && { t: 'مقترح شراكة جديد', s: 'من خدمة «شارك»', ic: 'send', kw: 'اقتراح شارك جديد', run: () => go('#/share/new') },
     can('edit.partnership') && { t: 'رفع صور', s: 'إلى شراكة في مركز الصور', ic: 'upload', kw: 'صور رفع مرفقات', run: async () => { go('#/media'); await sleep(250); if (await mediaUploadDlg('')) route(); } },
-    can('view.dashboard') && { t: 'عرض إحاطة المجلس تقديميًا', s: 'كل فصل شريحة بملء الشاشة', ic: 'play', kw: 'عرض تقديمي مجلس شرائح', run: async () => { if (design() !== 'board') { go('#/dashboard'); await sleep(300); return togglePresent(); } go('#/dashboard'); await sleep(450); boPresent(true); } },
+    can('view.dashboard') && { t: 'عرض اللوحة المفصلة تقديميًا', s: 'كل فصل شريحة بملء الشاشة', ic: 'play', kw: 'عرض تقديمي مجلس شرائح', run: async () => { if (design() !== 'board') { go('#/dashboard'); await sleep(300); return togglePresent(); } go('#/dashboard'); await sleep(450); boPresent(true); } },
     can('view.reports') && { t: 'إنشاء تقرير', s: 'PowerPoint أو PDF', ic: 'file', kw: 'تقرير عرض باوربوينت', run: () => go('#/reports') },
     can('export') && { t: 'تصدير سجل الشراكات إلى Excel', s: 'كل السجلات المتاحة لدورك', ic: 'download', kw: 'اكسل تصدير', run: () => exportPartnershipsXlsx(visiblePartnerships(), 'سجل-الشراكات') },
     Session.role() !== 'viewer' && { t: 'مهامي', s: (() => { const n = wfTasks().filter((t) => !t.follow).length; return n ? `${n} بانتظارك` : 'لا مهام الآن'; })(), ic: 'flag', kw: 'مهام مهمة انتظار مسار', run: () => go('#/tasks') },
     { t: 'حسابي', s: accountLabel(), ic: 'users', kw: 'حساب كلمة مرور خروج', run: () => accountMenu() },
     { t: 'تسجيل الخروج', s: accountLabel(), ic: 'x', kw: 'خروج تسجيل', run: () => authLogout() },
     { t: 'مسار الشراكة والصلاحيات', s: 'من المقترح إلى الإغلاق', ic: 'convert', kw: 'مسار عملية صلاحيات', run: () => go('#/process') },
-    { t: 'تبديل الوضع النهاري والليلي', s: 'حسب الاتجاه الحالي', ic: 'moon', kw: 'ليلي نهاري داكن فاتح', run: () => { const b = $('[data-themetoggle]'); b && b.click(); } },
+    { t: 'تبديل الوضع النهاري والليلي', s: 'حسب الشكل الحالي', ic: 'moon', kw: 'ليلي نهاري داكن فاتح', run: () => { const b = $('[data-themetoggle]'); b && b.click(); } },
     { t: 'استعراض المنصة', s: 'جولة تعريفية تفاعلية', ic: 'play', kw: 'جولة شرح', run: () => startTour() },
     { t: 'استعراض مسار طلب الشراكة', s: 'من «شارك» حتى الاعتماد أو الرفض', ic: 'convert', kw: 'جولة مسار طلب اعتماد رفض', run: () => startReqTour() },
     (isSysAdmin() || AUTH.dev) && { t: 'الدخول بحساب آخر للمعاينة', s: 'لمدير النظام', ic: 'user', kw: 'دور صلاحية مستخدم حساب', run: () => roleDialog() },
-    ...Object.entries(DESIGNS).filter(([k]) => k !== design()).map(([k, d]) => ({ t: `اتجاه التصميم: ${d.name}`, s: d.tag, ic: 'palette', kw: 'تصميم اتجاه شكل', run: () => applyDesign(k) })),
+    ...Object.entries(DESIGNS).filter(([k]) => k !== design()).map(([k, d]) => ({ t: `شكل المنصة: ${d.name}`, s: d.tag, ic: 'palette', kw: 'تصميم اتجاه شكل', run: () => applyDesign(k) })),
   ];
   return A.filter(Boolean);
 }
