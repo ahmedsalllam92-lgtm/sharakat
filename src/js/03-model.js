@@ -26,7 +26,7 @@ const PERMS = {
   'manage.accounts': ['admin'],
 };
 const PERM_LABELS = {
-  'view.dashboard': 'لوحة المؤشرات', 'view.register': 'سجل الشراكات', 'view.drafts': 'رؤية المسودات', 'view.contacts': 'بيانات التواصل',
+  'view.dashboard': 'لوحة المؤشرات', 'view.reports': 'التقارير', 'view.partners': 'الجهات الشريكة', 'view.register': 'سجل الشراكات', 'view.drafts': 'رؤية المسودات', 'view.contacts': 'بيانات التواصل',
   'view.internal': 'المرفقات والملاحظات الداخلية', 'edit.partnership': 'إضافة الشراكات وتعديلها', 'delete.partnership': 'حذف الشراكات',
   'manage.partners': 'إدارة الجهات الشريكة', 'proposal.create': 'تقديم مقترح', 'proposal.review': 'مراجعة المقترحات واتخاذ الإجراء',
   'manage.content': 'محتوى الرئيسية والإنجازات', 'manage.lists': 'التصنيفات والقوائم', 'manage.backup': 'النسخ الاحتياطي والاستعادة', 'view.audit': 'سجل التغييرات', 'manage.accounts': 'الحسابات وكلمات المرور', 'export': 'التصدير والطباعة',
