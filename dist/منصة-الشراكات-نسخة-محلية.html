@@ -20212,7 +20212,7 @@ function setGeneral(b) {
     </div></div></div>
     <div class="row" style="margin-top:18px"><button class="btn primary" id="gsave">حفظ الإعدادات</button></div>`;
   hydrateFiles(b);
-  const readSpl = () => ({ on: $('#gspl_on', b).checked, text: $('#gspl_t', b).value.trim() || SPLASH_DEF.text, sub: $('#gspl_s', b).value.trim(), bg: $('#gspl_bg', b).value, stats: $('#gspl_n', b).checked, dur: Math.max(2, Math.min(8, +$('#gspl_d', b).value || 3)), bgV2: true });
+  const readSpl = () => ({ bgV2: true, bgV3: true, bgV4: true, on: $('#gspl_on', b).checked, text: $('#gspl_t', b).value.trim() || SPLASH_DEF.text, sub: $('#gspl_s', b).value.trim(), bg: $('#gspl_bg', b).value, stats: $('#gspl_n', b).checked, dur: Math.max(2, Math.min(8, +$('#gspl_d', b).value || 3)), bgV2: true });
   $('#gsplprev', b).onclick = () => { const keep = localStorage.getItem('shk_splash'); D.settings.splash = { ...D.settings.splash }; const tmp = readSpl(); try { localStorage.setItem('shk_splash', JSON.stringify({ ...JSON.parse(keep || '{}'), ...tmp })); } catch (e) { /* */ } splashShow(true); try { if (keep) localStorage.setItem('shk_splash', keep); } catch (e) { /* */ } };
   $('#glogo', b).onchange = async (e) => { try { const f = await saveUpload(e.target.files[0]); o.logoFileId = f.id; await saveSet('شعار الجهة'); renderShell(); route(); } catch (er) { toast(er.message, 'err'); } };
   const gx = $('#glogox', b); if (gx) gx.onclick = async () => { o.logoFileId = null; await saveSet('إزالة الشعار'); renderShell(); route(); };
