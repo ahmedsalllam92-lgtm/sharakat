@@ -3319,3 +3319,10 @@ input.ph-bad{animation:phBad .4s}
 .review-box .acts2{display:flex!important;flex-wrap:wrap;gap:8px}
 .review-box .acts2 .btn{flex:1 1 150px;min-width:0;width:auto;white-space:normal;line-height:1.4;text-align:center;justify-content:center;padding-block:9px}
 .review-box .acts2 .btn.primary{flex-basis:100%}
+
+/* المقترح المقبول: الخطوة الأولى بعد التحويل تحمل زر التحويل نفسه */
+.wf-s.lock.cur{opacity:1;filter:none;background:color-mix(in srgb,var(--gold) 9%,var(--paper));border-color:color-mix(in srgb,var(--gold) 45%,var(--line))}
+.wf-s.lock.cur .wf-dot{background:var(--gold);color:#fff;border-color:var(--gold)}
+.wf-s.lock.cur .wf-now{color:color-mix(in srgb,var(--gold) 70%,var(--ink))}
+.wf-wait{font-size:12px;color:var(--muted);align-self:center;white-space:nowrap}
+.wf-ph.lockp .wf-list:has(.wf-s.lock.cur){opacity:1}
