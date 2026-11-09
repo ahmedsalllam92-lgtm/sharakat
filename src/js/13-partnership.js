@@ -26,13 +26,15 @@ function renderPartnership(el, r) {
         <div class="tagline">${statusChip(p)}${p.ptype ? `<span class="chip plain cat">${esc(p.ptype)}</span>` : ''}${pr && pr.domain ? `<span class="chip plain cat">${esc(pr.domain)}</span>` : ''}${(p.categories || []).map((c) => `<span class="chip plain cat">${esc(c)}</span>`).join('')}${p.activation ? `<span class="chip plain">${esc(p.activation)}</span>` : ''}${p.public && !p.isDraft ? '<span class="chip plain">منشورة في الواجهة</span>' : ''}${featured ? '<span class="chip gold plain">مميزة في الرئيسية</span>' : ''}</div></div>
       ${photos.length ? `<div class="dh-photos no-print" aria-label="صور الشراكة">${photos.slice(0, 4).map((ph, k) => `<button data-dgal="${k}" title="${esc(ph.sub || '')}"><img data-file="${esc(ph.fileId)}" alt="">${k === 3 && photos.length > 4 ? `<span class="more">+${photos.length - 4}</span>` : ''}</button>`).join('')}<span class="dh-pl">${plural(photos.length, 'صورة واحدة', 'صورتان', 'صور', 'صورة')}</span></div>` : ''}</div></div>
   ${pFactsHTML(p)}
-  <div class="dbar"><div class="dbar-in">${secs.map(([id, l], i) => `<a href="#${id}" data-anchor="${id}" class="${i === 0 ? 'on' : ''}">${l}</a>`).join('')}<span class="sp"></span>
-    <button class="btn sm ghost" data-print title="طباعة صفحة الشراكة كما تظهر">${icon('print')} طباعة</button>
-    <button class="btn sm" data-dossier data-tour="detail-dossier" title="ملف واحد يجمع التفاصيل والنماذج والصور والمستندات">${icon('file')} الملف الشامل</button>
-    ${can('view.reports') ? `<a class="btn sm ghost" href="#/reports?ids=${p.id}" data-tour="detail-report">${icon('file')} تقرير</a><a class="btn sm ghost" href="#/reports/marketing?p=${p.id}" title="تقرير تسويقي لهذه الشراكة">${icon('star')} تقرير تسويقي</a>` : ''}
-    ${canEdit ? `<a class="btn sm primary" href="#/partnerships/${p.id}/edit">${icon('edit')} تعديل</a>` : ''}
-    ${can('delete.partnership') ? `<button class="btn sm danger" data-del>${icon('trash')}</button>` : ''}</div></div>
-  <div class="dbody"><div>
+  <div class="dbar"><div class="dbar-in"><nav class="dbar-nav" aria-label="أقسام الشراكة">${secs.map(([id, l], i) => `<a href="#${id}" data-anchor="${id}" class="${i === 0 ? 'on' : ''}">${l}</a>`).join('')}</nav>
+    <div class="dbar-acts">
+    <button class="icon-btn da-btn" data-print title="طباعة صفحة الشراكة" aria-label="طباعة">${icon('print')}</button>
+    <button class="btn sm da-lbl" data-dossier data-tour="detail-dossier" title="ملف واحد يجمع التفاصيل والنماذج والصور والمستندات">${icon('file')}<span>الملف الشامل</span></button>
+    ${can('view.reports') ? `<a class="btn sm ghost da-lbl" href="#/reports?ids=${p.id}" data-ret="${esc(pr ? pr.name : p.title)}" data-tour="detail-report" title="تقرير الشراكة">${icon('chart')}<span>تقرير</span></a><a class="btn sm ghost da-lbl" href="#/reports/marketing?p=${p.id}" data-ret="${esc(pr ? pr.name : p.title)}" title="تقرير تسويقي لهذه الشراكة">${icon('star')}<span>تسويقي</span></a>` : ''}
+    ${canEdit ? `<a class="icon-btn da-btn primary" href="#/partnerships/${p.id}/edit" title="تعديل" aria-label="تعديل">${icon('edit')}</a>` : ''}
+    ${can('delete.partnership') ? `<button class="icon-btn da-btn danger" data-del title="حذف" aria-label="حذف">${icon('trash')}</button>` : ''}
+    <button class="icon-btn da-btn" data-asidet title="إخفاء أو إظهار الشريط الجانبي" aria-label="الشريط الجانبي">${icon('sidebar')}</button></div></div></div>
+  <div class="dbody ${(() => { try { return localStorage.getItem('shk_aside_off') ? 'aside-off' : ''; } catch (_) { return ''; } })()}"><div>
     ${printHead('بطاقة شراكة — ' + (pr ? pr.name : p.title), '', { compact: true })}
     ${p.isDraft ? `<div class="note warn" style="margin-bottom:16px">${icon('edit')}<span>هذا السجل محفوظ كمسودة ولا يظهر إلا لفريق إدارة الشراكات. ${canEdit ? `<a href="#/partnerships/${p.id}/edit">استكمل البيانات واحفظه</a>.` : ''}</span></div>` : ''}
     ${(() => { const a = internal ? expiryAlert(p) : null; return a ? `<div class="p-alert ${a.tone}" role="alert" data-tour="detail-alert"><span class="pa-ic">${icon(a.tone === 'ended' ? 'flag' : 'alert')}</span><div class="grow"><b>${esc(a.title)}</b><span>${esc(a.text)}</span></div>${canEdit ? `<a class="btn sm" href="#/partnerships/${p.id}/edit">${icon('edit')} تحديث الشراكة</a>` : ''}</div>` : ''; })()}
@@ -87,7 +89,7 @@ function renderPartnership(el, r) {
       ${p.startDate || p.endDate ? `<div class="term-big"><div class="term"><i style="width:${tp !== null ? (tp * 100).toFixed(0) : 0}%"></i></div><div class="lbls"><span>${fmtDate(p.startDate, 'short')}</span><span>${fmtDate(p.endDate, 'short')}</span></div></div>
         <p class="small" style="margin-top:6px">${st === 'upcoming' ? `يبدأ السريان بعد ${plural(daysBetween(today(), parseDate(p.startDate)), 'يوم واحد', 'يومين', 'أيام', 'يومًا')}` : dl !== null ? (dl >= 0 ? `متبقٍ ${plural(dl, 'يوم واحد', 'يومان', 'أيام', 'يومًا')} على الانتهاء` : `انتهت منذ ${plural(-dl, 'يوم واحد', 'يومين', 'أيام', 'يومًا')}`) : ''}</p>` : '<p class="small muted">لم تُحدَّد تواريخ البدء والانتهاء.</p>'}</div>
     <div class="side-card"><h3>المسؤولون من إدارة الشراكات</h3>${(p.owners || []).length ? `<div class="people">${p.owners.map((o) => `<div class="person">${avatar(o)}<span>${esc(o)}</span></div>`).join('')}</div>` : '<p class="small muted">لم يُحدَّد مسؤول.</p>'}</div>
-    ${canEdit ? `<div class="side-card"><h3>اكتمال البيانات الأساسية</h3>${miss.length ? `<p class="small muted" style="margin-bottom:10px">${plural(miss.length, 'حقل واحد غير معبأ', 'حقلان غير معبأين', 'حقول غير معبأة', 'حقلًا غير معبأ')}:</p><div class="tagline">${miss.map((k) => `<span class="chip warn plain">${esc(FIELDS[k].label)}</span>`).join('')}</div><a class="btn sm" style="margin-top:12px" href="#/partnerships/${p.id}/edit">استكمال البيانات</a>` : '<p class="small" style="color:var(--ok)">جميع الحقول الأساسية معبأة.</p>'}</div>` : ''}
+    ${canEdit ? `<div class="side-card"><h3>اكتمال البيانات الأساسية</h3>${miss.length ? `<p class="small muted" style="margin-bottom:10px">${plural(miss.length, 'حقل واحد غير معبأ', 'حقلان غير معبأين', 'حقول غير معبأة', 'حقلًا غير معبأ')}:</p><div class="tagline">${miss.map((k) => `<a class="chip warn plain miss-go" href="#/partnerships/${p.id}/edit?f=${k}" title="الانتقال إلى الحقل">${esc(FIELDS[k].label)}</a>`).join('')}</div><a class="btn sm" style="margin-top:12px" href="#/partnerships/${p.id}/edit">استكمال البيانات</a>` : '<p class="small" style="color:var(--ok)">جميع الحقول الأساسية معبأة.</p>'}</div>` : ''}
     ${can('manage.content') && !p.isDraft ? `<div class="side-card no-print"><h3>العرض في الواجهة</h3>
       <label class="row" style="justify-content:space-between;margin-bottom:10px"><span class="small">منشورة في الواجهة التعريفية</span><span class="switch"><input type="checkbox" data-pub ${p.public ? 'checked' : ''}><i></i></span></label>
       <label class="row" style="justify-content:space-between"><span class="small">ضمن الشراكات المختارة</span><span class="switch"><input type="checkbox" data-feat ${featured ? 'checked' : ''} ${p.public ? '' : 'disabled'}><i></i></span></label>
@@ -253,7 +255,8 @@ function renderPartnershipForm(el, r) {
   const canAdd = can('edit.partnership');
   const fromLabel = () => (orig ? `الشراكة ${orig.code}` : 'نموذج شراكة جديدة');
   const pr0 = partnerById(s.partnerId);
-  const fs = { step: (r.query && r.query.step) || 'entity', newPartner: null, sector: pr0 ? pr0.sector || '' : '', logoFileId: pr0 ? pr0.logoFileId : null, errors: {} };
+  const goF = r.query && r.query.f;
+  const fs = { step: (r.query && r.query.step) || (goF && (P_STEPS.find((x) => (x.f || []).includes(goF)) || {}).id) || 'entity', newPartner: null, sector: pr0 ? pr0.sector || '' : '', logoFileId: pr0 ? pr0.logoFileId : null, errors: {} };
   App.dirty = false;
   const partnerOpts = () => D.partners.filter((x) => !x.demo || showDemo() || x.id === s.partnerId).sort((a, b) => a.name.localeCompare(b.name, 'ar')).map((x) => ({ value: x.id, label: x.name, sub: x.sector || '' }));
   const pName = () => (s.partnerId === '__new__' ? fs.newPartner.name : (partnerById(s.partnerId) || {}).name || '');
@@ -306,7 +309,7 @@ function renderPartnershipForm(el, r) {
       body = `<div class="grid2">
         ${field('contactName', 'ضابط الاتصال', `<input class="in" id="f_contactName" data-k="contactName" value="${esc(s.contactName)}">`, { full: true })}
         ${field('contactEmail', 'البريد الإلكتروني للشريك', `<input class="in" type="email" dir="ltr" id="f_contactEmail" data-k="contactEmail" value="${esc(s.contactEmail)}" placeholder="name@example.com">`)}
-        ${field('contactPhone', 'رقم الجوال', `<input class="in" dir="ltr" inputmode="tel" id="f_contactPhone" data-k="contactPhone" value="${esc(s.contactPhone)}" placeholder="05XXXXXXXX">`)}
+        ${field('contactPhone', 'رقم الجوال', `<input class="in" type="tel" dir="ltr" inputmode="tel" autocomplete="tel" maxlength="20" id="f_contactPhone" data-k="contactPhone" data-phone value="${esc(s.contactPhone)}" placeholder="05XXXXXXXX">`)}
       </div><div class="note" style="margin-top:16px">${icon('lock')}<span>تظهر بيانات التواصل لفريق الشراكات ومستخدمي الاطلاع، ولا تظهر لممثلي الإدارات الأخرى ولا في الواجهة التعريفية.</span></div>`;
     } else if (st.id === 'files') {
       body = attachEditorHTML('pAtt', { cats: L('attachmentCats'), defaultCat: L('attachmentCats')[0] });
@@ -396,6 +399,11 @@ function renderPartnershipForm(el, r) {
     go('#/partnerships/' + s.id);
   };
   drawStep();
+  if (goF) setTimeout(() => { // القفز من «اكتمال البيانات» إلى الحقل نفسه
+    const w = el.querySelector(`[data-f="${goF}"]`) || (el.querySelector(`#f_${goF}`) || {}).closest?.('.field') || el.querySelector(`[data-cb="${goF}"]`);
+    if (!w) return; w.scrollIntoView({ block: 'center', behavior: 'smooth' }); w.classList.add('f-flash');
+    const inp = w.querySelector('input:not([type=hidden]),textarea,select') || w; setTimeout(() => { try { inp.focus({ preventScroll: true }); } catch (_) { /* */ } }, 350); setTimeout(() => w.classList.remove('f-flash'), 2400);
+  }, 120);
   const panel = $('#fpanel', el);
   el.addEventListener('click', async (e) => {
     const stp = e.target.closest('[data-step]'); if (stp) { fs.step = stp.dataset.step; drawStep(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }

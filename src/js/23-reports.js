@@ -454,7 +454,7 @@ function renderReports(el, r) {
   const base = () => visiblePartnerships({ includeDrafts: can('view.drafts') });
   if (q.all) RPT.ids = applyFilters(base(), RPT.f).map((p) => p.id);
   el.innerHTML = `<section class="rx-hero">
-      <div class="rx-hero-t"><span class="rx-eye"><i></i>التقارير</span><h1>استوديو القصة</h1>
+      <div class="rx-hero-t">${App.ret ? retLinkHTML() : ''}<span class="rx-eye"><i></i>التقارير</span><h1>استوديو القصة</h1>
         <p>حوّل بيانات الشراكات إلى عرض يُقنع ويُلهم: اختر القصة، وحدد الشراكات، وعدّل أي نص مباشرة على الشريحة، ثم اعرضه بملء الشاشة أو نزّله PowerPoint وPDF. الأرقام تُقرأ من السجلات لحظة العرض.</p></div>
       <div class="rx-fan" aria-hidden="true"><span class="f1"><b></b><i></i><i></i><i></i></span><span class="f2"><b></b><em></em><i></i><i></i></span><span class="f3"><strong>”</strong><i></i><i></i><i></i></span></div>
     </section>

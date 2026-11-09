@@ -239,6 +239,7 @@ function parseHash() {
 function route() {
   if (!AUTH.dev && !currentLogin()) { if (!$('#shkLogin')) showLogin(); return; }
   const { path, query } = parseHash();
+  if (App.ret && !/^\/reports(\/marketing)?$/.test(path) && ('#' + path) !== App.ret.hash.split('?')[0]) App.ret = null;
   let def = null, m = null;
   for (const d of ROUTES) { m = d.re.exec(path); if (m) { def = d; break; } }
   const main = $('#main');

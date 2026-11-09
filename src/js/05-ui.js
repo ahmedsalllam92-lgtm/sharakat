@@ -197,7 +197,7 @@ function attachmentsView(list, { cats = L('attachmentCats'), editable = false, e
     <div class="att-list">${groups[c].map((a) => `<div class="att" data-att="${esc(a.id)}"><span class="fi">${attIcon(a)}</span>
       <div class="grow"><div class="nm" title="${esc(a.name)}">${esc(a.name)}</div><div class="mt"><span class="num">${fmtSize(a.size || 0)}</span> — ${fmtDate(a.addedAt || a.at)}${a.fromProposal ? ` — من المقترح ${esc(a.fromProposal)}` : ''}</div></div>
       <button class="icon-btn" data-dl="${esc(a.fileId)}" data-name="${esc(a.name)}" title="تنزيل" type="button">${icon('download')}</button>
-      ${editable ? `<button class="icon-btn" data-rmatt="${esc(a.id)}" title="إزالة" type="button">${icon('trash')}</button>` : ''}</div>`).join('')}</div></div>`).join('')}</div>`;
+      ${editable ? `<select class="in att-move" data-attmove="${esc(a.id)}" title="تصنيف الملف" aria-label="تصنيف الملف">${[...new Set([...cats, c])].map((x) => `<option ${x === c ? 'selected' : ''}>${esc(x)}</option>`).join('')}</select><button class="icon-btn" data-rmatt="${esc(a.id)}" title="إزالة" type="button">${icon('trash')}</button>` : ''}</div>`).join('')}</div></div>`).join('')}</div>`;
 }
 async function downloadStored(fileId, name) {
   const f = await Store.getFile(fileId);
@@ -219,7 +219,8 @@ document.addEventListener('click', (e) => {
 function attachEditorHTML(id, { cats, defaultCat }) {
   return `<div class="att-editor" id="${id}">
     <div class="row wrap" style="margin-bottom:10px"><label class="flabel" style="margin:0">التصنيف</label>
-      <select class="in" data-attcat style="width:auto;min-width:200px">${cats.map((c) => `<option ${c === defaultCat ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select></div>
+      <select class="in" data-attcat style="width:auto;min-width:200px"><option value="__auto" selected>تلقائي — حسب نوع الملف واسمه</option>${cats.map((c) => `<option>${esc(c)}</option>`).join('')}</select>
+      <span class="xs muted">يمكن تغيير تصنيف أي ملف بعد رفعه، ويظهر الملف بتصنيفه في التقارير والملف الشامل.</span></div>
     <label class="drop" data-drop><input type="file" multiple hidden>${icon('upload')}<div>اسحب الملفات هنا أو <b>اختر من جهازك</b></div><div class="xs faint">حتى 50 ميجابايت للملف — والصور تُضغط تلقائيًا</div></label>
     <div class="att-out" style="margin-top:14px"></div></div>`;
 }
@@ -228,14 +229,18 @@ function bindAttachEditor(root, getList, setList, { onChange } = {}) {
   const out = box.querySelector('.att-out'), drop = box.querySelector('[data-drop]'), inp = drop.querySelector('input');
   const draw = () => { out.innerHTML = attachmentsView(getList(), { editable: true, emptyText: 'لم تُرفق ملفات بعد.' }); hydrateFiles(out); };
   const add = async (files) => {
-    const cat = box.querySelector('[data-attcat]').value;
+    const sel = box.querySelector('[data-attcat]').value, cats = [...box.querySelectorAll('[data-attcat] option')].map((o) => o.value).filter((v) => v !== '__auto');
+    const done = {};
     for (const f of files) {
       try {
+        const cat = sel === '__auto' ? guessAttCat(f, cats) : sel;
         const rec = await saveUpload(f);
+        done[cat] = (done[cat] || 0) + 1;
         setList([...getList(), { id: uid('att'), fileId: rec.id, name: rec.name, type: rec.type, size: rec.size, category: cat, addedAt: nowISO(), by: Session.userName() }]);
       } catch (e) { toast(e.message, 'err'); }
     }
     draw(); onChange && onChange();
+    if (sel === '__auto' && Object.keys(done).length) toast('صُنّفت الملفات: ' + Object.entries(done).map(([c, n]) => `${c} (${n})`).join('، ') + ' — ويمكن تغيير أي تصنيف من القائمة بجوار الملف');
   };
   inp.onchange = () => { add([...inp.files]); inp.value = ''; };
   ['dragenter', 'dragover'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('over'); }));
@@ -244,6 +249,10 @@ function bindAttachEditor(root, getList, setList, { onChange } = {}) {
   out.addEventListener('click', (e) => {
     const rm = e.target.closest('[data-rmatt]');
     if (rm) { setList(getList().filter((a) => a.id !== rm.dataset.rmatt)); draw(); onChange && onChange(); }
+  });
+  out.addEventListener('change', (e) => { // تغيير تصنيف ملف بعد رفعه
+    const c = e.target.closest('[data-attmove]'); if (!c) return;
+    setList(getList().map((a) => (a.id === c.dataset.attmove ? { ...a, category: c.value } : a))); draw(); onChange && onChange();
   });
   draw();
 }
@@ -256,4 +265,46 @@ function printHead(title, filtersText = '', { compact = false } = {}) {
 function filtersText(f) {
   const parts = Object.entries(f).filter(([, v]) => v && v.length).map(([k, v]) => `${FILTER_DIMS[k].label}: ${v.map((x) => (FILTER_DIMS[k].fmt ? FILTER_DIMS[k].fmt(x) : x)).join('، ')}`);
   return parts.length ? 'الفلاتر المطبقة — ' + parts.join(' | ') : 'دون فلاتر — جميع السجلات المتاحة';
+}
+
+/* حقول الهاتف: أرقام و«+» ومسافة وشرطة فقط، والأرقام العربية-الهندية تتحول إلى لاتينية */
+document.addEventListener('input', (e) => {
+  const t = e.target; if (!t.matches || !t.matches('input[data-phone]')) return;
+  const v = t.value.replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+  const c = v.replace(/[^\d+\s-]/g, '').replace(/(?!^)\+/g, '');
+  if (c !== t.value) { const pos = Math.max(0, (t.selectionStart || c.length) - (t.value.length - c.length)); t.value = c; try { t.setSelectionRange(pos, pos); } catch (_) { /* */ } t.classList.add('ph-bad'); clearTimeout(t._phT); t._phT = setTimeout(() => t.classList.remove('ph-bad'), 700); t.dispatchEvent(new Event('change', { bubbles: true })); }
+});
+/* طي الشريط الجانبي في صفحة الشراكة */
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-asidet]'); if (!b) return;
+  const d = document.querySelector('.dbody'); if (!d) return;
+  const off = d.classList.toggle('aside-off');
+  try { off ? localStorage.setItem('shk_aside_off', '1') : localStorage.removeItem('shk_aside_off'); } catch (_) { /* */ }
+});
+/* العودة من التقارير إلى الشراكة في المكان نفسه */
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[data-ret]'); if (!a) return;
+  const h = document.querySelector('.dhead h1');
+  App.ret = { hash: location.hash, y: window.scrollY, label: a.dataset.ret || (h ? h.textContent.trim() : 'الشراكة') };
+}, true);
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('[data-goret]'); if (!a || !App.ret) return;
+  e.preventDefault(); const r = App.ret; App.ret = null;
+  location.hash = r.hash;
+  const restore = (n) => { if (document.querySelector('.dhead')) { window.scrollTo(0, r.y); } else if (n < 20) setTimeout(() => restore(n + 1), 60); };
+  setTimeout(() => restore(0), 80);
+});
+function retLinkHTML(fallbackHref, fallbackLabel) {
+  return App.ret ? `<a class="back ret-back" href="#" data-goret>${icon('arrowR')} العودة إلى «${esc(App.ret.label)}»</a>` : `<a class="back" href="${fallbackHref}">${icon('arrowR')} ${fallbackLabel}</a>`;
+}
+
+/* تصنيف تلقائي للمرفق من نوعه واسمه */
+function guessAttCat(f, cats) {
+  const n = String(f.name || '').toLowerCase(), has = (c) => cats.includes(c) ? c : null;
+  if (/^image\//.test(f.type || '') || /\.(jpe?g|png|webp|heic|gif)$/.test(n)) return has('صور الشراكة') || cats[0];
+  if (/اتفاقي|مذكر|تفاهم|تعاون|عقد|mou|agreement|contract/.test(n)) return has('الاتفاقية') || cats[0];
+  if (/تقييم|evaluation|assessment/.test(n)) return has('تقييم الشراكة') || cats[0];
+  if (/تقرير|report/.test(n)) return has('تقرير الشراكة العام') || cats[0];
+  if (/خطاب|محضر|مسار|موافق|اعتماد/.test(n)) return has('مستندات مسار المذكرة') || has('أخرى') || cats[0];
+  return has('أخرى') || cats[cats.length - 1];
 }
