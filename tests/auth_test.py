@@ -15,12 +15,12 @@ async def main():
         E = pg.evaluate
         async def login(acc, pw):
             await pg.wait_for_selector('#shkLogin #lgPw')
-            await pg.select_option('#lgAcc', acc); await pg.fill('#lgPw', pw); await pg.click('#shkLogin .lg-go'); await pg.wait_for_timeout(700)
+            await pg.fill('#lgUser', await pg.evaluate("(id)=>accUser(authAccounts().find(a=>a.id===id))", acc)); await pg.fill('#lgPw', pw); await pg.click('#shkLogin .lg-go'); await pg.wait_for_timeout(700)
         async def logout():
             await E("authLogout()"); await pg.wait_for_timeout(500)
         await pg.goto(URL); await pg.wait_for_timeout(800)
         ok('login screen before any data is shown', await E("!!document.getElementById('shkLogin') && !document.querySelector('#main .page')"))
-        accs = await E("[...document.querySelectorAll('#lgAcc option')].map(o=>o.value)")
+        accs = await E("[...accUsers().keys()]")
         ok('accounts: system admin, partnerships, team, departments, viewer', accs[0]=='sysadmin' and 'admin' in accs and any(a.startswith('team:') for a in accs) and any(a.startswith('dept:') for a in accs) and 'viewer' in accs, len(accs))
         await login('admin', 'wrong')
         ok('wrong password rejected', await E("document.getElementById('lgErr').textContent.includes('غير صحيحة') && !document.querySelector('#main .page')"))

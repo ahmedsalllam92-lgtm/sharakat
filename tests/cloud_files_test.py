@@ -21,7 +21,7 @@ async def main():
             ctx = await b.new_context(viewport={'width': 1366, 'height': 860}); pg = await ctx.new_page()
             pg.on('pageerror', lambda e: errs.append(str(e))); return pg
         async def login(pg, acc, pw, wait=1500):
-            await pg.wait_for_selector('#shkLogin #lgPw'); await pg.select_option('#lgAcc', acc); await pg.fill('#lgPw', pw); await pg.click('#shkLogin .lg-go'); await pg.wait_for_timeout(wait)
+            await pg.wait_for_selector('#shkLogin #lgPw'); await pg.fill('#lgUser', await pg.evaluate("(id)=>accUser(authAccounts().find(a=>a.id===id))", acc)); await pg.fill('#lgPw', pw); await pg.click('#shkLogin .lg-go'); await pg.wait_for_timeout(wait)
         A = await device(); await A.goto(URL); await A.evaluate(FORCE); await A.reload(); await A.wait_for_timeout(900)
         await login(A, 'admin', PW['admin'], 900); await A.click('.modal [data-ok]'); await A.wait_for_timeout(2500)
         ok('platform initialised', await A.evaluate("Cloud.ready && Cloud.pending()===0"))

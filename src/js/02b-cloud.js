@@ -47,6 +47,14 @@ function cloudInit() {
   window.addEventListener('focus', () => cloudTick());
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') cloudTick(); });
 }
+/* مسح نسخة البيانات المحفوظة على هذا الجهاز (عند الخروج دون «تذكّرني»)؛ لا يمسح إن بقيت تعديلات لم تُرفع */
+Store.wipeLocal = async function () {
+  if (Object.keys(Cloud.out || {}).length || Object.keys(Cloud.fout || {}).length) return false;
+  try { if (Store.db) Store.db.close(); } catch (_) { /* */ }
+  await new Promise((r) => { const q = indexedDB.deleteDatabase(CLOUD_DB); q.onsuccess = q.onerror = q.onblocked = () => r(); });
+  Cloud.rev = 0; Cloud.sRev = 0; Cloud.save();
+  return true;
+};
 Cloud.save = function () { try { localStorage.setItem('shk_cloud', JSON.stringify({ url: this.url, rev: this.rev, sRev: this.sRev, out: this.out, fout: this.fout })); } catch (_) { /* */ } };
 Cloud.token = function () { try { const s = JSON.parse(localStorage.getItem('shk_auth') || sessionStorage.getItem('shk_auth') || 'null'); return (s && s.tk) || null; } catch (_) { return null; } };
 Cloud.pending = function () { return Object.keys(this.out).length + this.fout.length; };

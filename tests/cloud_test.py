@@ -22,7 +22,7 @@ async def main():
             pg.on('pageerror', lambda e: errs.append(str(e))); return ctx, pg
         async def login(pg, acc, pw, wait=1200):
             await pg.wait_for_selector('#shkLogin #lgPw')
-            await pg.select_option('#lgAcc', acc); await pg.fill('#lgPw', pw); await pg.click('#shkLogin .lg-go'); await pg.wait_for_timeout(wait)
+            await pg.fill('#lgUser', await pg.evaluate("(id)=>accUser(authAccounts().find(a=>a.id===id))", acc)); await pg.fill('#lgPw', pw); await pg.click('#shkLogin .lg-go'); await pg.wait_for_timeout(wait)
         # ===== الجهاز A: بيانات قديمة محفوظة محليًا قبل الربط =====
         ctxA, A = await device()
         await A.goto(URL); await A.wait_for_timeout(900)
@@ -48,7 +48,7 @@ async def main():
         dept = await A.evaluate("wfAccounts().find(a=>a.role==='dept').id")
         ctxB, B = await device()
         await B.goto(URL); await B.evaluate(FORCE); await B.reload(); await B.wait_for_timeout(1200)
-        ok('login list comes from the server settings', await B.evaluate(f"[...document.querySelectorAll('#lgAcc option')].some(o=>o.value==={json.dumps(dept)})"))
+        ok('login list comes from the server settings', await B.evaluate(f"[...accUsers().keys()].includes({json.dumps(dept)})"))
         await login(B, dept, PW['dept'], 1800)
         ok('department on another device sees the shared data', await B.evaluate(f"!!document.querySelector('#main .page') && (D.partnerships.find(p=>p.id==='{old_id}')||{{}}).title==='شراكة محفوظة قبل الربط'"))
         ok('department session applied', await B.evaluate("Session.role()") == 'dept')

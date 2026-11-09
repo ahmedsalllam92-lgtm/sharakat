@@ -95,12 +95,96 @@ async function authLogin(a, remember, cl) {
 async function authLogout() {
   if (App.dirty && !(await confirmDlg('لديك تعديلات غير محفوظة. تسجيل الخروج سيغلق النموذج دون حفظ.', { ok: 'تسجيل الخروج', danger: true }))) return;
   try { await Repo.log('auth.logout', 'account', currentAccountId(), accountLabel(), ''); } catch (_) { /* */ }
-  if (Cloud.on) { try { await Cloud.flush(); } catch (_) { /* */ } await Cloud.logout(); }
+  let wiped = false;
+  if (Cloud.on) { try { await Cloud.flush(); } catch (_) { /* */ } await Cloud.logout(); if (!localStorage.getItem(AUTH_KEY)) { try { wiped = await Store.wipeLocal(); } catch (_) { /* */ } } }
   try { localStorage.removeItem(AUTH_KEY); sessionStorage.removeItem(AUTH_KEY); } catch (_) { /* */ }
+  if (wiped) { history.replaceState(null, '', '#/'); location.reload(); return; } // جهاز مشترك: لا تبقى بيانات المنصة بعد الخروج
   App.dirty = false;
   location.hash = '#/';
   ['#side', '#topbar', '#main'].forEach((s) => { const e = $(s); if (e) e.innerHTML = ''; });
   showLogin();
+}
+
+/* — أسماء المستخدمين بصيغة البريد (مثل admin@murooj): بدل قائمة الحسابات في شاشة الدخول.
+   الثابت منها للحسابات المعروفة، ويمكن لإدارة الشراكات تعديل أي اسم من «الحسابات وكلمات المرور»
+   (يُحفظ في org.usernames فيظهر قبل الدخول)، والحساب الجديد يأخذ اسمًا منقولًا من اسمه العربي. — */
+const LG_DOMAIN = 'murooj';
+const LG_FIXED = {
+  sysadmin: 'sysadmin', admin: 'admin', viewer: 'board',
+  'team:وعد': 'waad', 'team:رنيم': 'raneem', 'team:عبدالله': 'abdullah', 'team:العنود': 'alanoud',
+  'dept:الإدارة العامة للمشاريع': 'projects', 'dept:إدارة المشاريع': 'projects', 'dept:إدارة تطوير الأعمال': 'bizdev',
+  'dept:الإدارة العامة للاتصال المؤسسي': 'comms', 'dept:إدارة الاتصال المؤسسي': 'comms', 'dept:الإدارة العامة للمشاركة المجتمعية': 'community', 'dept:إدارة المشاركة المجتمعية': 'community',
+  'dept:الإدارة العامة للاستراتيجية': 'strategy', 'dept:الإدارة العامة للموارد البشرية والشؤون الإدارية': 'hr', 'dept:الإدارة القانونية': 'legal', 'dept:الإدارة المالية': 'finance',
+};
+function lgTranslit(s) {
+  const M = { 'ا': 'a', 'أ': 'a', 'إ': 'e', 'آ': 'a', 'ب': 'b', 'ت': 't', 'ث': 'th', 'ج': 'j', 'ح': 'h', 'خ': 'kh', 'د': 'd', 'ذ': 'th', 'ر': 'r', 'ز': 'z', 'س': 's', 'ش': 'sh', 'ص': 's', 'ض': 'd', 'ط': 't', 'ظ': 'z', 'ع': 'a', 'غ': 'gh', 'ف': 'f', 'ق': 'q', 'ك': 'k', 'ل': 'l', 'م': 'm', 'ن': 'n', 'ه': 'h', 'ة': 'a', 'و': 'w', 'ي': 'y', 'ى': 'a', 'ئ': 'e', 'ؤ': 'o', 'ء': '' };
+  const t = String(s || '').replace(/^(الإدارة العامة ل?ل?|إدارة |الإدارة )/, '').replace(/[ً-ْـ]/g, '').split('').map((c) => (M[c] !== undefined ? M[c] : /[a-z0-9]/i.test(c) ? c.toLowerCase() : c === ' ' ? '.' : '')).join('');
+  return t.replace(/\.+/g, '.').replace(/^\.|\.$/g, '').slice(0, 24) || 'user';
+}
+/* خريطة الحساب ← اسم المستخدم، بلا تكرار */
+function accUsers() {
+  const own = (D.settings.org && D.settings.org.usernames) || {}, used = new Set(), out = new Map();
+  authAccounts().forEach((a) => {
+    let u = String(own[a.id] || LG_FIXED[a.id] || lgTranslit(a.role === 'team' ? a.member : a.t)).toLowerCase().replace(/@.*$/, '');
+    let k = u, n = 2; while (used.has(k)) k = u + n++;
+    used.add(k); out.set(a.id, k + '@' + LG_DOMAIN);
+  });
+  return out;
+}
+const accUser = (a) => (a ? accUsers().get(a.id) || '' : '');
+function accByUser(v) {
+  let u = String(v || '').trim().toLowerCase().replace(/\s+/g, ''); if (!u) return null;
+  if (!u.includes('@')) u += '@' + LG_DOMAIN;
+  for (const [id, x] of accUsers()) if (x === u) return authAccounts().find((a) => a.id === id) || null;
+  return null;
+}
+
+/* — خلفية الدخول الحية: «شبكة الشراكات» — نقاط تسبح ببطء وتتصل كلما اقتربت، وومضات ذهبية تسري على الروابط،
+   وتتجاوب الشبكة مع مؤشر الفأرة. تتوقف تلقائيًا عند إغلاق الشاشة، وتثبت لمن فعّل تقليل الحركة. — */
+function lgNet(root) {
+  const cv = root.querySelector('.lg-net'); if (!cv || !cv.getContext) return;
+  const cx = cv.getContext('2d'), still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W = 0, H = 0, dpr = 1, P = [], pulses = [], mouse = null, raf = 0, t0 = performance.now();
+  const size = () => { dpr = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px'; cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const n = Math.round(Math.min(90, Math.max(34, W * H / 17000)));
+    P = Array.from({ length: n }, (_, i) => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - 0.5) * 0.22, vy: (Math.random() - 0.5) * 0.22, r: 1 + Math.random() * 1.8, g: i % 7 === 0, ph: Math.random() * 6.28 })); };
+  size();
+  const D2 = () => Math.min(170, Math.max(120, W / 9));
+  const frame = (now) => {
+    if (!root.isConnected) { cancelAnimationFrame(raf); removeEventListener('resize', size); return; }
+    const t = (now - t0) / 1000, L = D2();
+    cx.clearRect(0, 0, W, H);
+    for (const p of P) {
+      if (!still) { p.x += p.vx; p.y += p.vy; if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20; if (p.y < -20) p.y = H + 20; if (p.y > H + 20) p.y = -20; }
+      if (mouse) { const dx = p.x - mouse.x, dy = p.y - mouse.y, d = Math.hypot(dx, dy); if (d < 140 && d > 0.1) { p.x += dx / d * 0.35; p.y += dy / d * 0.35; } }
+    }
+    cx.lineWidth = 1;
+    for (let i = 0; i < P.length; i++) for (let j = i + 1; j < P.length; j++) {
+      const a = P[i], b = P[j], d = Math.hypot(a.x - b.x, a.y - b.y); if (d > L) continue;
+      const k = 1 - d / L; cx.strokeStyle = (a.g || b.g) ? `rgba(230,199,134,${0.28 * k})` : `rgba(168,214,196,${0.2 * k})`;
+      cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(b.x, b.y); cx.stroke();
+      if (!still && k > 0.55 && Math.random() < 0.0009 && pulses.length < 10) pulses.push({ a: i, b: j, s: 0 });
+    }
+    if (mouse) for (const p of P) { const d = Math.hypot(p.x - mouse.x, p.y - mouse.y); if (d < 190) { cx.strokeStyle = `rgba(230,199,134,${0.32 * (1 - d / 190)})`; cx.beginPath(); cx.moveTo(p.x, p.y); cx.lineTo(mouse.x, mouse.y); cx.stroke(); } }
+    for (const p of P) {
+      const tw = 0.55 + 0.45 * Math.sin(t * 1.6 + p.ph);
+      cx.fillStyle = p.g ? `rgba(240,217,160,${0.55 + 0.4 * tw})` : `rgba(200,232,218,${0.35 + 0.35 * tw})`;
+      cx.beginPath(); cx.arc(p.x, p.y, p.r * (p.g ? 1.35 : 1), 0, 6.283); cx.fill();
+      if (p.g) { cx.fillStyle = `rgba(240,217,160,${0.08 * tw})`; cx.beginPath(); cx.arc(p.x, p.y, p.r * 6, 0, 6.283); cx.fill(); }
+    }
+    pulses = pulses.filter((q) => {
+      const a = P[q.a], b = P[q.b]; if (!a || !b) return false; q.s += 0.012;
+      const x = a.x + (b.x - a.x) * q.s, y = a.y + (b.y - a.y) * q.s;
+      const g = cx.createRadialGradient(x, y, 0, x, y, 9); g.addColorStop(0, 'rgba(255,236,190,.95)'); g.addColorStop(1, 'rgba(255,236,190,0)');
+      cx.fillStyle = g; cx.beginPath(); cx.arc(x, y, 9, 0, 6.283); cx.fill();
+      return q.s < 1;
+    });
+    if (!still) raf = requestAnimationFrame(frame);
+  };
+  addEventListener('resize', size);
+  root.addEventListener('pointermove', (e) => { mouse = { x: e.clientX, y: e.clientY }; });
+  root.addEventListener('pointerleave', () => { mouse = null; });
+  raf = requestAnimationFrame(frame);
 }
 
 /* شاشة الدخول */
@@ -108,15 +192,15 @@ function lgOpts(A, sel) { return [...new Set(A.map((a) => a.g))].map((g) => `<op
 function showLogin(done) {
   const old = $('#shkLogin'); if (old) old.remove();
   let A = authAccounts();
-  let last = ''; try { last = localStorage.getItem('shk_last_acc') || ''; } catch (_) { /* */ }
+  let last = ''; try { last = localStorage.getItem('shk_last_user') || ''; } catch (_) { /* */ }
   const img = (k) => ((typeof ASSET_IMG !== 'undefined' && ASSET_IMG[k]) || {}).src || '';
   const o = D.settings.org;
   const el = document.createElement('div'); el.id = 'shkLogin'; el.className = 'lg-glass';
-  el.innerHTML = `<div class="lg-bg lg-calm"></div><div class="calm-deco fixed" aria-hidden="true"><i class="cd-a"></i><i class="cd-b"></i><i class="cd-c"></i><span class="cd-lines"></span></div><div class="lg-veil lg-calm"></div>
-    <form class="lg-card" autocomplete="off" novalidate>
+  el.innerHTML = `<div class="lg-bg lg-calm"></div><div class="calm-deco fixed" aria-hidden="true"><i class="cd-a"></i><i class="cd-b"></i><i class="cd-c"></i><span class="cd-lines"></span></div><div class="lg-veil lg-calm"></div><canvas class="lg-net" aria-hidden="true"></canvas>
+    <form class="lg-card" autocomplete="off" novalidate><span class="lg-ring" aria-hidden="true"></span>
       ${img('murooj-logo-white') ? `<img class="lg-logo" src="${img('murooj-logo-white')}" alt="${esc(o.name)}">` : ''}
       <h1>${esc(o.platform)}</h1><p class="lg-sub">${esc(o.name)}</p>
-      <div class="field"><label for="lgAcc">الحساب</label><select class="in" id="lgAcc">${lgOpts(A, last)}</select></div>
+      <div class="field"><label for="lgUser">اسم المستخدم</label><div class="lg-user"><input class="in" id="lgUser" type="text" dir="ltr" inputmode="email" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="name@${LG_DOMAIN}" value="${esc(last)}"><span class="lg-at">${icon('users')}</span></div></div>
       <div class="field"><label for="lgPw">كلمة المرور</label><div class="lg-pw"><input class="in" id="lgPw" type="password" autocomplete="current-password" dir="ltr"><button type="button" class="icon-btn" data-lgeye aria-label="إظهار كلمة المرور">${icon('eye')}</button></div></div>
       <label class="lg-rem"><input type="checkbox" id="lgRem" checked> تذكّرني على هذا الجهاز</label>
       <div class="lg-err" id="lgErr" role="alert"></div>
@@ -124,20 +208,23 @@ function showLogin(done) {
       <small class="lg-note">لنسيان كلمة المرور تواصل مع إدارة الشراكات.</small>
     </form>`;
   document.body.appendChild(el);
+  lgNet(el);
   const boot = $('#boot'); if (boot) { boot.classList.add('out'); setTimeout(() => boot.remove(), 400); }
   const pw = $('#lgPw', el), err = $('#lgErr', el);
-  setTimeout(() => pw.focus(), 60);
+  setTimeout(() => ($('#lgUser', el).value ? pw : $('#lgUser', el)).focus(), 60);
   /* المنصة المشتركة: قائمة الإدارات وأعضاء الفريق كما هي على الخادم */
-  if (Cloud.on) Cloud.loadPublic().then((ok) => { if (!ok || !el.isConnected) return; const s = $('#lgAcc', el), v = s.value; A = authAccounts(); s.innerHTML = lgOpts(A, v || last); }).catch(() => {});
+  if (Cloud.on) Cloud.loadPublic().catch(() => {});
   $('[data-lgeye]', el).onclick = () => { pw.type = pw.type === 'password' ? 'text' : 'password'; };
   $('form', el).onsubmit = async (e) => {
     e.preventDefault();
     if (Date.now() < AUTH.lockUntil) { err.textContent = `محاولات كثيرة. حاول بعد ${Math.ceil((AUTH.lockUntil - Date.now()) / 1000)} ثانية.`; return; }
-    const a = A.find((x) => x.id === $('#lgAcc', el).value);
+    const a = accByUser($('#lgUser', el).value);
+    try { if ($('#lgRem', el).checked && a) localStorage.setItem('shk_last_user', accUser(a)); else localStorage.removeItem('shk_last_user'); } catch (_) { /* */ }
+    if (!$('#lgUser', el).value.trim()) { err.textContent = 'اكتب اسم المستخدم.'; $('#lgUser', el).focus(); return; }
     if (Cloud.on) return cloudLoginSubmit(el, a, done);
-    if (!authCheck(a, pw.value)) {
+    if (!a || !authCheck(a, pw.value)) {
       AUTH.fails++; if (AUTH.fails >= 5) { AUTH.lockUntil = Date.now() + 30000; AUTH.fails = 0; }
-      err.textContent = 'كلمة المرور غير صحيحة.'; pw.select(); el.querySelector('.lg-card').classList.remove('shake'); void el.offsetWidth; el.querySelector('.lg-card').classList.add('shake'); return;
+      err.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة.'; pw.select(); el.querySelector('.lg-card').classList.remove('shake'); void el.offsetWidth; el.querySelector('.lg-card').classList.add('shake'); return;
     }
     AUTH.fails = 0;
     await authLogin(a, $('#lgRem', el).checked);
@@ -153,14 +240,15 @@ function showLogin(done) {
 async function cloudLoginSubmit(el, a, done) {
   const pw = $('#lgPw', el), err = $('#lgErr', el), btn = $('.lg-go', el);
   const shake = () => { const c = el.querySelector('.lg-card'); c.classList.remove('shake'); void el.offsetWidth; c.classList.add('shake'); };
-  if (!a || !pw.value) { err.textContent = 'اكتب كلمة المرور.'; return; }
+  if (!pw.value) { err.textContent = 'اكتب كلمة المرور.'; return; }
+  if (!a) { await new Promise((r) => setTimeout(r, 600)); err.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة.'; pw.select(); shake(); return; }
   btn.disabled = true; err.textContent = ''; btn.classList.add('busy');
   let r;
   try { r = await Cloud.login(a.id, pw.value); }
   catch (e) { btn.disabled = false; btn.classList.remove('busy'); err.textContent = e.offline ? 'تعذّر الاتصال بالخادم. تأكد من الإنترنت ثم حاول مرة أخرى.' : 'تعذّر تسجيل الدخول: ' + e.message; return; }
   if (!r || r.error) {
     btn.disabled = false; btn.classList.remove('busy');
-    err.textContent = r && r.error === 'locked' ? `محاولات خاطئة كثيرة — الحساب مقفل مؤقتًا. حاول بعد ${Math.ceil((r.wait || 60) / 60)} دقيقة.` : 'كلمة المرور غير صحيحة.';
+    err.textContent = r && r.error === 'locked' ? `محاولات خاطئة كثيرة — الحساب مقفل مؤقتًا. حاول بعد ${Math.ceil((r.wait || 60) / 60)} دقيقة.` : 'اسم المستخدم أو كلمة المرور غير صحيحة.';
     pw.select(); shake(); return;
   }
   await authLogin(a, $('#lgRem', el).checked, r);
@@ -231,8 +319,8 @@ function authSettingsHTML() {
   const A = authAccounts();
   if (Cloud.on && !Cloud.pwSet && !Cloud.pwLoading) { Cloud.pwLoading = true; Cloud.loadPwStatus().then(() => { Cloud.pwLoading = false; const p = $('#setPw'); if (p && Cloud.pwSet) p.outerHTML = authSettingsHTML(); }); }
   return `<div class="panel" id="setPw"><div class="panel-h"><h3>الحسابات وكلمات المرور</h3><span class="sub">إدارة الشراكات تملك كامل الصلاحيات وتعيّن كلمات مرور الحسابات؛ حساب مدير النظام محمي</span></div><div class="panel-b">
-    <div class="tbl-wrap"><table class="tbl pw-tbl"><thead><tr><th>الحساب</th><th>المجموعة</th><th>الصلاحية</th><th>كلمة المرور</th><th></th></tr></thead><tbody>
-    ${A.map((a) => `<tr data-pwrow="${esc(a.id)}"><td><b>${esc(a.t)}</b></td><td>${esc(a.g)}</td><td>${esc(a.sys ? 'كل الصلاحيات (الحساب الرئيسي)' : a.role === 'admin' ? 'كامل الصلاحيات' : ROLES[a.role].label)}</td>
+    <div class="tbl-wrap"><table class="tbl pw-tbl"><thead><tr><th>الحساب</th><th>اسم المستخدم</th><th>المجموعة</th><th>الصلاحية</th><th>كلمة المرور</th><th></th></tr></thead><tbody>
+    ${A.map((a) => `<tr data-pwrow="${esc(a.id)}"><td><b>${esc(a.t)}</b></td><td><code class="pw-user" dir="ltr">${esc(accUser(a))}</code>${a.sys ? '' : ` <button class="linkbtn xs" type="button" data-userset="${esc(a.id)}" title="تغيير اسم المستخدم">${icon('edit')}</button>`}</td><td>${esc(a.g)}</td><td>${esc(a.sys ? 'كل الصلاحيات (الحساب الرئيسي)' : a.role === 'admin' ? 'كامل الصلاحيات' : ROLES[a.role].label)}</td>
       <td>${a.sys ? `<span class="chip pw-lock">${icon('lock')} محمية — لا تظهر ولا تُغيَّر</span>` : Cloud.on && !Cloud.pwSet ? '<span class="chip">…</span>' : authIsDefault(a) ? '<span class="chip warn">افتراضية</span>' : '<span class="chip ok">مخصّصة</span>'}</td>
       <td class="pw-acts">${a.sys ? '' : `<button class="btn sm" type="button" data-pwset="${esc(a.id)}">تعيين</button>${authIsDefault(a) ? '' : `<button class="btn sm ghost" type="button" data-pwreset="${esc(a.id)}">الافتراضية</button>`}`}</td></tr>`).join('')}
     </tbody></table></div>
@@ -243,6 +331,19 @@ function authSettingsClick(e) {
   const s = e.target.closest('[data-pwset]'); if (s) { passwordDialog(authAccounts().find((x) => x.id === s.dataset.pwset), !!(currentLogin() && currentLogin().id === s.dataset.pwset)); return true; }
   const r = e.target.closest('[data-pwreset]');
   if (r) { const a = authAccounts().find((x) => x.id === r.dataset.pwreset); confirmDlg(`إعادة كلمة مرور «${a.t}» إلى الافتراضية؟`, { ok: 'إعادة' }).then(async (y) => { if (!y) return; await authSetPassword(a.id, null); toast('أُعيدت إلى الافتراضية'); route(); }); return true; }
+  const us = e.target.closest('[data-userset]');
+  if (us) {
+    const a = authAccounts().find((x) => x.id === us.dataset.userset);
+    inputDlg({ title: 'اسم المستخدم — ' + a.t, label: `أحرف إنجليزية وأرقام فقط، ويُضاف @${LG_DOMAIN} تلقائيًا`, value: accUser(a).replace('@' + LG_DOMAIN, '') }).then(async (v) => {
+      if (v === null || v === undefined) return;
+      const u = String(v).trim().toLowerCase().replace(/@.*$/, '');
+      if (!/^[a-z0-9][a-z0-9._-]{1,29}$/.test(u)) return toast('اسم المستخدم: من 2 إلى 30 حرفًا إنجليزيًا أو رقمًا (ويُسمح بالنقطة والشرطة).', 'err');
+      const other = accByUser(u); if (other && other.id !== a.id) return toast('هذا الاسم مستخدم لحساب آخر.', 'err');
+      D.settings.org.usernames = { ...(D.settings.org.usernames || {}), [a.id]: u };
+      await saveSet('اسم المستخدم', `${a.t}: ${u}@${LG_DOMAIN}`); toast('حُفظ اسم المستخدم'); route();
+    });
+    return true;
+  }
   if (e.target.closest('[data-pwself]')) { passwordDialog(currentLogin() || authAccounts().find((x) => x.id === currentAccountId()), true); return true; }
   return false;
 }

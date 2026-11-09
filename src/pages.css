@@ -3542,3 +3542,30 @@ input.ph-bad{animation:phBad .4s}
 #shkLogin.lg-glass .lg-err,#shkLogin.lg-glass .err{color:#FFB4A8}
 .calm-deco i{filter:none!important;will-change:auto!important}
 #shkLogin.lg-glass select.in{background-repeat:no-repeat!important;background-position:left 14px center!important;background-size:12px 12px!important}
+
+/* صفحة الدخول: شبكة حية، وإطار مضيء يدور حول البطاقة، وزر ذهبي فاتح بلمعة */
+#shkLogin .lg-net{position:fixed;inset:0;pointer-events:none}
+#shkLogin.lg-glass .lg-card{isolation:isolate;animation:lgIn .9s cubic-bezier(.2,.7,.2,1) both}
+#shkLogin .lg-ring{position:absolute;inset:-1px;border-radius:inherit;padding:1.5px;pointer-events:none;z-index:-1;
+  background:conic-gradient(from var(--lga,0deg),rgba(240,217,160,0) 0deg,rgba(240,217,160,.9) 40deg,rgba(168,214,196,.5) 90deg,rgba(240,217,160,0) 150deg,rgba(240,217,160,0) 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:lgSpin 7s linear infinite}
+@property --lga{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes lgSpin{to{--lga:360deg}}
+@keyframes lgIn{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
+#shkLogin.lg-glass .lg-logo{animation:lgFloat 6s ease-in-out infinite}
+@keyframes lgFloat{50%{transform:translateY(-4px)}}
+#shkLogin.lg-glass h1{background:linear-gradient(100deg,#fff 0%,#fff 40%,#F3DFA6 50%,#fff 60%,#fff 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:lgShine 6s ease-in-out 1s infinite}
+@keyframes lgShine{0%,60%{background-position:100% 0}100%{background-position:-50% 0}}
+#shkLogin.lg-glass .lg-go{position:relative;overflow:hidden;background:linear-gradient(180deg,#F6E4B0,#E9CC8A);border-color:#F1DCA2;color:#0B2E26;box-shadow:0 10px 26px -12px rgba(233,204,138,.75)}
+#shkLogin.lg-glass .lg-go:hover{background:linear-gradient(180deg,#FAEBC2,#EFD69C);border-color:#F6E4B0}
+#shkLogin.lg-glass .lg-go::after{content:"";position:absolute;inset:0 auto 0 -60%;width:45%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:lgBtn 4.5s ease-in-out 1.5s infinite}
+@keyframes lgBtn{0%,70%{left:-60%}100%{left:130%}}
+#shkLogin .lg-user{position:relative}
+#shkLogin .lg-user .in{width:100%;padding-inline-end:40px}
+#shkLogin .lg-at{position:absolute;inset-inline-end:12px;top:50%;transform:translateY(-50%);color:#D7E6DD;opacity:.7;display:grid}
+#shkLogin .lg-at .ic{width:16px;height:16px}
+#shkLogin.lg-glass .in{text-align:left}
+@media (prefers-reduced-motion:reduce){#shkLogin .lg-ring,#shkLogin.lg-glass .lg-logo,#shkLogin.lg-glass h1,#shkLogin.lg-glass .lg-go::after,#shkLogin.lg-glass .lg-card{animation:none}}
+code.pw-user{font-size:12.5px;background:var(--paper-2);padding:2px 8px;border-radius:6px;color:var(--petrol)}
+#shkLogin .lg-user .in{padding-inline-end:12px;padding-left:40px}
+#shkLogin .lg-at{inset-inline-end:auto;left:13px;right:auto}
