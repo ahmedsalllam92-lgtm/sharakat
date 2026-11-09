@@ -6668,6 +6668,86 @@ input.ph-bad{animation:phBad .4s}
 .mk-anim .px-docs>div{opacity:0}.mk-anim.play .px-docs>div{animation:mxPop .7s forwards;animation-delay:calc(.3s + var(--i) * .12s)}
 .mx-film .cover{position:absolute;inset:0;width:100%;height:100%}.mx-film .cover svg{width:100%;height:100%}
 .px-team{bottom:auto!important;align-items:start!important}.px-team-c{min-height:240px}
+
+/* ===== تقرير الشراكة: شبكة الفريق ===== */
+.tn-svg{position:absolute;inset:0;width:1280px;height:720px;z-index:1}
+.tn-l{fill:none;stroke-width:2;stroke:rgba(14,59,53,.22)}.tn-l.d{stroke:rgba(176,138,62,.35)}
+.tn-rbg{fill:#fff;stroke:rgba(14,59,53,.1);stroke-width:12}
+.tn-r{fill:none;stroke:#2E8B70;stroke-width:12;stroke-linecap:round}
+.mk-anim .tn-l{stroke-dasharray:1;stroke-dashoffset:1}.mk-anim.play .tn-l{animation:mxDraw .9s forwards;animation-delay:calc(.6s + var(--i) * .12s)}
+.mk-anim .tn-r{stroke-dashoffset:var(--c)}.mk-anim.play .tn-r{animation:mxRing 1.6s .3s cubic-bezier(.5,0,.2,1) forwards}
+.tn-core{position:absolute;transform:translate(-50%,-50%);z-index:3}
+.tn-lg{width:120px;height:120px;border-radius:50%;background:#fff;display:grid;place-items:center;overflow:hidden;box-shadow:0 18px 40px -20px rgba(14,59,53,.5)}
+.tn-lg img{width:70%;height:70%;object-fit:contain}.tn-lg>span{font-size:34px;font-weight:700;color:#0E3B35}
+.tn-act{position:absolute;transform:translateX(-50%);text-align:center;z-index:3;display:flex;flex-direction:column;gap:2px;padding:8px 18px;border-radius:14px;background:#fff;border:1px solid rgba(14,59,53,.1);box-shadow:0 10px 24px -16px rgba(14,59,53,.4);white-space:nowrap}
+.tn-act b{font-size:17px;color:var(--mk-p)}.tn-act small{font-size:12.5px;color:var(--mk-mut)}
+.tn-act.ok b{color:#1E6B4A}.tn-act.mid b{color:#8A5A00}
+.tn-cap{position:absolute;transform:translateX(-50%);font-size:14px;font-weight:700;color:var(--mk-mut);letter-spacing:.3px;padding:4px 14px;border-radius:20px;background:rgba(14,59,53,.06);z-index:3}
+.tn-cap.d{background:rgba(176,138,62,.12);color:#8A6A2A}
+.tn-n{position:absolute;transform:translate(-50%,-50%);z-index:3;display:flex;align-items:center;gap:12px;padding:8px 16px 8px 10px;border-radius:40px;background:#fff;border:1px solid rgba(14,59,53,.1);box-shadow:0 12px 26px -16px rgba(14,59,53,.45);white-space:nowrap;max-width:330px}
+.tn-n i{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:700;font-size:15px;color:#fff;background:linear-gradient(135deg,#0E3B35,#2E8B70)}
+.tn-n.d i{background:#F4EBD3;color:#8A6A2A}.tn-n.d i .ic{width:20px;height:20px}
+.tn-n b{font-size:16.5px;color:var(--mk-p);overflow:hidden;text-overflow:ellipsis}
+.tn-n.empty{opacity:.6;border-style:dashed}
+.tn-more{position:absolute;transform:translateX(-50%);font-size:14px;color:var(--mk-mut);z-index:3}
+.mk-anim .tn-n,.mk-anim .tn-core,.mk-anim .tn-act,.mk-anim .tn-cap{opacity:0}
+.mk-anim.play .tn-core{animation:mxPop .8s .1s forwards}.mk-anim.play .tn-act{animation:mxFade .6s 1.4s forwards}.mk-anim.play .tn-cap{animation:mxFade .6s .5s forwards}
+.mk-anim.play .tn-n{animation:tnIn .6s cubic-bezier(.3,1.4,.5,1) forwards;animation-delay:calc(1s + var(--i) * .12s)}
+@keyframes tnIn{from{opacity:0;transform:translate(-50%,-50%) scale(.6)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+/* ===== المسار الزمني ===== */
+.tl-stats{position:absolute;top:170px;inset-inline:56px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:0;z-index:2}
+.tl-stats>div{background:#fff;border:1px solid rgba(14,59,53,.08);border-radius:16px;padding:14px 18px;box-shadow:0 12px 28px -24px rgba(14,59,53,.5)}
+.tl-stats dt{font-size:13px;color:var(--mk-mut)}.tl-stats dd{margin:4px 0 0;font-size:15px;color:var(--mk-mut)}.tl-stats b{font-size:34px;color:var(--mk-p);font-variant-numeric:tabular-nums}
+.tl2{position:absolute;inset-inline:0;top:300px;height:380px;z-index:2}
+.tl2-bed,.tl2-fill{position:absolute;top:190px;height:14px;border-radius:14px}
+.tl2-bed{background:rgba(14,59,53,.1)}
+.tl2-fill{width:var(--w);background:linear-gradient(270deg,#0E3B35,#2E8B70 70%,#B08A3E);box-shadow:0 6px 16px -6px rgba(46,139,112,.6)}
+.tl2-tk{position:absolute;top:180px;width:1px;height:34px;background:rgba(14,59,53,.18)}
+.tl2-tk.y{top:172px;height:50px;width:2px;background:rgba(14,59,53,.45)}
+.tl2-yr{position:absolute;top:228px;transform:translateX(-50%);font-size:14px;font-weight:700;color:var(--mk-p)}
+.tl2-now{position:absolute;top:120px;width:0;z-index:4}
+.tl2-now::before{content:"";position:absolute;left:-1.5px;top:30px;width:3px;height:110px;background:linear-gradient(180deg,#B08A3E,rgba(176,138,62,0));border-radius:3px}
+.tl2-now span{position:absolute;left:50%;transform:translateX(-50%);top:0;white-space:nowrap;font-size:14px;font-weight:700;color:#fff;background:#B08A3E;padding:5px 14px;border-radius:20px;box-shadow:0 10px 22px -10px rgba(176,138,62,.8)}
+.tl2-ev{position:absolute;top:197px;width:0;z-index:3}
+.tl2-dot{position:absolute;left:-10px;top:-10px;width:20px;height:20px;border-radius:50%;background:#fff;border:5px solid #0E3B35;box-sizing:border-box}
+.tl2-ev.w .tl2-dot{border-color:#2E8B70}.tl2-ev.b .tl2-dot{border-color:#B08A3E}.tl2-ev.c .tl2-dot{border-color:#C9A253}.tl2-ev.f .tl2-dot{border-color:#5B7FA6}.tl2-ev.d .tl2-dot{border-color:#8A9A93;border-style:dashed}
+.tl2-card{position:absolute;left:50%;transform:translateX(-50%);width:170px;display:grid;grid-template-columns:30px 1fr;gap:2px 8px;align-items:center;padding:9px 11px;border-radius:12px;background:#fff;border:1px solid rgba(14,59,53,.1);box-shadow:0 12px 26px -18px rgba(14,59,53,.5);text-align:start}
+.tl2-ev.up .tl2-card{bottom:34px}.tl2-ev.dn .tl2-card{top:58px}
+.tl2-card::after{content:"";position:absolute;left:50%;width:1px;background:rgba(14,59,53,.2)}
+.tl2-ev.up .tl2-card::after{top:100%;height:24px}.tl2-ev.dn .tl2-card::after{bottom:100%;height:48px}
+.tl2-card em{grid-row:1/3;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:#F1ECDF;color:#0E3B35}.tl2-card em .ic{width:15px;height:15px}
+.tl2-card b{font-size:13px;line-height:1.35;color:var(--mk-p);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.tl2-card small{font-size:11.5px;color:var(--mk-mut)}
+.mk-anim:not(.play) .tl2-fill{width:0}.tl2-fill{transition:width 1.8s .4s cubic-bezier(.5,0,.2,1)}
+.mk-anim .tl2-ev,.mk-anim .tl2-now{opacity:0}.mk-anim.play .tl2-ev{animation:mxFade .5s forwards;animation-delay:calc(.6s + var(--i) * .16s)}.mk-anim.play .tl2-now{animation:mxPop .6s 2s forwards}
+/* ===== الوثائق والصور ===== */
+.dc2{position:absolute;top:215px;inset-inline:56px;bottom:86px;display:grid;gap:22px;z-index:2}
+.dc2.both{grid-template-columns:1.15fr 1fr}.dc2.ph,.dc2.dc{grid-template-columns:1fr}
+.dc2-ph{position:relative;display:grid;gap:10px;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;min-height:0}
+.dc2-ph figure{margin:0;border-radius:14px;overflow:hidden;box-shadow:0 18px 36px -22px rgba(0,0,0,.8)}
+.dc2-ph figure:first-child{grid-row:1/3}
+.dc2-ph.n1{grid-template-columns:1fr;grid-template-rows:1fr}.dc2-ph.n2{grid-template-rows:1fr}.dc2-ph.n2 figure:first-child{grid-row:auto}
+.dc2-ph.n4{grid-template-columns:2fr 1fr 1fr}.dc2-ph.n4 figure:nth-child(4){grid-column:2/4}
+.dc2-ph img{width:100%;height:100%;object-fit:cover}
+.dc2-more{position:absolute;bottom:12px;left:12px;font-size:13px;color:#fff;background:rgba(0,0,0,.55);padding:4px 12px;border-radius:20px}
+.dc2-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;justify-content:center}
+.dc2.dc .dc2-list{display:grid;grid-template-columns:1fr 1fr;align-content:center}
+.dc2-list li{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+.dc2-ic{flex:none;width:52px;height:60px;border-radius:8px 16px 8px 8px;display:grid;place-items:center;font-size:12px;font-weight:800;letter-spacing:.5px;color:#fff;background:#5B7FA6;font-family:ui-monospace,Menlo,monospace}
+.dc2-ic.t-pdf{background:#C0453A}.dc2-ic.t-doc,.dc2-ic.t-docx{background:#2B5797}.dc2-ic.t-xls,.dc2-ic.t-xlsx{background:#217346}.dc2-ic.t-ppt,.dc2-ic.t-pptx{background:#C4502A}
+.dc2-ic .ic{width:22px;height:22px}
+.dc2-list b{display:block;font-size:15.5px;color:#fff;line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:430px}
+.dc2-list small{font-size:12.5px;color:#9FBDB2}
+.dc2-more-l{justify-content:center;color:#C5D9D1;font-size:14px}
+.mk-anim .dc2-ph figure,.mk-anim .dc2-list li{opacity:0}
+.mk-anim.play .dc2-ph figure{animation:mxPop .7s forwards;animation-delay:calc(.2s + var(--i) * .15s)}
+.mk-anim.play .dc2-list li{animation:mxUp .6s forwards;animation-delay:calc(.5s + var(--i) * .12s)}
+/* محاذاة مركز الشبكة (الحركة لا تُلغي التوسيط) ووسم «اليوم» على المسار */
+.tn-core{transform:none!important;margin:-60px 0 0 -60px}
+.tl2-ev.up .tl2-card{bottom:62px}.tl2-ev.up .tl2-card::after{height:52px}
+.tl2-now{top:156px!important}
+.tl2-now::before{top:24px!important;height:34px!important;background:#B08A3E!important}
+.tl2-now span{font-size:12.5px!important;padding:3px 11px!important}
 </style>
 </head>
 <body>
@@ -22333,36 +22413,56 @@ function mkSlidesOne(p) {
   pages(imps, 4).forEach((part, pi, all) => S.push(['pimp', 'deep', 'الأثر المتوقع', `
     <h2 class="mx-h">${mkE(k('im.h' + (pi || '')), 'الأثر المتوقع وكيف يخدم المؤسسة' + (all.length > 1 ? ` (${pi + 1}/${all.length})` : ''))}</h2>
     <div class="px-imp n${part.length}">${part.map((o, i) => { const m = o.match(/^([^:：]{3,60})[:：]\s*(.+)$/); return `<article style="--i:${i}"><i>${icon('leaf')}</i>${m ? `<b>${esc(m[1])}</b><p>${esc(m[2].slice(0, 170))}</p>` : `<p>${esc(o.slice(0, 200))}</p>`}</article>`; }).join('')}</div>`]));
-  /* 6ج. الفريق والإدارات والتفعيل */
+  /* 6ج. شبكة الشراكة: الشراكة في المركز، وفريق إدارة الشراكات يمينًا، والإدارات يسارًا، والتفعيل أسفلها */
   const own = p.owners || [], deps = p.departments || [];
-  if (own.length || deps.length || p.activation) S.push(['pteam', 'paper', 'فريق العمل', `
-    <h2 class="mx-h">${mkE(k('tm2.h'), 'فريق العمل والإدارات المشاركة')}</h2>
-    <div class="px-team">
-      <div class="px-team-c"><small>المسؤولون من ${esc(org.dept)}</small><div class="px-people">${own.length ? own.map((o, i) => `<span style="--i:${i}"><i>${esc(initials(o))}</i>${esc(o)}</span>`).join('') : '<em>لم يُحدَّد بعد</em>'}</div></div>
-      <div class="px-team-c"><small>الإدارات الداخلية المتقاطعة</small><div class="px-deps">${deps.length ? deps.map((d, i) => `<span style="--i:${i}">${icon('building')}${esc(d)}</span>`).join('') : '<em>لم تُحدَّد بعد</em>'}</div></div>
-      <div class="px-team-c px-act ${p.activation === 'مفعّلة' ? 'ok' : p.activation === 'قيد التفعيل' ? 'mid' : ''}"><small>حالة التفعيل</small><b>${esc(p.activation || 'غير محدد')}</b><span>${p.activation === 'مفعّلة' ? 'بدأ تنفيذ المخرجات ورفع تقارير التفعيل' : p.activation === 'قيد التفعيل' ? 'خطة التفعيل قيد التنفيذ مع الإدارات' : 'لم تبدأ خطة التفعيل بعد'}</span></div>
-    </div>`]);
+  if (own.length || deps.length || p.activation) {
+    const CX = 640, CY = 420;
+    const place = (n, side) => Array.from({ length: n }, (_, i) => { const t = n === 1 ? 0.5 : i / (n - 1); const a = (side > 0 ? -60 + t * 120 : 120 + t * 120) * Math.PI / 180; return [CX + Math.cos(a) * (side > 0 ? 400 : 400) * (side > 0 ? 1 : 1), CY + Math.sin(a) * 210]; });
+    const oP = place(Math.min(own.length, 5), 1).map(([x, y]) => [CX + Math.abs(x - CX), y]);
+    const dP = place(Math.min(deps.length, 6), -1).map(([x, y]) => [CX - Math.abs(x - CX), y]);
+    const actPct = p.activation === 'مفعّلة' ? 1 : p.activation === 'قيد التفعيل' ? 0.5 : 0, RR = 82, CC = 2 * Math.PI * RR;
+    const line = ([x, y], i, cls) => `<path class="tn-l ${cls}" pathLength="1" style="--i:${i}" d="M${CX} ${CY} C ${(CX + x) / 2} ${CY}, ${(CX + x) / 2} ${y}, ${x} ${y}"/>`;
+    S.push(['pteam', 'paper', 'فريق العمل', `
+      <h2 class="mx-h">${mkE(k('tm2.h'), 'من يعمل على هذه الشراكة')}</h2>
+      <svg class="tn-svg" viewBox="0 0 1280 720" aria-hidden="true">${oP.map((pt, i) => line(pt, i, 'o')).join('')}${dP.map((pt, i) => line(pt, i + oP.length, 'd')).join('')}
+        <circle cx="${CX}" cy="${CY}" r="${RR}" class="tn-rbg"/><circle cx="${CX}" cy="${CY}" r="${RR}" class="tn-r" style="--c:${CC.toFixed(1)}" stroke-dasharray="${(actPct * CC).toFixed(1)} ${CC.toFixed(1)}" transform="rotate(-90 ${CX} ${CY})"/></svg>
+      <div class="tn-core" style="left:${CX}px;top:${CY}px"><span class="tn-lg">${logoOrMono(pr, name)}</span></div>
+      <div class="tn-act ${actPct === 1 ? 'ok' : actPct ? 'mid' : ''}" style="left:${CX}px;top:${CY + 112}px"><b>${esc(p.activation || 'التفعيل غير محدد')}</b><small>${actPct === 1 ? 'المخرجات قيد التنفيذ' : actPct ? 'خطة التفعيل جارية' : 'لم تبدأ خطة التفعيل'}</small></div>
+      <span class="tn-cap o" style="left:${CX + 400}px;top:150px">فريق ${esc(org.dept)}</span><span class="tn-cap d" style="left:${CX - 400}px;top:150px">الإدارات المتقاطعة</span>
+      ${oP.map(([x, y], i) => `<div class="tn-n o" style="left:${x}px;top:${y}px;--i:${i}"><i>${esc(initials(own[i]))}</i><b>${esc(own[i])}</b></div>`).join('')}
+      ${own.length > 5 ? `<span class="tn-more o" style="left:${CX + 400}px;top:${CY + 250}px">+${own.length - 5}</span>` : ''}
+      ${!own.length ? `<div class="tn-n o empty" style="left:${CX + 400}px;top:${CY}px"><i>?</i><b>لم يُحدَّد مسؤول</b></div>` : ''}
+      ${dP.map(([x, y], i) => `<div class="tn-n d" style="left:${x}px;top:${y}px;--i:${i + oP.length}"><i>${icon('building')}</i><b>${esc(deps[i])}</b></div>`).join('')}
+      ${deps.length > 6 ? `<span class="tn-more d" style="left:${CX - 400}px;top:${CY + 250}px">+${deps.length - 6}</span>` : ''}
+      ${!deps.length ? `<div class="tn-n d empty" style="left:${CX - 400}px;top:${CY}px"><i>${icon('building')}</i><b>لم تُحدَّد إدارات</b></div>` : ''}`]);
+  }
   /* 6د. الارتباط بالأهداف الاستراتيجية */
   const gl = (p.goalsLinked || []).map((g) => (goalCodes().find((x) => x.k === g) || {}).t || g).filter(Boolean);
   if (gl.length || p.strategicGoal || p.initiative) S.push(['pgoal', 'deep', 'الأهداف الاستراتيجية', `
     <h2 class="mx-h">${mkE(k('gl.h'), 'الارتباط بأهداف المؤسسة')}</h2>
     <div class="px-goals">${[...(p.strategicGoal ? [['الهدف الاستراتيجي', p.strategicGoal]] : []), ...(p.initiative ? [['المبادرة', p.initiative]] : []), ...gl.map((g) => ['هدف مرتبط', g])].slice(0, 6).map(([l, t], i) => `<div style="--i:${i}"><small>${esc(l)}</small><b>${esc(String(t).slice(0, 110))}</b></div>`).join('')}</div>`]);
-  /* 7. المسار الزمني للشراكة */
-  const ev = [];
-  if (s0) ev.push([p.startDate, 'بداية الشراكة', 'a']);
-  evs.forEach((e) => ev.push([e.data.date || e.at, `تقييم${e.data && evalScore(e.data) != null ? ': ' + evalScore(e.data) + '/100' : ''}`, 'b']));
-  stories.forEach((s) => s.date && ev.push([s.date, trimP(s.title || 'إنجاز').slice(0, 40), 'c']));
-  if (e0) ev.push([p.endDate, 'نهاية المدة الحالية', 'd']);
-  const evS = ev.filter((x) => parseDate(String(x[0]).slice(0, 10))).sort((a, b) => (String(a[0]) < String(b[0]) ? -1 : 1)).slice(0, 7);
-  if (evS.length >= 2) {
-    const t0 = parseDate(String(evS[0][0]).slice(0, 10)).getTime(), t1 = Math.max(parseDate(String(evS[evS.length - 1][0]).slice(0, 10)).getTime(), t0 + 1), now = today().getTime();
-    const X_ = (t) => 1160 - Math.max(0, Math.min(1, (t - t0) / (t1 - t0))) * 1040;
-    const nowF = Math.max(0, Math.min(1, (now - t0) / (t1 - t0)));
+  /* 7. المسار الزمني: السنوات والشهور، ونسبة المنقضي، وكل أحداث الشراكة الموثقة */
+  if (s0 && e0 && e0 > s0) {
+    const ev = [[p.startDate, 'بداية الشراكة', 'a', 'flag']];
+    try { const W = wfStateOf('partnership', p); WF_STEPS.forEach((x) => { const r_ = W.S[x.id]; if (r_ && r_.status === 'done' && r_.at && !r_.legacy) ev.push([r_.at, x.t, 'w', 'check']); }); } catch (_) { /* */ }
+    evs.forEach((e) => ev.push([e.data.date || e.at, `تقييم الشراكة${evalScore(e.data) != null ? ': ' + evalScore(e.data) + '/100' : ''}`, 'b', 'award']));
+    stories.forEach((st_) => st_.date && ev.push([st_.date, trimP(st_.title || 'إنجاز').slice(0, 42), 'c', 'star']));
+    (p.attachments || []).filter((a2) => a2.addedAt && !isImg(a2) && a2.category !== 'أخرى').forEach((a2) => ev.push([a2.addedAt, `${a2.category}: ${a2.name.replace(/\.[a-z0-9]{2,5}$/i, '')}`.slice(0, 48), 'f', 'file']));
+    ev.push([p.endDate, 'نهاية المدة الحالية', 'd', 'calendar']);
+    const t0 = s0.getTime(), t1 = e0.getTime(), now = today().getTime();
+    const L0 = 1140, L1 = 140, X_ = (t) => L0 - Math.max(0, Math.min(1, (t - t0) / (t1 - t0))) * (L0 - L1);
+    const evS = ev.map(([d, t, c, ic]) => [parseDate(String(d).slice(0, 10)), t, c, ic]).filter((x) => x[0] && x[0].getTime() >= t0 - 864e5 && x[0].getTime() <= t1 + 864e5).sort((a2, b2) => a2[0] - b2[0]);
+    const keep = evS.length > 8 ? [evS[0], ...evS.slice(1, -1).filter((_, i, arr) => i % Math.ceil(arr.length / 6) === 0).slice(0, 6), evS[evS.length - 1]] : evS;
+    const pct = Math.max(0, Math.min(1, (now - t0) / (t1 - t0))), months = Math.round((t1 - t0) / (30.44 * 864e5));
+    const ticks = []; for (let d = new Date(s0.getFullYear(), s0.getMonth() + 1, 1); d < e0; d = new Date(d.getFullYear(), d.getMonth() + 1, 1)) ticks.push(d);
     S.push(['ptime', 'paper', 'المسار الزمني', `
       <h2 class="mx-h">${mkE(k('tm.h'), 'المسار الزمني للشراكة')}</h2>
-      <div class="px-tl"><i class="px-tl-bed"></i><i class="px-tl-done" style="--f:${nowF.toFixed(3)}"></i>
-        ${now > t0 && now < t1 ? `<span class="px-now" style="left:${X_(now).toFixed(0)}px">اليوم</span>` : ''}
-        ${evS.map(([d, t, c], i) => `<div class="px-ev ${c} ${i % 2 ? 'dn' : 'up'}" style="left:${X_(parseDate(String(d).slice(0, 10)).getTime()).toFixed(0)}px;--i:${i}"><i></i><span><b>${esc(t)}</b><small>${fmtDate(String(d).slice(0, 10))}</small></span></div>`).join('')}
+      <dl class="tl-stats"><div><dt>مدة الشراكة</dt><dd><b>${months}</b> شهرًا</dd></div><div><dt>انقضى من المدة</dt><dd><b>${Math.round(pct * 100)}%</b></dd></div><div><dt>${now > t1 ? 'انتهت منذ' : now < t0 ? 'تبدأ بعد' : 'المتبقي'}</dt><dd><b>${nf(Math.abs(Math.round(((now > t1 ? now - t1 : now < t0 ? t0 - now : t1 - now)) / 864e5)))}</b> يومًا</dd></div><div><dt>أحداث موثقة</dt><dd><b>${evS.length}</b></dd></div></dl>
+      <div class="tl2">
+        <i class="tl2-bed" style="right:${1280 - L0}px;left:${L1}px"></i><i class="tl2-fill" style="right:${1280 - L0}px;--w:${(pct * (L0 - L1)).toFixed(0)}px"></i>
+        ${ticks.map((d) => `<i class="tl2-tk ${d.getMonth() === 0 ? 'y' : ''}" style="left:${X_(d.getTime()).toFixed(0)}px"></i>${d.getMonth() === 0 ? `<span class="tl2-yr" style="left:${X_(d.getTime()).toFixed(0)}px">${d.getFullYear()}</span>` : ''}`).join('')}
+        ${now >= t0 && now <= t1 ? `<div class="tl2-now" style="left:${X_(now).toFixed(0)}px"><span>اليوم · ${Math.round(pct * 100)}%</span></div>` : ''}
+        ${keep.map(([d, t, c, ic], i) => `<div class="tl2-ev ${c} ${i % 2 ? 'dn' : 'up'}" style="left:${X_(d.getTime()).toFixed(0)}px;--i:${i}"><i class="tl2-dot"></i><span class="tl2-card"><em>${icon(ic)}</em><b>${esc(t)}</b><small>${fmtDate(isoDate(d))}</small></span></div>`).join('')}
       </div>`]);
   }
   /* 8. من الميدان: قصص الشراكة، أو معرض صورها */
@@ -22386,12 +22486,21 @@ function mkSlidesOne(p) {
       <p class="mx-sub">${W.cur ? `الخطوة الحالية: ${W.cur.n}. ${esc(W.cur.t)}` : W.closed ? 'أُغلق الطلب' : 'اكتملت خطوات المسار'} — ${done} من ${WF_STEPS.length} خطوة مكتملة.</p>
       <div class="px-wf">${WF_PHASES.map((ph, pi) => { const st = WF_STEPS.filter((x) => x.ph === ph.id); const d = st.filter((x) => W.S[x.id] && W.S[x.id].status === 'done').length; const cur = W.cur && st.some((x) => x.id === W.cur.id); return `<div class="px-ph ${d === st.length ? 'd' : cur ? 'c' : ''}" style="--i:${pi}"><em>${String(pi + 1).padStart(2, '0')}</em><b>${esc(ph.t)}</b><span class="px-ph-bar"><i style="width:${Math.round(d / st.length * 100)}%"></i></span><small>${d}/${st.length}</small></div>`; }).join('')}</div>`]);
   } catch (_) { /* المسار اختياري */ }
-  /* 8ج. الوثائق الموثّقة */
-  const docsBy = {}; (p.attachments || []).forEach((a2) => { const c2 = a2.category || 'أخرى'; docsBy[c2] = (docsBy[c2] || 0) + 1; });
-  const dk = Object.entries(docsBy);
-  if (dk.length) S.push(['pdocs', 'night', 'الوثائق', `
-    <h2 class="mx-h">${mkE(k('dc.h'), 'وثائق ومرفقات موثّقة')}</h2>
-    <div class="px-docs">${dk.map(([c2, n], i) => `<div style="--i:${i}"><i>${icon(FILE_CAT_IC && FILE_CAT_IC[c2] || 'file')}</i><b>${n}</b><span>${esc(c2)}</span></div>`).join('')}</div>`]);
+  /* 8ج. الوثائق والصور: صور الشراكة الفعلية وقائمة المستندات بتصنيفاتها */
+  const atts = (p.attachments || []).filter((a2) => a2.fileId);
+  const phs = [...new Set([p.coverFileId, ...atts.filter((a2) => isImg(a2)).map((a2) => a2.fileId)].filter(Boolean))];
+  const docs = atts.filter((a2) => !isImg(a2));
+  if (phs.length || docs.length) {
+    const ext = (n) => (String(n).match(/\.([a-z0-9]+)$/i) || [, ''])[1].toUpperCase();
+    const byCat = {}; atts.forEach((a2) => { const c2 = a2.category || 'أخرى'; byCat[c2] = (byCat[c2] || 0) + 1; });
+    S.push(['pdocs', 'night', 'الوثائق والصور', `
+      <h2 class="mx-h">${mkE(k('dc.h'), 'الوثائق والصور')}</h2>
+      <p class="mx-sub">${Object.entries(byCat).map(([c2, n]) => `${esc(c2)}: ${n}`).join(' · ')}</p>
+      <div class="dc2 ${phs.length && docs.length ? 'both' : phs.length ? 'ph' : 'dc'}">
+        ${phs.length ? `<div class="dc2-ph n${Math.min(4, phs.length)}">${phs.slice(0, 4).map((id, i) => `<figure style="--i:${i}">${mkImg(id)}</figure>`).join('')}${phs.length > 4 ? `<span class="dc2-more">+${phs.length - 4} صورة</span>` : ''}</div>` : ''}
+        ${docs.length ? `<ul class="dc2-list">${docs.slice(0, 6).map((a2, i) => `<li style="--i:${i}"><span class="dc2-ic t-${ext(a2.name).toLowerCase()}">${ext(a2.name) || icon('file')}</span><div><b>${esc(a2.name)}</b><small>${esc(a2.category || 'أخرى')} · ${fmtSize(a2.size || 0)}${a2.addedAt ? ' · ' + fmtDate(String(a2.addedAt).slice(0, 10), 'short') : ''}</small></div></li>`).join('')}${docs.length > 6 ? `<li class="dc2-more-l">+${docs.length - 6} مستندات أخرى</li>` : ''}</ul>` : ''}
+      </div>`]);
+  }
   /* 9. القيمة */
   if (P.total) {
     const f = P.fin, mult = +f.murojSar ? ((+f.partnerSar || 0) + (+f.inkindSar || 0)) / +f.murojSar : 0;

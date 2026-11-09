@@ -167,36 +167,56 @@ function mkSlidesOne(p) {
   pages(imps, 4).forEach((part, pi, all) => S.push(['pimp', 'deep', 'الأثر المتوقع', `
     <h2 class="mx-h">${mkE(k('im.h' + (pi || '')), 'الأثر المتوقع وكيف يخدم المؤسسة' + (all.length > 1 ? ` (${pi + 1}/${all.length})` : ''))}</h2>
     <div class="px-imp n${part.length}">${part.map((o, i) => { const m = o.match(/^([^:：]{3,60})[:：]\s*(.+)$/); return `<article style="--i:${i}"><i>${icon('leaf')}</i>${m ? `<b>${esc(m[1])}</b><p>${esc(m[2].slice(0, 170))}</p>` : `<p>${esc(o.slice(0, 200))}</p>`}</article>`; }).join('')}</div>`]));
-  /* 6ج. الفريق والإدارات والتفعيل */
+  /* 6ج. شبكة الشراكة: الشراكة في المركز، وفريق إدارة الشراكات يمينًا، والإدارات يسارًا، والتفعيل أسفلها */
   const own = p.owners || [], deps = p.departments || [];
-  if (own.length || deps.length || p.activation) S.push(['pteam', 'paper', 'فريق العمل', `
-    <h2 class="mx-h">${mkE(k('tm2.h'), 'فريق العمل والإدارات المشاركة')}</h2>
-    <div class="px-team">
-      <div class="px-team-c"><small>المسؤولون من ${esc(org.dept)}</small><div class="px-people">${own.length ? own.map((o, i) => `<span style="--i:${i}"><i>${esc(initials(o))}</i>${esc(o)}</span>`).join('') : '<em>لم يُحدَّد بعد</em>'}</div></div>
-      <div class="px-team-c"><small>الإدارات الداخلية المتقاطعة</small><div class="px-deps">${deps.length ? deps.map((d, i) => `<span style="--i:${i}">${icon('building')}${esc(d)}</span>`).join('') : '<em>لم تُحدَّد بعد</em>'}</div></div>
-      <div class="px-team-c px-act ${p.activation === 'مفعّلة' ? 'ok' : p.activation === 'قيد التفعيل' ? 'mid' : ''}"><small>حالة التفعيل</small><b>${esc(p.activation || 'غير محدد')}</b><span>${p.activation === 'مفعّلة' ? 'بدأ تنفيذ المخرجات ورفع تقارير التفعيل' : p.activation === 'قيد التفعيل' ? 'خطة التفعيل قيد التنفيذ مع الإدارات' : 'لم تبدأ خطة التفعيل بعد'}</span></div>
-    </div>`]);
+  if (own.length || deps.length || p.activation) {
+    const CX = 640, CY = 420;
+    const place = (n, side) => Array.from({ length: n }, (_, i) => { const t = n === 1 ? 0.5 : i / (n - 1); const a = (side > 0 ? -60 + t * 120 : 120 + t * 120) * Math.PI / 180; return [CX + Math.cos(a) * (side > 0 ? 400 : 400) * (side > 0 ? 1 : 1), CY + Math.sin(a) * 210]; });
+    const oP = place(Math.min(own.length, 5), 1).map(([x, y]) => [CX + Math.abs(x - CX), y]);
+    const dP = place(Math.min(deps.length, 6), -1).map(([x, y]) => [CX - Math.abs(x - CX), y]);
+    const actPct = p.activation === 'مفعّلة' ? 1 : p.activation === 'قيد التفعيل' ? 0.5 : 0, RR = 82, CC = 2 * Math.PI * RR;
+    const line = ([x, y], i, cls) => `<path class="tn-l ${cls}" pathLength="1" style="--i:${i}" d="M${CX} ${CY} C ${(CX + x) / 2} ${CY}, ${(CX + x) / 2} ${y}, ${x} ${y}"/>`;
+    S.push(['pteam', 'paper', 'فريق العمل', `
+      <h2 class="mx-h">${mkE(k('tm2.h'), 'من يعمل على هذه الشراكة')}</h2>
+      <svg class="tn-svg" viewBox="0 0 1280 720" aria-hidden="true">${oP.map((pt, i) => line(pt, i, 'o')).join('')}${dP.map((pt, i) => line(pt, i + oP.length, 'd')).join('')}
+        <circle cx="${CX}" cy="${CY}" r="${RR}" class="tn-rbg"/><circle cx="${CX}" cy="${CY}" r="${RR}" class="tn-r" style="--c:${CC.toFixed(1)}" stroke-dasharray="${(actPct * CC).toFixed(1)} ${CC.toFixed(1)}" transform="rotate(-90 ${CX} ${CY})"/></svg>
+      <div class="tn-core" style="left:${CX}px;top:${CY}px"><span class="tn-lg">${logoOrMono(pr, name)}</span></div>
+      <div class="tn-act ${actPct === 1 ? 'ok' : actPct ? 'mid' : ''}" style="left:${CX}px;top:${CY + 112}px"><b>${esc(p.activation || 'التفعيل غير محدد')}</b><small>${actPct === 1 ? 'المخرجات قيد التنفيذ' : actPct ? 'خطة التفعيل جارية' : 'لم تبدأ خطة التفعيل'}</small></div>
+      <span class="tn-cap o" style="left:${CX + 400}px;top:150px">فريق ${esc(org.dept)}</span><span class="tn-cap d" style="left:${CX - 400}px;top:150px">الإدارات المتقاطعة</span>
+      ${oP.map(([x, y], i) => `<div class="tn-n o" style="left:${x}px;top:${y}px;--i:${i}"><i>${esc(initials(own[i]))}</i><b>${esc(own[i])}</b></div>`).join('')}
+      ${own.length > 5 ? `<span class="tn-more o" style="left:${CX + 400}px;top:${CY + 250}px">+${own.length - 5}</span>` : ''}
+      ${!own.length ? `<div class="tn-n o empty" style="left:${CX + 400}px;top:${CY}px"><i>?</i><b>لم يُحدَّد مسؤول</b></div>` : ''}
+      ${dP.map(([x, y], i) => `<div class="tn-n d" style="left:${x}px;top:${y}px;--i:${i + oP.length}"><i>${icon('building')}</i><b>${esc(deps[i])}</b></div>`).join('')}
+      ${deps.length > 6 ? `<span class="tn-more d" style="left:${CX - 400}px;top:${CY + 250}px">+${deps.length - 6}</span>` : ''}
+      ${!deps.length ? `<div class="tn-n d empty" style="left:${CX - 400}px;top:${CY}px"><i>${icon('building')}</i><b>لم تُحدَّد إدارات</b></div>` : ''}`]);
+  }
   /* 6د. الارتباط بالأهداف الاستراتيجية */
   const gl = (p.goalsLinked || []).map((g) => (goalCodes().find((x) => x.k === g) || {}).t || g).filter(Boolean);
   if (gl.length || p.strategicGoal || p.initiative) S.push(['pgoal', 'deep', 'الأهداف الاستراتيجية', `
     <h2 class="mx-h">${mkE(k('gl.h'), 'الارتباط بأهداف المؤسسة')}</h2>
     <div class="px-goals">${[...(p.strategicGoal ? [['الهدف الاستراتيجي', p.strategicGoal]] : []), ...(p.initiative ? [['المبادرة', p.initiative]] : []), ...gl.map((g) => ['هدف مرتبط', g])].slice(0, 6).map(([l, t], i) => `<div style="--i:${i}"><small>${esc(l)}</small><b>${esc(String(t).slice(0, 110))}</b></div>`).join('')}</div>`]);
-  /* 7. المسار الزمني للشراكة */
-  const ev = [];
-  if (s0) ev.push([p.startDate, 'بداية الشراكة', 'a']);
-  evs.forEach((e) => ev.push([e.data.date || e.at, `تقييم${e.data && evalScore(e.data) != null ? ': ' + evalScore(e.data) + '/100' : ''}`, 'b']));
-  stories.forEach((s) => s.date && ev.push([s.date, trimP(s.title || 'إنجاز').slice(0, 40), 'c']));
-  if (e0) ev.push([p.endDate, 'نهاية المدة الحالية', 'd']);
-  const evS = ev.filter((x) => parseDate(String(x[0]).slice(0, 10))).sort((a, b) => (String(a[0]) < String(b[0]) ? -1 : 1)).slice(0, 7);
-  if (evS.length >= 2) {
-    const t0 = parseDate(String(evS[0][0]).slice(0, 10)).getTime(), t1 = Math.max(parseDate(String(evS[evS.length - 1][0]).slice(0, 10)).getTime(), t0 + 1), now = today().getTime();
-    const X_ = (t) => 1160 - Math.max(0, Math.min(1, (t - t0) / (t1 - t0))) * 1040;
-    const nowF = Math.max(0, Math.min(1, (now - t0) / (t1 - t0)));
+  /* 7. المسار الزمني: السنوات والشهور، ونسبة المنقضي، وكل أحداث الشراكة الموثقة */
+  if (s0 && e0 && e0 > s0) {
+    const ev = [[p.startDate, 'بداية الشراكة', 'a', 'flag']];
+    try { const W = wfStateOf('partnership', p); WF_STEPS.forEach((x) => { const r_ = W.S[x.id]; if (r_ && r_.status === 'done' && r_.at && !r_.legacy) ev.push([r_.at, x.t, 'w', 'check']); }); } catch (_) { /* */ }
+    evs.forEach((e) => ev.push([e.data.date || e.at, `تقييم الشراكة${evalScore(e.data) != null ? ': ' + evalScore(e.data) + '/100' : ''}`, 'b', 'award']));
+    stories.forEach((st_) => st_.date && ev.push([st_.date, trimP(st_.title || 'إنجاز').slice(0, 42), 'c', 'star']));
+    (p.attachments || []).filter((a2) => a2.addedAt && !isImg(a2) && a2.category !== 'أخرى').forEach((a2) => ev.push([a2.addedAt, `${a2.category}: ${a2.name.replace(/\.[a-z0-9]{2,5}$/i, '')}`.slice(0, 48), 'f', 'file']));
+    ev.push([p.endDate, 'نهاية المدة الحالية', 'd', 'calendar']);
+    const t0 = s0.getTime(), t1 = e0.getTime(), now = today().getTime();
+    const L0 = 1140, L1 = 140, X_ = (t) => L0 - Math.max(0, Math.min(1, (t - t0) / (t1 - t0))) * (L0 - L1);
+    const evS = ev.map(([d, t, c, ic]) => [parseDate(String(d).slice(0, 10)), t, c, ic]).filter((x) => x[0] && x[0].getTime() >= t0 - 864e5 && x[0].getTime() <= t1 + 864e5).sort((a2, b2) => a2[0] - b2[0]);
+    const keep = evS.length > 8 ? [evS[0], ...evS.slice(1, -1).filter((_, i, arr) => i % Math.ceil(arr.length / 6) === 0).slice(0, 6), evS[evS.length - 1]] : evS;
+    const pct = Math.max(0, Math.min(1, (now - t0) / (t1 - t0))), months = Math.round((t1 - t0) / (30.44 * 864e5));
+    const ticks = []; for (let d = new Date(s0.getFullYear(), s0.getMonth() + 1, 1); d < e0; d = new Date(d.getFullYear(), d.getMonth() + 1, 1)) ticks.push(d);
     S.push(['ptime', 'paper', 'المسار الزمني', `
       <h2 class="mx-h">${mkE(k('tm.h'), 'المسار الزمني للشراكة')}</h2>
-      <div class="px-tl"><i class="px-tl-bed"></i><i class="px-tl-done" style="--f:${nowF.toFixed(3)}"></i>
-        ${now > t0 && now < t1 ? `<span class="px-now" style="left:${X_(now).toFixed(0)}px">اليوم</span>` : ''}
-        ${evS.map(([d, t, c], i) => `<div class="px-ev ${c} ${i % 2 ? 'dn' : 'up'}" style="left:${X_(parseDate(String(d).slice(0, 10)).getTime()).toFixed(0)}px;--i:${i}"><i></i><span><b>${esc(t)}</b><small>${fmtDate(String(d).slice(0, 10))}</small></span></div>`).join('')}
+      <dl class="tl-stats"><div><dt>مدة الشراكة</dt><dd><b>${months}</b> شهرًا</dd></div><div><dt>انقضى من المدة</dt><dd><b>${Math.round(pct * 100)}%</b></dd></div><div><dt>${now > t1 ? 'انتهت منذ' : now < t0 ? 'تبدأ بعد' : 'المتبقي'}</dt><dd><b>${nf(Math.abs(Math.round(((now > t1 ? now - t1 : now < t0 ? t0 - now : t1 - now)) / 864e5)))}</b> يومًا</dd></div><div><dt>أحداث موثقة</dt><dd><b>${evS.length}</b></dd></div></dl>
+      <div class="tl2">
+        <i class="tl2-bed" style="right:${1280 - L0}px;left:${L1}px"></i><i class="tl2-fill" style="right:${1280 - L0}px;--w:${(pct * (L0 - L1)).toFixed(0)}px"></i>
+        ${ticks.map((d) => `<i class="tl2-tk ${d.getMonth() === 0 ? 'y' : ''}" style="left:${X_(d.getTime()).toFixed(0)}px"></i>${d.getMonth() === 0 ? `<span class="tl2-yr" style="left:${X_(d.getTime()).toFixed(0)}px">${d.getFullYear()}</span>` : ''}`).join('')}
+        ${now >= t0 && now <= t1 ? `<div class="tl2-now" style="left:${X_(now).toFixed(0)}px"><span>اليوم · ${Math.round(pct * 100)}%</span></div>` : ''}
+        ${keep.map(([d, t, c, ic], i) => `<div class="tl2-ev ${c} ${i % 2 ? 'dn' : 'up'}" style="left:${X_(d.getTime()).toFixed(0)}px;--i:${i}"><i class="tl2-dot"></i><span class="tl2-card"><em>${icon(ic)}</em><b>${esc(t)}</b><small>${fmtDate(isoDate(d))}</small></span></div>`).join('')}
       </div>`]);
   }
   /* 8. من الميدان: قصص الشراكة، أو معرض صورها */
@@ -220,12 +240,21 @@ function mkSlidesOne(p) {
       <p class="mx-sub">${W.cur ? `الخطوة الحالية: ${W.cur.n}. ${esc(W.cur.t)}` : W.closed ? 'أُغلق الطلب' : 'اكتملت خطوات المسار'} — ${done} من ${WF_STEPS.length} خطوة مكتملة.</p>
       <div class="px-wf">${WF_PHASES.map((ph, pi) => { const st = WF_STEPS.filter((x) => x.ph === ph.id); const d = st.filter((x) => W.S[x.id] && W.S[x.id].status === 'done').length; const cur = W.cur && st.some((x) => x.id === W.cur.id); return `<div class="px-ph ${d === st.length ? 'd' : cur ? 'c' : ''}" style="--i:${pi}"><em>${String(pi + 1).padStart(2, '0')}</em><b>${esc(ph.t)}</b><span class="px-ph-bar"><i style="width:${Math.round(d / st.length * 100)}%"></i></span><small>${d}/${st.length}</small></div>`; }).join('')}</div>`]);
   } catch (_) { /* المسار اختياري */ }
-  /* 8ج. الوثائق الموثّقة */
-  const docsBy = {}; (p.attachments || []).forEach((a2) => { const c2 = a2.category || 'أخرى'; docsBy[c2] = (docsBy[c2] || 0) + 1; });
-  const dk = Object.entries(docsBy);
-  if (dk.length) S.push(['pdocs', 'night', 'الوثائق', `
-    <h2 class="mx-h">${mkE(k('dc.h'), 'وثائق ومرفقات موثّقة')}</h2>
-    <div class="px-docs">${dk.map(([c2, n], i) => `<div style="--i:${i}"><i>${icon(FILE_CAT_IC && FILE_CAT_IC[c2] || 'file')}</i><b>${n}</b><span>${esc(c2)}</span></div>`).join('')}</div>`]);
+  /* 8ج. الوثائق والصور: صور الشراكة الفعلية وقائمة المستندات بتصنيفاتها */
+  const atts = (p.attachments || []).filter((a2) => a2.fileId);
+  const phs = [...new Set([p.coverFileId, ...atts.filter((a2) => isImg(a2)).map((a2) => a2.fileId)].filter(Boolean))];
+  const docs = atts.filter((a2) => !isImg(a2));
+  if (phs.length || docs.length) {
+    const ext = (n) => (String(n).match(/\.([a-z0-9]+)$/i) || [, ''])[1].toUpperCase();
+    const byCat = {}; atts.forEach((a2) => { const c2 = a2.category || 'أخرى'; byCat[c2] = (byCat[c2] || 0) + 1; });
+    S.push(['pdocs', 'night', 'الوثائق والصور', `
+      <h2 class="mx-h">${mkE(k('dc.h'), 'الوثائق والصور')}</h2>
+      <p class="mx-sub">${Object.entries(byCat).map(([c2, n]) => `${esc(c2)}: ${n}`).join(' · ')}</p>
+      <div class="dc2 ${phs.length && docs.length ? 'both' : phs.length ? 'ph' : 'dc'}">
+        ${phs.length ? `<div class="dc2-ph n${Math.min(4, phs.length)}">${phs.slice(0, 4).map((id, i) => `<figure style="--i:${i}">${mkImg(id)}</figure>`).join('')}${phs.length > 4 ? `<span class="dc2-more">+${phs.length - 4} صورة</span>` : ''}</div>` : ''}
+        ${docs.length ? `<ul class="dc2-list">${docs.slice(0, 6).map((a2, i) => `<li style="--i:${i}"><span class="dc2-ic t-${ext(a2.name).toLowerCase()}">${ext(a2.name) || icon('file')}</span><div><b>${esc(a2.name)}</b><small>${esc(a2.category || 'أخرى')} · ${fmtSize(a2.size || 0)}${a2.addedAt ? ' · ' + fmtDate(String(a2.addedAt).slice(0, 10), 'short') : ''}</small></div></li>`).join('')}${docs.length > 6 ? `<li class="dc2-more-l">+${docs.length - 6} مستندات أخرى</li>` : ''}</ul>` : ''}
+      </div>`]);
+  }
   /* 9. القيمة */
   if (P.total) {
     const f = P.fin, mult = +f.murojSar ? ((+f.partnerSar || 0) + (+f.inkindSar || 0)) / +f.murojSar : 0;
