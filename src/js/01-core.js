@@ -412,7 +412,8 @@ function bindCombos(root, onChange) {
       const exact = opts.some((o) => normAr(optLabel(o)) === normAr(q));
       pop.innerHTML = (list.length ? list.map((o, i) => `<div class="cb-opt ${vals.includes(optVal(o)) ? 'sel' : ''} ${i === act ? 'act' : ''}" data-v="${esc(optVal(o))}">${esc(optLabel(o))}${optSub(o) ? `<span class="sub">${esc(optSub(o))}</span>` : ''}${vals.includes(optVal(o)) ? icon('check') : ''}</div>`).join('') : `<div class="cb-empty">لا توجد خيارات مطابقة.</div>`)
         + (!multi && vals.length ? `<div class="cb-opt" data-clear style="color:var(--muted)">مسح الاختيار</div>` : '')
-        + (allowAdd && q && !exact ? `<div class="cb-add"><div class="cb-opt" data-addv="${esc(q)}">${icon('plus')}&nbsp;${esc(cb.dataset.addlabel)} «${esc(q)}»</div></div>` : '');
+        + (allowAdd && q && !exact ? `<div class="cb-add"><div class="cb-opt" data-addv="${esc(q)}">${icon('plus')}&nbsp;${esc(cb.dataset.addlabel)} «${esc(q)}»</div></div>` : '')
+        + (allowAdd && !q ? `<div class="cb-add"><div class="cb-opt cb-new" data-addnew>${icon('plus')}&nbsp;${esc(cb.dataset.addlabel)}…</div></div>` : ''); // إضافة ظاهرة دائمًا، لا تحتاج البدء بالكتابة
     };
     box.addEventListener('mousedown', (e) => {
       const rm = e.target.closest('.cb-tag button');
@@ -436,11 +437,20 @@ function bindCombos(root, onChange) {
       const o = e.target.closest('.cb-opt'); if (!o || !pop || !pop.contains(o)) return;
       e.preventDefault();
       if (o.hasAttribute('data-clear')) { vals = []; close(); emit(); return; }
-      if (o.dataset.addv) {
-        const nv = o.dataset.addv;
+      const doAdd = (nv) => {
         const ev = new CustomEvent('cbadd', { bubbles: true, cancelable: true, detail: { value: nv, accept: (label) => { opts.push(label || nv); pick(label || nv); if (multi) close(); } } });
         cb.dispatchEvent(ev);
         if (!ev.defaultPrevented) { opts.push(nv); pick(nv); if (multi) { close(); input.blur(); } }
+      };
+      if (o.dataset.addv) { doAdd(o.dataset.addv); return; }
+      if (o.hasAttribute('data-addnew')) {
+        close(); input.blur();
+        inputDlg({ title: cb.dataset.addlabel, label: 'الاسم', ok: 'إضافة', multiline: false, hint: 'تُضاف إلى القائمة وتظهر في الاختيارات بعد ذلك.' }).then((r) => {
+          const nv = String((r && typeof r === 'object' ? r.value : r) || '').trim(); if (!nv) return;
+          const ex = opts.find((x) => normAr(optLabel(x)) === normAr(nv));
+          if (ex) { if (!vals.includes(optVal(ex))) pick(optVal(ex)); if (multi) close(); return; }
+          doAdd(nv);
+        });
         return;
       }
       pick(o.dataset.v);

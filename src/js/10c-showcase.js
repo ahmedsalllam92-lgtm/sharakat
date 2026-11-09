@@ -19,7 +19,9 @@ function heroSlides() {
   const by = new Map();
   showcasePhotos().forEach((x) => { if (x.p && !by.has(x.p.id)) by.set(x.p.id, x); });
   const rank = (p) => (p.golden ? 0 : ['active', 'soon'].includes(pStatus(p)) ? 1 : 2);
-  const L_ = [...by.values()].sort((a, b) => rank(a.p) - rank(b.p));
+  const fake = (x) => !!(x.p && x.p.demo) || String(x.id).startsWith('lib:'); // صور البيانات التجريبية والصور المولّدة
+  let L_ = [...by.values()].sort((a, b) => fake(a) - fake(b) || rank(a.p) - rank(b.p));
+  if (L_.filter((x) => !fake(x)).length >= 2) L_ = L_.filter((x) => !fake(x)); // صور الشراكات الفعلية أولًا، ولا تُخلط بالتجريبية متى توفرت
   if (L_.length < 2) ['waqf-saitah-signing', 'border-guard-signing'].forEach((k) => { if (ASSET_IMG[k]) L_.push({ id: 'asset:' + k, p: null, cap: ASSET_IMG[k].title }); });
   return L_.slice(0, 12);
 }

@@ -103,7 +103,7 @@ function renderHomeBoard(el) {
   el.classList.add('full');
   el.innerHTML = `<div class="bo-home">
     <section class="bo-hero" data-tour="home-hero">
-      <div class="bo-hero-bg bo-geo" aria-hidden="true"><svg width="100%" height="100%"><defs><pattern id="boStar" width="96" height="96" patternUnits="userSpaceOnUse"><g fill="none" stroke-width="1"><rect x="20" y="20" width="56" height="56"/><rect x="20" y="20" width="56" height="56" transform="rotate(45 48 48)"/><circle cx="48" cy="48" r="9"/><path d="M0 48H8M88 48h8M48 0v8M48 88v8"/></g></pattern></defs><rect width="100%" height="100%" fill="url(#boStar)"/></svg><span class="bo-geo-glow"></span></div>
+      <div class="bo-hero-bg bo-geo" aria-hidden="true"><svg width="100%" height="100%"><defs><pattern id="boStar" width="96" height="96" patternUnits="userSpaceOnUse"><g fill="none" stroke-width="1"><rect x="20" y="20" width="56" height="56"/><rect x="20" y="20" width="56" height="56" transform="rotate(45 48 48)"><animateTransform attributeName="transform" type="rotate" values="45 48 48;405 48 48" dur="48s" repeatCount="indefinite"/></rect><circle cx="48" cy="48" r="9"/><path d="M0 48H8M88 48h8M48 0v8M48 88v8"/></g></pattern></defs><rect width="100%" height="100%" fill="url(#boStar)"/></svg><span class="bo-geo-glow"></span></div>
       <div class="bo-hero-in">
         <div class="bo-hero-t">
           <div class="bo-eyebrow"><i></i>${esc(o.name)} · ${esc(o.dept)}</div>
@@ -144,8 +144,8 @@ function renderHomeBoard(el) {
 
     ${(D.settings.home.sections.find((x) => x.id === 'golden') || { on: true }).on ? goldSectionHTML(true) : ''}
     ${feat.length ? `<section class="bo-feat bo-rv" data-tour="home-partnerships">
-      <header class="bo-sh"><span class="bo-num">03</span><div><h2>شراكات مختارة</h2><p>نماذج من الشراكات السارية ومخرجاتها</p></div><a class="bo-more-l" href="#/partnerships">كل الشراكات ${icon('arrowL')}</a></header>
-      <div class="bo-cards">${feat.map((p) => boPCard(p)).join('')}</div></section>` : ''}
+      <header class="bo-sh"><span class="bo-num">03</span><div><h2>شراكات مختارة</h2><p>نماذج من الشراكات السارية ومخرجاتها</p></div>${pshowBtn('featured')}<a class="bo-more-l" href="#/partnerships">كل الشراكات ${icon('arrowL')}</a></header>
+      <div class="bo-cards">${feat.map((p, i) => boPCard(p).replace('<a class="bo-pc"', `<a class="bo-pc" style="--i:${i}"`)).join('')}</div></section>` : ''}
 
     ${stories.length ? `<section class="bo-stories bo-rv">
       <header class="bo-sh"><span class="bo-num">${feat.length ? '04' : '03'}</span><div><h2>قصص الأثر</h2><p>ما تحقق في الميدان عبر الشراكات</p></div><a class="bo-more-l" href="#/stories">كل الإنجازات ${icon('arrowL')}</a></header>
@@ -156,8 +156,12 @@ function renderHomeBoard(el) {
       <header class="bo-sh"><span class="bo-num">${boIdx(3 + !!feat.length + !!stories.length)}</span><div><h2>شركاؤنا</h2><p>جهات حكومية وخاصة وغير ربحية تتكامل مع المؤسسة</p></div></header>
       <div class="bo-wall-g">${[...L('sectors'), ''].map((s) => { const ps = partners.filter((pr) => (pr.sector || '') === s); return ps.length ? `<div class="bo-wall-s"><h4><i style="background:${SEC_VAR(s)}"></i>${esc(s || 'غير محدد')}<span>${ps.length}</span></h4><div class="bo-wall-l">${ps.map((pr) => `<a href="${can('view.partners') ? '#/partners/' + pr.id : '#/partnerships'}" title="${esc(pr.name)}">${plateHTML(pr, 48)}<span>${esc(pr.name)}</span></a>`).join('')}</div></div>` : ''; }).join('')}</div></section>` : ''}
 
-    <section class="bo-close bo-rv">
+    <section class="bo-close bc2 bo-rv">
+      <div class="bc-bg" aria-hidden="true"><svg width="100%" height="100%"><defs><pattern id="bcStar" width="120" height="120" patternUnits="userSpaceOnUse"><g fill="none" stroke-width="1"><rect x="30" y="30" width="60" height="60"/><rect x="30" y="30" width="60" height="60" transform="rotate(45 60 60)"/><circle cx="60" cy="60" r="10"/></g></pattern></defs><rect width="100%" height="100%" fill="url(#bcStar)"/></svg>
+        <svg class="bc-ring" viewBox="-200 -200 400 400"><g><circle r="180"/><circle r="150" class="d"/>${Array.from({ length: 24 }, (_, k) => { const a = k / 24 * Math.PI * 2; return `<circle class="p" r="3" cx="${(Math.cos(a) * 180).toFixed(1)}" cy="${(Math.sin(a) * 180).toFixed(1)}"/>`; }).join('')}<rect x="-70" y="-70" width="140" height="140"/><rect x="-70" y="-70" width="140" height="140" transform="rotate(45)"/></g></svg>
+        <svg class="bc-ring l" viewBox="-200 -200 400 400"><g><circle r="180"/><circle r="150" class="d"/><rect x="-70" y="-70" width="140" height="140"/><rect x="-70" y="-70" width="140" height="140" transform="rotate(45)"/></g></svg><i class="bc-sweep"></i></div>
       <div class="bo-close-in"><span class="bo-q" aria-hidden="true">”</span><p>كل شراكة في هذه المنظومة مرتبطة بأثر يمكن قياسه، وبمسؤول يتابعها، وبقرار في وقته.</p>
+        <dl class="bc-stats">${[[c.active, 'شراكة سارية'], [c.partners, 'جهة شريكة'], [outputs, 'مخرجًا مستهدفًا'], [publicStories().length, 'قصة أثر']].map(([v, l], k) => `<div style="--k:${k}"><dd><b class="cu" data-v="${v}">${v}</b></dd><dt>${l}</dt></div>`).join('')}</dl>
         <div class="bo-cta">${can('proposal.create') ? `<a class="btn gold lg" href="#/share">${icon('send')} شارك بمقترح شراكة</a>` : ''}${can('view.reports') ? `<a class="btn lg" href="#/reports">${icon('file')} التقارير</a>` : ''}</div></div>
     </section>
     <footer class="bo-foot"><span>${esc(o.name)} — ${esc(o.dept)}</span><span>${showDemo() ? 'تتضمن الصفحة بيانات تجريبية مميزة بوسم «تجريبي» ولا تمثل شراكات فعلية.' : 'المحتوى مصدره سجلات المنصة المنشورة.'}</span></footer>
@@ -166,6 +170,7 @@ function renderHomeBoard(el) {
   runCountUps(el);
   boReveal(el);
   initHeroRot(el);
+  if (cuReduce()) $$('animateTransform', el).forEach((a) => a.remove());
   el.onclick = (e) => { const s = e.target.closest('[data-story]'); if (s) { e.preventDefault(); openStory(s.dataset.story); } };
 }
 /* اختصارات العمل اليومي: كل بطاقة تذهب إلى المهمة مباشرة وتعرض ما ينتظر */

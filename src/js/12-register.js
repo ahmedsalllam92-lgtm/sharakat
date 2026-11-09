@@ -16,7 +16,7 @@ function renderRegister(el, r) {
   const VIEWS = [['cards', 'grid', 'بطاقات'], ['table', 'table', 'جدول']];
   const canEdit = can('edit.partnership');
   el.innerHTML = `<div id="regPrintHead"></div>
-    <div class="ph no-print"><div><h1>سجل الشراكات</h1><p>جميع الشراكات المسجلة في المنصة${can('view.drafts') ? '، بما فيها المسودات' : ''}. ابحث بالاسم أو الرمز أو أي نص في المجالات والمخرجات.</p></div>
+    <div class="ph no-print"><div><h1>سجل الشراكات</h1><p>ابحث بالاسم أو الرمز أو أي نص في المجالات والمخرجات.</p></div>
     <div class="ph-actions">${can('export') ? `<button class="btn" data-xls>${icon('download')} Excel</button><button class="btn" data-print>${icon('print')} طباعة</button>` : ''}${can('view.reports') ? `<button class="btn" data-rep title="تقرير بالشراكات المعروضة">${icon('file')} تقرير</button>` : ''}${canEdit ? `<a class="btn primary" href="#/partnerships/new">${icon('plus')} شراكة جديدة</a>` : ''}</div></div>
     ${design() === 'board' ? '<div class="bo-strip-st no-print" id="regStrip" role="group" aria-label="تصفية سريعة حسب الحالة"></div>' : ''}
     <div class="reg-tools" data-tour="reg-tools">

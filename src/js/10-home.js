@@ -128,7 +128,7 @@ function homeFeatured() {
     return `<section class="hsec"><div class="hsec-h"><div><h2>شراكات مختارة</h2></div></div><div class="manage-hint"><span>لم تُحدَّد شراكات للعرض المميز. تظهر هنا الشراكات المنشورة التي تختارها الإدارة.</span><a class="btn sm" href="#/settings/home">اختيار الشراكات</a></div></section>`;
   }
   return `<section class="hsec" aria-label="شراكات مختارة" data-tour="home-partnerships">
-    <div class="hsec-h"><div><h2>شراكات مختارة</h2><p>نماذج من شراكات الإدارة مع جهات حكومية وخاصة وغير ربحية.</p></div><a class="lnk" href="#/partnerships">جميع الشراكات ${icon('arrowL')}</a></div>
+    <div class="hsec-h"><div><h2>شراكات مختارة</h2><p>نماذج من شراكات الإدارة مع جهات حكومية وخاصة وغير ربحية.</p></div>${pshowBtn('featured')}<a class="lnk" href="#/partnerships">جميع الشراكات ${icon('arrowL')}</a></div>
     <div id="spotBox">${spotHTML(list[0])}</div>
     ${list.length > 1 ? `<nav class="spot-nav" aria-label="التنقل بين الشراكات المختارة">${list.map((p, i) => `<button class="${i === 0 ? 'on' : ''}" data-spotgo="${p.id}"><b>${esc(partnerName(p))}</b>${esc(p.classification || '')}${p.demo ? ' — تجريبي' : ''}</button>`).join('')}</nav>` : ''}
   </section>`;

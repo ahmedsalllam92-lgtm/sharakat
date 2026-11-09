@@ -60,7 +60,7 @@ function goldSectionHTML(board) {
   }
   return `<section class="hsec gold-sec ${board ? 'bo bo-rv' : ''}" aria-label="الشراكات الذهبية">
     <div class="gold-bg" aria-hidden="true">${Array.from({ length: 18 }, (_, k) => `<i style="--x:${(k * 37) % 100}%;--y:${(k * 53) % 100}%;--k:${k}"></i>`).join('')}</div>
-    <div class="gold-head"><span class="gold-crest">${STAR_SVG}</span><div><h2>الشراكات الذهبية</h2><p>شراكات نوعية اختارتها ${esc(D.settings.org.dept)} لأثرها وقيمتها الاستراتيجية</p></div><span class="gold-n">${L_.length}</span></div>
+    <div class="gold-head"><span class="gold-crest">${STAR_SVG}</span><div><h2>الشراكات الذهبية</h2><p>شراكات نوعية اختارتها ${esc(D.settings.org.dept)} لأثرها وقيمتها الاستراتيجية</p></div><span class="gold-n">${L_.length}</span>${pshowBtn('golden')}</div>
     <div class="gold-grid ${L_.length === 1 ? 'one' : ''}">${L_.map(goldCardHTML).join('')}</div>
   </section>`;
 }
