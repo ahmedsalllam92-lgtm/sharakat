@@ -3286,3 +3286,31 @@ input.ph-bad{animation:phBad .4s}
 .tl2-now{top:156px!important}
 .tl2-now::before{top:24px!important;height:34px!important;background:#B08A3E!important}
 .tl2-now span{font-size:12.5px!important;padding:3px 11px!important}
+
+/* شريحة الوثائق: عناصر قابلة للضغط */
+.rs2.mk [data-mkopen]{cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s}
+.rs2.mk .dc2-ph [data-mkopen]:hover{transform:scale(1.02);box-shadow:0 0 0 3px #E6C786,0 18px 36px -22px rgba(0,0,0,.8)}
+.rs2.mk .dc2-list [data-mkopen]:hover{background:rgba(230,199,134,.14);border-color:rgba(230,199,134,.4)}
+.mk-tog{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2);margin-inline-end:14px;cursor:pointer}
+/* المستندات في الطباعة */
+#rptPrint .mk-app-cover .mkac{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:60px 160px}
+.mkac-n{font-size:16px;color:#E6C786;letter-spacing:.5px;padding:4px 16px;border:1px solid rgba(230,199,134,.4);border-radius:20px}
+.mkac .dc2-ic{width:110px;height:128px;font-size:24px;border-radius:14px 30px 14px 14px}
+.mkac h2{margin:0;font-size:46px;line-height:1.3;color:#fff}
+.mkac dl{display:flex;gap:14px;margin:6px 0 0;flex-wrap:wrap;justify-content:center}
+.mkac dl>div{padding:12px 20px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
+.mkac dt{font-size:12.5px;color:#9FBDB2}.mkac dd{margin:4px 0 0;font-size:17px;color:#fff}
+.mkac p{margin:0;font-size:15px;color:#B9CFC6}
+#rptPrint .mk-app-pg{position:relative;width:1280px;height:720px;background:#fff;display:grid;place-items:center;overflow:hidden}
+#rptPrint .mk-app-pg img{max-width:100%;max-height:100%;object-fit:contain}
+#rptPrint .mk-app-pg span{position:absolute;bottom:8px;left:14px;font-size:11px;color:#8a948f}
+#rptPrint .mk-app-note>div{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center}
+#rptPrint .mk-app-note b{font-size:24px;color:var(--mk-p);display:inline-flex;gap:10px;align-items:center}#rptPrint .mk-app-note small{font-size:15px;color:var(--mk-mut)}
+#rptPrint .mk-app-flow{width:1280px;box-sizing:border-box;padding:56px 90px;background:#fff;color:#14201B;font-family:'SaudiRiyal','Expo Arabic','IBM Plex Sans Arabic',Tahoma,sans-serif;font-size:17px;line-height:1.9;break-before:page;page-break-before:always}
+#rptPrint .mk-app-flow h1,#rptPrint .mk-app-flow h2,#rptPrint .mk-app-flow h3{color:#0E3B35;margin:0 0 14px}
+#rptPrint .mk-app-flow table{border-collapse:collapse;width:100%;font-size:13px}
+#rptPrint .mk-app-flow td,#rptPrint .mk-app-flow th{border:1px solid #DCE5E1;padding:6px 8px;text-align:start;vertical-align:top}
+#rptPrint .mk-app-flow pre{white-space:pre-wrap;font-family:inherit}
+#rptPrint .mk-app-flow img{max-width:100%}
+@media print{#rptPrint .mk-app-pg,#rptPrint .mk-app-cover,#rptPrint .mk-app-note{break-after:page;page-break-after:always}}
+@media print{#rptPrint .mk-app-flow{break-after:page;page-break-after:always}#rptPrint .mk-app-cover{break-before:page;page-break-before:always}}

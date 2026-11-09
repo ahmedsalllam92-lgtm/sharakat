@@ -201,7 +201,7 @@ function mkSlidesOne(p) {
     try { const W = wfStateOf('partnership', p); WF_STEPS.forEach((x) => { const r_ = W.S[x.id]; if (r_ && r_.status === 'done' && r_.at && !r_.legacy) ev.push([r_.at, x.t, 'w', 'check']); }); } catch (_) { /* */ }
     evs.forEach((e) => ev.push([e.data.date || e.at, `تقييم الشراكة${evalScore(e.data) != null ? ': ' + evalScore(e.data) + '/100' : ''}`, 'b', 'award']));
     stories.forEach((st_) => st_.date && ev.push([st_.date, trimP(st_.title || 'إنجاز').slice(0, 42), 'c', 'star']));
-    (p.attachments || []).filter((a2) => a2.addedAt && !isImg(a2) && a2.category !== 'أخرى').forEach((a2) => ev.push([a2.addedAt, `${a2.category}: ${a2.name.replace(/\.[a-z0-9]{2,5}$/i, '')}`.slice(0, 48), 'f', 'file']));
+    (MK.docs === false ? [] : p.attachments || []).filter((a2) => a2.addedAt && !isImg(a2) && a2.category !== 'أخرى').forEach((a2) => ev.push([a2.addedAt, `${a2.category}: ${a2.name.replace(/\.[a-z0-9]{2,5}$/i, '')}`.slice(0, 48), 'f', 'file']));
     ev.push([p.endDate, 'نهاية المدة الحالية', 'd', 'calendar']);
     const t0 = s0.getTime(), t1 = e0.getTime(), now = today().getTime();
     const L0 = 1140, L1 = 140, X_ = (t) => L0 - Math.max(0, Math.min(1, (t - t0) / (t1 - t0))) * (L0 - L1);
@@ -243,16 +243,16 @@ function mkSlidesOne(p) {
   /* 8ج. الوثائق والصور: صور الشراكة الفعلية وقائمة المستندات بتصنيفاتها */
   const atts = (p.attachments || []).filter((a2) => a2.fileId);
   const phs = [...new Set([p.coverFileId, ...atts.filter((a2) => isImg(a2)).map((a2) => a2.fileId)].filter(Boolean))];
-  const docs = atts.filter((a2) => !isImg(a2));
+  const docs = MK.docs === false ? [] : atts.filter((a2) => !isImg(a2));
   if (phs.length || docs.length) {
     const ext = (n) => (String(n).match(/\.([a-z0-9]+)$/i) || [, ''])[1].toUpperCase();
     const byCat = {}; atts.forEach((a2) => { const c2 = a2.category || 'أخرى'; byCat[c2] = (byCat[c2] || 0) + 1; });
-    S.push(['pdocs', 'night', 'الوثائق والصور', `
-      <h2 class="mx-h">${mkE(k('dc.h'), 'الوثائق والصور')}</h2>
-      <p class="mx-sub">${Object.entries(byCat).map(([c2, n]) => `${esc(c2)}: ${n}`).join(' · ')}</p>
+    S.push(['pdocs', 'night', docs.length ? 'الوثائق والصور' : 'الصور', `
+      <h2 class="mx-h">${mkE(k(docs.length ? 'dc.h' : 'dc.h2'), docs.length ? 'الوثائق والصور' : 'صور الشراكة')}</h2>
+      <p class="mx-sub">${Object.entries(byCat).filter(([c2]) => docs.length || c2 === 'صور الشراكة').map(([c2, n]) => `${esc(c2)}: ${n}`).join(' · ')}</p>
       <div class="dc2 ${phs.length && docs.length ? 'both' : phs.length ? 'ph' : 'dc'}">
-        ${phs.length ? `<div class="dc2-ph n${Math.min(4, phs.length)}">${phs.slice(0, 4).map((id, i) => `<figure style="--i:${i}">${mkImg(id)}</figure>`).join('')}${phs.length > 4 ? `<span class="dc2-more">+${phs.length - 4} صورة</span>` : ''}</div>` : ''}
-        ${docs.length ? `<ul class="dc2-list">${docs.slice(0, 6).map((a2, i) => `<li style="--i:${i}"><span class="dc2-ic t-${ext(a2.name).toLowerCase()}">${ext(a2.name) || icon('file')}</span><div><b>${esc(a2.name)}</b><small>${esc(a2.category || 'أخرى')} · ${fmtSize(a2.size || 0)}${a2.addedAt ? ' · ' + fmtDate(String(a2.addedAt).slice(0, 10), 'short') : ''}</small></div></li>`).join('')}${docs.length > 6 ? `<li class="dc2-more-l">+${docs.length - 6} مستندات أخرى</li>` : ''}</ul>` : ''}
+        ${phs.length ? `<div class="dc2-ph n${Math.min(4, phs.length)}">${phs.slice(0, 4).map((id, i) => `<figure style="--i:${i}" data-mkopen="${esc(id)}" title="عرض الصورة">${mkImg(id)}</figure>`).join('')}${phs.length > 4 ? `<span class="dc2-more">+${phs.length - 4} صورة</span>` : ''}</div>` : ''}
+        ${docs.length ? `<ul class="dc2-list">${docs.slice(0, 6).map((a2, i) => `<li style="--i:${i}" data-mkopen="${esc(a2.fileId)}" title="فتح المستند"><span class="dc2-ic t-${ext(a2.name).toLowerCase()}">${ext(a2.name) || icon('file')}</span><div><b>${esc(a2.name)}</b><small>${esc(a2.category || 'أخرى')} · ${fmtSize(a2.size || 0)}${a2.addedAt ? ' · ' + fmtDate(String(a2.addedAt).slice(0, 10), 'short') : ''}</small></div></li>`).join('')}${docs.length > 6 ? `<li class="dc2-more-l">+${docs.length - 6} مستندات أخرى</li>` : ''}</ul>` : ''}
       </div>`]);
   }
   /* 9. القيمة */
@@ -432,7 +432,7 @@ function renderMarketingReport(el, r) {
       <div class="mk-scope" role="tablist" aria-label="نطاق التقرير">
         <div class="mk-mode"><button type="button" class="${MK.scope !== 'one' ? 'on' : ''}" data-mkmode="all">${icon('layers')} كل الشراكات</button><button type="button" class="${MK.scope === 'one' ? 'on' : ''}" data-mkmode="one">${icon('file')} شراكة واحدة</button></div>
         ${MK.scope === 'one' ? `<select class="in mk-pick" id="mkPick" aria-label="اختر الشراكة"><option value="">اختر الشراكة…</option>${mkPool().sort((a, b) => partnerName(a).localeCompare(partnerName(b), 'ar')).map((p) => `<option value="${p.id}" ${p.id === MK.pid ? 'selected' : ''}>${esc(partnerName(p))}${p.title && partnerById(p.partnerId) && p.title !== partnerById(p.partnerId).name ? ' — ' + esc(p.title) : ''} (${esc(p.code || '')})</option>`).join('')}</select>`
-        : MK_SCOPES.map(([k, l, f]) => { const n = mkPool().filter(f).length; return `<button type="button" class="${MK.scope === k ? 'on' : ''}" data-mkscope="${k}" ${n ? '' : 'disabled'}>${esc(l)}<b>${n}</b></button>`; }).join('')}<span class="sp"></span><button type="button" class="linkbtn" data-mkreset>${icon('history')} استعادة النصوص الأصلية</button></div>
+        : MK_SCOPES.map(([k, l, f]) => { const n = mkPool().filter(f).length; return `<button type="button" class="${MK.scope === k ? 'on' : ''}" data-mkscope="${k}" ${n ? '' : 'disabled'}>${esc(l)}<b>${n}</b></button>`; }).join('')}<span class="sp"></span>${mkOne() && (mkOne().attachments || []).some((a2) => !isImg(a2)) ? `<label class="mk-tog" title="عند الإخفاء تبقى الصور فقط، ولا تُطبع المستندات"><span class="switch"><input type="checkbox" data-mkdocs ${MK.docs === false ? '' : 'checked'}><i></i></span>المستندات في التقرير والطباعة</label>` : ''}<button type="button" class="linkbtn" data-mkreset>${icon('history')} استعادة النصوص الأصلية</button></div>
       <div class="mk-deck" id="mkDeck">${S.length ? S.map((s, i) => `<div class="mk-fr" data-i="${i}">${s}</div>`).join('') : `<div class="panel">${MK.scope === 'one' ? emptyHTML({ ic: 'file', title: 'اختر الشراكة', text: 'اختر من القائمة أعلاه الشراكة التي تريد تقريرها التسويقي.' }) : emptyHTML({ ic: 'file', title: 'لا توجد شراكات في هذا النطاق', text: 'اختر نطاقًا آخر.' })}</div>`}</div>`;
     hydrateFiles(el);
     fit();
@@ -444,14 +444,22 @@ function renderMarketingReport(el, r) {
   draw();
   App.mkFit = fit; window.removeEventListener('resize', App.mkFitL || (() => {})); App.mkFitL = () => fit(); window.addEventListener('resize', App.mkFitL);
   el.addEventListener('input', (e) => { const t = e.target.closest('[data-ek]'); if (t) RPT.ov[t.dataset.ek] = { v: t.innerText.replace(/ /g, ' ').trim(), base: t.dataset.base }; });
-  el.addEventListener('change', (e) => { if (e.target.id === 'mkPick') { MK.pid = e.target.value; draw(); } });
+  el.addEventListener('change', (e) => { if (e.target.id === 'mkPick') { MK.pid = e.target.value; draw(); } if (e.target.matches('[data-mkdocs]')) { MK.docs = e.target.checked; draw(); } });
   el.addEventListener('keydown', (e) => { const t = e.target.closest && e.target.closest('[data-ek]'); if (t && e.key === 'Enter') { e.preventDefault(); t.blur(); } });
   el.addEventListener('click', (e) => {
     const sc = e.target.closest('[data-mkscope]'); if (sc) { MK.scope = sc.dataset.mkscope; return draw(); }
     const md = e.target.closest('[data-mkmode]'); if (md) { if (md.dataset.mkmode === 'one') { MK.scope = 'one'; if (!MK.pid || !mkPool().some((p) => p.id === MK.pid)) MK.pid = (mkPool()[0] || {}).id; } else if (MK.scope === 'one') MK.scope = 'all'; return draw(); }
     if (e.target.closest('[data-mkreset]')) { Object.keys(RPT.ov).filter((k) => k.startsWith('mk.')).forEach((k) => delete RPT.ov[k]); toast('استُعيدت النصوص الأصلية'); return draw(); }
     if (e.target.closest('[data-mkshow]')) return openReportShow(0, $$('#mkDeck .rs2', el));
-    if (e.target.closest('[data-mkpdf]')) { prepareReportPrint($$('#mkDeck .rs2', el), 'التقرير-التسويقي-' + (mkOne() ? partnerName(mkOne()).replace(/\s+/g, '-') + '-' : '') + isoDate(today())); setTimeout(() => window.print(), 300); }
+    if (e.target.closest('[data-mkpdf]')) {
+      const one = mkOne(), title = 'التقرير-التسويقي-' + (one ? partnerName(one).replace(/\s+/g, '-') + '-' : '') + isoDate(today());
+      const withDocs = one && MK.docs !== false && (one.attachments || []).some((a2) => a2.fileId && !isImg(a2));
+      if (!withDocs) { prepareReportPrint($$('#mkDeck .rs2', el), title); setTimeout(() => window.print(), 300); return; }
+      const b = e.target.closest('[data-mkpdf]'); b.disabled = true; const old = b.innerHTML;
+      mkAppendixHTML(one, (i, n, name) => { b.innerHTML = `${icon('history')} تجهيز المستندات ${i}/${n}…`; }).then((extra) => {
+        prepareReportPrint($$('#mkDeck .rs2', el), title, extra); setTimeout(() => window.print(), 400);
+      }).catch(() => toast('تعذّر تجهيز المستندات للطباعة', 'err')).finally(() => { b.disabled = false; b.innerHTML = old; });
+    }
   });
 }
 

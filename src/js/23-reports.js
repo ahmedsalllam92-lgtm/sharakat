@@ -559,11 +559,11 @@ function renderReports(el, r) {
 const rptFileName = () => { const ps = RPT.ids.map((id) => D.partnerships.find((p) => p.id === id)).filter(Boolean); return (ps.length === 1 ? `تقرير شراكة ${partnerName(ps[0])}` : `تقرير الشراكات (${ps.length})`) + ` — ${isoDate(new Date())}`; };
 
 /* — PDF: نسخ شرائح المعاينة نفسها (بنفس الخط والتنسيق) إلى صفحات 16:9 — */
-function prepareReportPrint(nodes, title) {
+function prepareReportPrint(nodes, title, extraHTML = '') {
   let host = $('#rptPrint'); if (host) host.remove();
   host = document.createElement('div'); host.id = 'rptPrint'; host.dir = 'rtl';
   const src = nodes && nodes.length ? nodes : $$('#rpSlides .rs2');
-  host.innerHTML = src.length ? src.map((n) => n.outerHTML).join('') : rptSlides().map(specHTML).join('');
+  host.innerHTML = (src.length ? src.map((n) => n.outerHTML).join('') : rptSlides().map(specHTML).join('')) + extraHTML; // المستندات المرفقة بعد الشرائح
   $$('[contenteditable]', host).forEach((x) => x.removeAttribute('contenteditable')); $$('.rs2.mk', host).forEach((x) => x.classList.remove('mk-anim', 'play')); $$('.rs2-t.ed', host).forEach((x) => x.classList.remove('ed'));
   document.body.appendChild(host);
   if (!src.length) hydrateFiles(host);
