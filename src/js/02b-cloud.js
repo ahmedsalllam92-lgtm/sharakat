@@ -295,7 +295,7 @@ function cloudRefreshUI() {
   if (busy) { Cloud.pendingUI = true; return; }
   Cloud.pendingUI = false;
   const y = window.scrollY;
-  renderShell(); route();
+  renderShell(); route(); if (typeof splashSync === 'function') splashSync();
   requestAnimationFrame(() => window.scrollTo(0, y));
 }
 Cloud.expired = function () {

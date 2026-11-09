@@ -6,7 +6,7 @@
    ===================================================================== */
 const SPLASH_DEF = { on: true, text: 'نبني شراكات… تصنع أثرًا يبقى', sub: 'منظومة الشراكات — مؤسسة مروج الأهلية', bg: 'calm', stats: true, dur: 3.4 };
 const SPLASH_BGS = [['calm', 'هادئ — لون المؤسسة بإضاءة خفيفة، بلا صور أو رسومات'], ['splash-bond', 'فجر الشراكة — لوحة فنية (نهران من الضوء يلتقيان)'], ['signings', 'لحظات توقيع الشراكات (صور متتابعة)'], ['splash-aerial', 'صورة جوية للغطاء النباتي'], ['splash-forest', 'غابة ومسطحات خضراء'], ['border-guard-signing', 'صورة توقيع مذكرة'], ['waqf-saitah-signing', 'صورة توقيع شراكة']];
-function splashCfg() { let c = {}; try { c = JSON.parse(localStorage.getItem('shk_splash') || '{}') || {}; } catch (e) { c = {}; } if (c.bg === 'splash-bond' && !c.bgV4) c.bg = 'calm'; return { ...SPLASH_DEF, ...c }; }
+function splashCfg() { let c = {}; try { c = JSON.parse(localStorage.getItem('shk_splash') || '{}') || {}; } catch (e) { c = {}; } if (!c.bgV4) c.bg = 'calm'; return { ...SPLASH_DEF, ...c }; }
 function splashShow(force) {
   if (window.__SBX) return null;
   const cfg = splashCfg();
@@ -23,7 +23,7 @@ function splashShow(force) {
   el.style.setProperty('--dur', dur + 's');
   const words = String(cfg.text || SPLASH_DEF.text).split(/\s+/).filter(Boolean);
   const S = cfg.statsVals;
-  const stats = cfg.stats && S ? [[S.act, 'شراكة سارية'], [S.partners, 'جهة شريكة'], [S.sectors, 'قطاعات']].filter((x) => x[0] != null) : [];
+  const stats = []; // الأرقام لا تُعرض من ذاكرة الجهاز (قد تكون قديمة)؛ تظهر حين تُحمَّل بيانات المنصة الفعلية (splashSync)
   /* «لحظات التوقيع»: صور توقيع الشراكات الحقيقية تتعاقب ببطء، وفوقها حلقتان ذهبيتان تقتربان حتى تتشابكا (رمز الشراكة) */
   const SIGN = ['waqf-saitah-signing', 'border-guard-signing'].map(img).filter(Boolean);
   const calm = cfg.bg === 'calm';
@@ -58,13 +58,14 @@ function splashShow(force) {
   return el;
 }
 /* تُستدعى بعد تحميل البيانات: تحفظ الإعدادات والأرقام لتظهر فورًا في الفتح التالي، وتحدّث الأرقام إن كانت الشاشة ما زالت ظاهرة */
-function splashSync() {
+function splashSync(live = true) {
   if (window.__SBX) return;
   try {
     const s = (D.settings && D.settings.splash) || {};
     const nd = visiblePartnerships().filter((p) => !p.isDraft);
     const statsVals = { act: nd.filter((p) => ['active', 'soon'].includes(pStatus(p))).length, partners: new Set(nd.map((p) => p.partnerId)).size, sectors: new Set(nd.filter((p) => p.stage === 'signed').map(pSector).filter(Boolean)).size };
     localStorage.setItem('shk_splash', JSON.stringify({ ...SPLASH_DEF, ...s, statsVals }));
+    if (!live) return; // شاشة الدخول: البيانات لم تُسحب من المنصة بعد
     const el = document.getElementById('shkSplash');
     if (el && !el.classList.contains('out') && s.stats !== false) {
       const box = el.querySelector('.sp-stats');
