@@ -4090,3 +4090,52 @@ html.share-mode .design-switch,html.share-mode #dsw,html.share-mode .bo-find,htm
 @keyframes spLogoGlow{0%{filter:drop-shadow(0 0 0 rgba(240,215,155,0))}35%{filter:drop-shadow(0 0 22px rgba(240,215,155,.75))}100%{filter:drop-shadow(0 0 6px rgba(240,215,155,.25))}}
 #shkSplash.fx-pulse .sp-stats span{box-shadow:0 0 0 1px rgba(230,199,134,.35),0 0 24px -6px rgba(230,199,134,.5);transition:box-shadow .8s}
 html.share-mode [data-palette]{display:none!important}
+/* الملف الشامل: «الشراكة في سطور» */
+.dossier .dsx-bridge{display:grid;grid-template-columns:150px 1fr 150px;align-items:center;gap:10px;margin:6px 0 18px;padding:18px 16px;border-radius:14px;background:linear-gradient(135deg,#0F4433,#145440 60%,#0F4433);color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;break-inside:avoid}
+.dossier .dsx-party{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.dossier .dsx-lg{width:76px;height:76px;border-radius:50%;background:#fff;display:grid;place-items:center;overflow:hidden;box-shadow:0 0 0 3px rgba(217,192,138,.75),0 8px 18px -8px rgba(0,0,0,.5)}
+.dossier .dsx-lg img{max-width:78%;max-height:78%;object-fit:contain}.dossier .dsx-lg .emb{width:100%;height:100%}
+.dossier .dsx-party b{font-size:12.5px;line-height:1.4}.dossier .dsx-party small{font-size:10px;color:#C7D6CD}
+.dossier .dsx-span{position:relative;min-height:128px;display:flex;flex-direction:column;justify-content:flex-end}
+.dossier .dsx-span svg{position:absolute;inset:0 0 18px;width:100%;height:calc(100% - 18px)}
+.dossier .dsx-span .arc{fill:none;stroke:rgba(217,192,138,.35);stroke-width:8;stroke-linecap:round}
+.dossier .dsx-span .arc2{fill:none;stroke:#D9C08A;stroke-width:1.6;stroke-dasharray:2 6;stroke-linecap:round}
+.dossier .dsx-nodes{position:relative;display:flex;justify-content:space-around;gap:6px;margin-bottom:6px}
+.dossier .dsx-nodes span{display:flex;flex-direction:column;align-items:center;gap:4px;max-width:20%;text-align:center}
+.dossier .dsx-nodes i{width:30px;height:30px;border-radius:50%;background:#D9C08A;color:#0F4433;display:grid;place-items:center}.dossier .dsx-nodes i .ic{width:15px;height:15px}
+.dossier .dsx-nodes em{font-style:normal;font-size:9.5px;line-height:1.35;color:#E7F0EC}
+.dossier .dsx-cap{text-align:center;font-size:10px;color:#D9C08A;letter-spacing:.2px}
+.dossier .dsx-narr{border-inline-start:3px solid #A47C32;padding:2px 14px 2px 0;margin:0 0 16px}
+.dossier .dsx-narr p{margin:0 0 8px;font-size:12.5px;line-height:1.95;color:#2E3B35}.dossier .dsx-narr p:first-child{font-size:13.5px}
+.dossier .dsx-nums{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:18px;break-inside:avoid}
+.dossier .dsx-nums>div{border:1px solid #E7E1D3;border-radius:12px;padding:10px 8px;text-align:center;background:#FBF8F1;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.dossier .dsx-nums span{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#E8EFEA;color:#0F4433}.dossier .dsx-nums span .ic{width:13px;height:13px}
+.dossier .dsx-nums b{display:block;font-size:24px;line-height:1.1;margin-top:4px;color:#0F4433}.dossier .dsx-nums small{font-size:10px;color:#5C6861}
+.dossier .dsx-chain{display:grid;grid-template-columns:1fr 22px 1fr 22px 1fr;align-items:stretch;gap:4px;margin-bottom:16px;break-inside:avoid}
+.dossier .dsx-arr{display:grid;place-items:center;color:#A47C32}.dossier .dsx-arr .ic{width:18px;height:18px}
+.dossier .dsx-col{border-radius:12px;padding:10px 12px;border:1px solid #E7E1D3;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.dossier .dsx-col.a{background:#F1F6F3}.dossier .dsx-col.b{background:#FBF5E8}.dossier .dsx-col.c{background:#EEF4F1;border-color:#CFE0D7}
+.dossier .dsx-col h4{display:flex;align-items:center;gap:6px;margin:0 0 8px;font-size:12.5px;color:#0F4433}
+.dossier .dsx-col h4 span{display:grid;place-items:center;width:24px;height:24px;border-radius:7px;background:#0F4433;color:#fff}.dossier .dsx-col h4 .ic{width:13px;height:13px}
+.dossier .dsx-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.dossier .dsx-col li{display:flex;gap:7px;align-items:flex-start;font-size:10.8px;line-height:1.55;color:#2E3B35}
+.dossier .dsx-col li i{flex:none;width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid #E7E1D3;display:grid;place-items:center;color:#A47C32}.dossier .dsx-col li i .ic{width:11px;height:11px}
+.dossier .dsx-col em{display:block;margin-top:6px;font-size:9.5px;color:#8C958E;font-style:normal}
+.dossier .dsx-goals{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.dossier .dsx-goals span{display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 12px;border-radius:999px;border:1px solid #D9C08A;background:#FBF5E8;font-size:11px;color:#3D3214;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.dossier .dsx-goals em{font-style:normal;font-weight:800;color:#A47C32;font-size:10px}
+.dossier .dsx-life{padding:40px 30px 44px;break-inside:avoid}
+.dossier .dsx-line{position:relative;height:4px;border-radius:4px;background:#E7E1D3;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.dossier .dsx-line .prog{position:absolute;right:0;top:0;bottom:0;border-radius:4px;background:linear-gradient(90deg,#A47C32,#0F4433);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.dossier .dsx-line .pt{position:absolute;top:2px;transform:translateX(50%);display:flex;flex-direction:column;align-items:center;white-space:nowrap;z-index:1}
+.dossier .dsx-line .pt i{width:12px;height:12px;border-radius:50%;background:#fff;border:2.5px solid #0F4433;margin-top:-6px}
+.dossier .dsx-line .pt.t i{border-color:#A47C32;background:#A47C32;box-shadow:0 0 0 4px rgba(164,124,50,.2)}.dossier .dsx-line .pt.e i{border-color:#8C958E}.dossier .dsx-line .pt.r i{border-color:#A47C32}
+.dossier .dsx-line .pt b{font-size:10px;color:#14201B}.dossier .dsx-line .pt small{font-size:9px;color:#5C6861}
+.dossier .dsx-line .pt.up{flex-direction:column-reverse;top:auto;bottom:2px}.dossier .dsx-line .pt.up i{margin:0 0 -6px}
+.dossier .dsx-line .pt.dn b{margin-top:4px}
+
+.dossier .dsx-span{min-height:0;justify-content:center;padding-top:4px}
+.dossier .dsx-rail{position:absolute;left:-6px;right:-6px;top:19px;height:3px;border-radius:3px;background:repeating-linear-gradient(90deg,#D9C08A 0 8px,transparent 8px 13px);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.dossier .dsx-nodes{align-items:flex-start;margin:0 0 10px}
+.dossier .dsx-nodes i{position:relative;z-index:1;box-shadow:0 0 0 4px #145440;color:#0F4433!important}
+.dossier .dsx-nodes i svg{width:15px;height:15px;stroke:#0F4433}

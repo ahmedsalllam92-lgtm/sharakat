@@ -3,6 +3,7 @@
    يُعرض للمعاينة ثم يُطبع أو يُحفظ PDF من المتصفح
    ===================================================================== */
 const DOS_SECS = [
+  ['story', 'الشراكة في سطور: الدور وسلسلة القيمة ودورة الحياة', true],
   ['summary', 'بطاقة الشراكة: الحقائق والفترة', true],
   ['partner', 'الجهة الشريكة', true],
   ['profile', 'التصنيف والقيمة والوضع المالي والتقييم', true],
@@ -123,6 +124,53 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
   const kv2 = (rows) => `<dl class="ds-dl">${rows.filter(Boolean).map(([l, v, full]) => `<div class="${full ? 'full' : ''}"><dt>${esc(l)}</dt><dd>${v || '<span class="ds-faint">—</span>'}</dd></div>`).join('')}</dl>`;
   const bar = (pct, cls = '') => `<span class="ds-bar ${cls}"><i style="width:${Math.max(0, Math.min(100, pct))}%"></i></span>`;
   const lst = (txt, empty) => richHTML(txt, { empty });
+
+  /* — الفصل الأول: الشراكة في سطور — سرد يشرح الشراكة ودورها، وجسر بين الطرفين، وسلسلة القيمة، والأهداف، ودورة حياة الشراكة — */
+  if (has('story')) {
+    const coop = richItems(p.cooperationAreas), outs = richItems(p.outputs), imps = richItems(p.expectedImpact);
+    const short = (it, n = 90) => { const s = (it.title || it.text || '').replace(/\s+/g, ' ').trim(); return s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : s; };
+    const ico = (t) => (typeof mkIconFor === 'function' ? mkIconFor(t) : 'link');
+    const goals = (p.goalsLinked || []).map((k) => (goalCodes().find((g) => g.k === k) || {}).t).filter(Boolean);
+    const years = p.startDate && p.endDate ? Math.max(1, Math.round((parseDate(p.endDate) - parseDate(p.startDate)) / (365.25 * 864e5) * 10) / 10) : null;
+    const signed = st.S.signed && st.S.signed.status === 'done' && !st.S.signed.legacy ? st.S.signed.at : null;
+    const renews = p.renewals || [];
+    const sect = pSector(p);
+    /* السرد */
+    const para = [
+      `<b>${esc(pr.name || name)}</b> جهة من ${sect ? `القطاع ${esc(sect)}` : 'الجهات الشريكة'}${pr.domain ? ` تعمل في مجال ${esc(pr.domain)}` : ''}، ترتبط مع ${esc(o.name)} بـ${esc(p.classification || 'مذكرة شراكة')}${p.ptype ? ` ضمن الشراكات <b>${esc(p.ptype)}</b>` : ''}${p.startDate ? ` بدأت في ${fmtDate(p.startDate)}` : ''}${p.endDate ? ` وتمتد حتى ${fmtDate(p.endDate)}${years ? ` (${nf(years)} ${years <= 1 ? 'سنة' : years < 3 ? 'سنتان' : 'سنوات'})` : ''}` : ''}.`,
+      p.showcaseGoal || coop.length ? `تهدف الشراكة إلى ${esc((p.showcaseGoal ? trimP(p.showcaseGoal).replace(/^(إلى|الى)\s+/, '') : short(coop[0], 160)).replace(/[.。،,\s…]+$/, ''))}.` : '',
+      `<b>دورها في عمل المؤسسة:</b> ${[coop.length && `تفتح ${plural(coop.length, 'مجال تعاون واحدًا', 'مجالي تعاون', 'مجالات تعاون', 'مجالًا للتعاون')}`, outs.length && `وتستهدف ${plural(outs.length, 'مخرجًا واحدًا', 'مخرجين', 'مخرجات', 'مخرجًا')}`, goals.length && `وتخدم ${plural(goals.length, 'هدفًا استراتيجيًا واحدًا', 'هدفين استراتيجيين', 'أهداف استراتيجية', 'هدفًا استراتيجيًا')} للمؤسسة`, (p.departments || []).length && `وتشارك فيها ${plural(p.departments.length, 'إدارة واحدة', 'إدارتان', 'إدارات', 'إدارة')} من المؤسسة`].filter(Boolean).join(' ') || 'لم تُسجَّل بعد مجالات التعاون ومخرجاتها'}.`,
+      `<b>أين تقف اليوم:</b> ${esc(statusLabel(stt))}${['active', 'soon'].includes(stt) && dl !== null ? ` ومتبقٍ ${plural(dl, 'يوم واحد', 'يومان', 'أيام', 'يومًا')}` : ''}${st.cur && !st.closed ? `، والخطوة الحالية في مسار المذكرة «${esc(st.cur.t)}»` : ''}${P.ev && P.ev.score !== null ? `، وآخر تقييم لها ${P.ev.score} من 100 (${esc(evalGrade(P.ev.score))})` : ''}${renews.length ? `، وجُدّدت ${plural(renews.length, 'مرة', 'مرتين', 'مرات', 'مرة')}` : ''}.`,
+    ].filter(Boolean);
+    /* الجسر بين الطرفين */
+    const mlogo = (ASSET_IMG['murooj-logo'] || {}).src, plg = pr.logoFileId ? await url(pr.logoFileId) : '';
+    const bridge = `<div class="dsx-bridge">
+      <div class="dsx-party"><span class="dsx-lg">${mlogo ? `<img src="${mlogo}" alt="">` : ''}</span><b>${esc(o.name)}</b><small>${esc(o.dept)}</small></div>
+      <div class="dsx-span"><span class="dsx-rail" aria-hidden="true"></span>
+        <div class="dsx-nodes">${(coop.length ? coop : [{ text: 'مجالات التعاون تُسجَّل في الشراكة' }]).slice(0, 5).map((it, i) => `<span style="--i:${i}"><i>${icon(ico(it.title || it.text))}</i><em>${esc(short(it, 46))}</em></span>`).join('')}</div>
+        <small class="dsx-cap">${esc(p.classification || 'مذكرة شراكة')}${years ? ` · ${nf(years)} ${years <= 1 ? 'سنة' : years < 3 ? 'سنتان' : 'سنوات'}` : ''}</small></div>
+      <div class="dsx-party"><span class="dsx-lg">${plg ? `<img src="${plg}" alt="">` : `<span class="emb" data-sec="${esc(pr.sector || '')}">${icon(embIcon(pr))}</span>`}</span><b>${esc(pr.name || name)}</b><small>${esc([sect, pr.domain].filter(Boolean).join(' · ') || 'الجهة الشريكة')}</small></div></div>`;
+    /* الأرقام */
+    const nums = [[coop.length, 'مجال تعاون', 'link'], [outs.length, 'مخرج مستهدف', 'award'], [imps.length, 'أثر متوقع', 'leaf'], [goals.length, 'هدف استراتيجي', 'flag'], [(p.departments || []).length, 'إدارة مشاركة', 'users'], [P.ev && P.ev.score !== null ? P.ev.score : null, 'آخر تقييم /100', 'star']];
+    const numsH = `<div class="dsx-nums">${nums.map(([v, l, ic]) => `<div><span>${icon(ic)}</span><b>${v === null || v === undefined ? '—' : nf(v)}</b><small>${l}</small></div>`).join('')}</div>`;
+    /* سلسلة القيمة */
+    const col = (t, ic, arr, cls) => `<div class="dsx-col ${cls}"><h4><span>${icon(ic)}</span>${t}</h4>${arr.length ? `<ul>${arr.slice(0, 4).map((it) => `<li><i>${icon(ico(it.title || it.text))}</i><span>${esc(short(it, 120))}</span></li>`).join('')}</ul>${arr.length > 4 ? `<em>+ ${plural(arr.length - 4, 'بند آخر', 'بندان آخران', 'بنود أخرى', 'بندًا آخر')} في الفصول التالية</em>` : ''}` : '<p class="ds-faint">لم يُسجَّل بعد.</p>'}</div>`;
+    const chain = `<div class="dsx-chain">${col('ما نتعاون فيه', 'link', coop, 'a')}<span class="dsx-arr">${icon('chevL')}</span>${col('ما ننتجه معًا', 'award', outs, 'b')}<span class="dsx-arr">${icon('chevL')}</span>${col('الأثر الذي نصنعه', 'leaf', imps, 'c')}</div>`;
+    /* دورة الحياة */
+    const ev_ = [prop && prop.submittedAt && [prop.submittedAt.slice(0, 10), 'تقديم المقترح', 'p'], signed && [String(signed).slice(0, 10), 'توقيع المذكرة', 's'], p.startDate && [p.startDate, 'بداية الشراكة', 'b'], ...renews.map((r) => [String(r.at).slice(0, 10), 'تجديد حتى ' + fmtDate(r.to, 'short'), 'r']), [isoDate(today()), 'اليوم', 't'], p.endDate && [p.endDate, 'نهاية المدة', 'e']].filter(Boolean).filter((x) => parseDate(x[0])).sort((a, b) => (a[0] < b[0] ? -1 : 1));
+    let life = '';
+    if (ev_.length >= 2) {
+      const t0 = parseDate(ev_[0][0]).getTime(), t1 = Math.max(parseDate(ev_[ev_.length - 1][0]).getTime(), t0 + 1);
+      life = `<div class="dsx-life"><div class="dsx-line">${ev_.map(([d, l, k], i) => { const f = (parseDate(d).getTime() - t0) / (t1 - t0); return `<span class="pt ${k} ${i % 2 ? 'dn' : 'up'}" style="right:${(f * 100).toFixed(1)}%"><i></i><b>${esc(l)}</b><small>${fmtDate(d, 'short')}</small></span>`; }).join('')}<i class="prog" style="width:${tp !== null ? Math.round(Math.max(0, Math.min(1, (today().getTime() - t0) / (t1 - t0))) * 100) : 0}%"></i></div></div>`;
+    }
+    chap('story', 'الشراكة في سطور', `
+      ${bridge}
+      <div class="dsx-narr">${para.map((x) => `<p>${x}</p>`).join('')}</div>
+      ${numsH}
+      <h3 class="ds-h3">سلسلة القيمة: من التعاون إلى الأثر</h3>${chain}
+      ${goals.length ? `<h3 class="ds-h3">الأهداف الاستراتيجية التي تخدمها الشراكة</h3><div class="dsx-goals">${goals.map((g, i) => `<span><em>${pad(i + 1)}</em>${esc(g)}</span>`).join('')}</div>` : ''}
+      ${life ? `<h3 class="ds-h3">دورة حياة الشراكة</h3>${life}` : ''}`, { sub: 'من هي الجهة، ولماذا هذه الشراكة، وما دورها في عمل المؤسسة' });
+  }
 
   if (has('summary')) {
     const remTxt = ['active', 'soon'].includes(stt) && dl !== null ? `${nf(dl)} يومًا` : stt === 'upcoming' && p.startDate ? `يبدأ بعد ${nf(daysBetween(today(), parseDate(p.startDate)))} يومًا` : stt === 'ended' ? 'انتهت' : '—';

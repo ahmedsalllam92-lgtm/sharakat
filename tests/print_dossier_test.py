@@ -71,7 +71,7 @@ async def main():
         ok('facts strip under partnership header', await E("document.querySelectorAll('.pfacts .pfx').length>=4"))
         await pg.set_input_files('[data-fup="الاتفاقية"]', [OUT+'/mou.pdf', OUT+'/notes.docx']); await pg.wait_for_timeout(1200)
         await pg.click('[data-dossier]'); await pg.wait_for_timeout(400)
-        ok('dossier options dialog', await E("document.querySelectorAll('.dos-opts input').length===14 && !document.querySelector('#dosPdf').disabled"))
+        ok('dossier options dialog', await E("document.querySelectorAll('.dos-opts input').length===15 && !!document.querySelector('.dos-opts input[value=story], .dos-opts [data-sec=story], .dos-opts input') && !document.querySelector('#dosPdf').disabled"))
         await pg.click('[data-dosgo]')
         await pg.wait_for_function("document.querySelector('[data-dsprint]') && !document.querySelector('[data-dsprint]').disabled", timeout=60000)
         ok('dossier preview ready', await E("!!document.querySelector('#dossier .ds-cover') && document.querySelectorAll('#dossier .ds-ch').length>=5"))

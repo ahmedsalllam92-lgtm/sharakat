@@ -7554,6 +7554,55 @@ html.share-mode .design-switch,html.share-mode #dsw,html.share-mode .bo-find,htm
 @keyframes spLogoGlow{0%{filter:drop-shadow(0 0 0 rgba(240,215,155,0))}35%{filter:drop-shadow(0 0 22px rgba(240,215,155,.75))}100%{filter:drop-shadow(0 0 6px rgba(240,215,155,.25))}}
 #shkSplash.fx-pulse .sp-stats span{box-shadow:0 0 0 1px rgba(230,199,134,.35),0 0 24px -6px rgba(230,199,134,.5);transition:box-shadow .8s}
 html.share-mode [data-palette]{display:none!important}
+/* الملف الشامل: «الشراكة في سطور» */
+.dossier .dsx-bridge{display:grid;grid-template-columns:150px 1fr 150px;align-items:center;gap:10px;margin:6px 0 18px;padding:18px 16px;border-radius:14px;background:linear-gradient(135deg,#0F4433,#145440 60%,#0F4433);color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;break-inside:avoid}
+.dossier .dsx-party{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.dossier .dsx-lg{width:76px;height:76px;border-radius:50%;background:#fff;display:grid;place-items:center;overflow:hidden;box-shadow:0 0 0 3px rgba(217,192,138,.75),0 8px 18px -8px rgba(0,0,0,.5)}
+.dossier .dsx-lg img{max-width:78%;max-height:78%;object-fit:contain}.dossier .dsx-lg .emb{width:100%;height:100%}
+.dossier .dsx-party b{font-size:12.5px;line-height:1.4}.dossier .dsx-party small{font-size:10px;color:#C7D6CD}
+.dossier .dsx-span{position:relative;min-height:128px;display:flex;flex-direction:column;justify-content:flex-end}
+.dossier .dsx-span svg{position:absolute;inset:0 0 18px;width:100%;height:calc(100% - 18px)}
+.dossier .dsx-span .arc{fill:none;stroke:rgba(217,192,138,.35);stroke-width:8;stroke-linecap:round}
+.dossier .dsx-span .arc2{fill:none;stroke:#D9C08A;stroke-width:1.6;stroke-dasharray:2 6;stroke-linecap:round}
+.dossier .dsx-nodes{position:relative;display:flex;justify-content:space-around;gap:6px;margin-bottom:6px}
+.dossier .dsx-nodes span{display:flex;flex-direction:column;align-items:center;gap:4px;max-width:20%;text-align:center}
+.dossier .dsx-nodes i{width:30px;height:30px;border-radius:50%;background:#D9C08A;color:#0F4433;display:grid;place-items:center}.dossier .dsx-nodes i .ic{width:15px;height:15px}
+.dossier .dsx-nodes em{font-style:normal;font-size:9.5px;line-height:1.35;color:#E7F0EC}
+.dossier .dsx-cap{text-align:center;font-size:10px;color:#D9C08A;letter-spacing:.2px}
+.dossier .dsx-narr{border-inline-start:3px solid #A47C32;padding:2px 14px 2px 0;margin:0 0 16px}
+.dossier .dsx-narr p{margin:0 0 8px;font-size:12.5px;line-height:1.95;color:#2E3B35}.dossier .dsx-narr p:first-child{font-size:13.5px}
+.dossier .dsx-nums{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:18px;break-inside:avoid}
+.dossier .dsx-nums>div{border:1px solid #E7E1D3;border-radius:12px;padding:10px 8px;text-align:center;background:#FBF8F1;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.dossier .dsx-nums span{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#E8EFEA;color:#0F4433}.dossier .dsx-nums span .ic{width:13px;height:13px}
+.dossier .dsx-nums b{display:block;font-size:24px;line-height:1.1;margin-top:4px;color:#0F4433}.dossier .dsx-nums small{font-size:10px;color:#5C6861}
+.dossier .dsx-chain{display:grid;grid-template-columns:1fr 22px 1fr 22px 1fr;align-items:stretch;gap:4px;margin-bottom:16px;break-inside:avoid}
+.dossier .dsx-arr{display:grid;place-items:center;color:#A47C32}.dossier .dsx-arr .ic{width:18px;height:18px}
+.dossier .dsx-col{border-radius:12px;padding:10px 12px;border:1px solid #E7E1D3;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.dossier .dsx-col.a{background:#F1F6F3}.dossier .dsx-col.b{background:#FBF5E8}.dossier .dsx-col.c{background:#EEF4F1;border-color:#CFE0D7}
+.dossier .dsx-col h4{display:flex;align-items:center;gap:6px;margin:0 0 8px;font-size:12.5px;color:#0F4433}
+.dossier .dsx-col h4 span{display:grid;place-items:center;width:24px;height:24px;border-radius:7px;background:#0F4433;color:#fff}.dossier .dsx-col h4 .ic{width:13px;height:13px}
+.dossier .dsx-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.dossier .dsx-col li{display:flex;gap:7px;align-items:flex-start;font-size:10.8px;line-height:1.55;color:#2E3B35}
+.dossier .dsx-col li i{flex:none;width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid #E7E1D3;display:grid;place-items:center;color:#A47C32}.dossier .dsx-col li i .ic{width:11px;height:11px}
+.dossier .dsx-col em{display:block;margin-top:6px;font-size:9.5px;color:#8C958E;font-style:normal}
+.dossier .dsx-goals{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.dossier .dsx-goals span{display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 12px;border-radius:999px;border:1px solid #D9C08A;background:#FBF5E8;font-size:11px;color:#3D3214;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.dossier .dsx-goals em{font-style:normal;font-weight:800;color:#A47C32;font-size:10px}
+.dossier .dsx-life{padding:40px 30px 44px;break-inside:avoid}
+.dossier .dsx-line{position:relative;height:4px;border-radius:4px;background:#E7E1D3;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.dossier .dsx-line .prog{position:absolute;right:0;top:0;bottom:0;border-radius:4px;background:linear-gradient(90deg,#A47C32,#0F4433);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.dossier .dsx-line .pt{position:absolute;top:2px;transform:translateX(50%);display:flex;flex-direction:column;align-items:center;white-space:nowrap;z-index:1}
+.dossier .dsx-line .pt i{width:12px;height:12px;border-radius:50%;background:#fff;border:2.5px solid #0F4433;margin-top:-6px}
+.dossier .dsx-line .pt.t i{border-color:#A47C32;background:#A47C32;box-shadow:0 0 0 4px rgba(164,124,50,.2)}.dossier .dsx-line .pt.e i{border-color:#8C958E}.dossier .dsx-line .pt.r i{border-color:#A47C32}
+.dossier .dsx-line .pt b{font-size:10px;color:#14201B}.dossier .dsx-line .pt small{font-size:9px;color:#5C6861}
+.dossier .dsx-line .pt.up{flex-direction:column-reverse;top:auto;bottom:2px}.dossier .dsx-line .pt.up i{margin:0 0 -6px}
+.dossier .dsx-line .pt.dn b{margin-top:4px}
+
+.dossier .dsx-span{min-height:0;justify-content:center;padding-top:4px}
+.dossier .dsx-rail{position:absolute;left:-6px;right:-6px;top:19px;height:3px;border-radius:3px;background:repeating-linear-gradient(90deg,#D9C08A 0 8px,transparent 8px 13px);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.dossier .dsx-nodes{align-items:flex-start;margin:0 0 10px}
+.dossier .dsx-nodes i{position:relative;z-index:1;box-shadow:0 0 0 4px #145440;color:#0F4433!important}
+.dossier .dsx-nodes i svg{width:15px;height:15px;stroke:#0F4433}
 </style>
 </head>
 <body>
@@ -20027,6 +20076,7 @@ function noAccessHTML() {
    يُعرض للمعاينة ثم يُطبع أو يُحفظ PDF من المتصفح
    ===================================================================== */
 const DOS_SECS = [
+  ['story', 'الشراكة في سطور: الدور وسلسلة القيمة ودورة الحياة', true],
   ['summary', 'بطاقة الشراكة: الحقائق والفترة', true],
   ['partner', 'الجهة الشريكة', true],
   ['profile', 'التصنيف والقيمة والوضع المالي والتقييم', true],
@@ -20147,6 +20197,53 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
   const kv2 = (rows) => `<dl class="ds-dl">${rows.filter(Boolean).map(([l, v, full]) => `<div class="${full ? 'full' : ''}"><dt>${esc(l)}</dt><dd>${v || '<span class="ds-faint">—</span>'}</dd></div>`).join('')}</dl>`;
   const bar = (pct, cls = '') => `<span class="ds-bar ${cls}"><i style="width:${Math.max(0, Math.min(100, pct))}%"></i></span>`;
   const lst = (txt, empty) => richHTML(txt, { empty });
+
+  /* — الفصل الأول: الشراكة في سطور — سرد يشرح الشراكة ودورها، وجسر بين الطرفين، وسلسلة القيمة، والأهداف، ودورة حياة الشراكة — */
+  if (has('story')) {
+    const coop = richItems(p.cooperationAreas), outs = richItems(p.outputs), imps = richItems(p.expectedImpact);
+    const short = (it, n = 90) => { const s = (it.title || it.text || '').replace(/\s+/g, ' ').trim(); return s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : s; };
+    const ico = (t) => (typeof mkIconFor === 'function' ? mkIconFor(t) : 'link');
+    const goals = (p.goalsLinked || []).map((k) => (goalCodes().find((g) => g.k === k) || {}).t).filter(Boolean);
+    const years = p.startDate && p.endDate ? Math.max(1, Math.round((parseDate(p.endDate) - parseDate(p.startDate)) / (365.25 * 864e5) * 10) / 10) : null;
+    const signed = st.S.signed && st.S.signed.status === 'done' && !st.S.signed.legacy ? st.S.signed.at : null;
+    const renews = p.renewals || [];
+    const sect = pSector(p);
+    /* السرد */
+    const para = [
+      `<b>${esc(pr.name || name)}</b> جهة من ${sect ? `القطاع ${esc(sect)}` : 'الجهات الشريكة'}${pr.domain ? ` تعمل في مجال ${esc(pr.domain)}` : ''}، ترتبط مع ${esc(o.name)} بـ${esc(p.classification || 'مذكرة شراكة')}${p.ptype ? ` ضمن الشراكات <b>${esc(p.ptype)}</b>` : ''}${p.startDate ? ` بدأت في ${fmtDate(p.startDate)}` : ''}${p.endDate ? ` وتمتد حتى ${fmtDate(p.endDate)}${years ? ` (${nf(years)} ${years <= 1 ? 'سنة' : years < 3 ? 'سنتان' : 'سنوات'})` : ''}` : ''}.`,
+      p.showcaseGoal || coop.length ? `تهدف الشراكة إلى ${esc((p.showcaseGoal ? trimP(p.showcaseGoal).replace(/^(إلى|الى)\s+/, '') : short(coop[0], 160)).replace(/[.。،,\s…]+$/, ''))}.` : '',
+      `<b>دورها في عمل المؤسسة:</b> ${[coop.length && `تفتح ${plural(coop.length, 'مجال تعاون واحدًا', 'مجالي تعاون', 'مجالات تعاون', 'مجالًا للتعاون')}`, outs.length && `وتستهدف ${plural(outs.length, 'مخرجًا واحدًا', 'مخرجين', 'مخرجات', 'مخرجًا')}`, goals.length && `وتخدم ${plural(goals.length, 'هدفًا استراتيجيًا واحدًا', 'هدفين استراتيجيين', 'أهداف استراتيجية', 'هدفًا استراتيجيًا')} للمؤسسة`, (p.departments || []).length && `وتشارك فيها ${plural(p.departments.length, 'إدارة واحدة', 'إدارتان', 'إدارات', 'إدارة')} من المؤسسة`].filter(Boolean).join(' ') || 'لم تُسجَّل بعد مجالات التعاون ومخرجاتها'}.`,
+      `<b>أين تقف اليوم:</b> ${esc(statusLabel(stt))}${['active', 'soon'].includes(stt) && dl !== null ? ` ومتبقٍ ${plural(dl, 'يوم واحد', 'يومان', 'أيام', 'يومًا')}` : ''}${st.cur && !st.closed ? `، والخطوة الحالية في مسار المذكرة «${esc(st.cur.t)}»` : ''}${P.ev && P.ev.score !== null ? `، وآخر تقييم لها ${P.ev.score} من 100 (${esc(evalGrade(P.ev.score))})` : ''}${renews.length ? `، وجُدّدت ${plural(renews.length, 'مرة', 'مرتين', 'مرات', 'مرة')}` : ''}.`,
+    ].filter(Boolean);
+    /* الجسر بين الطرفين */
+    const mlogo = (ASSET_IMG['murooj-logo'] || {}).src, plg = pr.logoFileId ? await url(pr.logoFileId) : '';
+    const bridge = `<div class="dsx-bridge">
+      <div class="dsx-party"><span class="dsx-lg">${mlogo ? `<img src="${mlogo}" alt="">` : ''}</span><b>${esc(o.name)}</b><small>${esc(o.dept)}</small></div>
+      <div class="dsx-span"><span class="dsx-rail" aria-hidden="true"></span>
+        <div class="dsx-nodes">${(coop.length ? coop : [{ text: 'مجالات التعاون تُسجَّل في الشراكة' }]).slice(0, 5).map((it, i) => `<span style="--i:${i}"><i>${icon(ico(it.title || it.text))}</i><em>${esc(short(it, 46))}</em></span>`).join('')}</div>
+        <small class="dsx-cap">${esc(p.classification || 'مذكرة شراكة')}${years ? ` · ${nf(years)} ${years <= 1 ? 'سنة' : years < 3 ? 'سنتان' : 'سنوات'}` : ''}</small></div>
+      <div class="dsx-party"><span class="dsx-lg">${plg ? `<img src="${plg}" alt="">` : `<span class="emb" data-sec="${esc(pr.sector || '')}">${icon(embIcon(pr))}</span>`}</span><b>${esc(pr.name || name)}</b><small>${esc([sect, pr.domain].filter(Boolean).join(' · ') || 'الجهة الشريكة')}</small></div></div>`;
+    /* الأرقام */
+    const nums = [[coop.length, 'مجال تعاون', 'link'], [outs.length, 'مخرج مستهدف', 'award'], [imps.length, 'أثر متوقع', 'leaf'], [goals.length, 'هدف استراتيجي', 'flag'], [(p.departments || []).length, 'إدارة مشاركة', 'users'], [P.ev && P.ev.score !== null ? P.ev.score : null, 'آخر تقييم /100', 'star']];
+    const numsH = `<div class="dsx-nums">${nums.map(([v, l, ic]) => `<div><span>${icon(ic)}</span><b>${v === null || v === undefined ? '—' : nf(v)}</b><small>${l}</small></div>`).join('')}</div>`;
+    /* سلسلة القيمة */
+    const col = (t, ic, arr, cls) => `<div class="dsx-col ${cls}"><h4><span>${icon(ic)}</span>${t}</h4>${arr.length ? `<ul>${arr.slice(0, 4).map((it) => `<li><i>${icon(ico(it.title || it.text))}</i><span>${esc(short(it, 120))}</span></li>`).join('')}</ul>${arr.length > 4 ? `<em>+ ${plural(arr.length - 4, 'بند آخر', 'بندان آخران', 'بنود أخرى', 'بندًا آخر')} في الفصول التالية</em>` : ''}` : '<p class="ds-faint">لم يُسجَّل بعد.</p>'}</div>`;
+    const chain = `<div class="dsx-chain">${col('ما نتعاون فيه', 'link', coop, 'a')}<span class="dsx-arr">${icon('chevL')}</span>${col('ما ننتجه معًا', 'award', outs, 'b')}<span class="dsx-arr">${icon('chevL')}</span>${col('الأثر الذي نصنعه', 'leaf', imps, 'c')}</div>`;
+    /* دورة الحياة */
+    const ev_ = [prop && prop.submittedAt && [prop.submittedAt.slice(0, 10), 'تقديم المقترح', 'p'], signed && [String(signed).slice(0, 10), 'توقيع المذكرة', 's'], p.startDate && [p.startDate, 'بداية الشراكة', 'b'], ...renews.map((r) => [String(r.at).slice(0, 10), 'تجديد حتى ' + fmtDate(r.to, 'short'), 'r']), [isoDate(today()), 'اليوم', 't'], p.endDate && [p.endDate, 'نهاية المدة', 'e']].filter(Boolean).filter((x) => parseDate(x[0])).sort((a, b) => (a[0] < b[0] ? -1 : 1));
+    let life = '';
+    if (ev_.length >= 2) {
+      const t0 = parseDate(ev_[0][0]).getTime(), t1 = Math.max(parseDate(ev_[ev_.length - 1][0]).getTime(), t0 + 1);
+      life = `<div class="dsx-life"><div class="dsx-line">${ev_.map(([d, l, k], i) => { const f = (parseDate(d).getTime() - t0) / (t1 - t0); return `<span class="pt ${k} ${i % 2 ? 'dn' : 'up'}" style="right:${(f * 100).toFixed(1)}%"><i></i><b>${esc(l)}</b><small>${fmtDate(d, 'short')}</small></span>`; }).join('')}<i class="prog" style="width:${tp !== null ? Math.round(Math.max(0, Math.min(1, (today().getTime() - t0) / (t1 - t0))) * 100) : 0}%"></i></div></div>`;
+    }
+    chap('story', 'الشراكة في سطور', `
+      ${bridge}
+      <div class="dsx-narr">${para.map((x) => `<p>${x}</p>`).join('')}</div>
+      ${numsH}
+      <h3 class="ds-h3">سلسلة القيمة: من التعاون إلى الأثر</h3>${chain}
+      ${goals.length ? `<h3 class="ds-h3">الأهداف الاستراتيجية التي تخدمها الشراكة</h3><div class="dsx-goals">${goals.map((g, i) => `<span><em>${pad(i + 1)}</em>${esc(g)}</span>`).join('')}</div>` : ''}
+      ${life ? `<h3 class="ds-h3">دورة حياة الشراكة</h3>${life}` : ''}`, { sub: 'من هي الجهة، ولماذا هذه الشراكة، وما دورها في عمل المؤسسة' });
+  }
 
   if (has('summary')) {
     const remTxt = ['active', 'soon'].includes(stt) && dl !== null ? `${nf(dl)} يومًا` : stt === 'upcoming' && p.startDate ? `يبدأ بعد ${nf(daysBetween(today(), parseDate(p.startDate)))} يومًا` : stt === 'ended' ? 'انتهت' : '—';
@@ -23519,8 +23616,8 @@ function FileCache_src(id) { if (id.startsWith('lib:')) return (IMG_LIB[id.slice
 /* — الصفحة — */
 /* — قوالب القصة الجاهزة — */
 const RPT_PRESETS = [
-  { k: 'brief', t: 'الإحاطة التنفيذية', d: 'صورة سريعة للمحفظة ثم شريحة واحدة لكل شراكة: حالتها وأرقامها وما يحتاج قرارًا.', who: 'للقيادة والاجتماعات', use: 'PowerPoint وPDF · شرائح قليلة ومركّزة', ic: 'chart', secs: ['cover', 'toc', 'portfolio', 'summary', 'exec', 'end'] },
-  { k: 'full', t: 'الملف الكامل', d: 'كل مكونات كل شراكة بلا استثناء: البيانات والفريق والإنجازات والصور والسجل.', who: 'للتوثيق والأرشفة والمراجعة', use: 'PDF للطباعة · أشمل تقرير', ic: 'layers', secs: null },
+  { k: 'brief', t: 'الموجز القيادي', d: 'صورة سريعة للمحفظة ثم شريحة واحدة لكل شراكة: حالتها وأرقامها وما يحتاج قرارًا.', who: 'للقيادة والاجتماعات', use: 'PowerPoint وPDF · شرائح قليلة ومركّزة', ic: 'chart', secs: ['cover', 'toc', 'portfolio', 'summary', 'exec', 'end'] },
+  { k: 'full', t: 'التقرير التفصيلي', d: 'كل مكونات كل شراكة بلا استثناء: البيانات والفريق والإنجازات والصور والسجل.', who: 'للتوثيق والأرشفة والمراجعة', use: 'PDF للطباعة · أشمل تقرير', ic: 'layers', secs: null },
 ];
 const RPT_QUICK = [
   ['active', 'السارية', (p) => ['active', 'soon'].includes(pStatus(p))],
@@ -24312,7 +24409,7 @@ function renderMarketingReport(el, r) {
       <div class="mk-scope" role="tablist" aria-label="نطاق التقرير">
         <div class="mk-mode"><button type="button" class="${MK.scope !== 'one' ? 'on' : ''}" data-mkmode="all">${icon('layers')} كل الشراكات</button><button type="button" class="${MK.scope === 'one' ? 'on' : ''}" data-mkmode="one">${icon('file')} شراكة واحدة</button></div>
         ${MK.scope === 'one' ? `<select class="in mk-pick" id="mkPick" aria-label="اختر الشراكة"><option value="">اختر الشراكة…</option>${mkPool().sort((a, b) => partnerName(a).localeCompare(partnerName(b), 'ar')).map((p) => `<option value="${p.id}" ${p.id === MK.pid ? 'selected' : ''}>${esc(partnerName(p))}${p.title && partnerById(p.partnerId) && p.title !== partnerById(p.partnerId).name ? ' — ' + esc(p.title) : ''} (${esc(p.code || '')})</option>`).join('')}</select>`
-        : MK_SCOPES.map(([k, l, f]) => { const n = mkPool().filter(f).length; return `<button type="button" class="${MK.scope === k ? 'on' : ''}" data-mkscope="${k}" ${n ? '' : 'disabled'}>${esc(l)}<b>${n}</b></button>`; }).join('')}${MK.scope !== 'one' ? `<div class="mk-mode mk-cover" title="شكل غلاف التقرير"><button type="button" class="${MK.cover !== 'tree' ? 'on' : ''}" data-mkcover="formal">غلاف رسمي</button><button type="button" class="${MK.cover === 'tree' ? 'on' : ''}" data-mkcover="tree">غلاف الشجرة</button></div>` : ''}<span class="sp"></span>${mkOne() && (mkOne().attachments || []).some((a2) => !isImg(a2)) ? `<label class="mk-tog" title="عند الإخفاء تبقى الصور فقط، ولا تُطبع المستندات"><span class="switch"><input type="checkbox" data-mkdocs ${MK.docs === false ? '' : 'checked'}><i></i></span>المستندات في التقرير والطباعة</label>` : ''}<button type="button" class="linkbtn" data-mkreset>${icon('history')} استعادة النصوص الأصلية</button></div>
+        : MK_SCOPES.map(([k, l, f]) => { const n = mkPool().filter(f).length; return `<button type="button" class="${MK.scope === k ? 'on' : ''}" data-mkscope="${k}" ${n ? '' : 'disabled'}>${esc(l)}<b>${n}</b></button>`; }).join('')}${MK.scope !== 'one' ? `<div class="mk-mode mk-cover" title="شكل غلاف التقرير"><button type="button" class="${MK.cover !== 'tree' ? 'on' : ''}" data-mkcover="formal">غلاف 1</button><button type="button" class="${MK.cover === 'tree' ? 'on' : ''}" data-mkcover="tree">غلاف 2</button></div>` : ''}<span class="sp"></span>${mkOne() && (mkOne().attachments || []).some((a2) => !isImg(a2)) ? `<label class="mk-tog" title="عند الإخفاء تبقى الصور فقط، ولا تُطبع المستندات"><span class="switch"><input type="checkbox" data-mkdocs ${MK.docs === false ? '' : 'checked'}><i></i></span>المستندات في التقرير والطباعة</label>` : ''}<button type="button" class="linkbtn" data-mkreset>${icon('history')} استعادة النصوص الأصلية</button></div>
       <div class="mk-deck" id="mkDeck">${S.length ? S.map((s, i) => `<div class="mk-fr" data-i="${i}">${s}</div>`).join('') : `<div class="panel">${MK.scope === 'one' ? emptyHTML({ ic: 'file', title: 'اختر الشراكة', text: 'اختر من القائمة أعلاه الشراكة التي تريد تقريرها التسويقي.' }) : emptyHTML({ ic: 'file', title: 'لا توجد شراكات في هذا النطاق', text: 'اختر نطاقًا آخر.' })}</div>`}</div>`;
     hydrateFiles(el);
     fit();

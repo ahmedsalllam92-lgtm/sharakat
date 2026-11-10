@@ -432,8 +432,8 @@ function FileCache_src(id) { if (id.startsWith('lib:')) return (IMG_LIB[id.slice
 /* — الصفحة — */
 /* — قوالب القصة الجاهزة — */
 const RPT_PRESETS = [
-  { k: 'brief', t: 'الإحاطة التنفيذية', d: 'صورة سريعة للمحفظة ثم شريحة واحدة لكل شراكة: حالتها وأرقامها وما يحتاج قرارًا.', who: 'للقيادة والاجتماعات', use: 'PowerPoint وPDF · شرائح قليلة ومركّزة', ic: 'chart', secs: ['cover', 'toc', 'portfolio', 'summary', 'exec', 'end'] },
-  { k: 'full', t: 'الملف الكامل', d: 'كل مكونات كل شراكة بلا استثناء: البيانات والفريق والإنجازات والصور والسجل.', who: 'للتوثيق والأرشفة والمراجعة', use: 'PDF للطباعة · أشمل تقرير', ic: 'layers', secs: null },
+  { k: 'brief', t: 'الموجز القيادي', d: 'صورة سريعة للمحفظة ثم شريحة واحدة لكل شراكة: حالتها وأرقامها وما يحتاج قرارًا.', who: 'للقيادة والاجتماعات', use: 'PowerPoint وPDF · شرائح قليلة ومركّزة', ic: 'chart', secs: ['cover', 'toc', 'portfolio', 'summary', 'exec', 'end'] },
+  { k: 'full', t: 'التقرير التفصيلي', d: 'كل مكونات كل شراكة بلا استثناء: البيانات والفريق والإنجازات والصور والسجل.', who: 'للتوثيق والأرشفة والمراجعة', use: 'PDF للطباعة · أشمل تقرير', ic: 'layers', secs: null },
 ];
 const RPT_QUICK = [
   ['active', 'السارية', (p) => ['active', 'soon'].includes(pStatus(p))],
