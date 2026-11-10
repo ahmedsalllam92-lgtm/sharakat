@@ -95,6 +95,7 @@ function rnwHistoryHTML(p) {
 }
 /* الدائرة المتحركة داخل صفحة الشراكة */
 function rnwMount(el, id) {
+  document.querySelectorAll('.rnw-fab').forEach((x) => x.remove());
   const p = D.partnerships.find((x) => x.id === id); if (!p) return;
   /* شارة التجديد وسجله */
   const tag = el.querySelector('.dhead .tagline'); if (tag && rnwCount(p) && !tag.querySelector('.rnw-chip')) tag.insertAdjacentHTML('beforeend', rnwChipHTML(p));
@@ -106,7 +107,9 @@ function rnwMount(el, id) {
   b.innerHTML = `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44" class="t"/><circle cx="50" cy="50" r="44" class="v" stroke-dasharray="${(frac * C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 50 50)"/><circle cx="50" cy="50" r="48" class="o"/></svg>
     <span class="rnw-in"><b>${dl >= 0 ? nf(dl) : '!'}</b><small>${dl >= 0 ? 'يومًا' : 'انتهت'}</small></span><span class="rnw-lbl">تقييم التجديد</span>`;
   const go = () => openForm('partnership', p, 'renewal', { onDone: () => route() });
-  b.onclick = go; el.appendChild(b);
+  /* تُلحق بجسم الصفحة لا بالصفحة نفسها: في «القائمة العلوية» للصفحة حركة دخول (transform) تجعل الموضع الثابت نسبةً للصفحة لا للشاشة */
+  b.onclick = go; document.querySelectorAll('.rnw-fab').forEach((x) => x.remove()); document.body.appendChild(b);
+  const kill = () => { b.remove(); removeEventListener('hashchange', kill); }; addEventListener('hashchange', kill);
   /* زر مختصر داخل تنبيه قرب الانتهاء */
   const al = el.querySelector('.p-alert'); if (al && !al.querySelector('.rnw-go')) { const g = document.createElement('button'); g.type = 'button'; g.className = 'btn sm primary rnw-go'; g.innerHTML = `${icon('history')} تقييم التجديد`; g.onclick = go; al.appendChild(g); }
 }
