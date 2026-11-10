@@ -70,6 +70,7 @@ function renderObservatory(el) {
     hydrateFiles(el);
     if (!first) { body.classList.remove('ob-in'); void body.offsetWidth; body.classList.add('ob-in'); }
     runCountUps(el);
+    if (document.documentElement.classList.contains('ob-show')) obGo(el, App.obIdx || 0); // وضع العرض: البقاء على نفس الشريحة بعد التصفية
   };
   const cross = (dim, k) => { const s = new Set(App.dashF[dim] || []); s.has(k) ? s.delete(k) : s.add(k); if (s.size) App.dashF[dim] = [...s]; else delete App.dashF[dim]; fb.render(); draw(false); };
   draw(true);
@@ -355,7 +356,7 @@ function obOrbit(order, g) {
     a0 += span;
   });
   const logo = (ASSET_IMG['murooj-logo-white'] || {}).src;
-  return `<div class="orb" aria-label="كوكبة الشركاء">
+  return `<div class="orb ${(App.dashF.sector || []).length || (App.dashF.ptype || []).length ? 'focus' : ''}" aria-label="كوكبة الشركاء">
     <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">
       ${rings.map(([rx, ry], i) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" class="rg" style="--k:${i}"/>`).join('')}
       <g class="rays">${rays}</g>${wedges}</svg>

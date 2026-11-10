@@ -3986,3 +3986,22 @@ tr.gold{background:linear-gradient(90deg,transparent 60%,rgba(240,217,160,.16))}
 .regpage .bo-strip-st{margin-bottom:10px!important}
 .regpage .bo-strip-st>*{padding-top:8px!important;padding-bottom:8px!important;min-height:0!important}
 .regpage .bo-strip-st b{font-size:22px!important}
+
+/* كوكبة الشركاء: أسماء أصغر وعادية، وواضحة عريضة عند التصفية على نوع */
+.orb-n small{font-size:max(8.5px,.8cqw)!important;font-weight:400!important;line-height:1.28;color:#C9DAD3}
+.orb.focus .orb-n small{font-size:max(10px,1cqw)!important;font-weight:700!important;color:#fff}
+/* وضع العرض بملء الشاشة: الخريطة كاملة بلا تمرير */
+html.ob-show #obBody>.ob-mosaic{display:flex;flex-direction:column;overflow:hidden!important;padding:14px 18px}
+html.ob-show #obBody>.ob-mosaic .ob-sh{flex:none;margin-bottom:6px}
+html.ob-show #obBody>.ob-mosaic .orb{flex:none;width:min(100%,calc((100vh - 300px) * 1200 / 900));margin:0 auto}
+html.ob-show #obBody>.ob-mosaic.v-list .mz3{overflow:auto;flex:1;min-height:0}
+html.ob-show #obBody>.ob-mosaic .orb{width:100%!important;height:calc(100vh - 290px);aspect-ratio:auto!important}
+html.ob-show #obBody>.ob-mosaic .orb-core{width:9cqw;height:9cqw}
+html.ob-show #obBody>.ob-mosaic .orb-n .mg{left:-1.35cqw;top:-1.35cqw;width:2.7cqw;height:2.7cqw}
+html.ob-show #obBody>.ob-mosaic .orb-n small{top:1.65cqw;font-size:max(9px,.72cqw)!important}
+html.ob-show #obBody>.ob-mosaic .orb-n.up small{bottom:1.65cqw}
+html.ob-show #obBody>.ob-mosaic .orb.focus .orb-n small{font-size:max(10px,.85cqw)!important}
+html.ob-show #obBody>.ob-mosaic .orb{width:min(100%,calc((100vh - 290px) * 1.62))!important;margin:0 auto}
+html.ob-show #obBody>.ob-mosaic .orb-n .mg{left:-1.5cqw;top:-1.5cqw;width:3cqw;height:3cqw}
+html.ob-show #obBody>.ob-mosaic .orb-n small{top:1.8cqw;font-size:max(9px,.78cqw)!important}
+html.ob-show #obBody>.ob-mosaic .orb-n.up small{bottom:1.8cqw}
