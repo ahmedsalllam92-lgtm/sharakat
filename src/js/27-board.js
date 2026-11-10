@@ -217,12 +217,12 @@ function boPCard(p) {
    لوحة المجلس — إحاطة رسمية بفصول مرقّمة، كل فصل برسالة ورسم
    ===================================================================== */
 const BO_CH = [
-  { id: 'sum', t: 'الخلاصة التنفيذية', s: 'ثلاث رسائل رئيسية ومؤشر سلامة المحفظة' },
+  { id: 'sum', t: 'الملخص التنفيذي', s: 'الرسائل الرئيسية ومؤشر سلامة المحفظة' },
   { id: 'impact', t: 'الأثر المتحقق', s: 'النتائج الميدانية بالرموز والصور، لا بالأرقام وحدها' },
   { id: 'eval', t: 'تقييم الشراكات وقيمتها', s: 'نموذج تقييم الشراكة، والتصنيف، ومن فتح الباب، والوضع المالي' },
   { id: 'proc', t: 'سير الإجراءات', s: 'أين تقف كل مذكرة في المسار المعتمد، ومن يحملها الآن' },
   { id: 'net', t: 'منظومة الشركاء', s: 'شبكة الجهات حول المؤسسة حسب القطاع والحالة' },
-  { id: 'flow', t: 'تدفق المحفظة', s: 'من قطاع الجهة إلى مجال الشراكة إلى حالتها' },
+  { id: 'flow', t: 'توزيع المحفظة', s: 'أين تتركز الشراكات حسب القطاع، وفي أي مرحلة هي' },
   { id: 'time', t: 'المسار الزمني والاستحقاقات', s: 'مدة كل شراكة وإنجازاتها الموثقة، وسجل المتابعة' },
   { id: 'dec', t: 'القرارات والتوصيات', s: 'ما يُعرض على المجلس للاعتماد أو التوجيه' },
 ];
@@ -332,9 +332,8 @@ function boChSummary(X) {
   const d = X.trend ? X.trend.now - X.trend.ago : 0;
   const msgs = [
     { ic: 'users', tone: 'g', h: 'منظومة متنوعة', t: `تضم المحفظة ${boB(X.nd.length)} ${nounFor(X.nd.length, ['شراكة', 'شراكة', 'شراكات', 'شراكة'])} مع ${boB(X.partners.size)} ${nounFor(X.partners.size, ['جهة', 'جهة', 'جهات', 'جهة'])} في ${plural(nSec, 'قطاع واحد', 'قطاعين', 'قطاعات', 'قطاعًا')}${topSec ? `، أكبرها القطاع ${esc(boSecName(topSec[0]))} بـ${boB(topSec[1].size)}` : ''}.`, viz: boSecStrip(X.nd) },
-    { ic: 'chart', tone: 'g', h: d > 0 ? 'زخم متصاعد' : d < 0 ? 'المحفظة تتقلص' : 'محفظة مستقرة', t: X.trend ? `${boB(X.trend.now)} ${nounFor(X.trend.now, ['شراكة سارية', 'شراكة سارية', 'شراكات سارية', 'شراكة سارية'])} اليوم مقابل ${boB(X.trend.ago)} قبل اثني عشر شهرًا${d ? ` (${d > 0 ? '+' : ''}${d})` : ''}.` : `${boB(X.act.length)} ${nounFor(X.act.length, ['شراكة سارية', 'شراكة سارية', 'شراكات سارية', 'شراكة سارية'])} حاليًا.`, viz: X.ser ? boSpark(X.ser) : '' },
     X.soon.length
-      ? { ic: 'alert', tone: 'w', h: 'استحقاقات تحتاج قرارًا', t: `${plural(X.soon.length, 'شراكة واحدة تنتهي', 'شراكتان تنتهيان', 'شراكات تنتهي', 'شراكة تنتهي')} خلال ${D.settings.expiryDays} يومًا، أقربها مع «${esc(partnerName(X.soon[0]))}» في ${fmtDate(X.soon[0].endDate)}.`, viz: boCal(X.soon) }
+      ? { ic: 'alert', tone: 'w', h: 'استحقاقات تحتاج قرارًا', t: `${plural(X.soon.length, 'شراكة واحدة تنتهي', 'شراكتان تنتهيان', 'شراكات تنتهي', 'شراكة تنتهي')} خلال ${D.settings.expiryDays} يومًا، أقربها مع «${esc(partnerName(X.soon[0]))}» في ${fmtDate(X.soon[0].endDate)}.`, viz: boCalChips(X.soon) }
       : { ic: 'check', tone: 'g', h: 'لا استحقاقات عاجلة', t: `لا توجد شراكات تنتهي خلال ${D.settings.expiryDays} يومًا.${X.up.length ? ` ويبدأ سريان ${plural(X.up.length, 'شراكة جديدة', 'شراكتين جديدتين', 'شراكات جديدة', 'شراكة جديدة')} قريبًا.` : ''}`, viz: '' },
   ];
   const lvl = X.score >= 85 ? ['ممتاز', 'g'] : X.score >= 70 ? ['جيد', 'g'] : X.score >= 55 ? ['مقبول', 'w'] : ['يحتاج معالجة', 'r'];
@@ -367,9 +366,14 @@ function boSpark(ser) {
   const pts = rows.map((r, i) => [(W - 2 - i * (W - 4) / Math.max(1, n - 1)).toFixed(1), (H - 4 - r.total / mx * (H - 10)).toFixed(1)]);
   return `<svg class="bo-spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts.slice(0, ci + 1).map((p) => p.join(',')).join(' ')}" class="l"/><polyline points="${pts.slice(ci).map((p) => p.join(',')).join(' ')}" class="l f"/><circle cx="${pts[ci][0]}" cy="${pts[ci][1]}" r="3.5" class="d"/></svg>`;
 }
+/* الاستحقاقات القادمة بأسماء الأشهر كاملة: شهر لكل استحقاق ومن ينتهي فيه */
+function boCalChips(soon) {
+  const g = {}; soon.slice().sort((a, b) => (a.endDate < b.endDate ? -1 : 1)).forEach((p) => { const d = parseDate(p.endDate); const k = `${MONTHS[d.getMonth()]} ${d.getFullYear()}`; (g[k] = g[k] || []).push(p); });
+  return `<div class="bo-calc">${Object.entries(g).map(([m, ps]) => `<span><b>${m}</b><em>${ps.map((p) => esc(partnerName(p))).join('، ')}</em></span>`).join('')}</div>`;
+}
 function boCal(soon) {
   const t = today();
-  return `<span class="bo-cal">${Array.from({ length: 12 }, (_, k) => { const m = new Date(t.getFullYear(), t.getMonth() + k, 1), me = new Date(t.getFullYear(), t.getMonth() + k + 1, 0); const n = soon.filter((p) => { const e = parseDate(p.endDate); return e >= m && e <= me; }).length; return `<i class="${n ? 'on' : ''}" title="${MONTHS[m.getMonth()]} ${m.getFullYear()}${n ? ': ' + n : ''}"><em>${MONTHS[m.getMonth()].slice(0, 3)}</em></i>`; }).join('')}</span>`;
+  return `<span class="bo-cal">${Array.from({ length: 12 }, (_, k) => { const m = new Date(t.getFullYear(), t.getMonth() + k, 1), me = new Date(t.getFullYear(), t.getMonth() + k + 1, 0); const n = soon.filter((p) => { const e = parseDate(p.endDate); return e >= m && e <= me; }).length; return `<i class="${n ? 'on' : ''}" title="${MONTHS[m.getMonth()]} ${m.getFullYear()}${n ? ': ' + n : ''}">${n > 1 ? `<em>${n}</em>` : ''}</i>`; }).join('')}<small class="bo-cal-l"><span>${MONTHS[t.getMonth()]} ${t.getFullYear()}</span><span>${(() => { const e = new Date(t.getFullYear(), t.getMonth() + 11, 1); return MONTHS[e.getMonth()] + ' ' + e.getFullYear(); })()}</span></small></span>`;
 }
 
 /* 02 — الأثر المتحقق: مصفوفات رمزية تجعل الرقم مرئيًا */
@@ -542,58 +546,28 @@ function boChNetwork(X) {
     ${boInsight(`ترتبط المؤسسة بـ${boB(by.size)} ${nounFor(by.size, ['جهة', 'جهة', 'جهات', 'جهة'])}${topSec ? `، أكثرها من القطاع ${esc(boSecName(topSec[0]))} (${boB(topSec[1])})` : ''}${multi ? `، ${multi === 1 ? 'واحدة منها تجمعها' : `و${boB(multi)} منها تجمعها`} بالمؤسسة أكثر من شراكة` : ''}. اضغط القطاع لتصفية الإحاطة كلها.`)}`;
 }
 
-/* 04 — تدفق المحفظة (مخطط سانكي): القطاع ← مجال الشراكة ← الحالة */
+/* 04 — توزيع المحفظة: مصفوفة القطاع × الحالة (فقاعة لكل خانة بحجم عددها) — أين تتركز الشراكات وفي أي مرحلة هي */
 function boChFlow(X) {
   const nd = X.nd;
   const stGroup = (p) => { const s = pStatus(p); return s === 'active' ? 'active' : s === 'soon' ? 'soon' : s === 'upcoming' ? 'upcoming' : s === 'ended' ? 'ended' : 'pipe'; };
   const SG = { active: 'سارية', soon: 'تنتهي قريبًا', upcoming: 'لم يبدأ سريانها', pipe: 'قيد الإعداد والتوقيع', ended: 'منتهية' };
   const SGF = { active: ['active'], soon: ['soon'], upcoming: ['upcoming'], pipe: ['prep', 'sign', 'hold', 'nodates'], ended: ['ended', 'cancel'] };
   const SGC = { active: 'var(--st-active)', soon: 'var(--st-soon)', upcoming: 'var(--st-up)', pipe: 'var(--st-prep)', ended: 'var(--st-ended)' };
-  const cat = (p) => (p.categories && p.categories[0]) || 'غير مصنّف';
-  const cols = [
-    { key: 'sector', f: (p) => pSector(p) || 'غير محدد', order: [...L('sectors'), 'غير محدد'], c: (k) => SEC_VAR(k), lab: (k) => k, cf: (k) => `sector|${k}` },
-    { key: 'category', f: cat, order: [...L('categories'), 'غير مصنّف'], c: () => 'var(--bo-ink-3)', lab: (k) => k, cf: (k) => `category|${k}` },
-    { key: 'status', f: stGroup, order: ['active', 'soon', 'upcoming', 'pipe', 'ended'], c: (k) => SGC[k], lab: (k) => SG[k], cf: (k) => `status|${SGF[k][0]}`, href: (k) => '#/partnerships' + filtersToQuery({ ...App.dashF, status: SGF[k] }) },
-  ];
-  const W = 1000, H = Math.max(380, 90 + nd.length * 30), nodeW = 14, top = 34, bot = 14;
-  const colX = [W - 250, W / 2 - 7, 236];
-  const usable = H - top - bot;
-  const gap = 12;
-  const keysOf = cols.map((col) => col.order.filter((k) => nd.some((p) => col.f(p) === k)));
-  const unit = (usable - gap * Math.max(0, ...keysOf.map((k) => k.length - 1))) / nd.length; // مقياس واحد لكل الأعمدة
-  const pos = cols.map((col, ci) => {
-    const keys = keysOf[ci];
-    const colH = nd.length * unit + gap * Math.max(0, keys.length - 1);
-    let y = top + (usable - colH) / 2; const m = {};
-    keys.forEach((k) => { const n = nd.filter((p) => col.f(p) === k).length; m[k] = { y, h: n * unit, n, inY: y, outY: y }; y += n * unit + gap; });
-    return { keys, m, unit };
-  });
-  let bands = '';
-  for (let ci = 0; ci < 2; ci++) {
-    const A = cols[ci], B = cols[ci + 1], PA = pos[ci], PB = pos[ci + 1];
-    PA.keys.forEach((ka) => PB.keys.forEach((kb) => {
-      const n = nd.filter((p) => A.f(p) === ka && B.f(p) === kb).length; if (!n) return;
-      const h = n * unit;
-      const ya = PA.m[ka].outY, yb = PB.m[kb].inY; PA.m[ka].outY += h; PB.m[kb].inY += h;
-      const x0 = colX[ci], x1 = colX[ci + 1] + nodeW, xm = (x0 + x1) / 2;
-      const col = ci === 0 ? A.c(ka) : B.c(kb);
-      bands += `<path class="bo-sk-b" d="M${x0} ${ya.toFixed(1)}C${xm} ${ya.toFixed(1)} ${xm} ${yb.toFixed(1)} ${x1} ${yb.toFixed(1)}L${x1} ${(yb + h).toFixed(1)}C${xm} ${(yb + h).toFixed(1)} ${xm} ${(ya + h).toFixed(1)} ${x0} ${(ya + h).toFixed(1)}Z" style="fill:${col}" ${tipAttr(`${esc(A.lab(ka))} ← ${esc(B.lab(kb))}<br><b>${n}</b> ${n === 1 ? 'شراكة' : 'شراكات'}`)}/>`;
-    }));
-  }
-  const nodes = cols.map((col, ci) => pos[ci].keys.map((k) => {
-    const m = pos[ci].m[k], x = colX[ci];
-    const lx = ci === 0 ? x + nodeW + 10 : ci === 2 ? x - 10 : x + nodeW / 2;
-    const anchor = ci === 0 ? 'end' : ci === 2 ? 'start' : 'middle'; // النص عربي: البداية يمين النقطة
-    const ly = ci === 1 ? m.y - 6 : m.y + m.h / 2 + 5;
-    return `<g class="bo-sk-n" data-cf="${esc(col.cf(k))}"><rect x="${x}" y="${m.y.toFixed(1)}" width="${nodeW}" height="${Math.max(2, m.h).toFixed(1)}" rx="3" style="fill:${col.c(k)}"/>
-      <text x="${lx}" y="${ly.toFixed(1)}" text-anchor="${anchor}" class="bo-sk-t ${ci === 1 ? 'mid' : ''}">${esc(col.lab(k))} <tspan class="n">${m.n}</tspan></text></g>`;
-  }).join('')).join('');
+  const stKeys = ['active', 'soon', 'upcoming', 'pipe', 'ended'].filter((k) => nd.some((p) => stGroup(p) === k));
+  const secOf = (p) => pSector(p) || 'غير محدد';
+  const secs = [...L('sectors'), 'غير محدد'].filter((s) => nd.some((p) => secOf(p) === s)).sort((a, b) => nd.filter((p) => secOf(p) === b).length - nd.filter((p) => secOf(p) === a).length);
+  const cnt = (s, k) => nd.filter((p) => secOf(p) === s && stGroup(p) === k).length;
+  const max = Math.max(1, ...secs.flatMap((s) => stKeys.map((k) => cnt(s, k))));
+  const rowMax = Math.max(1, ...secs.map((s) => nd.filter((p) => secOf(p) === s).length));
+  const cell = (s, k) => { const n = cnt(s, k); if (!n) return '<td class="bo-mx-c"><span class="z">·</span></td>'; const d = 18 + Math.sqrt(n / max) * 40; return `<td class="bo-mx-c"><a href="#/partnerships${filtersToQuery({ ...App.dashF, sector: [s], status: SGF[k] })}" class="bo-mx-b" style="--d:${d.toFixed(0)}px;--c:${SGC[k]}" ${tipAttr(`<b>${esc(s)} · ${esc(SG[k])}</b><br>${plural(n, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')}`)}><b>${n}</b></a></td>`; };
   const act = nd.filter((p) => ['active', 'soon'].includes(pStatus(p)));
-  const topCat = pos[1].keys.map((k) => [k, pos[1].m[k].n]).sort((a, b) => b[1] - a[1])[0];
+  const top = secs[0], topN = top ? nd.filter((p) => secOf(p) === top).length : 0;
+  const pipeN = nd.filter((p) => stGroup(p) === 'pipe').length;
   return `${boChHead('flow')}
-    <div class="bo-sk-cols" aria-hidden="true"><span>قطاع الجهة</span><span>مجال الشراكة</span><span>حالة الشراكة</span></div>
-    <div class="bo-sk"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="تدفق الشراكات من القطاع إلى المجال إلى الحالة">${bands}${nodes}</svg></div>
-    ${boInsight(`${topCat ? `المجال الأكثر حضورًا في المحفظة: «${esc(topCat[0])}» بـ${boB(topCat[1])} ${nounFor(topCat[1], ['شراكة', 'شراكة', 'شراكات', 'شراكة'])}. ` : ''}${boB(act.length)} من ${nd.length} شراكة تصل إلى مرحلة السريان. اضغط أي عقدة لتصفية الإحاطة.`)}`;
+    <div class="bo-mx-wrap"><table class="bo-mx"><thead><tr><th class="h0">القطاع</th>${stKeys.map((k) => `<th><span class="dot" style="background:${SGC[k]}"></span>${SG[k]}</th>`).join('')}<th class="tot">الإجمالي</th></tr></thead>
+      <tbody>${secs.map((s) => { const n = nd.filter((p) => secOf(p) === s).length; return `<tr><th class="rh"><button type="button" data-cf="sector|${esc(s)}"><i style="background:${SEC_VAR(s)}"></i>${esc(s)}</button></th>${stKeys.map((k) => cell(s, k)).join('')}<td class="tot"><div class="bo-mx-t"><span class="bo-mx-bar"><i style="width:${(n / rowMax * 100).toFixed(0)}%;background:${SEC_VAR(s)}"></i></span><b>${n}</b></div></td></tr>`; }).join('')}</tbody>
+      <tfoot><tr><th class="rh">المجموع</th>${stKeys.map((k) => `<td><b>${nd.filter((p) => stGroup(p) === k).length}</b></td>`).join('')}<td class="tot"><b>${nd.length}</b></td></tr></tfoot></table></div>
+    ${boInsight(`${top ? `أكبر تركّز في القطاع ${esc(top)} بـ${boB(topN)} ${nounFor(topN, ['شراكة', 'شراكة', 'شراكات', 'شراكة'])} (${Math.round(topN / Math.max(1, nd.length) * 100)}٪ من المحفظة). ` : ''}${boB(act.length)} من ${nd.length} سارية الآن${pipeN ? `، و${boB(pipeN)} ما زالت في الإعداد والتوقيع` : ''}.`)}`;
 }
 
 /* 05 — المسار الزمني: لكل شراكة مسار من البدء إلى الانتهاء، عليه الإنجازات الموثقة */
