@@ -630,11 +630,23 @@ async function exportReportPptx() {
         const lines = e.text.split('\n');
         const al = e.align === 'center' ? 'center' : e.align === 'left' ? 'left' : 'right';
         const runs = lines.map((l, j) => ({ text: l, options: { breakLine: j < lines.length - 1, bold: !!(e.bold || (e.firstBold && j === 0 && lines.length > 1)), rtlMode: !e.ltr, align: al, lang: e.ltr ? 'en-US' : 'ar-SA' } }));
-        sl.addText(runs, { x: IN(e.x), y: IN(e.y), w: IN(e.w), h: IN(e.h), fontFace: e.font || 'IBM Plex Sans Arabic', fontSize: +(e.size * 0.75).toFixed(1), color: hex(e.color), align: e.align === 'center' ? 'center' : e.align === 'left' ? 'left' : 'right', valign: e.valign === 'middle' ? 'middle' : 'top', rtlMode: !e.ltr, lang: e.ltr ? 'en-US' : 'ar-SA', margin: 0, lineSpacingMultiple: +(e.lh / 1.2).toFixed(2), paraSpaceAfter: 0, wrap: true });
+        sl.addText(runs, { x: IN(e.x), y: IN(e.y), w: IN(e.w), h: IN(e.h), fontFace: 'Arial', /* خط متوفر في كل نسخ PowerPoint ويدعم العربية؛ خطوط الويب غير مثبتة عادةً فتستبدلها PowerPoint بخط صيني */ fontSize: +(e.size * 0.75 * 0.9).toFixed(1), fit: 'shrink', /* Arial أعرض قليلًا من خط المعاينة */ color: hex(e.color), align: e.align === 'center' ? 'center' : e.align === 'left' ? 'left' : 'right', valign: e.valign === 'middle' ? 'middle' : 'top', rtlMode: !e.ltr, lang: e.ltr ? 'en-US' : 'ar-SA', margin: 0, lineSpacingMultiple: +(e.lh / 1.2).toFixed(2), paraSpaceAfter: 0, wrap: true });
       }
     }
   }
-  await pptx.writeFile({ fileName: rptFileName() + '.pptx' });
+  /* pptxgenjs يضع للخطوط العربية مجموعة محارف صينية (charset) فتُعرض النصوص رموزًا صينية إن لم يوجد الخط؛ نزيلها قبل التنزيل */
+  let blob = await pptx.write({ outputType: 'blob' });
+  if (typeof JSZip !== 'undefined') {
+    try {
+      const z = await JSZip.loadAsync(blob);
+      await Promise.all(Object.keys(z.files).filter((n) => /^ppt\/(slides|slideLayouts|slideMasters|theme)\/[^/]+\.xml$/.test(n)).map(async (n) => {
+        const x = await z.file(n).async('string');
+        z.file(n, x.replace(/(<a:(?:ea|cs|latin|sym)\b[^>]*?)\s+charset="-?\d+"/g, '$1'));
+      }));
+      blob = await z.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', compression: 'DEFLATE' });
+    } catch (err) { console.warn(err); }
+  }
+  download(rptFileName() + '.pptx', blob);
   toast('نُزّل ملف PowerPoint');
 }
 
