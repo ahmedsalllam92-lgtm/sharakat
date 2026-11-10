@@ -113,7 +113,7 @@ function renderPartnership(el, r) {
     if (fx) { e.preventDefault(); const t = $('#' + fx.dataset.anchorTo, el); if (t) window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 124, behavior: 'smooth' }); return; }
     const an = e.target.closest('[data-anchor]');
     if (an) { e.preventDefault(); if (el.classList.contains('tabbed')) { showTab(an.dataset.anchor); return; } const s = $('#' + an.dataset.anchor, el); s && window.scrollTo({ top: s.getBoundingClientRect().top + scrollY - 124, behavior: 'smooth' }); return; }
-    if (e.target.closest('[data-print]')) return window.print();
+    if (e.target.closest('[data-print]')) return printPartnershipCard(p); // بطاقة مصممة للطباعة بدل واجهة الصفحة
     if (e.target.closest('[data-dossier]')) return dossierDialog(p);
     const dg = e.target.closest('[data-dgal]'); if (dg) return openGallery(photos, +dg.dataset.dgal);
     const vf = e.target.closest('[data-viewf]'); if (vf) return viewStored(vf.dataset.viewf);

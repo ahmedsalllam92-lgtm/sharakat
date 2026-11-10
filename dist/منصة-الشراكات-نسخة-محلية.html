@@ -7666,6 +7666,53 @@ html.share-mode [data-palette]{display:none!important}
 .bo-ph.b{position:relative}
 .bo-ph-cap{position:absolute;inset-inline:10px;bottom:10px;padding:4px 10px;border-radius:7px;background:rgba(12,30,24,.72);color:#F3EBD8;font-size:11px;font-weight:600;line-height:1.4;backdrop-filter:blur(4px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .4s}
 .bo-ph-cap:empty{display:none}
+/* ===== بطاقة الشراكة للطباعة ===== */
+#pcPrint{display:none}
+@media print{
+  html.printing-card,html.printing-card body{background:#fff!important;overflow:visible!important;height:auto!important}
+  html.printing-card body>*:not(#pcPrint){display:none!important}
+  html.printing-card #pcPrint{display:block!important}
+}
+.pcp-print{font-family:'SaudiRiyal','Expo Arabic','IBM Plex Sans Arabic',Tahoma,sans-serif;color:#14201B;font-size:11px;line-height:1.75;-webkit-print-color-adjust:exact;print-color-adjust:exact;display:flex;flex-direction:column;gap:10px}
+.pcp-hd{position:relative;overflow:hidden;border-radius:14px;padding:16px 20px 18px;background:radial-gradient(ellipse 80% 120% at 80% 0%,#1A5C46,#0F4433 55%,#0A2E24);color:#fff}
+.pcp-hd-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.32}
+.pcp-hd-veil{position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,46,36,.35),rgba(10,46,36,.85));}
+.pcp-hd>*:not(.pcp-hd-img):not(.pcp-hd-veil){position:relative}
+.pcp-hd-top{display:flex;align-items:center;gap:10px;font-size:10px;color:#C7D6CD;padding-bottom:10px;border-bottom:1px solid rgba(230,199,134,.35);margin-bottom:12px}
+.pcp-hd-top img{height:26px}.pcp-hd-top em{margin-inline-start:auto;font-style:normal;color:#E6C786;font-weight:700;letter-spacing:.3px}
+.pcp-hd-main{display:flex;align-items:center;gap:16px}
+.pcp-lg{flex:none;width:84px;height:84px;border-radius:12px;background:#fff;display:grid;place-items:center;overflow:hidden;box-shadow:0 0 0 3px rgba(230,199,134,.7)}
+.pcp-lg img{max-width:82%;max-height:82%;object-fit:contain}.pcp-lg b{font-size:26px;color:#0F4433}
+.pcp-code{font-family:monospace;font-size:10px;color:#E6C786}
+.pcp-hd h1{margin:2px 0 2px;font-size:24px;line-height:1.3;color:#fff}
+.pcp-hd p{margin:0;color:#D5E2DB;font-size:11px}
+.pcp-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.pcp-tags span{font-size:9.5px;padding:2px 9px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18)}
+.pcp-tags .gold{background:#E6C786;color:#3D2C08;border-color:#E6C786;font-weight:700}
+.pcp-tags .st-active{background:#2E8B6E;border-color:#2E8B6E}.pcp-tags .st-soon{background:#C9A24F;border-color:#C9A24F;color:#2A1E05}.pcp-tags .st-ended{background:#6B756F;border-color:#6B756F}
+.pcp-facts{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid #E2DCCB;border-radius:12px;overflow:hidden}
+.pcp-facts>div{padding:8px 12px;border-inline-start:1px solid #E2DCCB;display:flex;flex-direction:column}.pcp-facts>div:first-child{border-inline-start:0}
+.pcp-facts small{font-size:9px;color:#6B756F}.pcp-facts b{font-size:15px;color:#0F4433;line-height:1.35}.pcp-facts b small{font-size:9px;color:#6B756F}.pcp-facts em{font-style:normal;font-size:9px;color:#8C958E;line-height:1.4}
+.pcp-term{border:1px solid #E2DCCB;border-radius:12px;padding:8px 14px}
+.pcp-term-l{display:flex;justify-content:space-between}.pcp-term-l span{display:flex;flex-direction:column}.pcp-term-l .c{align-items:center}.pcp-term-l span:last-child{align-items:flex-end}
+.pcp-term-l small{font-size:9px;color:#6B756F}.pcp-term-l b{font-size:12px}
+.pcp-bar{height:6px;border-radius:3px;background:#EDE7D8;margin-top:6px;overflow:hidden}.pcp-bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#A47C32,#0F4433);margin-inline-start:0}
+.pcp-goal{border-inline-start:3px solid #A47C32;padding:2px 12px;background:#FBF8F1;border-radius:0 10px 10px 0}
+.pcp-goal small{font-size:9px;color:#A47C32;font-weight:700}.pcp-goal p{margin:0;font-size:13px;font-weight:600;color:#0F4433;line-height:1.7}
+.pcp-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pcp-box{border:1px solid #E2DCCB;border-radius:12px;padding:10px 14px;break-inside:avoid}
+.pcp-box h2{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:12.5px;color:#0F4433}
+.pcp-box h2 span{font-size:10px;color:#fff;background:#0F4433;border-radius:6px;padding:1px 6px;font-weight:800}
+.pcp-box h2 em{margin-inline-start:auto;font-style:normal;font-size:10px;color:#A47C32}
+.pcp-box ol{margin:0;padding-inline-start:18px}.pcp-box li{margin:0 0 4px}.pcp-box li::marker{color:#A47C32;font-weight:700}
+.pcp-box dl{margin:0}.pcp-box dt{font-size:9px;color:#6B756F}.pcp-box dd{margin:0 0 6px;font-weight:600}
+.pcp-faint{color:#8C958E;margin:0}
+.pcp-steps{list-style:none;padding:0!important;display:grid;grid-template-columns:repeat(4,1fr);gap:5px 8px}
+.pcp-steps li{display:flex;align-items:flex-start;gap:6px;font-size:9.5px;line-height:1.45;margin:0!important;color:#6B756F}
+.pcp-steps i{flex:none;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:9px;font-weight:800;border:1.5px solid #D9D2C0;color:#8C958E}
+.pcp-steps li.d{color:#14201B}.pcp-steps li.d i{background:#0F4433;border-color:#0F4433;color:#fff}
+.pcp-steps li.c{color:#14201B;font-weight:700}.pcp-steps li.c i{background:#E6C786;border-color:#A47C32;color:#3D2C08}
+.pcp-ft{display:flex;justify-content:space-between;font-size:9px;color:#8C958E;border-top:1px solid #E2DCCB;padding-top:6px}
 </style>
 </head>
 <body>
@@ -19793,7 +19840,7 @@ function renderPartnership(el, r) {
     if (fx) { e.preventDefault(); const t = $('#' + fx.dataset.anchorTo, el); if (t) window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 124, behavior: 'smooth' }); return; }
     const an = e.target.closest('[data-anchor]');
     if (an) { e.preventDefault(); if (el.classList.contains('tabbed')) { showTab(an.dataset.anchor); return; } const s = $('#' + an.dataset.anchor, el); s && window.scrollTo({ top: s.getBoundingClientRect().top + scrollY - 124, behavior: 'smooth' }); return; }
-    if (e.target.closest('[data-print]')) return window.print();
+    if (e.target.closest('[data-print]')) return printPartnershipCard(p); // بطاقة مصممة للطباعة بدل واجهة الصفحة
     if (e.target.closest('[data-dossier]')) return dossierDialog(p);
     const dg = e.target.closest('[data-dgal]'); if (dg) return openGallery(photos, +dg.dataset.dgal);
     const vf = e.target.closest('[data-viewf]'); if (vf) return viewStored(vf.dataset.viewf);
@@ -27355,6 +27402,66 @@ function dhFxMount(el) {
 }
 const _dhfxRender = renderPartnership;
 renderPartnership = function (el, r) { _dhfxRender(el, r); try { dhFxMount(el); } catch (e) { console.warn(e); } };
+
+/* —— 28i-pcard.js —— */
+/* =====================================================================
+   بطاقة الشراكة للطباعة: صفحة أو صفحتان A4 مصممتان للطباعة (لا تُطبع واجهة الصفحة التفاعلية)
+   رأس داكن بالشعار والاسم، شريط حقائق، المدة والمسار، الهدف والمجالات والمخرجات والأثر، الفريق.
+   لا تتضمن أقسام «البيانات الناقصة» ولا مناطق الرفع ولا السجل.
+   ===================================================================== */
+async function pcardHTML(p) {
+  const pr = partnerById(p.partnerId) || {}, o = D.settings.org, name = partnerName(p);
+  const st = pStatus(p), dl = daysLeft(p), tp = termProgress(p), P = pProfile(p), f = P.fin || {};
+  const W = wfStateOf('partnership', p);
+  const doneN = WF_STEPS.filter((s) => W.S[s.id] && W.S[s.id].status === 'done').length;
+  const coop = richItems(p.cooperationAreas), outs = richItems(p.outputs), imps = richItems(p.expectedImpact);
+  const url = async (id) => { const u = (await FileCache.url(id)) || ''; if (!u || u.startsWith('data:')) return u; try { const bl = await (await fetch(u)).blob(); return await new Promise((r) => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.onerror = () => r(u); fr.readAsDataURL(bl); }); } catch (_) { return u; } };
+  const lg = pr.logoFileId ? await url(pr.logoFileId) : '';
+  const mlogo = (ASSET_IMG['murooj-logo-white'] || {}).src || '';
+  const cover = p.coverFileId && !p.coverFileId.startsWith('lib:') ? await url(p.coverFileId) : '';
+  const txt = (it) => esc(it.title ? `${it.title}: ${it.text || ''}` : it.text || '');
+  const list = (arr, empty) => (arr.length ? `<ol>${arr.map((it) => `<li>${txt(it)}</li>`).join('')}</ol>` : `<p class="pcp-faint">${empty}</p>`);
+  const tot = (+f.partnerSar || 0) + (+f.murojSar || 0) + (+f.inkindSar || 0);
+  const ev = P.ev && P.ev.score !== null ? P.ev : null;
+  const rem = ['active', 'soon'].includes(st) && dl !== null ? `${nf(dl)} يومًا` : st === 'ended' ? 'انتهت' : st === 'upcoming' && p.startDate ? 'لم تبدأ بعد' : '—';
+  const fact = (l, v, s = '') => `<div><small>${l}</small><b>${v || '—'}</b>${s ? `<em>${s}</em>` : ''}</div>`;
+  const steps = WF_STEPS.map((s) => { const r = W.S[s.id] || {}; const done = r.status === 'done', cur = W.cur && W.cur.id === s.id; return `<li class="${done ? 'd' : cur ? 'c' : ''}"><i>${done ? '✓' : s.n}</i><span>${esc(s.t)}</span></li>`; }).join('');
+  return `<article class="pcp-print" dir="rtl">
+    <header class="pcp-hd">${cover ? `<img class="pcp-hd-img" src="${cover}" alt="">` : ''}<span class="pcp-hd-veil"></span>
+      <div class="pcp-hd-top">${mlogo ? `<img src="${mlogo}" alt="">` : ''}<span>${esc(o.name)} · ${esc(o.dept)}</span><em>بطاقة الشراكة</em></div>
+      <div class="pcp-hd-main"><span class="pcp-lg">${lg ? `<img src="${lg}" alt="">` : `<b>${esc(initials(name))}</b>`}</span>
+        <div><span class="pcp-code">${esc(p.code || '')}</span><h1>${esc(name)}</h1><p>${[p.classification, pSector(p) && 'القطاع ' + pSector(p), p.ptype].filter(Boolean).map(esc).join(' · ')}</p>
+          <div class="pcp-tags"><span class="st st-${st}">${esc(statusLabel(st))}</span>${p.golden ? '<span class="gold">★ شراكة ذهبية</span>' : ''}${(p.renewals || []).length ? '<span>مُجدَّدة</span>' : ''}${p.activation ? `<span>${esc(p.activation)}</span>` : ''}</div></div></div>
+    </header>
+    <section class="pcp-facts">${fact('الحالة', esc(statusLabel(st)), esc(stageLabel(p.stage)))}${fact('المتبقي', rem, p.endDate ? 'حتى ' + fmtDate(p.endDate, 'short') : '')}${fact('مسار المذكرة', `${doneN} من ${WF_STEPS.length}`, W.cur && !W.closed ? esc(W.cur.t) : 'اكتمل')}${fact('آخر تقييم', ev ? `${ev.score}<small>/100</small>` : 'لم تُقيَّم', ev ? esc(evalGrade(ev.score)) : '')}${fact('القيمة التقديرية', tot ? sar(tot) : '—', esc(f.model || ''))}</section>
+    ${p.startDate && p.endDate ? `<section class="pcp-term"><div class="pcp-term-l"><span><small>البداية</small><b>${fmtDate(p.startDate)}</b></span><span class="c"><small>انقضى</small><b>${tp !== null ? Math.round(Math.max(0, Math.min(1, tp)) * 100) + '%' : '—'}</b></span><span><small>النهاية</small><b>${fmtDate(p.endDate)}</b></span></div><div class="pcp-bar"><i style="width:${tp !== null ? Math.round(Math.max(0, Math.min(1, tp)) * 100) : 0}%"></i></div></section>` : ''}
+    ${p.showcaseGoal || coop.length ? `<section class="pcp-goal"><small>هدف الشراكة</small><p>${esc(p.showcaseGoal ? trimP(p.showcaseGoal) : coop[0].title || coop[0].text || '')}</p></section>` : ''}
+    <section class="pcp-cols">
+      <div class="pcp-box"><h2><span>01</span>مجالات التعاون</h2>${list(coop, 'لم تُسجَّل.')}</div>
+      <div class="pcp-box"><h2><span>02</span>المخرجات المستهدفة</h2>${list(outs, 'لم تُسجَّل.')}</div>
+    </section>
+    <section class="pcp-box wide"><h2><span>03</span>الأثر المتوقع وكيف يخدم المؤسسة</h2>${list(imps, 'لم يُسجَّل.')}</section>
+    <section class="pcp-box wide pcp-wf"><h2><span>04</span>مسار المذكرة <em>${doneN} من ${WF_STEPS.length}</em></h2><ol class="pcp-steps">${steps}</ol></section>
+    <section class="pcp-cols">
+      <div class="pcp-box"><h2><span>05</span>الفريق</h2><dl><dt>المسؤولون من إدارة الشراكات</dt><dd>${esc((p.owners || []).join('، ')) || '—'}</dd><dt>الإدارات المشاركة</dt><dd>${esc((p.departments || []).join('، ')) || '—'}</dd></dl></div>
+      <div class="pcp-box"><h2><span>06</span>الجهة الشريكة</h2><dl><dt>الجهة</dt><dd>${esc(pr.name || name)}</dd><dt>القطاع والمجال</dt><dd>${esc([pr.sector, pr.domain].filter(Boolean).join(' · ')) || '—'}</dd>${can('view.contacts') && p.contactName ? `<dt>ضابط الاتصال</dt><dd>${esc(p.contactName)}${p.contactEmail ? ` · <span dir="ltr">${esc(p.contactEmail)}</span>` : ''}</dd>` : ''}</dl></div>
+    </section>
+    <footer class="pcp-ft"><span>${esc(o.platform)} — ${esc(o.name)}</span><span>طُبعت في ${fmtDate(isoDate(today()))}</span></footer>
+  </article>`;
+}
+async function printPartnershipCard(p) {
+  document.querySelectorAll('#pcPrint').forEach((x) => x.remove());
+  const host = document.createElement('div'); host.id = 'pcPrint'; host.innerHTML = await pcardHTML(p);
+  document.body.appendChild(host);
+  await Promise.all([...host.querySelectorAll('img')].map((im) => (im.complete ? 0 : new Promise((r) => { im.onload = im.onerror = r; setTimeout(r, 2500); }))));
+  const html = document.documentElement; html.classList.add('printing-card');
+  let stp = $('#pcPage'); if (!stp) { stp = document.createElement('style'); stp.id = 'pcPage'; document.head.appendChild(stp); }
+  stp.textContent = '@page{size:A4;margin:10mm}';
+  const prev = document.title; document.title = `بطاقة الشراكة — ${partnerName(p)}`;
+  const done = () => { html.classList.remove('printing-card'); stp.textContent = ''; host.remove(); document.title = prev; removeEventListener('afterprint', done); };
+  addEventListener('afterprint', done);
+  window.print();
+}
 
 /* —— 29-process.js —— */
 /* =====================================================================
