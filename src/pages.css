@@ -3952,3 +3952,37 @@ code.pw-user{font-size:12.5px;background:var(--paper-2);padding:2px 8px;border-r
 }
 @media print{.ob-hero{zoom:.5!important;break-inside:auto!important}.ob-metro{zoom:.52!important}.ob-printf{margin:0}}
 @media print{.ob-mzv{display:none!important}}
+
+/* الاستعراض: الشرح يطفو فوق الجزء الكبير المميَّز */
+#tour .tour-card.over{box-shadow:0 0 0 1px rgba(233,203,138,.55),0 24px 60px -12px rgba(0,0,0,.65)}
+
+/* السجل: تمييز الشراكات الذهبية في البطاقات والجدول */
+.pc.gold{border-color:#D9B467!important;box-shadow:0 0 0 1px rgba(217,180,103,.55),0 14px 32px -18px rgba(184,145,63,.65)!important}
+.pc.gold::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,rgba(240,217,160,.18),transparent 40%)}
+.pc-gold{position:absolute;bottom:auto;top:calc(var(--pc-cover,206px) - 16px);inset-inline-start:14px;z-index:4;display:inline-flex;align-items:center;gap:5px;padding:4px 10px 4px 8px;border-radius:999px;background:linear-gradient(135deg,#F0D9A0,#C9A24F);color:#3D2C08;font-size:11.5px;font-weight:800;box-shadow:0 6px 14px -6px rgba(140,100,30,.7)}
+.pc-gold svg{width:13px;height:13px;fill:currentColor}
+tr.gold>td:first-child{box-shadow:inset -4px 0 0 #D9B467}
+tr.gold{background:linear-gradient(90deg,transparent 60%,rgba(240,217,160,.16))}
+.rt-gold{display:inline-grid;place-items:center;width:18px;height:18px;margin-inline-start:6px;vertical-align:-3px}
+.rt-gold svg{width:16px;height:16px;fill:#C9A24F;filter:drop-shadow(0 1px 2px rgba(140,100,30,.4))}
+/* السجل: رأس أصغر — البحث والفلاتر في سطر واحد */
+.btn.icon-only{padding-inline:10px;min-width:40px;justify-content:center}
+.reg-tools{display:flex!important;flex-wrap:wrap;align-items:center;gap:8px!important}
+.reg-tools .searchbox{flex:0 0 250px;max-width:250px;margin:0!important}
+.reg-tools .searchbox input{min-height:36px;font-size:13px}
+.reg-tools #regF{flex:1 1 0;min-width:0;display:flex;flex-wrap:wrap;gap:6px;margin:0}
+.reg-tools #regF .fbtn{min-height:34px;padding:4px 10px;font-size:12.5px}
+.reg-meta{margin-top:10px!important}
+@media (max-width:760px){.reg-tools .searchbox{flex:1 1 100%;max-width:none}}
+.pc-gold{top:auto!important;bottom:12px;inset-inline-start:auto;left:12px}
+.pc.gold .pc-ring{box-shadow:0 0 0 3px rgba(217,180,103,.65);border-radius:50%}
+
+/* سجل الشراكات: رأس مضغوط */
+.regpage>.ph{padding:0 0 10px!important;margin-bottom:12px!important;align-items:center!important;min-height:0!important}
+.regpage>.ph h1{font-size:26px!important;margin:0!important;line-height:1.2}
+.regpage>.ph p{font-size:12.5px!important;margin:2px 0 0!important}
+.regpage>.ph::before,.regpage>.ph .eyebrow{display:none!important}
+.regpage>.ph .btn{min-height:36px;padding-top:4px;padding-bottom:4px;font-size:13px}
+.regpage .bo-strip-st{margin-bottom:10px!important}
+.regpage .bo-strip-st>*{padding-top:8px!important;padding-bottom:8px!important;min-height:0!important}
+.regpage .bo-strip-st b{font-size:22px!important}

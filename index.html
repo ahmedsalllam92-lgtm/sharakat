@@ -7416,6 +7416,40 @@ code.pw-user{font-size:12.5px;background:var(--paper-2);padding:2px 8px;border-r
 }
 @media print{.ob-hero{zoom:.5!important;break-inside:auto!important}.ob-metro{zoom:.52!important}.ob-printf{margin:0}}
 @media print{.ob-mzv{display:none!important}}
+
+/* الاستعراض: الشرح يطفو فوق الجزء الكبير المميَّز */
+#tour .tour-card.over{box-shadow:0 0 0 1px rgba(233,203,138,.55),0 24px 60px -12px rgba(0,0,0,.65)}
+
+/* السجل: تمييز الشراكات الذهبية في البطاقات والجدول */
+.pc.gold{border-color:#D9B467!important;box-shadow:0 0 0 1px rgba(217,180,103,.55),0 14px 32px -18px rgba(184,145,63,.65)!important}
+.pc.gold::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,rgba(240,217,160,.18),transparent 40%)}
+.pc-gold{position:absolute;bottom:auto;top:calc(var(--pc-cover,206px) - 16px);inset-inline-start:14px;z-index:4;display:inline-flex;align-items:center;gap:5px;padding:4px 10px 4px 8px;border-radius:999px;background:linear-gradient(135deg,#F0D9A0,#C9A24F);color:#3D2C08;font-size:11.5px;font-weight:800;box-shadow:0 6px 14px -6px rgba(140,100,30,.7)}
+.pc-gold svg{width:13px;height:13px;fill:currentColor}
+tr.gold>td:first-child{box-shadow:inset -4px 0 0 #D9B467}
+tr.gold{background:linear-gradient(90deg,transparent 60%,rgba(240,217,160,.16))}
+.rt-gold{display:inline-grid;place-items:center;width:18px;height:18px;margin-inline-start:6px;vertical-align:-3px}
+.rt-gold svg{width:16px;height:16px;fill:#C9A24F;filter:drop-shadow(0 1px 2px rgba(140,100,30,.4))}
+/* السجل: رأس أصغر — البحث والفلاتر في سطر واحد */
+.btn.icon-only{padding-inline:10px;min-width:40px;justify-content:center}
+.reg-tools{display:flex!important;flex-wrap:wrap;align-items:center;gap:8px!important}
+.reg-tools .searchbox{flex:0 0 250px;max-width:250px;margin:0!important}
+.reg-tools .searchbox input{min-height:36px;font-size:13px}
+.reg-tools #regF{flex:1 1 0;min-width:0;display:flex;flex-wrap:wrap;gap:6px;margin:0}
+.reg-tools #regF .fbtn{min-height:34px;padding:4px 10px;font-size:12.5px}
+.reg-meta{margin-top:10px!important}
+@media (max-width:760px){.reg-tools .searchbox{flex:1 1 100%;max-width:none}}
+.pc-gold{top:auto!important;bottom:12px;inset-inline-start:auto;left:12px}
+.pc.gold .pc-ring{box-shadow:0 0 0 3px rgba(217,180,103,.65);border-radius:50%}
+
+/* سجل الشراكات: رأس مضغوط */
+.regpage>.ph{padding:0 0 10px!important;margin-bottom:12px!important;align-items:center!important;min-height:0!important}
+.regpage>.ph h1{font-size:26px!important;margin:0!important;line-height:1.2}
+.regpage>.ph p{font-size:12.5px!important;margin:2px 0 0!important}
+.regpage>.ph::before,.regpage>.ph .eyebrow{display:none!important}
+.regpage>.ph .btn{min-height:36px;padding-top:4px;padding-bottom:4px;font-size:13px}
+.regpage .bo-strip-st{margin-bottom:10px!important}
+.regpage .bo-strip-st>*{padding-top:8px!important;padding-bottom:8px!important;min-height:0!important}
+.regpage .bo-strip-st b{font-size:22px!important}
 </style>
 </head>
 <body>
@@ -18974,9 +19008,10 @@ function renderRegister(el, r) {
   App.ui[vkey] = App.ui[vkey] || 'cards';
   const VIEWS = [['cards', 'grid', 'بطاقات'], ['table', 'table', 'جدول']];
   const canEdit = can('edit.partnership');
+  el.classList.add('regpage');
   el.innerHTML = `<div id="regPrintHead"></div>
     <div class="ph no-print"><div><h1>سجل الشراكات</h1><p>ابحث بالاسم أو الرمز أو أي نص في المجالات والمخرجات.</p></div>
-    <div class="ph-actions">${can('export') ? `<button class="btn" data-xls>${icon('download')} Excel</button><button class="btn" data-print>${icon('print')} طباعة</button>` : ''}${can('view.reports') ? `<button class="btn" data-rep title="تقرير بالشراكات المعروضة">${icon('file')} تقرير</button>` : ''}${canEdit ? `<a class="btn primary" href="#/partnerships/new">${icon('plus')} شراكة جديدة</a>` : ''}</div></div>
+    <div class="ph-actions">${can('export') ? `<button class="btn" data-xls>${icon('download')} Excel</button><button class="btn icon-only" data-print title="طباعة" aria-label="طباعة">${icon('print')}</button>` : ''}${can('view.reports') ? `<button class="btn" data-rep title="تقرير بالشراكات المعروضة">${icon('file')} تقرير</button>` : ''}${canEdit ? `<a class="btn primary" href="#/partnerships/new">${icon('plus')} شراكة جديدة</a>` : ''}</div></div>
     ${design() === 'board' ? '<div class="bo-strip-st no-print" id="regStrip" role="group" aria-label="تصفية سريعة حسب الحالة"></div>' : ''}
     <div class="reg-tools" data-tour="reg-tools">
       <div class="searchbox">${icon('search')}<input id="regQ" type="search" placeholder="بحث في السجل…" value="${esc(st.q)}" aria-label="بحث في السجل"></div>
@@ -19084,8 +19119,8 @@ function rtRow(p, st) {
   else if (st === 'upcoming' && p.startDate) rem = `<span class="rt-rem">يبدأ بعد ${plural(Math.max(0, daysBetween(today(), parseDate(p.startDate))), 'يوم واحد', 'يومين', 'أيام', 'يومًا')}</span>`;
   else if (st === 'ended') rem = '<span class="rt-rem e">انتهت</span>';
   const term = p.startDate || p.endDate ? `<div class="rt-term">${tp !== null ? `<span class="rt-bar" title="انقضى ${Math.round(tp * 100)}% من المدة"><i style="width:${Math.max(3, Math.round(tp * 100))}%"></i></span>` : ''}<div class="small">${fmtDate(p.startDate, 'short')} – ${fmtDate(p.endDate, 'short')}</div>${rem}</div>` : '<span class="faint">—</span>';
-  return `<tr data-row="${p.id}" tabindex="0" class="st-${st}" style="--c:${ST_VAR(st)}">
-    <td class="rt-c-name"><div class="t-name">${plateHTML(pr, 44)}<div class="rt-nm"><b>${esc(name)} ${demoTag(p)}</b>
+  return `<tr data-row="${p.id}" tabindex="0" class="st-${st} ${p.golden ? 'gold' : ''}" style="--c:${ST_VAR(st)}">
+    <td class="rt-c-name"><div class="t-name">${plateHTML(pr, 44)}<div class="rt-nm"><b>${esc(name)} ${demoTag(p)}${p.golden ? `<span class="rt-gold" title="شراكة ذهبية">${STAR_SVG}</span>` : ''}</b>
       <span class="rt-meta"><span class="code">${esc(p.code || '')}</span>${sub ? `<span class="rt-sub">${esc(sub)}</span>` : ''}</span>
       ${(p.categories || []).length ? `<span class="rt-cats">${p.categories.slice(0, 3).map((c) => `<em>${esc(c)}</em>`).join('')}${p.categories.length > 3 ? `<em>+${p.categories.length - 3}</em>` : ''}</span>` : ''}</div></div></td>
     <td><div class="rt-cls"><b>${esc(p.classification || '—')}</b>${pSector(p) ? `<span>${esc(pSector(p))}${p.ptype ? ` · ${esc(p.ptype)}` : ''}</span>` : p.ptype ? `<span>${esc(p.ptype)}</span>` : ''}</div></td>
@@ -19114,8 +19149,8 @@ function pcardHTML(p) {
   const goal = p.showcaseGoal || firstItem(p.cooperationAreas) || firstItem(p.expectedImpact) || '';
   const ev = P.ev && P.ev.score !== null ? P.ev.score : null;
   const owners = p.owners || [];
-  return `<article class="pc st-${st} ${strat ? 'strat' : ''}" style="--c:${ST_VAR(st)}">
-    <div class="pc-media">${coverHTML(p.id + (pr ? pr.name : ''), p.coverFileId, { W: 640, H: 300, levels: 10, cols: 40, tone: toneFor(pr) })}<span class="pc-shade" aria-hidden="true"></span>
+  return `<article class="pc st-${st} ${strat ? 'strat' : ''} ${p.golden ? 'gold' : ''}" style="--c:${ST_VAR(st)}">
+    <div class="pc-media">${p.golden ? `<span class="pc-gold" title="شراكة ذهبية">${STAR_SVG}<b>شراكة ذهبية</b></span>` : ''}${coverHTML(p.id + (pr ? pr.name : ''), p.coverFileId, { W: 640, H: 300, levels: 10, cols: 40, tone: toneFor(pr) })}<span class="pc-shade" aria-hidden="true"></span>
       <div class="pc-top">${statusChip(p)}${p.ptype ? `<span class="pc-type">${strat ? icon('star') : ''}${esc(p.ptype)}</span>` : ''}</div>
       ${goal ? `<p class="pc-goal">${esc(goal)}</p>` : ''}
     </div>
@@ -19720,7 +19755,8 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
   const forms = dossierForms(p);
   const stories = D.achievements.filter((a) => a.partnershipId === p.id && (showDemo() || !a.demo));
   const logs = D.audit.filter((a) => a.entityId === p.id);
-  const url = async (id) => (await FileCache.url(id)) || '';
+  /* الصور تُضمَّن في الملف نفسه (data:) حتى تظهر في الطباعة وحفظ PDF دون الاعتماد على روابط مؤقتة */
+  const url = async (id) => { const u = (await FileCache.url(id)) || ''; if (!u || u.startsWith('data:')) return u; try { const bl = await (await fetch(u)).blob(); return await new Promise((r) => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.onerror = () => r(u); fr.readAsDataURL(bl); }); } catch (_) { return u; } };
   const kvT = (rows) => `<table class="ds-kv">${rows.filter(Boolean).map(([l, v]) => `<tr><th>${esc(l)}</th><td>${v || '<span class="ds-faint">—</span>'}</td></tr>`).join('')}</table>`;
   const has = (k) => secs.has(k);
   const toc = [];
@@ -21853,7 +21889,7 @@ function placeTour() {
   const pad = 8, gap = 14;
   let top = Math.max(topOff - 6, r.top - pad), left = Math.max(4, r.left - pad);
   let bottom = Math.min(vh - barH + 6, r.bottom + pad), right = Math.min(vw - 4, r.right + pad);
-  let x, y;
+  let x, y, over = false;
   if (small) {
     y = vh - barH - ch - 4; x = (vw - cw) / 2;
     bottom = Math.min(bottom, y - 6);
@@ -21866,12 +21902,12 @@ function placeTour() {
     else if (spaceL >= cw + gap * 2) { x = left - cw - gap; y = clampY(top); }
     else if (spaceR >= cw + gap * 2) { x = right + gap; y = clampY(top); }
     else {
-      // الهدف أكبر من المساحة المتاحة: نُبرز الجزء العلوي ونضع الشرح أسفله
-      y = vh - barH - ch - 6; x = clampX(right - cw);
-      bottom = Math.min(bottom, y - gap);
+      // الهدف أكبر من المساحة المتاحة: يبقى الإطار حول الجزء الظاهر كله، ويطفو الشرح فوقه في الركن الأيسر السفلي
+      over = true; x = clampX(left + 18); y = clampY(bottom - ch - 18);
     }
   }
   Object.assign(spot.style, { top: `${top}px`, left: `${left}px`, width: `${Math.max(0, right - left)}px`, height: `${Math.max(40, bottom - top)}px` });
+  card.classList.toggle('over', over);
   card.style.left = `${Math.round(x)}px`; card.style.top = `${Math.round(Math.max(small ? 8 : topOff, y))}px`;
 }
 function updateBar() {

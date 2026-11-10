@@ -15,9 +15,10 @@ function renderRegister(el, r) {
   App.ui[vkey] = App.ui[vkey] || 'cards';
   const VIEWS = [['cards', 'grid', 'بطاقات'], ['table', 'table', 'جدول']];
   const canEdit = can('edit.partnership');
+  el.classList.add('regpage');
   el.innerHTML = `<div id="regPrintHead"></div>
     <div class="ph no-print"><div><h1>سجل الشراكات</h1><p>ابحث بالاسم أو الرمز أو أي نص في المجالات والمخرجات.</p></div>
-    <div class="ph-actions">${can('export') ? `<button class="btn" data-xls>${icon('download')} Excel</button><button class="btn" data-print>${icon('print')} طباعة</button>` : ''}${can('view.reports') ? `<button class="btn" data-rep title="تقرير بالشراكات المعروضة">${icon('file')} تقرير</button>` : ''}${canEdit ? `<a class="btn primary" href="#/partnerships/new">${icon('plus')} شراكة جديدة</a>` : ''}</div></div>
+    <div class="ph-actions">${can('export') ? `<button class="btn" data-xls>${icon('download')} Excel</button><button class="btn icon-only" data-print title="طباعة" aria-label="طباعة">${icon('print')}</button>` : ''}${can('view.reports') ? `<button class="btn" data-rep title="تقرير بالشراكات المعروضة">${icon('file')} تقرير</button>` : ''}${canEdit ? `<a class="btn primary" href="#/partnerships/new">${icon('plus')} شراكة جديدة</a>` : ''}</div></div>
     ${design() === 'board' ? '<div class="bo-strip-st no-print" id="regStrip" role="group" aria-label="تصفية سريعة حسب الحالة"></div>' : ''}
     <div class="reg-tools" data-tour="reg-tools">
       <div class="searchbox">${icon('search')}<input id="regQ" type="search" placeholder="بحث في السجل…" value="${esc(st.q)}" aria-label="بحث في السجل"></div>
@@ -125,8 +126,8 @@ function rtRow(p, st) {
   else if (st === 'upcoming' && p.startDate) rem = `<span class="rt-rem">يبدأ بعد ${plural(Math.max(0, daysBetween(today(), parseDate(p.startDate))), 'يوم واحد', 'يومين', 'أيام', 'يومًا')}</span>`;
   else if (st === 'ended') rem = '<span class="rt-rem e">انتهت</span>';
   const term = p.startDate || p.endDate ? `<div class="rt-term">${tp !== null ? `<span class="rt-bar" title="انقضى ${Math.round(tp * 100)}% من المدة"><i style="width:${Math.max(3, Math.round(tp * 100))}%"></i></span>` : ''}<div class="small">${fmtDate(p.startDate, 'short')} – ${fmtDate(p.endDate, 'short')}</div>${rem}</div>` : '<span class="faint">—</span>';
-  return `<tr data-row="${p.id}" tabindex="0" class="st-${st}" style="--c:${ST_VAR(st)}">
-    <td class="rt-c-name"><div class="t-name">${plateHTML(pr, 44)}<div class="rt-nm"><b>${esc(name)} ${demoTag(p)}</b>
+  return `<tr data-row="${p.id}" tabindex="0" class="st-${st} ${p.golden ? 'gold' : ''}" style="--c:${ST_VAR(st)}">
+    <td class="rt-c-name"><div class="t-name">${plateHTML(pr, 44)}<div class="rt-nm"><b>${esc(name)} ${demoTag(p)}${p.golden ? `<span class="rt-gold" title="شراكة ذهبية">${STAR_SVG}</span>` : ''}</b>
       <span class="rt-meta"><span class="code">${esc(p.code || '')}</span>${sub ? `<span class="rt-sub">${esc(sub)}</span>` : ''}</span>
       ${(p.categories || []).length ? `<span class="rt-cats">${p.categories.slice(0, 3).map((c) => `<em>${esc(c)}</em>`).join('')}${p.categories.length > 3 ? `<em>+${p.categories.length - 3}</em>` : ''}</span>` : ''}</div></div></td>
     <td><div class="rt-cls"><b>${esc(p.classification || '—')}</b>${pSector(p) ? `<span>${esc(pSector(p))}${p.ptype ? ` · ${esc(p.ptype)}` : ''}</span>` : p.ptype ? `<span>${esc(p.ptype)}</span>` : ''}</div></td>
@@ -155,8 +156,8 @@ function pcardHTML(p) {
   const goal = p.showcaseGoal || firstItem(p.cooperationAreas) || firstItem(p.expectedImpact) || '';
   const ev = P.ev && P.ev.score !== null ? P.ev.score : null;
   const owners = p.owners || [];
-  return `<article class="pc st-${st} ${strat ? 'strat' : ''}" style="--c:${ST_VAR(st)}">
-    <div class="pc-media">${coverHTML(p.id + (pr ? pr.name : ''), p.coverFileId, { W: 640, H: 300, levels: 10, cols: 40, tone: toneFor(pr) })}<span class="pc-shade" aria-hidden="true"></span>
+  return `<article class="pc st-${st} ${strat ? 'strat' : ''} ${p.golden ? 'gold' : ''}" style="--c:${ST_VAR(st)}">
+    <div class="pc-media">${p.golden ? `<span class="pc-gold" title="شراكة ذهبية">${STAR_SVG}<b>شراكة ذهبية</b></span>` : ''}${coverHTML(p.id + (pr ? pr.name : ''), p.coverFileId, { W: 640, H: 300, levels: 10, cols: 40, tone: toneFor(pr) })}<span class="pc-shade" aria-hidden="true"></span>
       <div class="pc-top">${statusChip(p)}${p.ptype ? `<span class="pc-type">${strat ? icon('star') : ''}${esc(p.ptype)}</span>` : ''}</div>
       ${goal ? `<p class="pc-goal">${esc(goal)}</p>` : ''}
     </div>

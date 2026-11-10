@@ -307,7 +307,7 @@ function placeTour() {
   const pad = 8, gap = 14;
   let top = Math.max(topOff - 6, r.top - pad), left = Math.max(4, r.left - pad);
   let bottom = Math.min(vh - barH + 6, r.bottom + pad), right = Math.min(vw - 4, r.right + pad);
-  let x, y;
+  let x, y, over = false;
   if (small) {
     y = vh - barH - ch - 4; x = (vw - cw) / 2;
     bottom = Math.min(bottom, y - 6);
@@ -320,12 +320,12 @@ function placeTour() {
     else if (spaceL >= cw + gap * 2) { x = left - cw - gap; y = clampY(top); }
     else if (spaceR >= cw + gap * 2) { x = right + gap; y = clampY(top); }
     else {
-      // الهدف أكبر من المساحة المتاحة: نُبرز الجزء العلوي ونضع الشرح أسفله
-      y = vh - barH - ch - 6; x = clampX(right - cw);
-      bottom = Math.min(bottom, y - gap);
+      // الهدف أكبر من المساحة المتاحة: يبقى الإطار حول الجزء الظاهر كله، ويطفو الشرح فوقه في الركن الأيسر السفلي
+      over = true; x = clampX(left + 18); y = clampY(bottom - ch - 18);
     }
   }
   Object.assign(spot.style, { top: `${top}px`, left: `${left}px`, width: `${Math.max(0, right - left)}px`, height: `${Math.max(40, bottom - top)}px` });
+  card.classList.toggle('over', over);
   card.style.left = `${Math.round(x)}px`; card.style.top = `${Math.round(Math.max(small ? 8 : topOff, y))}px`;
 }
 function updateBar() {

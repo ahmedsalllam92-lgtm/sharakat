@@ -107,7 +107,8 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
   const forms = dossierForms(p);
   const stories = D.achievements.filter((a) => a.partnershipId === p.id && (showDemo() || !a.demo));
   const logs = D.audit.filter((a) => a.entityId === p.id);
-  const url = async (id) => (await FileCache.url(id)) || '';
+  /* الصور تُضمَّن في الملف نفسه (data:) حتى تظهر في الطباعة وحفظ PDF دون الاعتماد على روابط مؤقتة */
+  const url = async (id) => { const u = (await FileCache.url(id)) || ''; if (!u || u.startsWith('data:')) return u; try { const bl = await (await fetch(u)).blob(); return await new Promise((r) => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.onerror = () => r(u); fr.readAsDataURL(bl); }); } catch (_) { return u; } };
   const kvT = (rows) => `<table class="ds-kv">${rows.filter(Boolean).map(([l, v]) => `<tr><th>${esc(l)}</th><td>${v || '<span class="ds-faint">—</span>'}</td></tr>`).join('')}</table>`;
   const has = (k) => secs.has(k);
   const toc = [];

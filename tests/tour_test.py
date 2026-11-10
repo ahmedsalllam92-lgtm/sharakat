@@ -36,15 +36,15 @@ async def main():
                         if not await E("TOUR.busy"): break
                         await pg.wait_for_timeout(100)
                     await pg.wait_for_timeout(750)
-                    info = await E("""(()=>{const s=TOUR.steps[TOUR.i],p=s.parts[TOUR.part]; const W=document.documentElement.clientWidth,H=document.documentElement.clientHeight; const c=document.querySelector('.tour-card').getBoundingClientRect(); const sp=document.querySelector('.tour-spot'); let ov=0; if(TOUR.el && !sp.hidden){const r=sp.getBoundingClientRect(); const ix=Math.max(0,Math.min(c.right,r.right)-Math.max(c.left,r.left)), iy=Math.max(0,Math.min(c.bottom,r.bottom)-Math.max(c.top,r.top)); ov=ix*iy/Math.max(1,r.width*r.height);} return {key:s.key, part:TOUR.part, sel:p.sel, found:!!TOUR.el || !p.sel, ov, spotH: TOUR.el? sp.getBoundingClientRect().height:0, elH: TOUR.el? TOUR.el.getBoundingClientRect().height:0, cardIn:c.left>=-1&&c.right<=W+1&&c.top>=-1&&c.bottom<=H+1}})()""")
+                    info = await E("""(()=>{const s=TOUR.steps[TOUR.i],p=s.parts[TOUR.part]; const W=document.documentElement.clientWidth,H=document.documentElement.clientHeight; const c=document.querySelector('.tour-card').getBoundingClientRect(); const sp=document.querySelector('.tour-spot'); let ov=0; if(TOUR.el && !sp.hidden){const r=sp.getBoundingClientRect(); const ix=Math.max(0,Math.min(c.right,r.right)-Math.max(c.left,r.left)), iy=Math.max(0,Math.min(c.bottom,r.bottom)-Math.max(c.top,r.top)); ov=ix*iy/Math.max(1,r.width*r.height);} return {key:s.key, part:TOUR.part, sel:p.sel, found:!!TOUR.el || !p.sel, ov, spotH: TOUR.el? sp.getBoundingClientRect().height:0, elH: TOUR.el? TOUR.el.getBoundingClientRect().height:0, cardIn:c.left>=-1&&c.right<=W+1&&c.top>=-1&&c.bottom<=H+1, over:document.querySelector('.tour-card').classList.contains('over')}})()""")
                     if TOUR_SPOT_SMALL(info): overlaps.append((info['key'],'tiny-spot'))
                     if not info['found']: missing.append(info['key'])
-                    if info['ov'] > 0.04: overlaps.append((info['key'], round(info['ov'],2)))
+                    if info['ov'] > (0.4 if info.get('over') else 0.04): overlaps.append((info['key'], round(info['ov'],2)))
                     if not info['cardIn']: overlaps.append((info['key'],'card-offscreen'))
                     if k < total_parts-1:
                         await E("nextTour()")
                 ok(f'[{label}/{d}] every step target found', not missing, missing)
-                ok(f'[{label}/{d}] card avoids covering target', not overlaps, overlaps)
+                ok(f'[{label}/{d}] card avoids covering target (floats in a corner only over large areas)', not overlaps, overlaps)
                 ok(f'[{label}/{d}] final summary screen', await E("document.querySelector('#tour').classList.contains('final') && !!document.querySelector('.tour-final')"))
                 # prev / jump / play / speed
                 await E("prevTour()"); await pg.wait_for_timeout(900)
