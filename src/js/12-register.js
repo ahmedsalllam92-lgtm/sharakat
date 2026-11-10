@@ -90,7 +90,18 @@ function renderRegister(el, r) {
     const pd = e.target.closest('[data-pcdos]'); if (pd) { const pp = D.partnerships.find((x) => x.id === pd.dataset.pcdos); if (pp) dossierDialog(pp); return; }
     const row = e.target.closest('[data-row]');
     if (row && !e.target.closest('a,button') && !row.closest('.cm-detail')) go('#/partnerships/' + row.dataset.row);
-    if (e.target.closest('[data-print]')) { const pv = App.ui[vkey]; if (pv !== 'table') { App.ui[vkey] = 'table'; draw(); } window.print(); if (pv !== 'table') { App.ui[vkey] = pv; draw(); } } // الطباعة دائمًا بالجدول الرسمي
+    if (e.target.closest('[data-print]')) { // الطباعة دائمًا بالجدول الرسمي، أفقيًا، بعد تحميل الشعارات
+      (async () => {
+        const pv = App.ui[vkey]; if (pv !== 'table') { App.ui[vkey] = 'table'; draw(); }
+        await hydrateFiles(el); await Promise.all($$('#regBody img', el).map((im) => (im.complete ? 0 : new Promise((r) => { im.onload = im.onerror = r; setTimeout(r, 2500); }))));
+        const html = document.documentElement; html.classList.add('printing-reg');
+        let stp = $('#regPage'); if (!stp) { stp = document.createElement('style'); stp.id = 'regPage'; document.head.appendChild(stp); }
+        stp.textContent = '@page{size:A4 landscape;margin:10mm 9mm}';
+        const done = () => { html.classList.remove('printing-reg'); stp.textContent = ''; window.removeEventListener('afterprint', done); if (pv !== 'table') { App.ui[vkey] = pv; draw(); } };
+        window.addEventListener('afterprint', done);
+        window.print();
+      })();
+    }
     const qa = e.target.closest('[data-rtgo]'); if (qa) { go(qa.dataset.rtgo); return; }
     if (e.target.closest('[data-xls]')) exportPartnershipsXlsx(App.lastRegList || [], 'سجل-الشراكات');
     if (e.target.closest('[data-rep]')) { const ids = (App.lastRegList || []).map((p) => p.id); if (!ids.length) return toast('لا توجد شراكات معروضة.', 'err'); App.ui.rpt.ids = ids; go('#/reports'); }
