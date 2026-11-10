@@ -125,16 +125,18 @@ function renderPartner(el, r) {
   if (!pr || (pr.demo && !showDemo())) { el.innerHTML = emptyHTML({ ic: 'search', title: 'لم يُعثر على الجهة', actions: '<a class="btn" href="#/partners">سجل الجهات</a>' }); return; }
   const s = partnerStats(pr);
   el.innerHTML = `<div class="ph"><div class="row" style="gap:18px;align-items:center">${plateEditHTML(pr, 96, can('manage.partners'))}<div><h1>${esc(pr.name)} ${demoTag(pr)}</h1><p>${esc(pr.sector || 'قطاع غير محدد')}${(pr.aliases || []).length ? ` — يُعرف أيضًا بـ: ${esc(pr.aliases.join('، '))}` : ''}</p>${pr.website ? `<a href="${esc(pr.website)}" target="_blank" rel="noopener" dir="ltr" class="small">${esc(pr.website)}</a>` : ''}</div></div>
-    <div class="ph-actions"><a class="btn ghost" href="#/partners">${icon('arrowR')} الجهات</a>${can('manage.partners') ? `<button class="btn" data-editp>${icon('edit')} تعديل</button>` : ''}${can('edit.partnership') ? `<a class="btn primary" href="#/partnerships/new">${icon('plus')} شراكة جديدة</a>` : ''}</div></div>
-    <div class="dgrid"><div class="panel c8"><div class="panel-h"><h3>شراكات الجهة</h3><span class="sub">${s.ps.length}</span></div><div class="panel-b">
+    <div class="ph-actions"><a class="btn ghost" href="#/partners">${icon('arrowR')} الجهات</a>${can('manage.partners') ? `<button class="btn" data-editp>${icon('edit')} تعديل</button>` : ''}${can('edit.partnership') ? `<button class="btn primary" type="button" data-startp>${icon('plus')} بدء إجراءات شراكة</button>` : ''}</div></div>
+    ${pr.target && !s.ps.length ? `<div class="note gold-note" style="margin-bottom:16px">${icon('flag')}<span class="grow"><b>جهة مستهدفة</b> من ملف حصر الشراكات ولم تبدأ معها شراكة بعد.${pr.targetNote && !/مستهدف/.test(pr.targetNote) ? ` ${esc(pr.targetNote)}` : ''}${can('edit.partnership') ? ' اضغط «بدء إجراءات شراكة» لفتح ملفها في المسار المعتمد مباشرة دون مقترح من إدارة.' : ''}</span></div>` : ''}
+    <div class="dgrid"><div class="panel c12"><div class="panel-h"><h3>شراكات الجهة</h3><span class="sub">${s.ps.length}</span></div><div class="panel-b">
       ${s.ps.length ? regTable(s.ps) : '<p class="muted small">لا ترتبط بالجهة شراكات مسجلة.</p>'}</div></div>
-    <div class="panel c4"><div class="panel-h"><h3>المقترحات المرتبطة</h3><span class="sub">${s.props.length}</span></div><div class="panel-b">
+    <div class="panel c12"><div class="panel-h"><h3>المقترحات المرتبطة</h3><span class="sub">${s.props.length}</span></div><div class="panel-b">
       ${s.props.length ? `<div class="acts">${s.props.map((x) => `<a class="act" href="#/proposals/${x.id}" style="grid-template-columns:1fr auto"><span><div class="t">${esc(x.ref)}</div><div class="d">${esc(x.department)}</div></span>${propChip(x.status)}</a>`).join('')}</div>` : '<p class="muted small">لا توجد مقترحات بهذه الجهة.</p>'}
       ${pr.notes ? `<div class="note" style="margin-top:14px">${icon('info')}<span>${esc(pr.notes)}</span></div>` : ''}</div></div></div>`;
   hydrateFiles(el);
   bindLogoUpload(el, () => route());
   el.onclick = async (e) => {
     if (e.target.closest('[data-editp]')) { const x = await partnerDialog(pr); if (x) route(); return; }
+    if (e.target.closest('[data-startp]')) { const rec = await startPartnershipFor(pr); if (rec) go('#/partnerships/' + rec.id); return; }
     const row = e.target.closest('[data-row]'); if (row) go('#/partnerships/' + row.dataset.row);
   };
 }

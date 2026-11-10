@@ -312,6 +312,31 @@ async function convertProposal(x, { partnerId, newPartner }) {
   return rec;
 }
 
+/* ===== بدء إجراءات شراكة مع جهة مباشرة (مبادرة من إدارة الشراكات دون مقترح من إدارة) =====
+   تُفتح الشراكة في مرحلة الإعداد، وتُسجَّل مراحل الطلب الثلاث الأولى مكتملة بوصفها مبادرة من إدارة الشراكات،
+   فيبدأ العمل من «الاجتماع المبدئي»؛ وتخرج الجهة من قائمة المستهدفة. */
+async function startPartnershipFor(pr) {
+  const ex = D.partnerships.filter((p) => p.partnerId === pr.id && !p.isDraft && pStatus(p) !== 'ended');
+  const ok = await confirmDlg(`${ex.length ? `لهذه الجهة ${ex.length === 1 ? 'شراكة قائمة' : ex.length + ' شراكات قائمة'}. ` : ''}سيُفتح ملف شراكة جديد مع «${pr.name}» في مرحلة الإعداد، ويبدأ المسار من «الاجتماع المبدئي» كمبادرة من إدارة الشراكات دون مقترح من إدارة. متابعة؟`, { title: 'بدء إجراءات شراكة', ok: 'بدء الإجراءات' });
+  if (!ok) return null;
+  const at = nowISO(), by = Session.userName(), note = 'مبادرة من إدارة الشراكات (دون مقترح من إدارة)';
+  const rec = {
+    id: uid('pt'), code: nextPartnershipCode(''), title: pr.name, partnerId: pr.id, classification: '',
+    cooperationAreas: '', expectedImpact: '', outputs: '', notes: pr.targetNote && !/مستهدف/.test(pr.targetNote) ? pr.targetNote : '', recommendations: '', challenges: '',
+    contactName: '', contactEmail: '', contactPhone: '', startDate: '', endDate: '',
+    owners: L('team').includes(by) ? [by] : [], departments: [], activation: '', attachments: [], stage: 'prep', isDraft: false, public: false,
+    highlight: null, coverFileId: null, proposalId: null, origin: 'مبادرة من إدارة الشراكات',
+    wf: { steps: { request: { status: 'done', at, by, note }, method: { status: 'done', at, by, note }, eval: { status: 'done', decision: 'yes', at, by, note } } },
+    forms: {}, createdAt: at, createdBy: by, updatedAt: at, updatedBy: by, demo: !!pr.demo,
+  };
+  await Repo.save('partnerships', rec);
+  if (pr.target) { pr.target = false; await Repo.save('partners', pr); }
+  await Repo.saveSettings();
+  await Repo.log('partnership.create', 'partnership', rec.id, rec.code + ' — ' + rec.title, note);
+  toast(`فُتح ملف الشراكة ${rec.code} — الخطوة التالية: الاجتماع المبدئي`);
+  return rec;
+}
+
 /* ===== إضافة قيمة إلى قائمة من داخل أي شراكة — تظهر لكل الشراكات وفي صفحة «القوائم» ===== */
 const LIST_TITLES = { formSectors: 'نوع الجهة (القطاع) في النماذج', domains: 'مجالات عمل الجهات', partnerTypes: 'تصنيف الشراكة', originTypes: 'بداية العلاقة', valueTypes: 'أنواع القيمة', financeModels: 'النماذج المالية', financeStatus: 'الوضع المالي', sectors: 'القطاعات', classifications: 'تصنيفات المذكرات', categories: 'تصنيفات الشراكة', departments: 'الإدارات', team: 'فريق إدارة الشراكات', activation: 'حالات التفعيل', attachmentCats: 'تصنيفات الملفات', goals: 'الأهداف الاستراتيجية' };
 async function addListValue(listKey, v, from) {

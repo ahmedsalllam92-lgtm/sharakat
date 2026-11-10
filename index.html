@@ -7504,6 +7504,12 @@ html.ob-show #obBody>.ob-mosaic .orb-n.up small{bottom:1.8cqw}
 .orb-t{position:absolute;width:.75cqw;height:.75cqw;margin:-.375cqw 0 0 -.375cqw;border-radius:50%;background:rgba(200,220,212,.35);box-shadow:0 0 0 2px rgba(200,220,212,.08);z-index:2;opacity:0;animation:orbIn .5s forwards;animation-delay:calc(1.6s + var(--i) * 15ms);transition:transform .2s,background .2s}
 .orb-t:hover{transform:scale(1.8);background:#E6C786}
 .orb-sec-t{text-decoration:none;opacity:.85}
+
+/* صفحة الجهة: جدول الشراكات داخل بطاقته */
+.panel .rt-wrap{max-width:100%;overflow-x:auto}
+.panel .tbl.rt td.rt-c-name{min-width:220px}
+.panel .tbl.rt thead th{position:static!important}
+.note.gold-note{background:color-mix(in srgb,var(--gold) 10%,var(--paper));border-color:color-mix(in srgb,var(--gold) 40%,transparent)}
 </style>
 </head>
 <body>
@@ -15993,6 +15999,31 @@ async function convertProposal(x, { partnerId, newPartner }) {
   return rec;
 }
 
+/* ===== بدء إجراءات شراكة مع جهة مباشرة (مبادرة من إدارة الشراكات دون مقترح من إدارة) =====
+   تُفتح الشراكة في مرحلة الإعداد، وتُسجَّل مراحل الطلب الثلاث الأولى مكتملة بوصفها مبادرة من إدارة الشراكات،
+   فيبدأ العمل من «الاجتماع المبدئي»؛ وتخرج الجهة من قائمة المستهدفة. */
+async function startPartnershipFor(pr) {
+  const ex = D.partnerships.filter((p) => p.partnerId === pr.id && !p.isDraft && pStatus(p) !== 'ended');
+  const ok = await confirmDlg(`${ex.length ? `لهذه الجهة ${ex.length === 1 ? 'شراكة قائمة' : ex.length + ' شراكات قائمة'}. ` : ''}سيُفتح ملف شراكة جديد مع «${pr.name}» في مرحلة الإعداد، ويبدأ المسار من «الاجتماع المبدئي» كمبادرة من إدارة الشراكات دون مقترح من إدارة. متابعة؟`, { title: 'بدء إجراءات شراكة', ok: 'بدء الإجراءات' });
+  if (!ok) return null;
+  const at = nowISO(), by = Session.userName(), note = 'مبادرة من إدارة الشراكات (دون مقترح من إدارة)';
+  const rec = {
+    id: uid('pt'), code: nextPartnershipCode(''), title: pr.name, partnerId: pr.id, classification: '',
+    cooperationAreas: '', expectedImpact: '', outputs: '', notes: pr.targetNote && !/مستهدف/.test(pr.targetNote) ? pr.targetNote : '', recommendations: '', challenges: '',
+    contactName: '', contactEmail: '', contactPhone: '', startDate: '', endDate: '',
+    owners: L('team').includes(by) ? [by] : [], departments: [], activation: '', attachments: [], stage: 'prep', isDraft: false, public: false,
+    highlight: null, coverFileId: null, proposalId: null, origin: 'مبادرة من إدارة الشراكات',
+    wf: { steps: { request: { status: 'done', at, by, note }, method: { status: 'done', at, by, note }, eval: { status: 'done', decision: 'yes', at, by, note } } },
+    forms: {}, createdAt: at, createdBy: by, updatedAt: at, updatedBy: by, demo: !!pr.demo,
+  };
+  await Repo.save('partnerships', rec);
+  if (pr.target) { pr.target = false; await Repo.save('partners', pr); }
+  await Repo.saveSettings();
+  await Repo.log('partnership.create', 'partnership', rec.id, rec.code + ' — ' + rec.title, note);
+  toast(`فُتح ملف الشراكة ${rec.code} — الخطوة التالية: الاجتماع المبدئي`);
+  return rec;
+}
+
 /* ===== إضافة قيمة إلى قائمة من داخل أي شراكة — تظهر لكل الشراكات وفي صفحة «القوائم» ===== */
 const LIST_TITLES = { formSectors: 'نوع الجهة (القطاع) في النماذج', domains: 'مجالات عمل الجهات', partnerTypes: 'تصنيف الشراكة', originTypes: 'بداية العلاقة', valueTypes: 'أنواع القيمة', financeModels: 'النماذج المالية', financeStatus: 'الوضع المالي', sectors: 'القطاعات', classifications: 'تصنيفات المذكرات', categories: 'تصنيفات الشراكة', departments: 'الإدارات', team: 'فريق إدارة الشراكات', activation: 'حالات التفعيل', attachmentCats: 'تصنيفات الملفات', goals: 'الأهداف الاستراتيجية' };
 async function addListValue(listKey, v, from) {
@@ -20207,16 +20238,18 @@ function renderPartner(el, r) {
   if (!pr || (pr.demo && !showDemo())) { el.innerHTML = emptyHTML({ ic: 'search', title: 'لم يُعثر على الجهة', actions: '<a class="btn" href="#/partners">سجل الجهات</a>' }); return; }
   const s = partnerStats(pr);
   el.innerHTML = `<div class="ph"><div class="row" style="gap:18px;align-items:center">${plateEditHTML(pr, 96, can('manage.partners'))}<div><h1>${esc(pr.name)} ${demoTag(pr)}</h1><p>${esc(pr.sector || 'قطاع غير محدد')}${(pr.aliases || []).length ? ` — يُعرف أيضًا بـ: ${esc(pr.aliases.join('، '))}` : ''}</p>${pr.website ? `<a href="${esc(pr.website)}" target="_blank" rel="noopener" dir="ltr" class="small">${esc(pr.website)}</a>` : ''}</div></div>
-    <div class="ph-actions"><a class="btn ghost" href="#/partners">${icon('arrowR')} الجهات</a>${can('manage.partners') ? `<button class="btn" data-editp>${icon('edit')} تعديل</button>` : ''}${can('edit.partnership') ? `<a class="btn primary" href="#/partnerships/new">${icon('plus')} شراكة جديدة</a>` : ''}</div></div>
-    <div class="dgrid"><div class="panel c8"><div class="panel-h"><h3>شراكات الجهة</h3><span class="sub">${s.ps.length}</span></div><div class="panel-b">
+    <div class="ph-actions"><a class="btn ghost" href="#/partners">${icon('arrowR')} الجهات</a>${can('manage.partners') ? `<button class="btn" data-editp>${icon('edit')} تعديل</button>` : ''}${can('edit.partnership') ? `<button class="btn primary" type="button" data-startp>${icon('plus')} بدء إجراءات شراكة</button>` : ''}</div></div>
+    ${pr.target && !s.ps.length ? `<div class="note gold-note" style="margin-bottom:16px">${icon('flag')}<span class="grow"><b>جهة مستهدفة</b> من ملف حصر الشراكات ولم تبدأ معها شراكة بعد.${pr.targetNote && !/مستهدف/.test(pr.targetNote) ? ` ${esc(pr.targetNote)}` : ''}${can('edit.partnership') ? ' اضغط «بدء إجراءات شراكة» لفتح ملفها في المسار المعتمد مباشرة دون مقترح من إدارة.' : ''}</span></div>` : ''}
+    <div class="dgrid"><div class="panel c12"><div class="panel-h"><h3>شراكات الجهة</h3><span class="sub">${s.ps.length}</span></div><div class="panel-b">
       ${s.ps.length ? regTable(s.ps) : '<p class="muted small">لا ترتبط بالجهة شراكات مسجلة.</p>'}</div></div>
-    <div class="panel c4"><div class="panel-h"><h3>المقترحات المرتبطة</h3><span class="sub">${s.props.length}</span></div><div class="panel-b">
+    <div class="panel c12"><div class="panel-h"><h3>المقترحات المرتبطة</h3><span class="sub">${s.props.length}</span></div><div class="panel-b">
       ${s.props.length ? `<div class="acts">${s.props.map((x) => `<a class="act" href="#/proposals/${x.id}" style="grid-template-columns:1fr auto"><span><div class="t">${esc(x.ref)}</div><div class="d">${esc(x.department)}</div></span>${propChip(x.status)}</a>`).join('')}</div>` : '<p class="muted small">لا توجد مقترحات بهذه الجهة.</p>'}
       ${pr.notes ? `<div class="note" style="margin-top:14px">${icon('info')}<span>${esc(pr.notes)}</span></div>` : ''}</div></div></div>`;
   hydrateFiles(el);
   bindLogoUpload(el, () => route());
   el.onclick = async (e) => {
     if (e.target.closest('[data-editp]')) { const x = await partnerDialog(pr); if (x) route(); return; }
+    if (e.target.closest('[data-startp]')) { const rec = await startPartnershipFor(pr); if (rec) go('#/partnerships/' + rec.id); return; }
     const row = e.target.closest('[data-row]'); if (row) go('#/partnerships/' + row.dataset.row);
   };
 }

@@ -4040,3 +4040,9 @@ html.ob-show #obBody>.ob-mosaic .orb-n.up small{bottom:1.8cqw}
 .orb-t{position:absolute;width:.75cqw;height:.75cqw;margin:-.375cqw 0 0 -.375cqw;border-radius:50%;background:rgba(200,220,212,.35);box-shadow:0 0 0 2px rgba(200,220,212,.08);z-index:2;opacity:0;animation:orbIn .5s forwards;animation-delay:calc(1.6s + var(--i) * 15ms);transition:transform .2s,background .2s}
 .orb-t:hover{transform:scale(1.8);background:#E6C786}
 .orb-sec-t{text-decoration:none;opacity:.85}
+
+/* صفحة الجهة: جدول الشراكات داخل بطاقته */
+.panel .rt-wrap{max-width:100%;overflow-x:auto}
+.panel .tbl.rt td.rt-c-name{min-width:220px}
+.panel .tbl.rt thead th{position:static!important}
+.note.gold-note{background:color-mix(in srgb,var(--gold) 10%,var(--paper));border-color:color-mix(in srgb,var(--gold) 40%,transparent)}
