@@ -7493,6 +7493,17 @@ html.ob-show #obBody>.ob-mosaic .orb-n.up small{bottom:1.8cqw}
   html.printing-reg .tbl.rt .rt-nm{gap:1px}
 }
 @media print{html.printing-reg .tbl.rt .rt-term .small,html.printing-reg .tbl.rt .rt-cls b,html.printing-reg .tbl.rt .rt-own .small,html.printing-reg .tbl.rt td .small{font-size:9.5px!important}html.printing-reg .tbl.rt tbody td{padding:4px 7px}}
+
+/* الحلقات: إجمالي واضح + بلا تواريخ + المستهدفة */
+.ob-und2{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;border:1px dashed var(--ob-line2,rgba(255,255,255,.2));font-size:12px;color:var(--ob-mut,#A8C6BB)}
+.ob-und2 i{width:9px;height:9px;border-radius:50%;border:1.5px dashed currentColor}.ob-und2 b{color:var(--ob-ink,#fff)}
+.ob-tot{font-size:12.5px;color:var(--ob-mut,#A8C6BB)}.ob-tot b{color:var(--ob-gold2,#F0D9A0);font-size:14px}.ob-tot small{font-size:11px;opacity:.85}
+.ob-tgt{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--ob-gold2,#F0D9A0);text-decoration:none;border-bottom:1px dashed currentColor}
+.ob-tgt .ic{width:13px;height:13px}
+.orb .rgt{stroke:rgba(255,255,255,.12);stroke-dasharray:1 5}
+.orb-t{position:absolute;width:.75cqw;height:.75cqw;margin:-.375cqw 0 0 -.375cqw;border-radius:50%;background:rgba(200,220,212,.35);box-shadow:0 0 0 2px rgba(200,220,212,.08);z-index:2;opacity:0;animation:orbIn .5s forwards;animation-delay:calc(1.6s + var(--i) * 15ms);transition:transform .2s,background .2s}
+.orb-t:hover{transform:scale(1.8);background:#E6C786}
+.orb-sec-t{text-decoration:none;opacity:.85}
 </style>
 </head>
 <body>
@@ -18745,7 +18756,9 @@ function obRings(all, list) {
       ${labels}
     </svg>
     <div class="ob-time no-print"><span class="ob-time-l">${icon('history')} عرض في تاريخ سابق</span><input type="range" min="${T0}" max="${T1 - 86400000}" step="86400000" value="${t.getTime()}" aria-label="اختر تاريخًا لعرض الشراكات السارية فيه"><output id="obTimeOut">اليوم</output><button type="button" class="linkbtn" data-obnow hidden>العودة إلى اليوم</button></div>
-    <div class="ob-lg">${legend}${undated.length ? `<span class="ob-und">${plural(undated.length, 'سجل واحد', 'سجلان', 'سجلات', 'سجلًا')} بلا تواريخ لا يظهر في الحلقات</span>` : ''}</div>
+    <div class="ob-lg">${legend}${undated.length ? `<span class="ob-und2" title="شراكات لم تُسجَّل لها تواريخ بدء وانتهاء بعد، فلا يمكن رسمها على الحلقات"><i></i>بلا تواريخ<b>${undated.length}</b></span>` : ''}
+      <span class="ob-tot">= <b>${items.length + undated.length}</b> شراكة${undated.length ? ` <small>(${items.length} على الحلقات + ${undated.length} بلا تواريخ)</small>` : ''}</span>
+      ${obTargets().length ? `<a class="ob-tgt" href="#/partners?kind=target" title="جهات مدرجة في ملف الحصر كمستهدفة ولم تبدأ معها شراكة بعد">${icon('flag')} ${obTargets().length} جهة مستهدفة بلا شراكة بعد</a>` : ''}</div>
   </div>`;
 }
 
@@ -18863,6 +18876,7 @@ function obMosaic(nd) {
 }
 
 /* — كوكبة الشركاء: مروج في المركز، ولكل قطاع شريحة من الدائرة، وشراكاته موزعة على ثلاث حلقات بالتناوب حتى لا تتزاحم الأسماء — */
+const obTargets = () => D.partners.filter((x) => x.target && (showDemo() || !x.demo) && !D.partnerships.some((p) => p.partnerId === x.id));
 function obMzView() { try { return localStorage.getItem('shk_mzv') || 'orbit'; } catch (_) { return 'orbit'; } }
 function obOrbit(order, g) {
   const W = 1200, H = 900, cx = W / 2, cy = H / 2, N = order.reduce((t, s) => t + g[s].length, 0) || 1;
@@ -18895,13 +18909,16 @@ function obOrbit(order, g) {
     });
     a0 += span;
   });
+  /* الجهات المستهدفة: نقاط خافتة على حلقة خارجية (لا تدخل في الأرقام) */
+  const TG = (App.dashF.sector || []).length || (App.dashF.ptype || []).length || Object.keys(App.dashF).some((k) => (App.dashF[k] || []).length) ? [] : obTargets();
+  const tgt = TG.map((pr, i) => { const a = -Math.PI / 2 + (i + 0.5) / TG.length * Math.PI * 2, x = cx + Math.cos(a) * 578, y = cy + Math.sin(a) * 418; return `<a class="orb-t" href="#/partners?kind=target" style="left:${(x / W * 100).toFixed(2)}%;top:${(y / H * 100).toFixed(2)}%;--i:${i}" ${tipAttr(`<b>${esc(pr.name)}</b><br>جهة مستهدفة — لم تبدأ معها شراكة بعد${pr.targetNote ? '<br>' + esc(pr.targetNote) : ''}`)}></a>`; }).join('');
   const logo = (ASSET_IMG['murooj-logo-white'] || {}).src;
   return `<div class="orb ${(App.dashF.sector || []).length || (App.dashF.ptype || []).length ? 'focus' : ''}" aria-label="كوكبة الشركاء">
     <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">
-      ${rings.map(([rx, ry], i) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" class="rg" style="--k:${i}"/>`).join('')}
+      ${rings.map(([rx, ry], i) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" class="rg" style="--k:${i}"/>`).join('')}${TG.length ? `<ellipse cx="${cx}" cy="${cy}" rx="578" ry="418" class="rg rgt"/>` : ''}
       <g class="rays">${rays}</g>${wedges}</svg>
     <div class="orb-core">${logo ? `<img src="${logo}" alt="">` : ''}<b>${N}</b><small>شراكة</small></div>
-    ${nodes}<div class="orb-legend">${labels}</div>
+    ${tgt}${nodes}<div class="orb-legend">${labels}${TG.length ? `<a class="orb-sec orb-sec-t" href="#/partners?kind=target" style="--c:#8FA9A0"><i></i>مستهدفة<b>${TG.length}</b></a>` : ''}</div>
   </div>`;
 }
 
@@ -20081,15 +20098,15 @@ function dupPairs() {
   }
   return out;
 }
-function renderPartners(el) {
+function renderPartners(el, r) {
   if (!can('view.partners')) { el.innerHTML = noAccessHTML(); return; }
-  const st = { q: '', sector: '', kind: '' };
+  const st = { q: '', sector: '', kind: ((r && r.query) || {}).kind || '' };
   const manage = can('manage.partners');
   el.innerHTML = `<div class="ph"><div><h1>الجهات الشريكة</h1><p>سجل موحد للجهات يمنع تكرار الجهة بأسماء مختلفة، ويربط كل جهة بشراكاتها ومقترحاتها.</p></div>
     <div class="ph-actions">${manage ? `<button class="btn primary" data-addp>${icon('plus')} جهة جديدة</button>` : ''}</div></div>
     <div id="dupBox"></div>
     <div class="reg-tools"><div class="searchbox">${icon('search')}<input id="pq" type="search" placeholder="بحث بالاسم أو الاسم البديل…" aria-label="بحث في الجهات"></div>
-      <div class="seg" id="pkind"><button class="on" data-k="">كل الجهات</button><button data-k="has">لها شراكات</button><button data-k="target">مستهدفة <b class="pk-n">${D.partners.filter((x) => x.target && (showDemo() || !x.demo) && !D.partnerships.some((p) => p.partnerId === x.id)).length}</b></button></div>
+      <div class="seg" id="pkind"><button class="${st.kind ? '' : 'on'}" data-k="">كل الجهات</button><button data-k="has" class="${st.kind === 'has' ? 'on' : ''}">لها شراكات</button><button data-k="target" class="${st.kind === 'target' ? 'on' : ''}">مستهدفة <b class="pk-n">${D.partners.filter((x) => x.target && (showDemo() || !x.demo) && !D.partnerships.some((p) => p.partnerId === x.id)).length}</b></button></div>
       <div class="seg" id="psec"><button class="on" data-s="">الكل</button>${L('sectors').map((s) => `<button data-s="${esc(s)}">${esc(s)}</button>`).join('')}</div></div>
     <div id="pbody" data-tour="partners-list"></div>`;
   const draw = () => {

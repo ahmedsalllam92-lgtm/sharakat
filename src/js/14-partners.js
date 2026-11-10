@@ -16,15 +16,15 @@ function dupPairs() {
   }
   return out;
 }
-function renderPartners(el) {
+function renderPartners(el, r) {
   if (!can('view.partners')) { el.innerHTML = noAccessHTML(); return; }
-  const st = { q: '', sector: '', kind: '' };
+  const st = { q: '', sector: '', kind: ((r && r.query) || {}).kind || '' };
   const manage = can('manage.partners');
   el.innerHTML = `<div class="ph"><div><h1>الجهات الشريكة</h1><p>سجل موحد للجهات يمنع تكرار الجهة بأسماء مختلفة، ويربط كل جهة بشراكاتها ومقترحاتها.</p></div>
     <div class="ph-actions">${manage ? `<button class="btn primary" data-addp>${icon('plus')} جهة جديدة</button>` : ''}</div></div>
     <div id="dupBox"></div>
     <div class="reg-tools"><div class="searchbox">${icon('search')}<input id="pq" type="search" placeholder="بحث بالاسم أو الاسم البديل…" aria-label="بحث في الجهات"></div>
-      <div class="seg" id="pkind"><button class="on" data-k="">كل الجهات</button><button data-k="has">لها شراكات</button><button data-k="target">مستهدفة <b class="pk-n">${D.partners.filter((x) => x.target && (showDemo() || !x.demo) && !D.partnerships.some((p) => p.partnerId === x.id)).length}</b></button></div>
+      <div class="seg" id="pkind"><button class="${st.kind ? '' : 'on'}" data-k="">كل الجهات</button><button data-k="has" class="${st.kind === 'has' ? 'on' : ''}">لها شراكات</button><button data-k="target" class="${st.kind === 'target' ? 'on' : ''}">مستهدفة <b class="pk-n">${D.partners.filter((x) => x.target && (showDemo() || !x.demo) && !D.partnerships.some((p) => p.partnerId === x.id)).length}</b></button></div>
       <div class="seg" id="psec"><button class="on" data-s="">الكل</button>${L('sectors').map((s) => `<button data-s="${esc(s)}">${esc(s)}</button>`).join('')}</div></div>
     <div id="pbody" data-tour="partners-list"></div>`;
   const draw = () => {

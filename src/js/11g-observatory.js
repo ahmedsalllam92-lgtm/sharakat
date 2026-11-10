@@ -205,7 +205,9 @@ function obRings(all, list) {
       ${labels}
     </svg>
     <div class="ob-time no-print"><span class="ob-time-l">${icon('history')} عرض في تاريخ سابق</span><input type="range" min="${T0}" max="${T1 - 86400000}" step="86400000" value="${t.getTime()}" aria-label="اختر تاريخًا لعرض الشراكات السارية فيه"><output id="obTimeOut">اليوم</output><button type="button" class="linkbtn" data-obnow hidden>العودة إلى اليوم</button></div>
-    <div class="ob-lg">${legend}${undated.length ? `<span class="ob-und">${plural(undated.length, 'سجل واحد', 'سجلان', 'سجلات', 'سجلًا')} بلا تواريخ لا يظهر في الحلقات</span>` : ''}</div>
+    <div class="ob-lg">${legend}${undated.length ? `<span class="ob-und2" title="شراكات لم تُسجَّل لها تواريخ بدء وانتهاء بعد، فلا يمكن رسمها على الحلقات"><i></i>بلا تواريخ<b>${undated.length}</b></span>` : ''}
+      <span class="ob-tot">= <b>${items.length + undated.length}</b> شراكة${undated.length ? ` <small>(${items.length} على الحلقات + ${undated.length} بلا تواريخ)</small>` : ''}</span>
+      ${obTargets().length ? `<a class="ob-tgt" href="#/partners?kind=target" title="جهات مدرجة في ملف الحصر كمستهدفة ولم تبدأ معها شراكة بعد">${icon('flag')} ${obTargets().length} جهة مستهدفة بلا شراكة بعد</a>` : ''}</div>
   </div>`;
 }
 
@@ -323,6 +325,7 @@ function obMosaic(nd) {
 }
 
 /* — كوكبة الشركاء: مروج في المركز، ولكل قطاع شريحة من الدائرة، وشراكاته موزعة على ثلاث حلقات بالتناوب حتى لا تتزاحم الأسماء — */
+const obTargets = () => D.partners.filter((x) => x.target && (showDemo() || !x.demo) && !D.partnerships.some((p) => p.partnerId === x.id));
 function obMzView() { try { return localStorage.getItem('shk_mzv') || 'orbit'; } catch (_) { return 'orbit'; } }
 function obOrbit(order, g) {
   const W = 1200, H = 900, cx = W / 2, cy = H / 2, N = order.reduce((t, s) => t + g[s].length, 0) || 1;
@@ -355,13 +358,16 @@ function obOrbit(order, g) {
     });
     a0 += span;
   });
+  /* الجهات المستهدفة: نقاط خافتة على حلقة خارجية (لا تدخل في الأرقام) */
+  const TG = (App.dashF.sector || []).length || (App.dashF.ptype || []).length || Object.keys(App.dashF).some((k) => (App.dashF[k] || []).length) ? [] : obTargets();
+  const tgt = TG.map((pr, i) => { const a = -Math.PI / 2 + (i + 0.5) / TG.length * Math.PI * 2, x = cx + Math.cos(a) * 578, y = cy + Math.sin(a) * 418; return `<a class="orb-t" href="#/partners?kind=target" style="left:${(x / W * 100).toFixed(2)}%;top:${(y / H * 100).toFixed(2)}%;--i:${i}" ${tipAttr(`<b>${esc(pr.name)}</b><br>جهة مستهدفة — لم تبدأ معها شراكة بعد${pr.targetNote ? '<br>' + esc(pr.targetNote) : ''}`)}></a>`; }).join('');
   const logo = (ASSET_IMG['murooj-logo-white'] || {}).src;
   return `<div class="orb ${(App.dashF.sector || []).length || (App.dashF.ptype || []).length ? 'focus' : ''}" aria-label="كوكبة الشركاء">
     <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">
-      ${rings.map(([rx, ry], i) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" class="rg" style="--k:${i}"/>`).join('')}
+      ${rings.map(([rx, ry], i) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" class="rg" style="--k:${i}"/>`).join('')}${TG.length ? `<ellipse cx="${cx}" cy="${cy}" rx="578" ry="418" class="rg rgt"/>` : ''}
       <g class="rays">${rays}</g>${wedges}</svg>
     <div class="orb-core">${logo ? `<img src="${logo}" alt="">` : ''}<b>${N}</b><small>شراكة</small></div>
-    ${nodes}<div class="orb-legend">${labels}</div>
+    ${tgt}${nodes}<div class="orb-legend">${labels}${TG.length ? `<a class="orb-sec orb-sec-t" href="#/partners?kind=target" style="--c:#8FA9A0"><i></i>مستهدفة<b>${TG.length}</b></a>` : ''}</div>
   </div>`;
 }
 

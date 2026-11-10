@@ -4029,3 +4029,14 @@ html.ob-show #obBody>.ob-mosaic .orb-n.up small{bottom:1.8cqw}
   html.printing-reg .tbl.rt .rt-nm{gap:1px}
 }
 @media print{html.printing-reg .tbl.rt .rt-term .small,html.printing-reg .tbl.rt .rt-cls b,html.printing-reg .tbl.rt .rt-own .small,html.printing-reg .tbl.rt td .small{font-size:9.5px!important}html.printing-reg .tbl.rt tbody td{padding:4px 7px}}
+
+/* الحلقات: إجمالي واضح + بلا تواريخ + المستهدفة */
+.ob-und2{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;border:1px dashed var(--ob-line2,rgba(255,255,255,.2));font-size:12px;color:var(--ob-mut,#A8C6BB)}
+.ob-und2 i{width:9px;height:9px;border-radius:50%;border:1.5px dashed currentColor}.ob-und2 b{color:var(--ob-ink,#fff)}
+.ob-tot{font-size:12.5px;color:var(--ob-mut,#A8C6BB)}.ob-tot b{color:var(--ob-gold2,#F0D9A0);font-size:14px}.ob-tot small{font-size:11px;opacity:.85}
+.ob-tgt{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--ob-gold2,#F0D9A0);text-decoration:none;border-bottom:1px dashed currentColor}
+.ob-tgt .ic{width:13px;height:13px}
+.orb .rgt{stroke:rgba(255,255,255,.12);stroke-dasharray:1 5}
+.orb-t{position:absolute;width:.75cqw;height:.75cqw;margin:-.375cqw 0 0 -.375cqw;border-radius:50%;background:rgba(200,220,212,.35);box-shadow:0 0 0 2px rgba(200,220,212,.08);z-index:2;opacity:0;animation:orbIn .5s forwards;animation-delay:calc(1.6s + var(--i) * 15ms);transition:transform .2s,background .2s}
+.orb-t:hover{transform:scale(1.8);background:#E6C786}
+.orb-sec-t{text-decoration:none;opacity:.85}
