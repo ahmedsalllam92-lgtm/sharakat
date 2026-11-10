@@ -189,7 +189,7 @@ function obRings(all, list) {
   const actN = list.filter((p) => !p.isDraft && ['active', 'soon'].includes(pStatus(p))).length;
   const legend = ['active', 'soon', 'upcoming', 'sign', 'prep', 'ended'].filter((k) => items.some((p) => pStatus(p) === k)).map((k) => `<button type="button" class="${(App.dashF.status || []).includes(k) ? 'on' : ''}" data-cf="status|${k}"><i style="background:${ST_VAR(k)}"></i>${esc(statusLabel(k))}<b>${items.filter((p) => pStatus(p) === k).length}</b></button>`).join('');
   return `<div class="ob-rings" data-tour="dash-evolution-hero">
-    <header class="ob-rh"><h2>${icon('leaf')} المحفظة عبر الزمن</h2><p>كل حلقة سنة، وكل شعاع شراكة من بدايتها إلى نهايتها، والحلقة الذهبية «اليوم». الداخل ماضٍ والخارج مستقبل.</p></header>
+    <header class="ob-rh"><h2>${icon('leaf')} المسار الزمني للشراكات</h2></header>
     <svg viewBox="-70 -6 ${C * 2 + 140} ${C * 2 + 12}" class="ob-svg" data-t0="${T0}" data-t1="${T1}" data-r0="${R0}" data-r1="${R1}" data-c="${C}" role="img" aria-label="حلقات المحفظة: ${items.length} شراكة من ${y0} إلى ${y1}">
       <defs><radialGradient id="obGlow"><stop offset="0" stop-color="var(--ob-glow)" stop-opacity=".55"/><stop offset="1" stop-color="var(--ob-glow)" stop-opacity="0"/></radialGradient></defs>
       <circle cx="${C}" cy="${C}" r="${R1 + 8}" class="ob-disc"/>
