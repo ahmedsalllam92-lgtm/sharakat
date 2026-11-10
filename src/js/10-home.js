@@ -42,7 +42,7 @@ function renderHome(el) {
     switch (s.id) {
       case 'hero': return homeHero();
       case 'kpis': return homeKpis(prev && prev.id === 'hero');
-      case 'golden': return goldSectionHTML(false);
+      case 'golden': return goldSectionHTML(false) + homeInsightsHTML(false);
       case 'featured': return homeFeatured();
       case 'gallery': return homeGallery();
       case 'stories': return homeStories();
@@ -58,7 +58,7 @@ function renderHome(el) {
   hydrateFiles(el);
   initHeroFX($('[data-hfx]', el), [[14, 34], [30, 58], [8, 62], [40, 30]]);
   initHeroRot(el);
-  bindHome(el);
+  bindHome(el); bindHomeInsights(el); bindTips(el);
 }
 
 function homeHero() {

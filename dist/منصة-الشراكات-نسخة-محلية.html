@@ -7392,6 +7392,30 @@ code.pw-user{font-size:12.5px;background:var(--paper-2);padding:2px 8px;border-r
 .orb-n small{top:2cqw;width:10.4cqw;left:-5.2cqw}.orb-n.up small{bottom:2cqw}
 .orb-sec{transform:translate(var(--tx),var(--ty,-50%))}
 .orb-legend{position:absolute;top:14px;right:16px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;z-index:4}.orb-legend .orb-sec{position:static;transform:none}
+
+/* متابعة الإدارة في الرئيسية */
+.h-ins{margin-top:8px}
+.h-ins-h{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px}
+.h-ins-h h2{margin:0;font-size:22px}.h-ins-h p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.h-ins.bo{max-width:1280px;margin:28px auto 0;padding:0 24px}
+@media print{.h-ins{break-inside:avoid}}
+/* لوحة المؤشرات تُطبع في ورقتين: (1) الرأس والملخص والمسار (2) خريطة الشركاء */
+@media print{
+  .ob-hero{zoom:.72}
+  .ob-metro{break-before:auto!important;zoom:.7}
+  .ob-mosaic{break-before:page!important;break-inside:avoid;box-shadow:none}
+  .ob-mosaic .ob-sh{margin-bottom:4px}
+  .orb{width:auto!important;height:150mm;margin:0 auto;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .orb *{animation:none!important;opacity:1!important;stroke-dashoffset:0!important}
+  .ob-mz3.v-list .mz3{zoom:.62}
+}
+@media print{
+  .ob-head{margin-bottom:0}.ob{gap:6px}
+  .ob-hero{zoom:.6!important}
+  .ob-metro{break-before:avoid!important;page-break-before:avoid!important;zoom:.6!important}
+}
+@media print{.ob-hero{zoom:.5!important;break-inside:auto!important}.ob-metro{zoom:.52!important}.ob-printf{margin:0}}
+@media print{.ob-mzv{display:none!important}}
 </style>
 </head>
 <body>
@@ -16918,7 +16942,7 @@ function renderHome(el) {
     switch (s.id) {
       case 'hero': return homeHero();
       case 'kpis': return homeKpis(prev && prev.id === 'hero');
-      case 'golden': return goldSectionHTML(false);
+      case 'golden': return goldSectionHTML(false) + homeInsightsHTML(false);
       case 'featured': return homeFeatured();
       case 'gallery': return homeGallery();
       case 'stories': return homeStories();
@@ -16934,7 +16958,7 @@ function renderHome(el) {
   hydrateFiles(el);
   initHeroFX($('[data-hfx]', el), [[14, 34], [30, 58], [8, 62], [40, 30]]);
   initHeroRot(el);
-  bindHome(el);
+  bindHome(el); bindHomeInsights(el); bindTips(el);
 }
 
 function homeHero() {
@@ -18545,11 +18569,18 @@ function obBody(list, all, animate) {
       ${obPulse(m, V, P)}
     </section>
     ${obMetro(P)}
-    <div class="ob-row ob-row2">
-      ${obCompass(V)}
-      ${obFoot(m)}
-    </div>
     ${obMosaic(m.nd)}`;
+}
+
+/* — متابعة الإدارة في الرئيسية: بوصلة القيمة + القرارات واكتمال البيانات والفريق (نُقلت من لوحة المؤشرات) — */
+function homeInsightsHTML(board) {
+  if (!can('view.internal')) return '';
+  const m = dashMetrics(visiblePartnerships()); if (!m.nd.length) return '';
+  return `<section class="hsec h-ins ${board ? 'bo' : ''}" aria-label="متابعة الإدارة"><div class="h-ins-h"><div><h2>متابعة الإدارة</h2><p>قيمة الشراكات المقيّمة، وما يحتاج قرارًا، واكتمال البيانات، وتوزيع المتابعة على الفريق.</p></div><a class="btn sm" href="#/dashboard">${icon('chart')} لوحة المؤشرات</a></div>
+    <div class="ob h-ob"><div class="ob-row ob-row2">${obCompass(valueData(m.nd))}${obFoot(m)}</div></div></section>`;
+}
+function bindHomeInsights(el) {
+  el.addEventListener('click', (e) => { const cf = e.target.closest('.h-ins [data-cf]'); if (!cf) return; e.preventDefault(); const [d, k] = cf.dataset.cf.split('|'); for (const x of Object.keys(App.dashF)) delete App.dashF[x]; App.dashF[d] = [k]; go('#/dashboard'); });
 }
 
 /* — حلقات السنوات — */
@@ -24367,7 +24398,7 @@ function renderHomeBoard(el) {
       <ol class="bo-steps">${steps.map((s, i) => `<li style="--i:${i}"><a href="${s.h}"><span class="bo-step-n"><i>${BO_AR(i + 1)}</i></span><b class="cu" data-v="${s.n}">${s.n}</b><strong>${s.t}</strong><small>${s.d}</small></a></li>`).join('')}</ol>
     </section>
 
-    ${(D.settings.home.sections.find((x) => x.id === 'golden') || { on: true }).on ? goldSectionHTML(true) : ''}
+    ${(D.settings.home.sections.find((x) => x.id === 'golden') || { on: true }).on ? goldSectionHTML(true) : ''}${homeInsightsHTML(true)}
     ${feat.length ? `<section class="bo-feat bo-rv" data-tour="home-partnerships">
       <header class="bo-sh"><span class="bo-num">03</span><div><h2>شراكات مختارة</h2><p>نماذج من الشراكات السارية ومخرجاتها</p></div>${pshowBtn('featured')}<a class="bo-more-l" href="#/partnerships">كل الشراكات ${icon('arrowL')}</a></header>
       <div class="bo-cards">${feat.map((p, i) => boPCard(p).replace('<a class="bo-pc"', `<a class="bo-pc" style="--i:${i}"`)).join('')}</div></section>` : ''}

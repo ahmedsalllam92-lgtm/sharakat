@@ -113,11 +113,18 @@ function obBody(list, all, animate) {
       ${obPulse(m, V, P)}
     </section>
     ${obMetro(P)}
-    <div class="ob-row ob-row2">
-      ${obCompass(V)}
-      ${obFoot(m)}
-    </div>
     ${obMosaic(m.nd)}`;
+}
+
+/* — متابعة الإدارة في الرئيسية: بوصلة القيمة + القرارات واكتمال البيانات والفريق (نُقلت من لوحة المؤشرات) — */
+function homeInsightsHTML(board) {
+  if (!can('view.internal')) return '';
+  const m = dashMetrics(visiblePartnerships()); if (!m.nd.length) return '';
+  return `<section class="hsec h-ins ${board ? 'bo' : ''}" aria-label="متابعة الإدارة"><div class="h-ins-h"><div><h2>متابعة الإدارة</h2><p>قيمة الشراكات المقيّمة، وما يحتاج قرارًا، واكتمال البيانات، وتوزيع المتابعة على الفريق.</p></div><a class="btn sm" href="#/dashboard">${icon('chart')} لوحة المؤشرات</a></div>
+    <div class="ob h-ob"><div class="ob-row ob-row2">${obCompass(valueData(m.nd))}${obFoot(m)}</div></div></section>`;
+}
+function bindHomeInsights(el) {
+  el.addEventListener('click', (e) => { const cf = e.target.closest('.h-ins [data-cf]'); if (!cf) return; e.preventDefault(); const [d, k] = cf.dataset.cf.split('|'); for (const x of Object.keys(App.dashF)) delete App.dashF[x]; App.dashF[d] = [k]; go('#/dashboard'); });
 }
 
 /* — حلقات السنوات — */

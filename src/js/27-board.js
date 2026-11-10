@@ -142,7 +142,7 @@ function renderHomeBoard(el) {
       <ol class="bo-steps">${steps.map((s, i) => `<li style="--i:${i}"><a href="${s.h}"><span class="bo-step-n"><i>${BO_AR(i + 1)}</i></span><b class="cu" data-v="${s.n}">${s.n}</b><strong>${s.t}</strong><small>${s.d}</small></a></li>`).join('')}</ol>
     </section>
 
-    ${(D.settings.home.sections.find((x) => x.id === 'golden') || { on: true }).on ? goldSectionHTML(true) : ''}
+    ${(D.settings.home.sections.find((x) => x.id === 'golden') || { on: true }).on ? goldSectionHTML(true) : ''}${homeInsightsHTML(true)}
     ${feat.length ? `<section class="bo-feat bo-rv" data-tour="home-partnerships">
       <header class="bo-sh"><span class="bo-num">03</span><div><h2>شراكات مختارة</h2><p>نماذج من الشراكات السارية ومخرجاتها</p></div>${pshowBtn('featured')}<a class="bo-more-l" href="#/partnerships">كل الشراكات ${icon('arrowL')}</a></header>
       <div class="bo-cards">${feat.map((p, i) => boPCard(p).replace('<a class="bo-pc"', `<a class="bo-pc" style="--i:${i}"`)).join('')}</div></section>` : ''}

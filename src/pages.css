@@ -3928,3 +3928,27 @@ code.pw-user{font-size:12.5px;background:var(--paper-2);padding:2px 8px;border-r
 .orb-n small{top:2cqw;width:10.4cqw;left:-5.2cqw}.orb-n.up small{bottom:2cqw}
 .orb-sec{transform:translate(var(--tx),var(--ty,-50%))}
 .orb-legend{position:absolute;top:14px;right:16px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;z-index:4}.orb-legend .orb-sec{position:static;transform:none}
+
+/* متابعة الإدارة في الرئيسية */
+.h-ins{margin-top:8px}
+.h-ins-h{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px}
+.h-ins-h h2{margin:0;font-size:22px}.h-ins-h p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.h-ins.bo{max-width:1280px;margin:28px auto 0;padding:0 24px}
+@media print{.h-ins{break-inside:avoid}}
+/* لوحة المؤشرات تُطبع في ورقتين: (1) الرأس والملخص والمسار (2) خريطة الشركاء */
+@media print{
+  .ob-hero{zoom:.72}
+  .ob-metro{break-before:auto!important;zoom:.7}
+  .ob-mosaic{break-before:page!important;break-inside:avoid;box-shadow:none}
+  .ob-mosaic .ob-sh{margin-bottom:4px}
+  .orb{width:auto!important;height:150mm;margin:0 auto;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .orb *{animation:none!important;opacity:1!important;stroke-dashoffset:0!important}
+  .ob-mz3.v-list .mz3{zoom:.62}
+}
+@media print{
+  .ob-head{margin-bottom:0}.ob{gap:6px}
+  .ob-hero{zoom:.6!important}
+  .ob-metro{break-before:avoid!important;page-break-before:avoid!important;zoom:.6!important}
+}
+@media print{.ob-hero{zoom:.5!important;break-inside:auto!important}.ob-metro{zoom:.52!important}.ob-printf{margin:0}}
+@media print{.ob-mzv{display:none!important}}
