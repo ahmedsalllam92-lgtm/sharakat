@@ -378,6 +378,8 @@ function migrate() {
   /* إصلاح: سجلات ملف الحصر التي طُبّقت على نسخة الجهاز قبل الاتصال بالخادم ولم تُرفع — تُضاف الناقصة فقط، بعد سحب بيانات الخادم */
   if (!s.wfAutoForms1 && (!Cloud.on || Cloud.ready)) { D.partnerships.forEach((p) => wfEnsureForms('partnership', p)); D.proposals.forEach((x) => wfEnsureForms('proposal', x)); s.wfAutoForms1 = true; changed = true; Store.putMany('proposals', D.proposals); }
   if (!s.realFix1 && (!Cloud.on || Cloud.ready)) { const n = applyRealV2({ onlyMissing: true }); s.realFix1 = true; changed = true; if (n && Cloud.on) setTimeout(() => toast(`استُكملت ${n} شراكة من ملف الحصر على المنصة المشتركة`), 1500); } // صور الشراكات الفعلية المضافة لاحقًا (المهيدب)
+  /* شعارات الجهات: تُطبق بعد سحب بيانات الخادم، ويُعاد التطبيق كلما أُضيفت شعارات جديدة */
+  { const pv = Object.keys(typeof PARTNER_LOGOS !== 'undefined' ? PARTNER_LOGOS : {}).length; if (pv && (s.plogosV || 0) < pv && (!Cloud.on || Cloud.ready)) { const n = applyPartnerLogos(); s.plogosV = pv; changed = true; if (n) Store.putMany('partners', D.partners); } }
   if (s.schema < 5) {
     if (!s.org.platform || s.org.platform === 'منصة الشراكات') s.org.platform = 'منظومة الشراكات';
     if (!s.alertDays) s.alertDays = 30;

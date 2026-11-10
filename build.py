@@ -56,11 +56,21 @@ for key, title in ASSETS:
     for ext, mime in (('.jpg', 'image/jpeg'), ('.png', 'image/png')):
         pth = os.path.join(ROOT, 'assets/photos', key + ext)
         if os.path.exists(pth): assets[key] = {'title': title, 'src': f'data:{mime};base64,' + base64.b64encode(open(pth, 'rb').read()).decode()}; break
+# شعارات الجهات الشريكة (assets/logos/map.json: اسم الجهة ← الملف) تُطبق على الجهات بلا شعار
+plogos = {}
+_lm = os.path.join(ROOT, 'assets/logos/map.json')
+if os.path.exists(_lm):
+    for _i, (_nm, _f) in enumerate(_json.load(open(_lm, encoding='utf-8')).items()):
+        _p = os.path.join(ROOT, 'assets/logos', _f)
+        if os.path.exists(_p):
+            _k = 'plogo-' + os.path.splitext(_f)[0]
+            assets[_k] = {'title': 'شعار ' + _nm, 'src': 'data:image/png;base64,' + base64.b64encode(open(_p, 'rb').read()).decode()}
+            plogos[_nm] = _k
 _ic = lambda n: 'data:image/png;base64,' + base64.b64encode(open(os.path.join(ROOT, 'assets/icons', n), 'rb').read()).decode()
 icon_links = (f'<link rel="icon" type="image/png" sizes="32x32" href="{_ic("icon-32.png")}">'
               f'<link rel="icon" type="image/png" sizes="192x192" href="{_ic("icon-192.png")}">'
               f'<link rel="apple-touch-icon" sizes="180x180" href="{_ic("icon-180.png")}">')
-lib_js = 'const IMG_LIB = ' + _json.dumps(lib, ensure_ascii=False) + ';\nconst ASSET_IMG = ' + _json.dumps(assets, ensure_ascii=False) + ';\n'
+lib_js = 'const IMG_LIB = ' + _json.dumps(lib, ensure_ascii=False) + ';\nconst ASSET_IMG = ' + _json.dumps(assets, ensure_ascii=False) + ';\nconst PARTNER_LOGOS = ' + _json.dumps(plogos, ensure_ascii=False) + ';\n'
 js_files = [os.path.join(ROOT, 'src/seed_real.js')] + ([os.path.join(ROOT, 'src/seed_real2.js')] if os.path.exists(os.path.join(ROOT, 'src/seed_real2.js')) else []) + sorted(glob.glob(os.path.join(ROOT, 'src/js/*.js')))
 js = lib_js + '\n'.join(f'/* —— {os.path.basename(f)} —— */\n' + open(f, encoding='utf-8').read() for f in js_files)
 js = js.replace('</script', '<\\/script')

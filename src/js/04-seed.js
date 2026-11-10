@@ -114,6 +114,12 @@ function applyRealV2({ onlyMissing = false } = {}) {
 }
 /* شعارات الجهات الفعلية المرفقة من الإدارة (تُطبق إن لم يكن للجهة شعار) */
 const REAL_LOGOS = { 'مؤسسة عبدالقادر المهيدب الخيرية': 'amsf-logo' };
+/* شعارات الجهات الرسمية المضافة مع المنصة (حسب اسم الجهة)؛ لا تستبدل شعارًا موجودًا */
+function applyPartnerLogos() {
+  let n = 0; const P = typeof PARTNER_LOGOS !== 'undefined' ? PARTNER_LOGOS : {};
+  for (const [name, key] of Object.entries(P)) { if (!ASSET_IMG[key]) continue; D.partners.filter((pr) => pr.name === name && !pr.logoFileId).forEach((pr) => { pr.logoFileId = 'asset:' + key; n++; }); }
+  return n;
+}
 function applyRealPhotos() {
   for (const [title, key] of Object.entries(REAL_LOGOS)) {
     if (!ASSET_IMG[key]) continue;
