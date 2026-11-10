@@ -74,6 +74,7 @@ function renderObservatory(el) {
   const cross = (dim, k) => { const s = new Set(App.dashF[dim] || []); s.has(k) ? s.delete(k) : s.add(k); if (s.size) App.dashF[dim] = [...s]; else delete App.dashF[dim]; fb.render(); draw(false); };
   draw(true);
   el.onclick = (e) => {
+    const mv = e.target.closest('[data-mzv]'); if (mv) { try { localStorage.setItem('shk_mzv', mv.dataset.mzv); } catch (_) {} const sec = mv.closest('#obMap'); sec.classList.remove('v-orbit', 'v-list'); sec.classList.add('v-' + mv.dataset.mzv); sec.querySelectorAll('[data-mzv]').forEach((b) => b.classList.toggle('on', b === mv)); return; }
     const cf = e.target.closest('[data-cf]'); if (cf) { e.preventDefault(); const [d, k] = cf.dataset.cf.split('|'); return cross(d, k); }
     const cx = e.target.closest('[data-chipx]'); if (cx) { const [d, k] = cx.dataset.chipx.split('|'); return cross(d, k); }
     if (e.target.closest('[data-undo]')) { const prev = App.dashHist.pop(); if (prev == null) return; for (const k of Object.keys(App.dashF)) delete App.dashF[k]; Object.assign(App.dashF, JSON.parse(prev)); App.dashLast = prev; fb.render(); return draw(false); }
@@ -294,9 +295,11 @@ function obMosaic(nd) {
   const stl = ST.filter((k) => nd.some((p) => pStatus(p) === k));
   const max = Math.max(1, ...order.map((s) => g[s].length));
   const strat = nd.filter((p) => p.ptype && p.ptype.includes('استراتيجي')).length;
-  return `<section class="ob-card ob-mosaic ob-mz3" id="obMap" data-tour="dash-status">
+  return `<section class="ob-card ob-mosaic ob-mz3 v-${obMzView()}" id="obMap" data-tour="dash-status">
     <header class="ob-sh"><div><h2>${icon('grid')} خريطة الشركاء</h2><p>${nd.length} شراكة في ${order.length} ${order.length === 1 ? 'قطاع' : 'قطاعات'}${strat ? ` · ${strat} شريك استراتيجي ${icon('star')}` : ''}. اضغط القطاع لتصفية اللوحة.</p></div>
+      <div class="ob-mzv" role="group" aria-label="طريقة العرض"><button type="button" data-mzv="orbit" class="${obMzView() === 'orbit' ? 'on' : ''}">${icon('globe')} كوكبة</button><button type="button" data-mzv="list" class="${obMzView() === 'list' ? 'on' : ''}">${icon('list')} قائمة</button></div>
       <div class="ob-mzl">${stl.map((k) => `<span><i style="background:${ST_VAR(k)}"></i>${esc(statusLabel(k))} <b>${nd.filter((p) => pStatus(p) === k).length}</b></span>`).join('')}</div></header>
+    ${obOrbit(order, g)}
     <div class="mz3">${order.map((s) => {
       const ps = g[s].sort((a, b) => rank(a) - rank(b) || partnerName(a).localeCompare(partnerName(b), 'ar'));
       const cnt = ST.map((k) => [k, ps.filter((p) => pStatus(p) === k).length]).filter(([, n]) => n);
@@ -309,6 +312,49 @@ function obMosaic(nd) {
       <ul class="mz3-l">${ps.map((p) => { const pr = partnerById(p.partnerId) || {}; const st = pStatus(p); return `<li><a class="mz3-p" href="#/partnerships/${p.id}" style="--c:${ST_VAR(st)}" ${tipAttr(`<b>${esc(partnerName(p))}</b><br>${esc(statusLabel(st))}${pr.domain ? ' · ' + esc(pr.domain) : ''}${p.ptype ? '<br>' + esc(p.ptype) : ''}`)}><span class="mg ${pr.logoFileId ? 'has-lg' : ''}">${logoOrMono(pr, partnerName(p))}</span><span class="nm">${esc(partnerName(p))}</span>${p.ptype && p.ptype.includes('استراتيجي') ? `<i class="star" title="شريك استراتيجي">${icon('star')}</i>` : ''}</a></li>`; }).join('')}</ul>
     </div>`; }).join('')}</div>
   </section>`;
+}
+
+/* — كوكبة الشركاء: مروج في المركز، ولكل قطاع شريحة من الدائرة، وشراكاته موزعة على ثلاث حلقات بالتناوب حتى لا تتزاحم الأسماء — */
+function obMzView() { try { return localStorage.getItem('shk_mzv') || 'orbit'; } catch (_) { return 'orbit'; } }
+function obOrbit(order, g) {
+  const W = 1200, H = 900, cx = W / 2, cy = H / 2, N = order.reduce((t, s) => t + g[s].length, 0) || 1;
+  const rings = [[165, 112], [285, 195], [400, 272], [505, 345]], PAT = [3, 1, 2, 3, 0, 2, 3, 1, 2, 3];
+  const cols = ['#2E8B6E', '#B8913F', '#5B8DB8', '#8E6BB0', '#C46B5A', '#6F9A4A', '#4FA3A0'];
+  let a0 = -Math.PI / 2, nodes = '', rays = '', wedges = '', labels = '', k = 0;
+  const gap = order.length > 1 ? 0.05 : 0;
+  order.forEach((sec, si) => {
+    const ps = g[sec], span = ps.length / N * Math.PI * 2, col = cols[si % cols.length];
+    const a1 = a0 + gap / 2, a2 = a0 + span - gap / 2;
+    /* قوس القطاع على الحافة واسمه */
+    const [ox, oy] = [rings[3][0] + 52, rings[3][1] + 44], P = (a, rx, ry) => [cx + Math.cos(a) * rx, cy + Math.sin(a) * ry];
+    const [x1, y1] = P(a1, ox, oy), [x2, y2] = P(a2, ox, oy);
+    wedges += `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} A${ox} ${oy} 0 ${a2 - a1 > Math.PI ? 1 : 0} 1 ${x2.toFixed(1)} ${y2.toFixed(1)}" class="wg" stroke="${col}" pathLength="1" style="--k:${si}"/>`;
+    const am = (a1 + a2) / 2, sideX = Math.cos(am); let [lx, ly] = P(am, ox, oy); lx = Math.max(14, Math.min(W - 14, lx)); ly = Math.max(22, Math.min(H - 22, ly));
+    labels += `<button type="button" class="orb-sec ${(App.dashF.sector || []).includes(sec) ? 'on' : ''}" data-cf="sector|${esc(sec)}" style="--c:${col}" title="تصفية اللوحة على القطاع ${esc(sec)}"><i></i>${esc(sec)}<b>${ps.length}</b></button>`;
+    /* توزيع متساوٍ بطول القوس داخل كل حلقة حتى لا تتزاحم الجهات على جانبي الشكل */
+    const byRing = [[], [], [], []]; ps.forEach((p) => { byRing[PAT[k % PAT.length]].push([p, k]); k++; });
+    const pos = [];
+    byRing.forEach((list, ri) => {
+      if (!list.length) return; const [rx, ry] = rings[ri], M = 160, cum = [0];
+      for (let m = 1; m <= M; m++) { const t0 = a1 + (a2 - a1) * (m - 1) / M, t1 = a1 + (a2 - a1) * m / M; cum.push(cum[m - 1] + Math.hypot(Math.cos(t1) * rx - Math.cos(t0) * rx, Math.sin(t1) * ry - Math.sin(t0) * ry)); }
+      list.forEach(([p, kk], i) => { const L = (i + 0.5) / list.length * cum[M]; let m = 1; while (m < M && cum[m] < L) m++; const f = (m - 1 + (L - cum[m - 1]) / ((cum[m] - cum[m - 1]) || 1)) / M; pos.push([p, kk, a1 + (a2 - a1) * f, rings[ri]]); });
+    });
+    pos.sort((x, y) => x[1] - y[1]).forEach(([p, kk, a, r]) => {
+      const [x, y] = P(a, r[0], r[1]);
+      const pr = partnerById(p.partnerId) || {}, st = pStatus(p), strat = p.ptype && p.ptype.includes('استراتيجي');
+      rays += `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${col}" style="--i:${kk}" pathLength="1"/>`;
+      nodes += `<a class="orb-n ${y < cy - 40 ? 'up' : ''}" href="#/partnerships/${p.id}" style="left:${(x / W * 100).toFixed(2)}%;top:${(y / H * 100).toFixed(2)}%;--c:${ST_VAR(st)};--s:${col};--i:${kk}" ${tipAttr(`<b>${esc(partnerName(p))}</b><br>${esc(sec)} · ${esc(statusLabel(st))}${p.ptype ? '<br>' + esc(p.ptype) : ''}`)}><span class="mg ${pr.logoFileId ? 'has-lg' : ''}">${logoOrMono(pr, partnerName(p))}</span><small>${esc(partnerName(p))}</small>${strat ? `<i class="star">${icon('star')}</i>` : ''}</a>`;
+    });
+    a0 += span;
+  });
+  const logo = (ASSET_IMG['murooj-logo-white'] || {}).src;
+  return `<div class="orb" aria-label="كوكبة الشركاء">
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">
+      ${rings.map(([rx, ry], i) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" class="rg" style="--k:${i}"/>`).join('')}
+      <g class="rays">${rays}</g>${wedges}</svg>
+    <div class="orb-core">${logo ? `<img src="${logo}" alt="">` : ''}<b>${N}</b><small>شراكة</small></div>
+    ${nodes}<div class="orb-legend">${labels}</div>
+  </div>`;
 }
 
 /* — التذييل المدمج: القرارات واكتمال البيانات وفريق المتابعة في شريط واحد — */
