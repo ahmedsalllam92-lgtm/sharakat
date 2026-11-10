@@ -4139,3 +4139,6 @@ html.share-mode [data-palette]{display:none!important}
 .dossier .dsx-nodes{align-items:flex-start;margin:0 0 10px}
 .dossier .dsx-nodes i{position:relative;z-index:1;box-shadow:0 0 0 4px #145440;color:#0F4433!important}
 .dossier .dsx-nodes i svg{width:15px;height:15px;stroke:#0F4433}
+.cb-pop.up{top:auto;bottom:calc(100% + 4px)}
+.cb-pop .cb-add{position:sticky;bottom:-5px;background:var(--paper)}
+.cb-row{display:flex;gap:8px;align-items:stretch}.cb-row .cb{flex:1;min-width:0}.cb-row .cb-plus{flex:none;width:46px;padding:0;justify-content:center}

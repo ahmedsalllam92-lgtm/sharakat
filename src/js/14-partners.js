@@ -50,10 +50,12 @@ function renderPartners(el, r) {
     const row = e.target.closest('[data-prow]'); if (row && !e.target.closest('a,button')) go('#/partners/' + row.dataset.prow);
   };
 }
-function partnerDialog(pr) {
+/* إضافة جهة من داخل نموذج الشراكة: تُحفظ في سجل الجهات فورًا وتظهر في القوائم بعد ذلك */
+async function quickAddPartner(name) { const pr = await partnerDialog(null, name || ''); return pr && pr.id ? pr : null; }
+function partnerDialog(pr, preName = '') {
   return new Promise((res) => {
     const isNew = !pr;
-    const v = pr ? clone(pr) : { name: '', sector: '', aliases: [], website: '', notes: '', logoFileId: null };
+    const v = pr ? clone(pr) : { name: preName || '', sector: '', aliases: [], website: '', notes: '', logoFileId: null };
     const m = Modal.open({
       title: isNew ? 'جهة جديدة' : 'تعديل الجهة', size: 'lg',
       body: `<div class="grid2">

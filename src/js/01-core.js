@@ -194,6 +194,15 @@ function confirmDlg(msg, { title = 'تأكيد', ok = 'تأكيد', danger = fal
     m.el.querySelector('[data-ok]').onclick = () => m.close(true);
   });
 }
+/* حوار بخيارات متعددة: يعيد مفتاح الخيار أو null عند الإلغاء */
+function choiceDlg(msg, choices, { title = 'تأكيد' } = {}) {
+  return new Promise((res) => {
+    const m = Modal.open({ title, body: `<p style="line-height:1.9">${msg}</p>`,
+      foot: `${choices.map(([k, l, cls], i) => `<button class="btn ${cls || (i ? '' : 'primary')}" data-choice="${esc(k)}">${esc(l)}</button>`).join('')}<button class="btn ghost" data-mclose>إلغاء</button>`,
+      onClose: (v) => res(v || null) });
+    m.el.querySelectorAll('[data-choice]').forEach((b) => { b.onclick = () => m.close(b.dataset.choice); });
+  });
+}
 function inputDlg({ title, label, hint = '', ok = 'حفظ', required = true, value = '', multiline = true, extra = '' }) {
   return new Promise((res) => {
     const m = Modal.open({
@@ -405,7 +414,7 @@ function bindCombos(root, onChange) {
       else { vals = v ? [v] : []; close(); }
       emit();
     };
-    const draw = () => {
+    let draw = () => {
       const q = multi || cb.classList.contains('typing') ? input.value.trim() : '';
       const list = opts.filter((o) => matchQ(optLabel(o) + ' ' + optSub(o), q));
       if (!pop) { pop = document.createElement('div'); pop.className = 'cb-pop'; cb.appendChild(pop); cb.classList.add('open'); }
@@ -415,6 +424,9 @@ function bindCombos(root, onChange) {
         + (allowAdd && q && !exact ? `<div class="cb-add"><div class="cb-opt" data-addv="${esc(q)}">${icon('plus')}&nbsp;${esc(cb.dataset.addlabel)} «${esc(q)}»</div></div>` : '')
         + (allowAdd && !q ? `<div class="cb-add"><div class="cb-opt cb-new" data-addnew>${icon('plus')}&nbsp;${esc(cb.dataset.addlabel)}…</div></div>` : ''); // إضافة ظاهرة دائمًا، لا تحتاج البدء بالكتابة
     };
+    /* القائمة لا تخرج عن الشاشة: تُفتح للأعلى إن ضاق المكان أسفلها، وارتفاعها بقدر المساحة المتاحة */
+    const fit = () => { if (!pop) return; const r = cb.getBoundingClientRect(), below = innerHeight - r.bottom - 12, above = r.top - 70, up = below < 240 && above > below; pop.classList.toggle('up', up); pop.style.maxHeight = Math.max(140, Math.min(320, up ? above : below)) + 'px'; };
+    const _draw = draw; draw = (...a) => { _draw(...a); fit(); };
     box.addEventListener('mousedown', (e) => {
       const rm = e.target.closest('.cb-tag button');
       if (rm) { e.preventDefault(); vals = vals.filter((x) => x !== rm.parentElement.dataset.v); renderTags(); emit(); return; }

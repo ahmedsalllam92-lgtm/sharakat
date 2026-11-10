@@ -7637,6 +7637,9 @@ html.share-mode [data-palette]{display:none!important}
 .dossier .dsx-nodes{align-items:flex-start;margin:0 0 10px}
 .dossier .dsx-nodes i{position:relative;z-index:1;box-shadow:0 0 0 4px #145440;color:#0F4433!important}
 .dossier .dsx-nodes i svg{width:15px;height:15px;stroke:#0F4433}
+.cb-pop.up{top:auto;bottom:calc(100% + 4px)}
+.cb-pop .cb-add{position:sticky;bottom:-5px;background:var(--paper)}
+.cb-row{display:flex;gap:8px;align-items:stretch}.cb-row .cb{flex:1;min-width:0}.cb-row .cb-plus{flex:none;width:46px;padding:0;justify-content:center}
 </style>
 </head>
 <body>
@@ -15027,6 +15030,15 @@ function confirmDlg(msg, { title = 'تأكيد', ok = 'تأكيد', danger = fal
     m.el.querySelector('[data-ok]').onclick = () => m.close(true);
   });
 }
+/* حوار بخيارات متعددة: يعيد مفتاح الخيار أو null عند الإلغاء */
+function choiceDlg(msg, choices, { title = 'تأكيد' } = {}) {
+  return new Promise((res) => {
+    const m = Modal.open({ title, body: `<p style="line-height:1.9">${msg}</p>`,
+      foot: `${choices.map(([k, l, cls], i) => `<button class="btn ${cls || (i ? '' : 'primary')}" data-choice="${esc(k)}">${esc(l)}</button>`).join('')}<button class="btn ghost" data-mclose>إلغاء</button>`,
+      onClose: (v) => res(v || null) });
+    m.el.querySelectorAll('[data-choice]').forEach((b) => { b.onclick = () => m.close(b.dataset.choice); });
+  });
+}
 function inputDlg({ title, label, hint = '', ok = 'حفظ', required = true, value = '', multiline = true, extra = '' }) {
   return new Promise((res) => {
     const m = Modal.open({
@@ -15238,7 +15250,7 @@ function bindCombos(root, onChange) {
       else { vals = v ? [v] : []; close(); }
       emit();
     };
-    const draw = () => {
+    let draw = () => {
       const q = multi || cb.classList.contains('typing') ? input.value.trim() : '';
       const list = opts.filter((o) => matchQ(optLabel(o) + ' ' + optSub(o), q));
       if (!pop) { pop = document.createElement('div'); pop.className = 'cb-pop'; cb.appendChild(pop); cb.classList.add('open'); }
@@ -15248,6 +15260,9 @@ function bindCombos(root, onChange) {
         + (allowAdd && q && !exact ? `<div class="cb-add"><div class="cb-opt" data-addv="${esc(q)}">${icon('plus')}&nbsp;${esc(cb.dataset.addlabel)} «${esc(q)}»</div></div>` : '')
         + (allowAdd && !q ? `<div class="cb-add"><div class="cb-opt cb-new" data-addnew>${icon('plus')}&nbsp;${esc(cb.dataset.addlabel)}…</div></div>` : ''); // إضافة ظاهرة دائمًا، لا تحتاج البدء بالكتابة
     };
+    /* القائمة لا تخرج عن الشاشة: تُفتح للأعلى إن ضاق المكان أسفلها، وارتفاعها بقدر المساحة المتاحة */
+    const fit = () => { if (!pop) return; const r = cb.getBoundingClientRect(), below = innerHeight - r.bottom - 12, above = r.top - 70, up = below < 240 && above > below; pop.classList.toggle('up', up); pop.style.maxHeight = Math.max(140, Math.min(320, up ? above : below)) + 'px'; };
+    const _draw = draw; draw = (...a) => { _draw(...a); fit(); };
     box.addEventListener('mousedown', (e) => {
       const rm = e.target.closest('.cb-tag button');
       if (rm) { e.preventDefault(); vals = vals.filter((x) => x !== rm.parentElement.dataset.v); renderTags(); emit(); return; }
@@ -19851,6 +19866,13 @@ async function viewStored(fileId) {
 }
 async function uploadToPartnership(p, cat, files) {
   const added = [];
+  /* ملف بنفس الاسم في التصنيف نفسه: إضافة بجانبه أو استبداله */
+  const same = files.map((f) => (p.attachments || []).filter((a) => a.category === cat && normAr(a.name) === normAr(f.name))).flat();
+  if (same.length) {
+    const ch = await choiceDlg(`يوجد في «${esc(cat)}» ${same.length === 1 ? 'ملف بالاسم نفسه' : 'ملفات بالأسماء نفسها'}: <b>${[...new Set(same.map((a) => esc(a.name)))].join('، ')}</b>.<br>هل تريد إضافة الملف الجديد بجانبه، أم استبدال الموجود؟`, [['add', 'إضافة بجانبه'], ['replace', 'استبدال', 'danger']], { title: 'ملف موجود' });
+    if (!ch) return false;
+    if (ch === 'replace') { const ids = new Set(same.map((a) => a.id)); p.attachments = p.attachments.filter((a) => !ids.has(a.id)); }
+  }
   for (const f of files) {
     if (cat === 'صور الشراكة' && !/^image\//.test(f.type)) { toast(`«${f.name}» ليس صورة؛ تصنيف «صور الشراكة» يقبل الصور فقط.`, 'err'); continue; }
     try { const rec = await saveUpload(f); added.push({ id: uid('att'), fileId: rec.id, name: rec.name, type: rec.type, size: rec.size, category: cat, addedAt: nowISO(), by: Session.userName() }); }
@@ -19922,7 +19944,7 @@ function renderPartnershipForm(el, r) {
       const sim = s.partnerId === '__new__' ? findSimilarPartners(fs.newPartner.name) : [];
       const otherCount = s.partnerId && s.partnerId !== '__new__' ? D.partnerships.filter((x) => x.partnerId === s.partnerId && x.id !== s.id).length : 0;
       body = `<div class="grid2">
-        ${field('partnerId', 'الجهة الشريكة', comboHTML('partnerId', { options: [...partnerOpts(), ...(fs.newPartner ? [{ value: '__new__', label: fs.newPartner.name, sub: 'جهة جديدة — تُنشأ عند الحفظ' }] : [])], value: s.partnerId, allowAdd: true, addLabel: 'إضافة جهة جديدة' }), { hint: 'ابحث في سجل الجهات لتجنب تكرار الجهة بأسماء مختلفة.', full: true })}
+        ${field('partnerId', 'الجهة الشريكة', `<div class="cb-row">${comboHTML('partnerId', { options: [...partnerOpts(), ...(fs.newPartner ? [{ value: '__new__', label: fs.newPartner.name, sub: 'جهة جديدة — تُنشأ عند الحفظ' }] : [])], value: s.partnerId, allowAdd: true, addLabel: 'إضافة جهة جديدة' })}${can('manage.partners') ? `<button type="button" class="btn cb-plus" data-newpartner title="إضافة جهة جديدة إلى سجل الجهات" aria-label="إضافة جهة جديدة">${icon('plus')}</button>` : ''}</div>`, { hint: 'ابحث في سجل الجهات لتجنب تكرار الجهة بأسماء مختلفة، أو أضف جهة جديدة بزر «+» فتُحفظ في سجل الجهات فورًا.', full: true })}
         ${sim.length ? `<div class="span2 dup-warn">${icon('alert')}<span>توجد جهات بأسماء مشابهة: ${sim.map((x) => `<button type="button" data-usep="${x.id}">${esc(x.name)}</button>`).join('، ')}. اختر إحداها إن كانت الجهة نفسها.</span></div>` : ''}
         ${field('title', 'اسم الشراكة', `<input class="in" id="f_title" data-k="title" value="${esc(s.title)}" placeholder="${esc(pName() || 'يُستخدم اسم الجهة إن تُرك فارغًا')}">`, { hint: 'في ملف الحصر يحمل هذا العمود اسم الجهة الشريكة؛ يمكن تمييز الشراكة باسم مختلف عند تعدد الشراكات مع الجهة نفسها.', full: true })}
         ${lst('sector', 'القطاع', 'sectors', fs.sector, { hint: otherCount ? `يُحفظ على مستوى الجهة، ويسري على ${plural(otherCount, 'شراكة أخرى', 'شراكتين أخريين', 'شراكات أخرى', 'شراكة أخرى')} لها.` : 'يُحفظ على مستوى الجهة.' })}
@@ -20083,11 +20105,17 @@ function renderPartnershipForm(el, r) {
     if (k === 'sector') { fs.sector = e.detail; markDirty(); drawNav(); return; }
     s[k] = e.detail; markDirty(); drawNav();
   });
+  el.addEventListener('click', async (e) => {
+    if (!e.target.closest('[data-newpartner]')) return;
+    const pr = await quickAddPartner(''); if (!pr) return;
+    s.partnerId = pr.id; fs.sector = pr.sector || ''; fs.logoFileId = pr.logoFileId || null; fs.newPartner = null; if (fs.errors.partnerId) delete fs.errors.partnerId; markDirty(); drawStep();
+  });
   el.addEventListener('cbadd', async (e) => {
     const k = e.target.dataset.cb;
     if (k === 'partnerId') {
       e.preventDefault();
       const name = e.detail.value.trim();
+      if (can('manage.partners')) { const pr = await quickAddPartner(name); if (pr) { s.partnerId = pr.id; fs.sector = pr.sector || ''; fs.logoFileId = pr.logoFileId || null; fs.newPartner = null; if (fs.errors.partnerId) delete fs.errors.partnerId; markDirty(); drawStep(); } return; }
       const sim = findSimilarPartners(name);
       if (sim.length && !(await confirmDlg(`توجد جهات بأسماء مشابهة لـ «${esc(name)}»:<br><b>${sim.map((x) => esc(x.name)).join('<br>')}</b><br><br>هل تريد إضافة جهة جديدة رغم ذلك؟ يمكنك بدلًا من ذلك اختيار الجهة الموجودة من القائمة.`, { title: 'جهة مشابهة موجودة', ok: 'إضافة جهة جديدة' }))) return;
       fs.newPartner = { name }; s.partnerId = '__new__'; fs.sector = ''; fs.logoFileId = null;
@@ -20567,10 +20595,12 @@ function renderPartners(el, r) {
     const row = e.target.closest('[data-prow]'); if (row && !e.target.closest('a,button')) go('#/partners/' + row.dataset.prow);
   };
 }
-function partnerDialog(pr) {
+/* إضافة جهة من داخل نموذج الشراكة: تُحفظ في سجل الجهات فورًا وتظهر في القوائم بعد ذلك */
+async function quickAddPartner(name) { const pr = await partnerDialog(null, name || ''); return pr && pr.id ? pr : null; }
+function partnerDialog(pr, preName = '') {
   return new Promise((res) => {
     const isNew = !pr;
-    const v = pr ? clone(pr) : { name: '', sector: '', aliases: [], website: '', notes: '', logoFileId: null };
+    const v = pr ? clone(pr) : { name: preName || '', sector: '', aliases: [], website: '', notes: '', logoFileId: null };
     const m = Modal.open({
       title: isNew ? 'جهة جديدة' : 'تعديل الجهة', size: 'lg',
       body: `<div class="grid2">
@@ -25994,6 +26024,16 @@ function wfStepDialog(kind, rec, sid, rerender) {
   });
   const box = m.el;
   const store = async (dk, files) => {
+    /* مستند موجود لنفس الخانة: إضافة بجانبه أو استبداله */
+    const dd = s.docs.find((d) => d.k === dk) || {};
+    const old = (rec.attachments || []).filter((a) => a.wf === sid && a.doc === dk);
+    if (old.length) {
+      const ch = await choiceDlg(`يوجد لمستند «${esc(dd.l || '')}» ${old.length === 1 ? 'ملف محفوظ' : 'ملفات محفوظة'}: <b>${old.map((a) => esc(a.name)).join('، ')}</b>.<br>هل تريد إضافة الملف الجديد بجانبه، أم استبداله؟`, [['add', 'إضافة بجانبه'], ['replace', 'استبدال', 'danger']], { title: 'ملف موجود' });
+      if (!ch) return;
+      if (ch === 'replace') { const ids = new Set(old.map((a) => a.id)); rec.attachments = rec.attachments.filter((a) => !ids.has(a.id)); }
+    } else if (dd.form && wfForm(kind, rec, dd.form)) {
+      if (!(await confirmDlg(`لمستند «${esc(dd.l || '')}» نموذج محفوظ في ملف الشراكة (${esc(FORMS[dd.form].title)}). سيُضاف الملف المرفوع بجانبه ويبقى النموذج محفوظًا.`, { title: 'يوجد نموذج لهذا المستند', ok: 'إضافة الملف' }))) return;
+    }
     for (const file of files) {
       try {
         const up = await saveUpload(file);

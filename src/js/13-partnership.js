@@ -212,6 +212,13 @@ async function viewStored(fileId) {
 }
 async function uploadToPartnership(p, cat, files) {
   const added = [];
+  /* ملف بنفس الاسم في التصنيف نفسه: إضافة بجانبه أو استبداله */
+  const same = files.map((f) => (p.attachments || []).filter((a) => a.category === cat && normAr(a.name) === normAr(f.name))).flat();
+  if (same.length) {
+    const ch = await choiceDlg(`يوجد في «${esc(cat)}» ${same.length === 1 ? 'ملف بالاسم نفسه' : 'ملفات بالأسماء نفسها'}: <b>${[...new Set(same.map((a) => esc(a.name)))].join('، ')}</b>.<br>هل تريد إضافة الملف الجديد بجانبه، أم استبدال الموجود؟`, [['add', 'إضافة بجانبه'], ['replace', 'استبدال', 'danger']], { title: 'ملف موجود' });
+    if (!ch) return false;
+    if (ch === 'replace') { const ids = new Set(same.map((a) => a.id)); p.attachments = p.attachments.filter((a) => !ids.has(a.id)); }
+  }
   for (const f of files) {
     if (cat === 'صور الشراكة' && !/^image\//.test(f.type)) { toast(`«${f.name}» ليس صورة؛ تصنيف «صور الشراكة» يقبل الصور فقط.`, 'err'); continue; }
     try { const rec = await saveUpload(f); added.push({ id: uid('att'), fileId: rec.id, name: rec.name, type: rec.type, size: rec.size, category: cat, addedAt: nowISO(), by: Session.userName() }); }
@@ -283,7 +290,7 @@ function renderPartnershipForm(el, r) {
       const sim = s.partnerId === '__new__' ? findSimilarPartners(fs.newPartner.name) : [];
       const otherCount = s.partnerId && s.partnerId !== '__new__' ? D.partnerships.filter((x) => x.partnerId === s.partnerId && x.id !== s.id).length : 0;
       body = `<div class="grid2">
-        ${field('partnerId', 'الجهة الشريكة', comboHTML('partnerId', { options: [...partnerOpts(), ...(fs.newPartner ? [{ value: '__new__', label: fs.newPartner.name, sub: 'جهة جديدة — تُنشأ عند الحفظ' }] : [])], value: s.partnerId, allowAdd: true, addLabel: 'إضافة جهة جديدة' }), { hint: 'ابحث في سجل الجهات لتجنب تكرار الجهة بأسماء مختلفة.', full: true })}
+        ${field('partnerId', 'الجهة الشريكة', `<div class="cb-row">${comboHTML('partnerId', { options: [...partnerOpts(), ...(fs.newPartner ? [{ value: '__new__', label: fs.newPartner.name, sub: 'جهة جديدة — تُنشأ عند الحفظ' }] : [])], value: s.partnerId, allowAdd: true, addLabel: 'إضافة جهة جديدة' })}${can('manage.partners') ? `<button type="button" class="btn cb-plus" data-newpartner title="إضافة جهة جديدة إلى سجل الجهات" aria-label="إضافة جهة جديدة">${icon('plus')}</button>` : ''}</div>`, { hint: 'ابحث في سجل الجهات لتجنب تكرار الجهة بأسماء مختلفة، أو أضف جهة جديدة بزر «+» فتُحفظ في سجل الجهات فورًا.', full: true })}
         ${sim.length ? `<div class="span2 dup-warn">${icon('alert')}<span>توجد جهات بأسماء مشابهة: ${sim.map((x) => `<button type="button" data-usep="${x.id}">${esc(x.name)}</button>`).join('، ')}. اختر إحداها إن كانت الجهة نفسها.</span></div>` : ''}
         ${field('title', 'اسم الشراكة', `<input class="in" id="f_title" data-k="title" value="${esc(s.title)}" placeholder="${esc(pName() || 'يُستخدم اسم الجهة إن تُرك فارغًا')}">`, { hint: 'في ملف الحصر يحمل هذا العمود اسم الجهة الشريكة؛ يمكن تمييز الشراكة باسم مختلف عند تعدد الشراكات مع الجهة نفسها.', full: true })}
         ${lst('sector', 'القطاع', 'sectors', fs.sector, { hint: otherCount ? `يُحفظ على مستوى الجهة، ويسري على ${plural(otherCount, 'شراكة أخرى', 'شراكتين أخريين', 'شراكات أخرى', 'شراكة أخرى')} لها.` : 'يُحفظ على مستوى الجهة.' })}
@@ -444,11 +451,17 @@ function renderPartnershipForm(el, r) {
     if (k === 'sector') { fs.sector = e.detail; markDirty(); drawNav(); return; }
     s[k] = e.detail; markDirty(); drawNav();
   });
+  el.addEventListener('click', async (e) => {
+    if (!e.target.closest('[data-newpartner]')) return;
+    const pr = await quickAddPartner(''); if (!pr) return;
+    s.partnerId = pr.id; fs.sector = pr.sector || ''; fs.logoFileId = pr.logoFileId || null; fs.newPartner = null; if (fs.errors.partnerId) delete fs.errors.partnerId; markDirty(); drawStep();
+  });
   el.addEventListener('cbadd', async (e) => {
     const k = e.target.dataset.cb;
     if (k === 'partnerId') {
       e.preventDefault();
       const name = e.detail.value.trim();
+      if (can('manage.partners')) { const pr = await quickAddPartner(name); if (pr) { s.partnerId = pr.id; fs.sector = pr.sector || ''; fs.logoFileId = pr.logoFileId || null; fs.newPartner = null; if (fs.errors.partnerId) delete fs.errors.partnerId; markDirty(); drawStep(); } return; }
       const sim = findSimilarPartners(name);
       if (sim.length && !(await confirmDlg(`توجد جهات بأسماء مشابهة لـ «${esc(name)}»:<br><b>${sim.map((x) => esc(x.name)).join('<br>')}</b><br><br>هل تريد إضافة جهة جديدة رغم ذلك؟ يمكنك بدلًا من ذلك اختيار الجهة الموجودة من القائمة.`, { title: 'جهة مشابهة موجودة', ok: 'إضافة جهة جديدة' }))) return;
       fs.newPartner = { name }; s.partnerId = '__new__'; fs.sector = ''; fs.logoFileId = null;

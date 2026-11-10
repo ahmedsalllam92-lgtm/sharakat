@@ -270,6 +270,16 @@ function wfStepDialog(kind, rec, sid, rerender) {
   });
   const box = m.el;
   const store = async (dk, files) => {
+    /* مستند موجود لنفس الخانة: إضافة بجانبه أو استبداله */
+    const dd = s.docs.find((d) => d.k === dk) || {};
+    const old = (rec.attachments || []).filter((a) => a.wf === sid && a.doc === dk);
+    if (old.length) {
+      const ch = await choiceDlg(`يوجد لمستند «${esc(dd.l || '')}» ${old.length === 1 ? 'ملف محفوظ' : 'ملفات محفوظة'}: <b>${old.map((a) => esc(a.name)).join('، ')}</b>.<br>هل تريد إضافة الملف الجديد بجانبه، أم استبداله؟`, [['add', 'إضافة بجانبه'], ['replace', 'استبدال', 'danger']], { title: 'ملف موجود' });
+      if (!ch) return;
+      if (ch === 'replace') { const ids = new Set(old.map((a) => a.id)); rec.attachments = rec.attachments.filter((a) => !ids.has(a.id)); }
+    } else if (dd.form && wfForm(kind, rec, dd.form)) {
+      if (!(await confirmDlg(`لمستند «${esc(dd.l || '')}» نموذج محفوظ في ملف الشراكة (${esc(FORMS[dd.form].title)}). سيُضاف الملف المرفوع بجانبه ويبقى النموذج محفوظًا.`, { title: 'يوجد نموذج لهذا المستند', ok: 'إضافة الملف' }))) return;
+    }
     for (const file of files) {
       try {
         const up = await saveUpload(file);
