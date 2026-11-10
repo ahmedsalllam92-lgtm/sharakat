@@ -299,6 +299,7 @@ function cloudRefreshUI() {
   requestAnimationFrame(() => window.scrollTo(0, y));
 }
 Cloud.expired = function () {
+  if (App.share) { shareEnd('انتهت مدة رابط الاطلاع'); return; }
   if (this.expiredShown) return; this.expiredShown = true;
   this.stop();
   try { localStorage.removeItem('shk_auth'); sessionStorage.removeItem('shk_auth'); } catch (_) { /* */ }
@@ -333,7 +334,7 @@ Cloud.loadPwStatus = async function () { try { this.pwSet = new Set(await this.r
 /* بعد تسجيل الدخول: سحب بيانات المنصة المشتركة (أو تهيئتها أول مرة) ثم بدء المزامنة. تعيد false إن انتهت الجلسة */
 async function cloudEnter() {
   if (!Cloud.on) return true;
-  const saved = (() => { try { return JSON.parse(localStorage.getItem('shk_auth') || sessionStorage.getItem('shk_auth') || 'null'); } catch (_) { return null; } })() || {};
+  const saved = App.share ? { grp: 'viewer' } : ((() => { try { return JSON.parse(localStorage.getItem('shk_auth') || sessionStorage.getItem('shk_auth') || 'null'); } catch (_) { return null; } })() || {});
   Cloud.grp = saved.grp || null;
   let ready = true;
   try {

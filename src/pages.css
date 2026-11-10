@@ -4059,3 +4059,34 @@ html.ob-show #obBody>.ob-mosaic .orb-n.up small{bottom:1.8cqw}
 .rk-art.a-full i:nth-child(1){right:calc(50% - 54px)}.rk-art.a-full i:nth-child(2){right:calc(50% - 20px)}.rk-art.a-full i:nth-child(3){right:calc(50% + 14px)}
 .rk-art.a-brief i:nth-child(1){height:30px;bottom:10px}.rk-art.a-brief i:nth-child(2){top:12px}.rk-art.a-brief i:nth-child(3){height:16px;bottom:10px}
 .rk-art.a-full i{top:9px;height:44px}
+
+/* روابط الاطلاع */
+.share-bar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:900;display:flex;align-items:center;gap:12px;padding:8px 10px 8px 16px;border-radius:999px;background:rgba(11,43,37,.94);color:#E7F0EC;font-size:12.5px;box-shadow:0 14px 34px -12px rgba(0,0,0,.55);backdrop-filter:blur(8px);white-space:nowrap}
+.share-bar .sb-ic{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:rgba(230,199,134,.18);color:#E6C786}.share-bar .sb-ic .ic{width:14px;height:14px}
+.share-bar b{color:#fff}.share-bar .sb-exp{color:#A8C6BB;font-size:11.5px}
+.share-bar .sb-end{border:0;background:#E6C786;color:#0B2B25;font:inherit;font-weight:800;font-size:12px;padding:5px 14px;border-radius:999px;cursor:pointer}
+html.share-mode .design-switch,html.share-mode #dsw,html.share-mode .bo-find,html.share-mode .bo-new,html.share-mode .tour-top,html.share-mode .rolebox,html.share-mode .rnw-fab{display:none!important}
+.share-screen{position:fixed;inset:0;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 30%,#164A3F,#0A2A24 70%);z-index:9999}
+.ss-card{max-width:440px;text-align:center;color:#E7F0EC;display:flex;flex-direction:column;align-items:center;gap:12px}
+.ss-card img{height:58px;filter:brightness(0) invert(1);opacity:.92;margin-bottom:10px}
+.ss-ic{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:rgba(230,199,134,.14);color:#E6C786;box-shadow:0 0 0 8px rgba(230,199,134,.06)}.ss-ic .ic{width:26px;height:26px}
+.ss-card h1{font-size:24px;margin:6px 0 0;color:#fff}.ss-card p{margin:0;color:#A8C6BB;line-height:1.8;font-size:14px}
+.sh-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.sh-chips .in{width:auto}
+.sh-secs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px 14px}.sh-secs.ex{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.sh-made{margin-top:14px;padding:14px;border-radius:12px;background:color-mix(in srgb,var(--petrol) 7%,var(--paper));border:1px solid color-mix(in srgb,var(--petrol) 25%,transparent);display:flex;flex-direction:column;gap:8px}
+.sh-made b{display:flex;align-items:center;gap:6px;color:var(--petrol)}.sh-made small{color:var(--muted)}
+.sh-url{display:flex;gap:8px}.sh-url .in{direction:ltr;text-align:left;font-family:monospace;font-size:12px}
+.sh-tags{display:flex;flex-wrap:wrap;gap:4px}.sh-tags em{font-style:normal;font-size:11px;padding:2px 8px;border-radius:999px;background:var(--paper-2);border:1px solid var(--line)}
+.sh-tbl tr.off{opacity:.55}
+
+/* الشاشة الافتتاحية: تلاقي الشركاء */
+#shkSplash .sp-fx{position:absolute;inset:0;z-index:1;pointer-events:none}
+#shkSplash .sp-in{position:relative;z-index:2}
+#shkSplash .sp-sheen{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(105deg,transparent 38%,rgba(255,240,205,.16) 47%,rgba(255,240,205,.32) 50%,rgba(255,240,205,.16) 53%,transparent 62%);background-size:250% 100%;background-position:130% 0;mix-blend-mode:screen;opacity:0}
+#shkSplash.fx-pulse .sp-sheen{animation:spSheen 1.5s cubic-bezier(.4,0,.2,1) .15s forwards}
+@keyframes spSheen{0%{opacity:1;background-position:130% 0}100%{opacity:1;background-position:-30% 0}}
+#shkSplash .sp-logo{transition:filter 1.2s ease}
+#shkSplash.fx-pulse .sp-logo{filter:drop-shadow(0 0 16px rgba(240,215,155,.6))}
+@keyframes spLogoGlow{0%{filter:drop-shadow(0 0 0 rgba(240,215,155,0))}35%{filter:drop-shadow(0 0 22px rgba(240,215,155,.75))}100%{filter:drop-shadow(0 0 6px rgba(240,215,155,.25))}}
+#shkSplash.fx-pulse .sp-stats span{box-shadow:0 0 0 1px rgba(230,199,134,.35),0 0 24px -6px rgba(230,199,134,.5);transition:box-shadow .8s}
+html.share-mode [data-palette]{display:none!important}

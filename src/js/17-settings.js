@@ -7,6 +7,7 @@ const SET_TABS = [
   { id: 'lists', t: 'القوائم', perm: 'manage.lists' },
   { id: 'forms', t: 'إعدادات النماذج', perm: 'manage.accounts' },
   { id: 'roles', t: 'الحسابات والصلاحيات', perm: null },
+  { id: 'share', t: 'روابط الاطلاع', perm: 'manage.accounts' },
   { id: 'data', t: 'البيانات والنسخ الاحتياطي', perm: 'manage.backup' },
   { id: 'audit', t: 'سجل التغييرات', perm: 'view.audit' },
 ];
@@ -17,7 +18,7 @@ function renderSettings(el, r) {
   el.innerHTML = `<div class="ph"><div><h1>الإعدادات</h1><p>إدارة التصنيفات والجهات والإدارات ومحتوى الرئيسية والبيانات، مع سجل مبسط للتغييرات.</p></div></div>
     <div class="set-wrap"><nav class="set-nav">${tabs.map((t) => `<a href="#/settings/${t.id}" class="${t.id === tab ? 'on' : ''}">${t.t}</a>`).join('')}<a href="#/partners">الجهات الشريكة</a></nav><div id="sbody"></div></div>`;
   const body = $('#sbody', el);
-  ({ general: setGeneral, design: setDesignTab, tour: setTourTab, home: setHome, lists: setLists, forms: setFormsCfg, roles: setRoles, data: setData, audit: setAudit })[tab](body);
+  ({ general: setGeneral, design: setDesignTab, tour: setTourTab, home: setHome, lists: setLists, forms: setFormsCfg, roles: setRoles, share: setShareTab, data: setData, audit: setAudit })[tab](body);
 }
 /* إعدادات النماذج: معايير التقييم المبدئي وأوزانها وحدود النتيجة */
 function setFormsCfg(b) {

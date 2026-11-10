@@ -7523,6 +7523,37 @@ html.ob-show #obBody>.ob-mosaic .orb-n.up small{bottom:1.8cqw}
 .rk-art.a-full i:nth-child(1){right:calc(50% - 54px)}.rk-art.a-full i:nth-child(2){right:calc(50% - 20px)}.rk-art.a-full i:nth-child(3){right:calc(50% + 14px)}
 .rk-art.a-brief i:nth-child(1){height:30px;bottom:10px}.rk-art.a-brief i:nth-child(2){top:12px}.rk-art.a-brief i:nth-child(3){height:16px;bottom:10px}
 .rk-art.a-full i{top:9px;height:44px}
+
+/* روابط الاطلاع */
+.share-bar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:900;display:flex;align-items:center;gap:12px;padding:8px 10px 8px 16px;border-radius:999px;background:rgba(11,43,37,.94);color:#E7F0EC;font-size:12.5px;box-shadow:0 14px 34px -12px rgba(0,0,0,.55);backdrop-filter:blur(8px);white-space:nowrap}
+.share-bar .sb-ic{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:rgba(230,199,134,.18);color:#E6C786}.share-bar .sb-ic .ic{width:14px;height:14px}
+.share-bar b{color:#fff}.share-bar .sb-exp{color:#A8C6BB;font-size:11.5px}
+.share-bar .sb-end{border:0;background:#E6C786;color:#0B2B25;font:inherit;font-weight:800;font-size:12px;padding:5px 14px;border-radius:999px;cursor:pointer}
+html.share-mode .design-switch,html.share-mode #dsw,html.share-mode .bo-find,html.share-mode .bo-new,html.share-mode .tour-top,html.share-mode .rolebox,html.share-mode .rnw-fab{display:none!important}
+.share-screen{position:fixed;inset:0;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 30%,#164A3F,#0A2A24 70%);z-index:9999}
+.ss-card{max-width:440px;text-align:center;color:#E7F0EC;display:flex;flex-direction:column;align-items:center;gap:12px}
+.ss-card img{height:58px;filter:brightness(0) invert(1);opacity:.92;margin-bottom:10px}
+.ss-ic{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:rgba(230,199,134,.14);color:#E6C786;box-shadow:0 0 0 8px rgba(230,199,134,.06)}.ss-ic .ic{width:26px;height:26px}
+.ss-card h1{font-size:24px;margin:6px 0 0;color:#fff}.ss-card p{margin:0;color:#A8C6BB;line-height:1.8;font-size:14px}
+.sh-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.sh-chips .in{width:auto}
+.sh-secs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px 14px}.sh-secs.ex{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.sh-made{margin-top:14px;padding:14px;border-radius:12px;background:color-mix(in srgb,var(--petrol) 7%,var(--paper));border:1px solid color-mix(in srgb,var(--petrol) 25%,transparent);display:flex;flex-direction:column;gap:8px}
+.sh-made b{display:flex;align-items:center;gap:6px;color:var(--petrol)}.sh-made small{color:var(--muted)}
+.sh-url{display:flex;gap:8px}.sh-url .in{direction:ltr;text-align:left;font-family:monospace;font-size:12px}
+.sh-tags{display:flex;flex-wrap:wrap;gap:4px}.sh-tags em{font-style:normal;font-size:11px;padding:2px 8px;border-radius:999px;background:var(--paper-2);border:1px solid var(--line)}
+.sh-tbl tr.off{opacity:.55}
+
+/* الشاشة الافتتاحية: تلاقي الشركاء */
+#shkSplash .sp-fx{position:absolute;inset:0;z-index:1;pointer-events:none}
+#shkSplash .sp-in{position:relative;z-index:2}
+#shkSplash .sp-sheen{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(105deg,transparent 38%,rgba(255,240,205,.16) 47%,rgba(255,240,205,.32) 50%,rgba(255,240,205,.16) 53%,transparent 62%);background-size:250% 100%;background-position:130% 0;mix-blend-mode:screen;opacity:0}
+#shkSplash.fx-pulse .sp-sheen{animation:spSheen 1.5s cubic-bezier(.4,0,.2,1) .15s forwards}
+@keyframes spSheen{0%{opacity:1;background-position:130% 0}100%{opacity:1;background-position:-30% 0}}
+#shkSplash .sp-logo{transition:filter 1.2s ease}
+#shkSplash.fx-pulse .sp-logo{filter:drop-shadow(0 0 16px rgba(240,215,155,.6))}
+@keyframes spLogoGlow{0%{filter:drop-shadow(0 0 0 rgba(240,215,155,0))}35%{filter:drop-shadow(0 0 22px rgba(240,215,155,.75))}100%{filter:drop-shadow(0 0 6px rgba(240,215,155,.25))}}
+#shkSplash.fx-pulse .sp-stats span{box-shadow:0 0 0 1px rgba(230,199,134,.35),0 0 24px -6px rgba(230,199,134,.5);transition:box-shadow .8s}
+html.share-mode [data-palette]{display:none!important}
 </style>
 </head>
 <body>
@@ -14559,9 +14590,9 @@ const REAL_V2 = {
    وجملة تُعدَّل من الإعدادات، وأرقام حية من آخر جلسة تُحدَّث فور تحميل البيانات.
    ملف مستقل لا يعتمد على بقية الشيفرة لأنه يعمل قبل تحميل البيانات.
    ===================================================================== */
-const SPLASH_DEF = { on: true, text: 'نبني شراكات… تصنع أثرًا يبقى', sub: 'منظومة الشراكات — مؤسسة مروج الأهلية', bg: 'calm', stats: true, dur: 3.4 };
+const SPLASH_DEF = { on: true, text: 'نبني شراكات… تصنع أثرًا يبقى', sub: 'منظومة الشراكات — مؤسسة مروج الأهلية', bg: 'calm', stats: true, dur: 4.2 };
 const SPLASH_BGS = [['calm', 'هادئ — لون المؤسسة بإضاءة خفيفة، بلا صور أو رسومات'], ['splash-bond', 'فجر الشراكة — لوحة فنية (نهران من الضوء يلتقيان)'], ['signings', 'لحظات توقيع الشراكات (صور متتابعة)'], ['splash-aerial', 'صورة جوية للغطاء النباتي'], ['splash-forest', 'غابة ومسطحات خضراء'], ['border-guard-signing', 'صورة توقيع مذكرة'], ['waqf-saitah-signing', 'صورة توقيع شراكة']];
-function splashCfg() { let c = {}; try { c = JSON.parse(localStorage.getItem('shk_splash') || '{}') || {}; } catch (e) { c = {}; } if (!c.bgV4) c.bg = 'calm'; return { ...SPLASH_DEF, ...c }; }
+function splashCfg() { let c = {}; try { c = JSON.parse(localStorage.getItem('shk_splash') || '{}') || {}; } catch (e) { c = {}; } if (!c.bgV4) c.bg = 'calm'; if (+c.dur === 3.4) c.dur = 4.2; /* المدة الافتراضية القديمة: وقت كافٍ لحركة تلاقي الشركاء */ return { ...SPLASH_DEF, ...c }; }
 function splashShow(force) {
   if (window.__SBX) return null;
   const cfg = splashCfg();
@@ -14597,12 +14628,14 @@ function splashShow(force) {
       ${cfg.sub ? `<p>${esc_(cfg.sub)}</p>` : ''}
       <div class="sp-stats">${stats.map(([v, l], i) => `<span style="animation-delay:${(1.1 + i * 0.12).toFixed(2)}s"><b data-to="${+v || 0}">0</b>${esc_(l)}</span>`).join('')}</div>
     </div>
+    ${calm ? '<span class="sp-sheen" aria-hidden="true"></span>' : ''}
     <div class="sp-bar"><i></i></div><small class="sp-skip">اضغط للمتابعة</small>`;
   const put = () => {
     document.documentElement.classList.add('sp-lock'); // لا شريط تمرير ولا تمرير خلف الشاشة الافتتاحية
     document.body.appendChild(el);
     const count = () => el.querySelectorAll('.sp-stats b').forEach((b) => { const to = +b.dataset.to || 0, t0 = performance.now(), d = reduce ? 1 : 900; const step = (t) => { const k = Math.min(1, (t - t0) / d); b.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); }; setTimeout(() => requestAnimationFrame(step), reduce ? 0 : 1100); });
     count(); el._count = count;
+    if (calm && !reduce) { try { spFx(el, (cfg.statsVals || {}).partners, dur); } catch (e) { /* زخرفة غير حرجة */ } }
     el._t = setTimeout(close, dur * 1000);
   };
   const close = () => { if (el.classList.contains('out')) return; clearTimeout(el._t); el.classList.add('out'); setTimeout(() => { el.remove(); if (!document.getElementById('shkSplash')) document.documentElement.classList.remove('sp-lock'); }, 700); document.removeEventListener('keydown', key); };
@@ -14611,6 +14644,88 @@ function splashShow(force) {
   document.addEventListener('keydown', key);
   if (document.body) put(); else document.addEventListener('DOMContentLoaded', put);
   return el;
+}
+/* «تلاقي الشركاء»: نقاط ذهبية بعدد الجهات تنطلق من أطراف الشاشة في مسارات منحنية،
+   وتلتقي في هالة حول الشعار تدور ببطء وتتصل خيوطها، ثم نبضة ذهبية ولمعة تعبر الشعار والجملة */
+function spFx(host, n, dur) {
+  const cv = document.createElement('canvas'); cv.className = 'sp-fx'; cv.setAttribute('aria-hidden', 'true');
+  host.insertBefore(cv, host.querySelector('.sp-in'));
+  const ctx = cv.getContext('2d'); if (!ctx) return;
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  let W = 0, H = 0, cx = 0, cy = 0, rx = 0, ry = 0;
+  const size = () => { W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px'; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); cx = W / 2; cy = H * 0.5; rx = Math.min(W * 0.4, 600); ry = Math.min(H * 0.38, 320); };
+  size(); addEventListener('resize', size);
+  const N = Math.max(24, Math.min(90, n || 48)), T_FLY = Math.min(1.5, dur * 0.42);
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const P = Array.from({ length: N }, (_, i) => {
+    const side = i % 4, e = Math.random();
+    const s = side === 0 ? [e, -0.05] : side === 1 ? [1.05, e] : side === 2 ? [e, 1.05] : [-0.05, e];
+    return { a0: (i / N) * Math.PI * 2 + rnd(-0.05, 0.05), sx: s[0], sy: s[1], bend: rnd(-0.35, 0.35), d: rnd(0, T_FLY * 0.45), r: rnd(1.2, 2.6), gold: Math.random() < 0.72, tw: rnd(0, 6.28) };
+  });
+  let mx = 0, my = 0, tmx = 0, tmy = 0;
+  host.addEventListener('mousemove', (ev) => { tmx = (ev.clientX / W - 0.5) * 18; tmy = (ev.clientY / H - 0.5) * 12; });
+  const ease = (t) => 1 - Math.pow(1 - t, 3);
+  const t0 = performance.now();
+  let pulsed = false;
+  const frame = (now) => {
+    if (!cv.isConnected) { removeEventListener('resize', size); return; }
+    const t = (now - t0) / 1000;
+    mx += (tmx - mx) * 0.06; my += (tmy - my) * 0.06;
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+    const rot = t * 0.12, pts = [];
+    P.forEach((p) => {
+      const k = Math.max(0, Math.min(1, (t - p.d) / (T_FLY - p.d * 0.6)));
+      const a = p.a0 + rot * ease(Math.min(1, t / (T_FLY + 0.4)));
+      const breathe = 1 + Math.sin(t * 1.4 + p.tw) * 0.012;
+      const tx = cx + Math.cos(a) * rx * breathe + mx, ty = cy + Math.sin(a) * ry * breathe + my;
+      const sx = p.sx * W, sy = p.sy * H;
+      const qx = (sx + tx) / 2 + (ty - sy) * p.bend, qy = (sy + ty) / 2 - (tx - sx) * p.bend; // نقطة التحكم: مسار منحنٍ
+      const u = ease(k), x = (1 - u) * (1 - u) * sx + 2 * (1 - u) * u * qx + u * u * tx, y = (1 - u) * (1 - u) * sy + 2 * (1 - u) * u * qy + u * u * ty;
+      pts.push([x, y, k]);
+      if (k <= 0) return;
+      const col = p.gold ? '240,215,155' : '170,225,200';
+      if (k < 1) { // ذيل الحركة
+        const u2 = ease(Math.max(0, k - 0.08)), x2 = (1 - u2) * (1 - u2) * sx + 2 * (1 - u2) * u2 * qx + u2 * u2 * tx, y2 = (1 - u2) * (1 - u2) * sy + 2 * (1 - u2) * u2 * qy + u2 * u2 * ty;
+        const g = ctx.createLinearGradient(x2, y2, x, y); g.addColorStop(0, `rgba(${col},0)`); g.addColorStop(1, `rgba(${col},.75)`);
+        ctx.strokeStyle = g; ctx.lineWidth = p.r; ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x, y); ctx.stroke();
+      }
+      const tw = k >= 1 ? 0.65 + Math.sin(t * 3 + p.tw) * 0.35 : 1;
+      const R = p.r * 5;
+      const gg = ctx.createRadialGradient(x, y, 0, x, y, R); gg.addColorStop(0, `rgba(${col},${0.9 * tw})`); gg.addColorStop(0.35, `rgba(${col},${0.28 * tw})`); gg.addColorStop(1, `rgba(${col},0)`);
+      ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(x, y, R, 0, Math.PI * 2); ctx.fill();
+    });
+    /* خيوط الشبكة بين الجيران بعد الوصول */
+    const L = Math.max(0, Math.min(1, (t - T_FLY * 0.85) / 0.7));
+    if (L > 0) {
+      for (let i = 0; i < N; i++) for (const j of [1, 2]) {
+        const A = pts[i], B = pts[(i + j) % N]; if (A[2] < 1 || B[2] < 1) continue;
+        ctx.strokeStyle = `rgba(230,199,134,${(j === 1 ? 0.32 : 0.12) * L})`; ctx.lineWidth = j === 1 ? 0.9 : 0.6;
+        ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
+      }
+      /* شرارات تسري على الخيوط */
+      for (let s = 0; s < 5; s++) {
+        const i = Math.floor((t * 0.9 + s / 5) * N) % N, f = ((t * 2.2 + s * 0.37) % 1), A = pts[i], B = pts[(i + 1) % N];
+        const x = A[0] + (B[0] - A[0]) * f, y = A[1] + (B[1] - A[1]) * f;
+        const g = ctx.createRadialGradient(x, y, 0, x, y, 9); g.addColorStop(0, `rgba(255,240,205,${0.85 * L})`); g.addColorStop(1, 'rgba(255,240,205,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    /* نبضة ذهبية تتسع من المركز عند اكتمال الهالة */
+    const pt = t - T_FLY * 0.95;
+    if (pt > 0 && pt < 1.4) {
+      if (!pulsed) { pulsed = true; host.classList.add('fx-pulse'); }
+      const q = ease(pt / 1.4);
+      for (const [off, al] of [[0, 0.55], [0.18, 0.3]]) {
+        const qq = Math.max(0, q - off);
+        ctx.strokeStyle = `rgba(240,215,155,${al * (1 - qq)})`; ctx.lineWidth = 2 * (1 - qq) + 0.5;
+        ctx.beginPath(); ctx.ellipse(cx + mx, cy + my, rx * (0.25 + qq * 1.05), ry * (0.25 + qq * 1.05), 0, 0, Math.PI * 2); ctx.stroke();
+      }
+    }
+    ctx.globalCompositeOperation = 'source-over';
+    requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
 }
 /* تُستدعى بعد تحميل البيانات: تحفظ الإعدادات والأرقام لتظهر فورًا في الفتح التالي، وتحدّث الأرقام إن كانت الشاشة ما زالت ظاهرة */
 function splashSync(live = true) {
@@ -15582,6 +15697,7 @@ function cloudRefreshUI() {
   requestAnimationFrame(() => window.scrollTo(0, y));
 }
 Cloud.expired = function () {
+  if (App.share) { shareEnd('انتهت مدة رابط الاطلاع'); return; }
   if (this.expiredShown) return; this.expiredShown = true;
   this.stop();
   try { localStorage.removeItem('shk_auth'); sessionStorage.removeItem('shk_auth'); } catch (_) { /* */ }
@@ -15616,7 +15732,7 @@ Cloud.loadPwStatus = async function () { try { this.pwSet = new Set(await this.r
 /* بعد تسجيل الدخول: سحب بيانات المنصة المشتركة (أو تهيئتها أول مرة) ثم بدء المزامنة. تعيد false إن انتهت الجلسة */
 async function cloudEnter() {
   if (!Cloud.on) return true;
-  const saved = (() => { try { return JSON.parse(localStorage.getItem('shk_auth') || sessionStorage.getItem('shk_auth') || 'null'); } catch (_) { return null; } })() || {};
+  const saved = App.share ? { grp: 'viewer' } : ((() => { try { return JSON.parse(localStorage.getItem('shk_auth') || sessionStorage.getItem('shk_auth') || 'null'); } catch (_) { return null; } })() || {});
   Cloud.grp = saved.grp || null;
   let ready = true;
   try {
@@ -15766,7 +15882,7 @@ const Session = {
     return 'مستخدم للاطلاع';
   },
 };
-const can = (perm) => (PERMS[perm] || []).includes(Session.role());
+const can = (perm) => (App.share ? shareCan(perm) : (PERMS[perm] || []).includes(Session.role())); // روابط الاطلاع: صلاحيات الرابط وحده
 
 /* ===== القوائم والتصنيفات ===== */
 const L = (k) => (D.settings && D.settings.lists && D.settings.lists[k]) || [];
@@ -16722,6 +16838,150 @@ function authSettingsClick(e) {
   }
   if (e.target.closest('[data-pwself]')) { passwordDialog(currentLogin() || authAccounts().find((x) => x.id === currentAccountId()), true); return true; }
   return false;
+}
+
+/* —— 04c-share.js —— */
+/* =====================================================================
+   روابط الاطلاع المؤقتة
+   - تُنشئها إدارة الشراكات من «الإعدادات ← روابط الاطلاع»: مدة محددة، وأقسام مختارة، بلا كلمة مرور.
+   - من يفتح الرابط يرى المنصة للاطلاع فقط (لا تعديل ولا رفع)، بشكل «القائمة العلوية» دائمًا.
+   - الخادم يحفظ بصمة الرابط فقط، ويفتح جلسة «اطلاع» تنتهي مع الرابط؛ وإيقاف الرابط ينهي جلساته فورًا.
+   ===================================================================== */
+const SHARE_KEY = 'shk_share';
+const SHARE_SECTIONS = [
+  { k: 'home', l: 'الرئيسية', m: ['home'], on: true },
+  { k: 'dashboard', l: 'لوحة الأداء', m: ['dashboard'], on: true },
+  { k: 'partnerships', l: 'سجل الشراكات وصفحات الشراكات', m: ['partnerships', 'partnership'], on: true },
+  { k: 'partners', l: 'الجهات الشريكة', m: ['partners', 'partner'], on: true },
+  { k: 'reports', l: 'التقارير والتقرير التسويقي', m: ['reports', 'reportsMk'], on: true },
+  { k: 'stories', l: 'الإنجازات', m: ['stories'], on: true },
+  { k: 'gallery', l: 'معرض الأثر', m: ['gallery'], on: true },
+  { k: 'media', l: 'مركز الصور', m: ['media'], on: false },
+  { k: 'process', l: 'مسار الشراكة', m: ['process'], on: false },
+];
+const SHARE_EXTRAS = [{ k: 'contacts', l: 'إظهار بيانات التواصل (ضابط الاتصال والبريد والجوال)', on: false }];
+const SHARE_DUR = [['1', 'يوم'], ['3', '3 أيام'], ['7', 'أسبوع'], ['30', 'شهر'], ['date', 'حتى تاريخ']];
+
+const shareSaved = () => { try { return JSON.parse(sessionStorage.getItem(SHARE_KEY) || 'null'); } catch (_) { return null; } };
+const shareHas = (k) => !!(App.share && (App.share.sections || []).includes(k));
+const shareRouteOk = (name) => SHARE_SECTIONS.some((s) => shareHas(s.k) && s.m.includes(name));
+const shareFirst = () => { const s = SHARE_SECTIONS.find((x) => shareHas(x.k)); return s ? ({ home: '#/', dashboard: '#/dashboard', partnerships: '#/partnerships', partners: '#/partners', reports: '#/reports', stories: '#/stories', gallery: '#/gallery', media: '#/media', process: '#/process' })[s.k] : '#/'; };
+/* صلاحيات جلسة الرابط: قراءة الأقسام المختارة فقط، دون تصدير أو تعديل */
+function shareCan(perm) {
+  if (perm === 'view.dashboard') return shareHas('dashboard');
+  if (perm === 'view.reports') return shareHas('reports');
+  if (perm === 'view.register') return shareHas('partnerships');
+  if (perm === 'view.partners') return shareHas('partners');
+  if (perm === 'view.internal') return true;
+  if (perm === 'view.contacts') return shareHas('contacts');
+  return false;
+}
+const shareNavOk = (it) => it.m.some((n) => shareRouteOk(n));
+
+/* شاشة رسالة (رابط منتهٍ أو غير صالح) */
+function shareScreen(msg, sub) {
+  const b = $('#boot'); if (b) b.remove();
+  ['#app', '#shkLogin'].forEach((s) => { const e = $(s); if (e) e.remove(); });
+  const logo = (ASSET_IMG['murooj-logo'] || {}).src;
+  const d = document.createElement('div'); d.className = 'share-screen';
+  d.innerHTML = `<div class="ss-card">${logo ? `<img src="${logo}" alt="">` : ''}<span class="ss-ic">${icon('eye')}</span><h1>${esc(msg)}</h1><p>${esc(sub || 'تواصل مع إدارة الشراكات في مؤسسة مروج الأهلية للحصول على رابط اطلاع جديد.')}</p></div>`;
+  document.body.appendChild(d);
+}
+async function shareEnd(msg) {
+  try { sessionStorage.removeItem(SHARE_KEY); sessionStorage.removeItem('shk_auth'); } catch (_) { /* */ }
+  try { Cloud.stop(); } catch (_) { /* */ }
+  let own = false; try { own = !!localStorage.getItem('shk_auth'); } catch (_) { /* */ }
+  if (!own) { try { await Store.wipeLocal(); } catch (_) { /* */ } } // جهاز الضيف: لا تبقى بيانات المنصة بعد انتهاء الاطلاع
+  App.share = null; document.documentElement.classList.remove('share-mode');
+  shareScreen(msg || 'انتهى الاطلاع', msg ? undefined : 'شكرًا لاطلاعك على منظومة الشراكات.');
+}
+/* عند الإقلاع: فتح الرابط (?view=...) أو استكمال جلسة الرابط في نفس التبويب. تعيد false إن عُرضت رسالة وتوقف الإقلاع */
+async function shareBoot() {
+  const q = new URLSearchParams(location.search).get('view');
+  const clean = () => history.replaceState(null, '', location.pathname + (location.hash || '#/'));
+  if (q) {
+    clean(); // لا يبقى الرابط في شريط العنوان
+    if (!Cloud.on) { shareScreen('روابط الاطلاع تعمل على المنصة المشتركة فقط'); return false; }
+    let r;
+    try { r = await Cloud.rpc('shk_share_open', { p_share: q }); } catch (_) { shareScreen('تعذّر فتح رابط الاطلاع', 'تحقق من الاتصال بالإنترنت ثم أعد فتح الرابط.'); return false; }
+    if (!r || r.error) { shareScreen({ expired: 'انتهت مدة رابط الاطلاع', revoked: 'أُوقف رابط الاطلاع' }[r && r.error] || 'رابط الاطلاع غير صالح'); return false; }
+    try { sessionStorage.setItem(SHARE_KEY, JSON.stringify({ label: r.label || '', sections: r.sections || [], exp: r.expires, tk: r.token })); } catch (_) { /* */ }
+  }
+  const s = shareSaved(); if (!s) return true;
+  if (!s.tk || new Date(s.exp) <= new Date()) { await shareEnd('انتهت مدة رابط الاطلاع'); return false; }
+  App.share = s;
+  document.documentElement.classList.add('share-mode');
+  /* الجلسة من الرابط وحده، ولا تختلط بحساب محفوظ في هذا المتصفح */
+  Cloud.token = () => (App.share && App.share.tk) || null;
+  authSaved = () => (App.share ? { id: 'viewer', at: nowISO(), tk: App.share.tk, grp: 'viewer' } : null);
+  const left = new Date(s.exp) - Date.now(); if (left < 2 ** 31) setTimeout(() => { if (App.share) shareEnd('انتهت مدة رابط الاطلاع'); }, left);
+  return true;
+}
+/* الشريط السفلي في وضع الاطلاع */
+function shareShell() {
+  if (!App.share) return;
+  let bar = $('#shareBar');
+  if (!bar) { bar = document.createElement('div'); bar.id = 'shareBar'; bar.className = 'share-bar no-print'; document.body.appendChild(bar); }
+  bar.innerHTML = `<span class="sb-ic">${icon('eye')}</span><span><b>وضع الاطلاع فقط</b>${App.share.label ? ` · ${esc(App.share.label)}` : ''}</span><span class="sb-exp">ينتهي ${esc(fmtDT(App.share.exp))}</span><button type="button" class="sb-end" data-shareend>إنهاء</button>`;
+  bar.onclick = async (e) => { if (e.target.closest('[data-shareend]') && await confirmDlg('إنهاء الاطلاع وإغلاق المنصة في هذا التبويب؟', { ok: 'إنهاء' })) shareEnd(); };
+}
+
+/* ===== الإعدادات ← روابط الاطلاع ===== */
+function shareLink(tk) { return `${location.origin}${location.pathname}?view=${tk}`; }
+function setShareTab(b) {
+  if (!Cloud.on) { b.innerHTML = `<div class="panel"><div class="panel-b">${emptyHTML({ ic: 'eye', title: 'روابط الاطلاع تعمل على المنصة المشتركة', text: 'افتح المنصة من رابطها على الإنترنت وسجّل الدخول بحساب إدارة الشراكات لإنشاء روابط الاطلاع.' })}</div></div>`; return; }
+  const st = { dur: '7', date: '', label: '', secs: new Set([...SHARE_SECTIONS, ...SHARE_EXTRAS].filter((s) => s.on).map((s) => s.k)), made: null, list: null, err: '' };
+  const expiry = () => { if (st.dur === 'date') { if (!st.date) return null; const d = new Date(st.date + 'T23:59:59'); return d > new Date() ? d : null; } return new Date(Date.now() + (+st.dur) * 864e5); };
+  const draw = () => {
+    const ex = expiry();
+    b.innerHTML = `<div class="panel sh-new"><div class="panel-h"><h3>${icon('eye')} رابط اطلاع جديد</h3><span class="sub">بلا كلمة مرور · للاطلاع فقط · بشكل القائمة العلوية</span></div><div class="panel-b">
+      <div class="field"><label for="shLabel">اسم الرابط (لمن سيُرسل)</label><input class="in" id="shLabel" maxlength="120" placeholder="مثال: وفد مؤسسة …، أو عرض مجلس الإدارة" value="${esc(st.label)}"></div>
+      <div class="field"><label>المدة</label><div class="sh-chips">${SHARE_DUR.map(([k, l]) => `<button type="button" class="ff-chip ${st.dur === k ? 'on' : ''}" data-shdur="${k}">${l}</button>`).join('')}${st.dur === 'date' ? `<input class="in" type="date" id="shDate" min="${isoDate(new Date(Date.now() + 864e5))}" max="${isoDate(new Date(Date.now() + 90 * 864e5))}" value="${esc(st.date)}">` : ''}</div>
+        <span class="hint">${ex ? `ينتهي الرابط ${esc(fmtDT(ex.toISOString()))} — أقصى مدة 90 يومًا` : 'اختر تاريخ الانتهاء'}</span></div>
+      <div class="field"><label>الأقسام التي يراها</label><div class="sh-secs">${SHARE_SECTIONS.map((s) => `<label class="check"><input type="checkbox" data-shsec="${s.k}" ${st.secs.has(s.k) ? 'checked' : ''}><span>${esc(s.l)}</span></label>`).join('')}</div>
+        <div class="sh-secs ex">${SHARE_EXTRAS.map((s) => `<label class="check"><input type="checkbox" data-shsec="${s.k}" ${st.secs.has(s.k) ? 'checked' : ''}><span>${esc(s.l)}</span></label>`).join('')}</div></div>
+      ${st.err ? `<div class="note warn">${icon('alert')}<span>${esc(st.err)}</span></div>` : ''}
+      <button type="button" class="btn primary" data-shmake ${ex && SHARE_SECTIONS.some((s) => st.secs.has(s.k)) ? '' : 'disabled'}>${icon('plus')} إنشاء الرابط</button>
+      ${st.made ? `<div class="sh-made"><b>${icon('check')} الرابط جاهز — انسخه الآن، فلا يُعرض مرة أخرى</b><div class="sh-url"><input class="in" readonly value="${esc(st.made)}" id="shUrl"><button type="button" class="btn" data-shcopy>${icon('copy')} نسخ</button></div><small>من يفتحه يرى الأقسام المختارة فقط دون أي تعديل، حتى انتهاء المدة أو إيقافه من القائمة أدناه.</small></div>` : ''}
+    </div></div>
+    <div class="panel"><div class="panel-h"><h3>الروابط المُنشأة</h3><span class="sub">${st.list ? st.list.length : '…'}</span></div><div class="panel-b">${shareListHTML(st.list)}</div></div>`;
+  };
+  const load = async () => { try { st.list = await Cloud.rpc('shk_share_list', { p_token: Cloud.token() }); } catch (e) { st.list = []; st.err = e.code === 'forbidden' ? 'إنشاء روابط الاطلاع متاح لإدارة الشراكات ومدير النظام.' : (/shk_share/.test(e.message || '') || e.status === 404 ? 'لم تُفعَّل روابط الاطلاع على الخادم بعد — يلزم تشغيل ملف supabase/share_links.sql مرة واحدة.' : 'تعذّر تحميل الروابط.'); } draw(); };
+  draw(); load();
+  b.oninput = (e) => { if (e.target.id === 'shLabel') st.label = e.target.value; if (e.target.id === 'shDate') { st.date = e.target.value; draw(); } };
+  b.onchange = (e) => { const k = e.target.dataset.shsec; if (k) { e.target.checked ? st.secs.add(k) : st.secs.delete(k); draw(); } };
+  b.onclick = async (e) => {
+    const d = e.target.closest('[data-shdur]'); if (d) { st.dur = d.dataset.shdur; draw(); return; }
+    if (e.target.closest('[data-shcopy]')) { const i = $('#shUrl', b); i.select(); try { await navigator.clipboard.writeText(i.value); } catch (_) { document.execCommand('copy'); } toast('نُسخ الرابط'); return; }
+    if (e.target.closest('[data-shmake]')) {
+      const ex = expiry(); if (!ex) return;
+      const secs = [...SHARE_SECTIONS, ...SHARE_EXTRAS].map((s) => s.k).filter((k) => st.secs.has(k));
+      try {
+        const r = await Cloud.rpc('shk_share_create', { p_token: Cloud.token(), p_label: st.label.trim(), p_sections: secs, p_expires_at: ex.toISOString() });
+        st.made = shareLink(r.token); st.err = '';
+        await Repo.log('share.create', 'share', r.id, st.label.trim() || 'رابط اطلاع', `حتى ${fmtDT(ex.toISOString())} · ${secs.length} أقسام`);
+      } catch (err) { st.err = { forbidden: 'إنشاء روابط الاطلاع متاح لإدارة الشراكات ومدير النظام.', bad_expiry: 'مدة الرابط غير صحيحة (أقصى 90 يومًا).' }[err.code] || 'تعذّر إنشاء الرابط.'; }
+      await load(); return;
+    }
+    const rv = e.target.closest('[data-shrevoke]');
+    if (rv && await confirmDlg('إيقاف هذا الرابط؟ لن يعمل بعد الآن، وتُغلق جلسات من يتصفح به.', { ok: 'إيقاف الرابط', danger: true })) {
+      try { await Cloud.rpc('shk_share_revoke', { p_token: Cloud.token(), p_id: rv.dataset.shrevoke }); await Repo.log('share.revoke', 'share', rv.dataset.shrevoke, 'رابط اطلاع', 'أُوقف'); toast('أُوقف الرابط'); } catch (_) { toast('تعذّر إيقاف الرابط', 'err'); }
+      await load();
+    }
+  };
+}
+function shareListHTML(list) {
+  if (!list) return '<p class="muted small">جارٍ التحميل…</p>';
+  if (!list.length) return '<p class="muted small">لم يُنشأ أي رابط بعد.</p>';
+  const lab = (k) => ([...SHARE_SECTIONS, ...SHARE_EXTRAS].find((s) => s.k === k) || {}).l || k;
+  return `<div class="tbl-wrap"><table class="tbl sh-tbl"><thead><tr><th>الرابط</th><th>الأقسام</th><th>ينتهي</th><th>الفتح</th><th>الحالة</th><th></th></tr></thead><tbody>${list.map((x) => {
+    const live = !x.revoked && new Date(x.expires) > new Date();
+    return `<tr class="${live ? '' : 'off'}"><td><b>${esc(x.label || 'رابط اطلاع')}</b><small class="muted xs" style="display:block">${esc(fmtDT(x.at))}</small></td>
+      <td><div class="sh-tags">${(x.sections || []).map((k) => `<em>${esc(lab(k).split(' ')[0] === 'إظهار' ? 'بيانات التواصل' : lab(k))}</em>`).join('')}</div></td>
+      <td class="small">${esc(fmtDT(x.expires))}</td><td class="small">${x.opens ? `${nf(x.opens)} مرة${x.last ? `<small class="muted xs" style="display:block">آخرها ${esc(fmtDT(x.last))}</small>` : ''}` : '—'}</td>
+      <td>${x.revoked ? '<span class="chip">موقوف</span>' : live ? '<span class="chip ok">سارٍ</span>' : '<span class="chip">منتهٍ</span>'}</td>
+      <td>${live ? `<button type="button" class="btn sm ghost" data-shrevoke="${esc(x.id)}">${icon('x')} إيقاف</button>` : ''}</td></tr>`;
+  }).join('')}</tbody></table></div><p class="xs muted" style="margin-top:8px">لا يُحفظ الرابط نفسه على الخادم؛ لإرساله مرة أخرى أنشئ رابطًا جديدًا.</p>`;
 }
 
 /* —— 05-ui.js —— */
@@ -20771,6 +21031,7 @@ const SET_TABS = [
   { id: 'lists', t: 'القوائم', perm: 'manage.lists' },
   { id: 'forms', t: 'إعدادات النماذج', perm: 'manage.accounts' },
   { id: 'roles', t: 'الحسابات والصلاحيات', perm: null },
+  { id: 'share', t: 'روابط الاطلاع', perm: 'manage.accounts' },
   { id: 'data', t: 'البيانات والنسخ الاحتياطي', perm: 'manage.backup' },
   { id: 'audit', t: 'سجل التغييرات', perm: 'view.audit' },
 ];
@@ -20781,7 +21042,7 @@ function renderSettings(el, r) {
   el.innerHTML = `<div class="ph"><div><h1>الإعدادات</h1><p>إدارة التصنيفات والجهات والإدارات ومحتوى الرئيسية والبيانات، مع سجل مبسط للتغييرات.</p></div></div>
     <div class="set-wrap"><nav class="set-nav">${tabs.map((t) => `<a href="#/settings/${t.id}" class="${t.id === tab ? 'on' : ''}">${t.t}</a>`).join('')}<a href="#/partners">الجهات الشريكة</a></nav><div id="sbody"></div></div>`;
   const body = $('#sbody', el);
-  ({ general: setGeneral, design: setDesignTab, tour: setTourTab, home: setHome, lists: setLists, forms: setFormsCfg, roles: setRoles, data: setData, audit: setAudit })[tab](body);
+  ({ general: setGeneral, design: setDesignTab, tour: setTourTab, home: setHome, lists: setLists, forms: setFormsCfg, roles: setRoles, share: setShareTab, data: setData, audit: setAudit })[tab](body);
 }
 /* إعدادات النماذج: معايير التقييم المبدئي وأوزانها وحدود النتيجة */
 function setFormsCfg(b) {
@@ -21570,7 +21831,7 @@ const DESIGNS = {
     desc: 'واجهة رسمية بخلفية عاجية وأخضر مروج وخطوط ذهبية، وعناوين بخط النسخ، ولوحة «إحاطة المجلس» بفصول مرقّمة: رسائل رئيسية، وأثر بالرموز، وشبكة الشركاء، وتدفق المحفظة، ومسار زمني، وقرارات مطلوبة، مع وضع عرض تقديمي.',
     traits: ['ترويسة رسمية بالتاريخين الهجري والميلادي', 'إحاطة بفصول مرقّمة وعرض تقديمي', 'رسوم تروي القصة: رموز وشبكة وتدفق ومسار زمني'] },
 };
-const design = () => { const d = D.settings && D.settings.design; return DESIGNS[d] ? d : 'classic'; };
+const design = () => { if (App.share) return 'board'; const d = D.settings && D.settings.design; return DESIGNS[d] ? d : 'classic'; };
 function applyDesignAttr() { document.documentElement.dataset.design = design(); if (typeof applyTheme === 'function') applyTheme(); }
 
 /* معاينات مصغرة تعبّر عن تكوين كل اتجاه */
@@ -27287,7 +27548,7 @@ function navGroups() {
     { id: 'pt', t: 'الشراكات', ic: 'leaf', items: [{ h: '#/partnerships', ic: 'layers', l: 'سجل الشراكات', m: ['partnerships', 'partnership', 'pform'] }, can('view.reports') && { h: '#/reports', ic: 'file', l: 'التقارير', m: ['reports', 'reportsMk'] }, can('view.partners') && { h: '#/partners', ic: 'building', l: 'الجهات الشريكة', m: ['partners', 'partner'] }, { h: '#/stories', ic: 'award', l: 'الإنجازات', m: ['stories'] }, { h: '#/media', ic: 'image', l: 'مركز الصور', m: ['media'] }, { h: '#/gallery', ic: 'star', l: 'معرض الأثر', m: ['gallery'] }, { h: '#/process', ic: 'convert', l: 'مسار الشراكة', m: ['process'] }, can('manage.content') && { h: '#/content', ic: 'news', l: 'إدارة المحتوى', m: ['content'] }] },
     { id: 'share', t: 'شارك', ic: 'msg', items: [{ h: '#/share', ic: 'send', l: 'شارك بمقترح', m: ['share', 'shareForm', 'shareDone'] }, (can('proposal.review') || dept) && { h: '#/proposals', ic: 'inbox', l: dept ? 'مقترحاتي' : 'المقترحات الواردة', m: ['proposals', 'proposal'], cnt: newCount }] },
     { id: 'adm', t: 'الإدارة', ic: 'lock', items: [can('manage.lists') && { h: '#/settings/lists', ic: 'list', l: 'القوائم', m: ['settings'], only: 'lists' }, (can('manage.lists') || can('manage.content')) && { h: '#/settings', ic: 'settings', l: 'الإعدادات', m: ['settings'], not: 'audit,lists' }, can('view.audit') && { h: '#/settings/audit', ic: 'history', l: 'سجل التغييرات', m: ['settings'], only: 'audit' }] },
-  ].map((g) => ({ ...g, items: g.items.filter(Boolean) })).filter((g) => g.items.length);
+  ].map((g) => ({ ...g, items: g.items.filter(Boolean).filter((it) => !App.share || shareNavOk(it)) })).filter((g) => g.items.length);
 }
 function renderShell() {
   let app = $('#app');
@@ -27319,7 +27580,7 @@ function renderShell() {
   const demo = showDemo() ? `<button class="demo-ribbon" data-demo title="البيانات التجريبية">${icon('info')}<span class="dr-t">يتضمن بيانات تجريبية</span></button>` : '';
   const search = (ph) => `<div class="gsearch"><input id="gq" type="search" placeholder="${ph}" aria-label="بحث عام" autocomplete="off">${icon('search')}</div>`;
   if (dz === 'board') {
-    $('#topbar').innerHTML = boardTopbarHTML(tourBtn, demo, roleBox);
+    $('#topbar').innerHTML = App.share ? boardTopbarHTML('', '', '') : boardTopbarHTML(tourBtn, demo, roleBox);
   } else {
     $('#topbar').innerHTML = `<button class="icon-btn menu-btn" data-menu aria-label="القائمة">${icon('menu')}</button>
     <div class="crumbs" id="crumbs"></div>
@@ -27330,6 +27591,7 @@ function renderShell() {
   hydrateFiles($('#side')); hydrateFiles($('#topbar'));
   renderDesignSwitcher();
   updateNav();
+  shareShell();
   if (!App.navIntro) setTimeout(() => { App.navIntro = true; const n = $('.side .nav'); n && n.classList.remove('intro'); }, 1200);
 }
 function moveNavPill(animate = true) {
@@ -27519,6 +27781,7 @@ function route() {
   if (App.ret && !/^\/reports(\/marketing)?$/.test(path) && ('#' + path) !== App.ret.hash.split('?')[0]) App.ret = null;
   let def = null, m = null;
   for (const d of ROUTES) { m = d.re.exec(path); if (m) { def = d; break; } }
+  if (App.share && (!def || !shareRouteOk(def.name))) { const f = shareFirst(); if (location.hash !== f) { location.hash = f; return; } }
   const main = $('#main');
   const page = document.createElement('div');
   if (!def) {
@@ -27539,6 +27802,7 @@ function route() {
     console.error(e);
     page.innerHTML = emptyHTML({ ic: 'alert', title: 'تعذّر عرض الصفحة', text: `حدث خطأ أثناء عرض هذه الصفحة: ${esc(e.message)}. بياناتك محفوظة؛ جرّب إعادة التحميل.`, actions: '<button class="btn" onclick="location.reload()">إعادة التحميل</button><a class="btn ghost" href="#/">الرئيسية</a>' });
   }
+  if (App.share) page.querySelectorAll('a[href^="#/"]').forEach((x) => { const p = x.getAttribute('href').slice(1).split('?')[0] || '/'; const d = ROUTES.find((r) => r.re.test(p)); if (!d || !shareRouteOk(d.name)) x.style.display = 'none'; }); // رابط الاطلاع: لا روابط لأقسام غير مختارة
   updateNav();
   if (['home', 'achievements', 'news', 'stories'].includes(def.name)) requestAnimationFrame(() => revealify(page));
   boardRouteEnter(page, def.name);
@@ -27673,6 +27937,7 @@ async function boot() {
     if (!D.settings) await seedAll();
     /* المنصة المشتركة: التحديثات تُطبَّق بعد سحب بيانات الخادم (في cloudEnter) حتى تُرفع إليه، لا على نسخة الجهاز وحدها */
     if (!Cloud.on && migrate()) { await Repo.saveSettings(); for (const c of ['partnerships', 'achievements', 'partners']) await Store.putMany(c, D[c]); }
+    if (!(await shareBoot())) return; // رابط اطلاع: جلسة الرابط وحدها
     applyTheme();
     if (!authBoot()) { showLogin(); splashSync(false); return; }
     if (Cloud.on) { if (!(await cloudEnter())) return; applyTheme(); }

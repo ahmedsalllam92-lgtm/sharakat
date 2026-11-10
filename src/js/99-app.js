@@ -10,7 +10,7 @@ function navGroups() {
     { id: 'pt', t: 'الشراكات', ic: 'leaf', items: [{ h: '#/partnerships', ic: 'layers', l: 'سجل الشراكات', m: ['partnerships', 'partnership', 'pform'] }, can('view.reports') && { h: '#/reports', ic: 'file', l: 'التقارير', m: ['reports', 'reportsMk'] }, can('view.partners') && { h: '#/partners', ic: 'building', l: 'الجهات الشريكة', m: ['partners', 'partner'] }, { h: '#/stories', ic: 'award', l: 'الإنجازات', m: ['stories'] }, { h: '#/media', ic: 'image', l: 'مركز الصور', m: ['media'] }, { h: '#/gallery', ic: 'star', l: 'معرض الأثر', m: ['gallery'] }, { h: '#/process', ic: 'convert', l: 'مسار الشراكة', m: ['process'] }, can('manage.content') && { h: '#/content', ic: 'news', l: 'إدارة المحتوى', m: ['content'] }] },
     { id: 'share', t: 'شارك', ic: 'msg', items: [{ h: '#/share', ic: 'send', l: 'شارك بمقترح', m: ['share', 'shareForm', 'shareDone'] }, (can('proposal.review') || dept) && { h: '#/proposals', ic: 'inbox', l: dept ? 'مقترحاتي' : 'المقترحات الواردة', m: ['proposals', 'proposal'], cnt: newCount }] },
     { id: 'adm', t: 'الإدارة', ic: 'lock', items: [can('manage.lists') && { h: '#/settings/lists', ic: 'list', l: 'القوائم', m: ['settings'], only: 'lists' }, (can('manage.lists') || can('manage.content')) && { h: '#/settings', ic: 'settings', l: 'الإعدادات', m: ['settings'], not: 'audit,lists' }, can('view.audit') && { h: '#/settings/audit', ic: 'history', l: 'سجل التغييرات', m: ['settings'], only: 'audit' }] },
-  ].map((g) => ({ ...g, items: g.items.filter(Boolean) })).filter((g) => g.items.length);
+  ].map((g) => ({ ...g, items: g.items.filter(Boolean).filter((it) => !App.share || shareNavOk(it)) })).filter((g) => g.items.length);
 }
 function renderShell() {
   let app = $('#app');
@@ -42,7 +42,7 @@ function renderShell() {
   const demo = showDemo() ? `<button class="demo-ribbon" data-demo title="البيانات التجريبية">${icon('info')}<span class="dr-t">يتضمن بيانات تجريبية</span></button>` : '';
   const search = (ph) => `<div class="gsearch"><input id="gq" type="search" placeholder="${ph}" aria-label="بحث عام" autocomplete="off">${icon('search')}</div>`;
   if (dz === 'board') {
-    $('#topbar').innerHTML = boardTopbarHTML(tourBtn, demo, roleBox);
+    $('#topbar').innerHTML = App.share ? boardTopbarHTML('', '', '') : boardTopbarHTML(tourBtn, demo, roleBox);
   } else {
     $('#topbar').innerHTML = `<button class="icon-btn menu-btn" data-menu aria-label="القائمة">${icon('menu')}</button>
     <div class="crumbs" id="crumbs"></div>
@@ -53,6 +53,7 @@ function renderShell() {
   hydrateFiles($('#side')); hydrateFiles($('#topbar'));
   renderDesignSwitcher();
   updateNav();
+  shareShell();
   if (!App.navIntro) setTimeout(() => { App.navIntro = true; const n = $('.side .nav'); n && n.classList.remove('intro'); }, 1200);
 }
 function moveNavPill(animate = true) {
@@ -242,6 +243,7 @@ function route() {
   if (App.ret && !/^\/reports(\/marketing)?$/.test(path) && ('#' + path) !== App.ret.hash.split('?')[0]) App.ret = null;
   let def = null, m = null;
   for (const d of ROUTES) { m = d.re.exec(path); if (m) { def = d; break; } }
+  if (App.share && (!def || !shareRouteOk(def.name))) { const f = shareFirst(); if (location.hash !== f) { location.hash = f; return; } }
   const main = $('#main');
   const page = document.createElement('div');
   if (!def) {
@@ -262,6 +264,7 @@ function route() {
     console.error(e);
     page.innerHTML = emptyHTML({ ic: 'alert', title: 'تعذّر عرض الصفحة', text: `حدث خطأ أثناء عرض هذه الصفحة: ${esc(e.message)}. بياناتك محفوظة؛ جرّب إعادة التحميل.`, actions: '<button class="btn" onclick="location.reload()">إعادة التحميل</button><a class="btn ghost" href="#/">الرئيسية</a>' });
   }
+  if (App.share) page.querySelectorAll('a[href^="#/"]').forEach((x) => { const p = x.getAttribute('href').slice(1).split('?')[0] || '/'; const d = ROUTES.find((r) => r.re.test(p)); if (!d || !shareRouteOk(d.name)) x.style.display = 'none'; }); // رابط الاطلاع: لا روابط لأقسام غير مختارة
   updateNav();
   if (['home', 'achievements', 'news', 'stories'].includes(def.name)) requestAnimationFrame(() => revealify(page));
   boardRouteEnter(page, def.name);
@@ -396,6 +399,7 @@ async function boot() {
     if (!D.settings) await seedAll();
     /* المنصة المشتركة: التحديثات تُطبَّق بعد سحب بيانات الخادم (في cloudEnter) حتى تُرفع إليه، لا على نسخة الجهاز وحدها */
     if (!Cloud.on && migrate()) { await Repo.saveSettings(); for (const c of ['partnerships', 'achievements', 'partners']) await Store.putMany(c, D[c]); }
+    if (!(await shareBoot())) return; // رابط اطلاع: جلسة الرابط وحدها
     applyTheme();
     if (!authBoot()) { showLogin(); splashSync(false); return; }
     if (Cloud.on) { if (!(await cloudEnter())) return; applyTheme(); }

@@ -66,7 +66,7 @@ const Session = {
     return 'مستخدم للاطلاع';
   },
 };
-const can = (perm) => (PERMS[perm] || []).includes(Session.role());
+const can = (perm) => (App.share ? shareCan(perm) : (PERMS[perm] || []).includes(Session.role())); // روابط الاطلاع: صلاحيات الرابط وحده
 
 /* ===== القوائم والتصنيفات ===== */
 const L = (k) => (D.settings && D.settings.lists && D.settings.lists[k]) || [];

@@ -7,7 +7,7 @@ const DESIGNS = {
     desc: 'واجهة رسمية بخلفية عاجية وأخضر مروج وخطوط ذهبية، وعناوين بخط النسخ، ولوحة «إحاطة المجلس» بفصول مرقّمة: رسائل رئيسية، وأثر بالرموز، وشبكة الشركاء، وتدفق المحفظة، ومسار زمني، وقرارات مطلوبة، مع وضع عرض تقديمي.',
     traits: ['ترويسة رسمية بالتاريخين الهجري والميلادي', 'إحاطة بفصول مرقّمة وعرض تقديمي', 'رسوم تروي القصة: رموز وشبكة وتدفق ومسار زمني'] },
 };
-const design = () => { const d = D.settings && D.settings.design; return DESIGNS[d] ? d : 'classic'; };
+const design = () => { if (App.share) return 'board'; const d = D.settings && D.settings.design; return DESIGNS[d] ? d : 'classic'; };
 function applyDesignAttr() { document.documentElement.dataset.design = design(); if (typeof applyTheme === 'function') applyTheme(); }
 
 /* معاينات مصغرة تعبّر عن تكوين كل اتجاه */
