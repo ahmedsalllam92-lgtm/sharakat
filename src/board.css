@@ -891,3 +891,8 @@
 .bo-mx td.tot{display:table-cell!important;height:76px}
 .bo-mx-t{display:flex;align-items:center;gap:10px}
 .bo-calc em+em::before{content:none}
+/* القائمة العلوية — الوضع الليلي: أخضر أهدأ بدل النعناعي الساطع، وأزرار الإجراء الرئيسية ذهبية */
+:root[data-design="board"][data-theme="dark"]{--petrol:#9CC7B2;--petrol-2:#B7D8C8;--petrol-3:#7FAF98;--accent:#9CC7B2;--sec-1:#9CC7B2;--xb-sec-1:#9CC7B2;--chart-1:#9CC7B2;--st-active:#6FA88C;--ok:#9CC7B2}
+[data-design="board"][data-theme="dark"] .dbar-acts .da-btn.primary{background:var(--gold);border-color:var(--gold);color:#0A1813}
+[data-design="board"][data-theme="dark"] .dbar-acts .da-btn.primary svg{stroke:#0A1813}
+[data-design="board"][data-theme="dark"] .rnw-fab{background:radial-gradient(circle at 35% 30%,#24493D,#132A23 70%);box-shadow:0 0 0 1px rgba(212,176,106,.35),0 18px 40px -16px rgba(0,0,0,.8)}
