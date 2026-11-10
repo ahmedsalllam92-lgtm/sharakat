@@ -49,7 +49,7 @@ function initHeroRot(root) {
     box.querySelectorAll('.hrot-s').forEach((s, j) => { s.classList.toggle('on', j === i); s.classList.toggle('prev', j === (i - 1 + n) % n); });
     box.querySelectorAll('[data-hc]').forEach((s, j) => s.classList.toggle('on', j === i));
     box.querySelectorAll('[data-hd]').forEach((s, j) => s.classList.toggle('on', j === i));
-    const twin = root.querySelector('[data-hrot-twin]'); if (twin) { const nx = box.querySelectorAll('.hrot-s img')[(i + 1) % n]; if (nx) { twin.classList.remove('in'); void twin.offsetWidth; twin.src = nx.src || ''; twin.classList.add('in'); } }
+    const twin = root.querySelector('[data-hrot-twin]'); if (twin) { const nx = box.querySelectorAll('.hrot-s img')[(i + 1) % n]; if (nx) { twin.classList.remove('in'); void twin.offsetWidth; twin.src = nx.src || ''; twin.classList.add('in'); } const cap = root.querySelector('[data-hrot-twincap]'); const sl = box.querySelectorAll('.hrot-s')[(i + 1) % n]; if (cap && sl) cap.textContent = sl.getAttribute('aria-label') || ''; }
   };
   clearInterval(App.hrotT);
   if (n > 1) App.hrotT = setInterval(() => { if (!document.body.contains(box)) return clearInterval(App.hrotT); if (!paused && !document.hidden) show(i + 1); }, 5200);

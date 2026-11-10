@@ -118,7 +118,7 @@ function renderHomeBoard(el) {
         </div>
         <div class="bo-hero-m">
           <figure class="bo-ph a">${heroRotHTML('board') || (photoA ? `<img class="photo" src="${photoA.src}" alt="${esc(photoA.title)}">` : coverHTML('bo-a', null, { W: 800, H: 600 }))}</figure>
-          ${photoB ? `<figure class="bo-ph b"><img class="photo hrot-twin" data-hrot-twin src="${photoB.src}" alt=""></figure>` : ''}
+          ${photoB ? `<figure class="bo-ph b"><img class="photo hrot-twin" data-hrot-twin src="${photoB.src}" alt=""><figcaption class="bo-ph-cap" data-hrot-twincap>وقف الأمير صيته بنت عبدالعزيز</figcaption></figure>` : ''}
           <div class="bo-medal" aria-hidden="true"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="56"/><circle cx="60" cy="60" r="47" class="rot"/><circle cx="60" cy="60" r="39" class="inr"/></svg><b>${c.partners}</b><span>جهة شريكة</span></div>
         </div>
       </div>

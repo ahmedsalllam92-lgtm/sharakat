@@ -4146,3 +4146,20 @@ html.share-mode [data-palette]{display:none!important}
 .page.full .dbar-in{max-width:1720px;padding:0 20px}
 .dbar-acts a.da-btn{display:grid!important;place-items:center;padding:0!important;line-height:0;text-decoration:none}
 .dbar-acts .da-btn>svg,.dbar-acts .da-btn>.ic{width:16px!important;height:16px!important;margin:0!important;position:static!important;transform:none!important}
+/* رأس الشراكة بلا صورة: حركة هادئة بدرجات الثيم */
+.dhead.dh-live .cover{background:radial-gradient(ellipse 70% 90% at 75% 20%,#1A5C46 0%,#0F4433 45%,#0A2E24 100%)}
+.dhead.dh-live .cover .dh-fx{position:absolute;inset:0;pointer-events:none}
+.dhead.dh-live .cover svg.topo{animation:dhDrift 38s ease-in-out infinite alternate;transform-origin:60% 40%}
+.dhead.dh-live .topo-path{stroke:rgba(230,199,134,.10)}
+.dhead.dh-live .topo-path.hi{stroke:rgba(230,199,134,.55);stroke-dasharray:6 14;animation:dhFlow 9s linear infinite}
+@keyframes dhDrift{from{transform:scale(1.04) translate(0,0)}to{transform:scale(1.1) translate(-2%,1.5%)}}
+@keyframes dhFlow{to{stroke-dashoffset:-200}}
+:root[data-theme="dark"] .dhead.dh-live .cover{background:radial-gradient(ellipse 70% 90% at 75% 15%,#22323B 0%,#18242C 45%,#10191F 100%)}
+:root[data-theme="dark"] .dhead.dh-live .topo-path{stroke:rgba(212,176,106,.09)}
+:root[data-theme="dark"] .dhead.dh-live .topo-path.hi{stroke:rgba(212,176,106,.45)}
+:root[data-theme="dark"] .dhead.dh-live .shade{background:linear-gradient(180deg,rgba(16,25,31,0) 30%,rgba(16,25,31,.55))!important}
+@media (prefers-reduced-motion:reduce){.dhead.dh-live .cover svg.topo,.dhead.dh-live .topo-path.hi{animation:none}}
+/* الصورة الصغيرة في الرئيسية: اسم الشراكة */
+.bo-ph.b{position:relative}
+.bo-ph-cap{position:absolute;inset-inline:10px;bottom:10px;padding:4px 10px;border-radius:7px;background:rgba(12,30,24,.72);color:#F3EBD8;font-size:11px;font-weight:600;line-height:1.4;backdrop-filter:blur(4px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .4s}
+.bo-ph-cap:empty{display:none}
