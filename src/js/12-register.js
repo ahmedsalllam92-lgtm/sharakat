@@ -70,6 +70,7 @@ function renderRegister(el, r) {
     const vw = App.ui[vkey];
     body.innerHTML = vw === 'cards' ? regCards(list) : regTable(list);
     hydrateFiles(body);
+    try { goldBadgesLive($('#regBody', el)); } catch (_) { /* زخرفة */ }
   };
   draw();
   /* الطباعة (حتى بـ Ctrl+P) تكون دائمًا بالجدول الرسمي ثم يعود العرض كما كان */

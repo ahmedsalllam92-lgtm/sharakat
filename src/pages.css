@@ -4277,3 +4277,14 @@ html.share-mode [data-palette]{display:none!important}
 :root[data-theme="dark"] .orb .rg{stroke:rgba(212,176,106,.14)}
 :root[data-theme="dark"] .orb-sec{background:rgba(16,25,31,.75)}
 :root[data-theme="dark"] .orb-n small{color:#CBD3D6}
+/* شرارات شارة الشراكة الذهبية */
+.pc-gold,.rt-gold{overflow:visible}
+.pc-gold .gburst{inset-inline-start:17px}
+.rt-gold{position:relative}.rt-gold .gburst{inset-inline-start:9px}.rt-gold .gburst .ring{left:-12px;top:-12px;width:24px;height:24px}
+.pc-gold.gpop svg,.rt-gold.gpop svg{animation:gPop .7s cubic-bezier(.2,1.6,.4,1)}
+.pc-gold::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);background-size:250% 100%;background-position:130% 0;opacity:0}
+.pc-gold.gpop::after{animation:gSheenB 1s ease forwards}
+@keyframes gSheenB{0%{opacity:1;background-position:130% 0}100%{opacity:1;background-position:-30% 0}}
+@media print{.gburst{display:none!important}}
+.pc-gold .gburst .sp,.rt-gold .gburst .sp{width:calc(var(--s) * 1.5);height:calc(var(--s) * 1.5);background:#FFE7A8;filter:drop-shadow(0 0 4px rgba(255,220,140,.95))}
+.pc-gold .gburst .ring{border-color:#FFE7A8;box-shadow:0 0 10px rgba(255,220,140,.8)}

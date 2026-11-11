@@ -7879,6 +7879,17 @@ html.share-mode [data-palette]{display:none!important}
 :root[data-theme="dark"] .orb .rg{stroke:rgba(212,176,106,.14)}
 :root[data-theme="dark"] .orb-sec{background:rgba(16,25,31,.75)}
 :root[data-theme="dark"] .orb-n small{color:#CBD3D6}
+/* شرارات شارة الشراكة الذهبية */
+.pc-gold,.rt-gold{overflow:visible}
+.pc-gold .gburst{inset-inline-start:17px}
+.rt-gold{position:relative}.rt-gold .gburst{inset-inline-start:9px}.rt-gold .gburst .ring{left:-12px;top:-12px;width:24px;height:24px}
+.pc-gold.gpop svg,.rt-gold.gpop svg{animation:gPop .7s cubic-bezier(.2,1.6,.4,1)}
+.pc-gold::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);background-size:250% 100%;background-position:130% 0;opacity:0}
+.pc-gold.gpop::after{animation:gSheenB 1s ease forwards}
+@keyframes gSheenB{0%{opacity:1;background-position:130% 0}100%{opacity:1;background-position:-30% 0}}
+@media print{.gburst{display:none!important}}
+.pc-gold .gburst .sp,.rt-gold .gburst .sp{width:calc(var(--s) * 1.5);height:calc(var(--s) * 1.5);background:#FFE7A8;filter:drop-shadow(0 0 4px rgba(255,220,140,.95))}
+.pc-gold .gburst .ring{border-color:#FFE7A8;box-shadow:0 0 10px rgba(255,220,140,.8)}
 </style>
 </head>
 <body>
@@ -18028,6 +18039,18 @@ function goldSectionHTML(board) {
     <div class="gold-grid ${L_.length === 1 ? 'one' : ''}">${L_.map(goldCardHTML).join('')}</div>
   </section>`;
 }
+/* شارة «شراكة ذهبية» في البطاقات والجدول: تتطاير منها شرارات النجمة نفسها عند ظهورها، ثم كل بضع ثوانٍ، وعند المرور عليها */
+function goldBadgesLive(root = document) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const els = [...root.querySelectorAll('.pc-gold, .rt-gold')].filter((x) => !x._gl); if (!els.length) return;
+  const fire = (b) => { if (b.isConnected && b._vis && !document.hidden) { goldBurst(b); b.classList.remove('gpop'); void b.offsetWidth; b.classList.add('gpop'); } };
+  const io = new IntersectionObserver((ents) => ents.forEach((e) => { const b = e.target; b._vis = e.isIntersecting; if (e.isIntersecting && !b._first) { b._first = true; setTimeout(() => fire(b), 300 + Math.random() * 500); } }), { threshold: 0.6 });
+  els.forEach((b, i) => {
+    b._gl = true; io.observe(b);
+    const card = b.closest('.pc, tr'); if (card) card.addEventListener('mouseenter', () => fire(b));
+    const t = setInterval(() => { if (!b.isConnected) { clearInterval(t); io.unobserve(b); return; } fire(b); }, 6000 + i * 700);
+  });
+}
 
 /* —— 10c-showcase.js —— */
 /* =====================================================================
@@ -19765,6 +19788,7 @@ function renderRegister(el, r) {
     const vw = App.ui[vkey];
     body.innerHTML = vw === 'cards' ? regCards(list) : regTable(list);
     hydrateFiles(body);
+    try { goldBadgesLive($('#regBody', el)); } catch (_) { /* زخرفة */ }
   };
   draw();
   /* الطباعة (حتى بـ Ctrl+P) تكون دائمًا بالجدول الرسمي ثم يعود العرض كما كان */

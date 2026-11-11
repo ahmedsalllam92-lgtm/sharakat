@@ -97,3 +97,15 @@ function goldSectionHTML(board) {
     <div class="gold-grid ${L_.length === 1 ? 'one' : ''}">${L_.map(goldCardHTML).join('')}</div>
   </section>`;
 }
+/* شارة «شراكة ذهبية» في البطاقات والجدول: تتطاير منها شرارات النجمة نفسها عند ظهورها، ثم كل بضع ثوانٍ، وعند المرور عليها */
+function goldBadgesLive(root = document) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const els = [...root.querySelectorAll('.pc-gold, .rt-gold')].filter((x) => !x._gl); if (!els.length) return;
+  const fire = (b) => { if (b.isConnected && b._vis && !document.hidden) { goldBurst(b); b.classList.remove('gpop'); void b.offsetWidth; b.classList.add('gpop'); } };
+  const io = new IntersectionObserver((ents) => ents.forEach((e) => { const b = e.target; b._vis = e.isIntersecting; if (e.isIntersecting && !b._first) { b._first = true; setTimeout(() => fire(b), 300 + Math.random() * 500); } }), { threshold: 0.6 });
+  els.forEach((b, i) => {
+    b._gl = true; io.observe(b);
+    const card = b.closest('.pc, tr'); if (card) card.addEventListener('mouseenter', () => fire(b));
+    const t = setInterval(() => { if (!b.isConnected) { clearInterval(t); io.unobserve(b); return; } fire(b); }, 6000 + i * 700);
+  });
+}
