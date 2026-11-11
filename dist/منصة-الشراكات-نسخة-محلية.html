@@ -7943,6 +7943,24 @@ html.share-mode [data-palette]{display:none!important}
 @media (max-width:760px){.ex-grid{grid-template-columns:1fr}}
 .ext-overlay{position:fixed;inset:0;z-index:99990;overflow:auto}
 .ext-mail-h{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #EFE9DB}.ext-mail-h small{display:block;color:#8C958E;font-size:12px}.ext-mail p{color:#2E3B35;line-height:1.9}.ext-mail .ext-link{max-width:none;margin-top:10px}
+/* مرفقات الجهة الخارجية ورد الاستكمال */
+.ext-form h2 small{font-size:12px;color:#8C958E;font-weight:500}
+.ext-files{grid-column:1/-1;display:flex;flex-direction:column;gap:10px}
+.ext-drop{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px dashed #CFC6AE;border-radius:12px;background:#FDFCF8;cursor:pointer;transition:.2s}
+.ext-drop:hover,.ext-files.over .ext-drop{border-color:#2F7A5E;background:#F1F6F2}
+.ext-drop svg{width:22px;height:22px;color:#2F7A5E;flex:none}
+.ext-drop span{display:flex;flex-direction:column;gap:2px}.ext-drop b{font-size:14px}.ext-drop small{font-size:12px;color:#8C958E}
+.ext-flist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.ext-flist li{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid #EFE9DB;border-radius:10px;background:#fff}
+.ext-flist .ext-fic svg{width:16px;height:16px;color:#A47C32}
+.ext-flist b{flex:1;min-width:0;font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ext-flist small{font-size:12px;color:#8C958E}
+.ext-flist button{border:0;background:none;cursor:pointer;color:#B5543C;padding:2px;display:grid;place-items:center}.ext-flist button svg{width:15px;height:15px}
+.ext-reply{border:1px solid #E9D9A8;background:#FBF7EC;border-radius:14px;padding:16px 18px;margin:18px 0;display:flex;flex-direction:column;gap:12px}
+.ext-reply h2{margin:0;display:flex;align-items:center;gap:8px;font-size:17px}.ext-reply h2 svg{width:18px;height:18px;color:#A47C32}
+.ext-reply blockquote{margin:0;padding:10px 14px;border-inline-start:3px solid #C9A85C;background:#fff;border-radius:8px;line-height:1.8;font-size:14px}
+.ext-reply .ext-actions{margin-top:0}
+.ext-msgs li.mine{background:#F1F6F2;border-color:#D5E4DA}.ext-msgs li.mine small{color:#2F7A5E}
 </style>
 </head>
 <body>
@@ -17404,6 +17422,47 @@ function extShell(inner) {
   document.body.appendChild(d); return d;
 }
 const extMsg = (t, s) => extShell(`<div class="ext-card ext-center"><span class="ext-ic">${icon('info')}</span><h1>${extEsc(t)}</h1><p>${extEsc(s || 'تواصل مع إدارة الشراكات في مؤسسة مروج الأهلية للحصول على رابط جديد.')}</p></div>`);
+/* مرفقات الجهة الخارجية: حتى 5 ميجابايت للملف و10 ملفات */
+const EXT_MAX_FILE = 5 * 1024 * 1024, EXT_MAX_FILES = 10;
+const extFmtSize = (n) => (n >= 1048576 ? (n / 1048576).toFixed(1) + ' م.ب' : Math.max(1, Math.round(n / 1024)) + ' ك.ب');
+function extFilesHTML(id) {
+  return `<div class="ext-files" id="${id}"><label class="ext-drop"><input type="file" multiple hidden>${icon('upload')}<span><b>إرفاق ملفات</b><small>عرض تقديمي، ملف تعريفي، خطاب… حتى 5 ميجابايت للملف</small></span></label><ul class="ext-flist"></ul></div>`;
+}
+/* يربط صندوق الملفات ويعيد دالة تُرجع الملفات المختارة */
+function extFilesBind(box) {
+  const files = [];
+  const draw = () => { box.querySelector('.ext-flist').innerHTML = files.map((f, i) => `<li><span class="ext-fic">${icon('file')}</span><b title="${extEsc(f.name)}">${extEsc(f.name)}</b><small>${extFmtSize(f.size)}</small><button type="button" data-rm="${i}" aria-label="إزالة">${icon('x')}</button></li>`).join(''); };
+  const add = async (list) => {
+    for (let f of list) {
+      if (files.length >= EXT_MAX_FILES) { alert('الحد الأقصى 10 ملفات.'); break; }
+      if (/^image\//.test(f.type) && typeof compressImage === 'function') { try { f = await compressImage(f); } catch (_) { /* */ } }
+      if (f.size > EXT_MAX_FILE) { alert(`حجم «${f.name}» أكبر من 5 ميجابايت.`); continue; }
+      files.push(f);
+    }
+    draw();
+  };
+  const inp = box.querySelector('input[type=file]');
+  inp.onchange = () => { add([...inp.files]); inp.value = ''; };
+  box.addEventListener('dragover', (e) => { e.preventDefault(); box.classList.add('over'); });
+  box.addEventListener('dragleave', () => box.classList.remove('over'));
+  box.addEventListener('drop', (e) => { e.preventDefault(); box.classList.remove('over'); add([...e.dataTransfer.files]); });
+  box.querySelector('.ext-flist').onclick = (e) => { const b = e.target.closest('[data-rm]'); if (b) { files.splice(+b.dataset.rm, 1); draw(); } };
+  box.__add = add;
+  return () => files;
+}
+/* رفع الملفات إلى الخادم بمفتاح الدعوة أو المتابعة، ويعيد معرّفاتها */
+async function extUpload(key, files, onStep) {
+  const ids = [];
+  for (let i = 0; i < files.length; i++) {
+    const f = files[i]; onStep && onStep(i + 1, files.length);
+    const b64 = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1] || ''); r.onerror = rej; r.readAsDataURL(f); });
+    const id = 'f-ext-' + [...crypto.getRandomValues(new Uint8Array(10))].map((x) => x.toString(16).padStart(2, '0')).join('');
+    const r = await Cloud.rpc('shk_ext_file_put', { p_key: key, p_id: id, p_meta: { name: f.name, type: f.type || 'application/octet-stream', size: f.size }, p_data: b64 });
+    if (!r || r.error) throw new Error(r && r.error === 'too_many' ? 'الحد الأقصى 10 ملفات.' : `تعذّر رفع «${f.name}».`);
+    ids.push(id);
+  }
+  return ids;
+}
 /* عند الإقلاع: تعيد false إن عُرضت صفحة خارجية وتوقف الإقلاع العادي */
 async function extBoot() {
   const q = new URLSearchParams(location.search), inv = q.get('propose'), trk = q.get('track');
@@ -17426,8 +17485,8 @@ function extFormPage(inv, info, opts = {}) {
   ];
   const field = ([k, l, t, req, def = '', opts, hint]) => k === 'h' ? `<h2>${l}</h2>` : `<label class="ext-f ${t === 'area' ? 'full' : ''}"><span>${l}${req ? ' <i>*</i>' : ''}</span>${t === 'area' ? `<textarea data-k="${k}" rows="4">${extEsc(def)}</textarea>` : t === 'select' ? `<select data-k="${k}"><option value="">اختر</option>${opts.map((o) => `<option>${extEsc(o)}</option>`).join('')}</select>` : `<input data-k="${k}" type="${t}" value="${extEsc(def)}" ${t === 'email' || t === 'tel' ? 'dir="ltr"' : ''}>`}${hint ? `<small>${hint}</small>` : ''}<em class="err"></em></label>`;
   const d = extShell(`<div class="ext-card"><div class="ext-intro"><small>دعوة من ${extEsc((info.org && info.org.name) || 'مؤسسة مروج الأهلية')}</small><h1>اقتراح شراكة</h1><p>يسعدنا اهتمامكم بالشراكة مع المؤسسة. عبّئوا النموذج وسيصل مباشرة إلى إدارة الشراكات، وتحصلون بعد الإرسال على رابط لمتابعة المقترح والرد عليه.</p></div>
-    <form class="ext-form" novalidate>${F.map(field).join('')}<div class="ext-actions"><button type="submit" class="btn primary">${icon('send')} إرسال المقترح</button></div></form></div>`);
-  const form = d.querySelector('form');
+    <form class="ext-form" novalidate>${F.map(field).join('')}<h2>المرفقات <small>(اختياري)</small></h2>${extFilesHTML('exFiles')}<div class="ext-actions"><button type="submit" class="btn primary">${icon('send')} إرسال المقترح</button></div></form></div>`);
+  const form = d.querySelector('form'), getFiles = extFilesBind(d.querySelector('#exFiles'));
   form.onsubmit = async (e) => {
     e.preventDefault();
     const data = {}; form.querySelectorAll('[data-k]').forEach((x) => { data[x.dataset.k] = x.value.trim(); });
@@ -17438,8 +17497,12 @@ function extFormPage(inv, info, opts = {}) {
     if (bad) { const f = form.querySelector('.ext-f.bad'); f && f.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
     data.contactName = data.requesterName; data.contactEmail = data.requesterEmail;
     const btn = form.querySelector('[type=submit]'); btn.disabled = true; btn.textContent = 'جارٍ الإرسال…';
-    let r; try { r = opts.submit ? await opts.submit(data) : await Cloud.rpc('shk_ext_submit', { p_invite: inv, p_data: data }); } catch (_) { r = { error: 'net' }; }
-    if (!r || r.error) { btn.disabled = false; btn.innerHTML = `${icon('send')} إرسال المقترح`; alert(r && r.error === 'missing' ? 'استكملوا الحقول المطلوبة.' : r && r.error === 'invalid' ? 'انتهت صلاحية رابط الدعوة.' : 'تعذّر الإرسال، حاولوا مرة أخرى.'); return; }
+    let r; try {
+      const fl = getFiles();
+      if (opts.submit) r = await opts.submit(data, fl);
+      else { data.files = await extUpload(inv, fl, (n, t) => { btn.textContent = `جارٍ رفع الملفات ${n} / ${t}…`; }); btn.textContent = 'جارٍ الإرسال…'; r = await Cloud.rpc('shk_ext_submit', { p_invite: inv, p_data: data }); }
+    } catch (e) { r = { error: 'net', msg: e && e.message }; }
+    if (!r || r.error) { btn.disabled = false; btn.innerHTML = `${icon('send')} إرسال المقترح`; alert(r && r.error === 'missing' ? 'استكملوا الحقول المطلوبة.' : r && r.error === 'invalid' ? 'انتهت صلاحية رابط الدعوة.' : (r && r.msg) || 'تعذّر الإرسال، حاولوا مرة أخرى.'); return; }
     const link = `${location.origin}${location.pathname}?track=${r.track}`;
     if (!opts.submit) history.replaceState(null, '', location.pathname + '?track=' + r.track);
     d.querySelector('.ext-main').innerHTML = `<div class="ext-card ext-center"><span class="ext-ic ok">${icon('check')}</span><h1>وصل مقترحكم</h1><p>رقم المقترح <b dir="ltr">${extEsc(r.ref)}</b>. احتفظوا برابط المتابعة لمعرفة الحالة ورد إدارة الشراكات:</p>
@@ -17454,11 +17517,31 @@ async function extTrackPage(trk, opts = {}) {
   const steps = [['تم الاستلام', 1], ['قيد الدراسة', 2], ['القرار', 3]];
   const msgs = (r.events || []).filter((e) => e.message).slice().reverse();
   const fmt = (t) => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-gregory', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(t)); } catch (_) { return String(t || '').slice(0, 10); } };
-  extShell(`<div class="ext-card"><div class="ext-intro"><small>متابعة مقترح شراكة · ${extEsc(r.org || 'مؤسسة مروج الأهلية')}</small><h1>${extEsc(r.partnerName || '')}</h1><p>رقم المقترح <b dir="ltr">${extEsc(r.ref || '')}</b> · قُدّم في ${fmt(r.submittedAt)}</p></div>
+  const last = (r.events || [])[(r.events || []).length - 1], replied = r.status === 'submitted' && last && last.type === 'resubmitted';
+  const ask = r.canReply ? [...(r.events || [])].reverse().find((e) => e.type === 'status' && e.to === 'info') : null;
+  const d = extShell(`<div class="ext-card"><div class="ext-intro"><small>متابعة مقترح شراكة · ${extEsc(r.org || 'مؤسسة مروج الأهلية')}</small><h1>${extEsc(r.partnerName || '')}</h1><p>رقم المقترح <b dir="ltr">${extEsc(r.ref || '')}</b> · قُدّم في ${fmt(r.submittedAt)}</p></div>
     <ol class="ext-steps">${steps.map(([l, n]) => `<li class="${n < step ? 'd' : n === step ? 'c' : ''} ${n === 3 && step === 3 ? (r.status === 'rejected' ? 'no' : 'yes') : ''}"><i>${n < step || (n === 3 && step === 3) ? '✓' : n}</i><span>${n === 3 && step === 3 ? S[0] : l}</span></li>`).join('')}</ol>
-    <div class="ext-status st-${extEsc(r.status)}"><b>${S[0]}</b><p>${S[1]}</p></div>
-    <h2>رسائل إدارة الشراكات</h2>${msgs.length ? `<ul class="ext-msgs">${msgs.map((e) => `<li><small>${fmt(e.at)}${e.to && EXT_STATUS[e.to] ? ' · ' + EXT_STATUS[e.to][0] : ''}</small><p>${extEsc(e.message).replace(/\n/g, '<br>')}</p></li>`).join('')}</ul>` : '<p class="ext-faint">لا توجد رسائل بعد. ستظهر هنا ردود إدارة الشراكات.</p>'}
+    <div class="ext-status st-${extEsc(r.status)}"><b>${replied ? 'وصل ردّكم' : S[0]}</b><p>${replied ? 'أُرسل ردّكم إلى إدارة الشراكات وسيُستكمل دراسة المقترح.' : S[1]}</p></div>
+    ${r.canReply ? `<section class="ext-reply" id="exReply"><h2>${icon('msg')} ردّكم على طلب الاستكمال</h2>${ask && ask.message ? `<blockquote>${extEsc(ask.message).replace(/\n/g, '<br>')}</blockquote>` : ''}
+      <label class="ext-f full"><span>الرد</span><textarea rows="4" id="exReplyT" placeholder="اكتبوا ردّكم أو المعلومات المطلوبة…"></textarea><em class="err"></em></label>${extFilesHTML('exReplyF')}
+      <div class="ext-actions"><button type="button" class="btn primary" id="exReplyGo">${icon('send')} إرسال الرد</button></div></section>` : ''}
+    <h2>المراسلات</h2>${msgs.length ? `<ul class="ext-msgs">${msgs.map((e) => `<li class="${e.type === 'resubmitted' ? 'mine' : ''}"><small>${e.type === 'resubmitted' ? 'ردّكم · ' : ''}${fmt(e.at)}${e.to && EXT_STATUS[e.to] ? ' · ' + EXT_STATUS[e.to][0] : ''}</small><p>${extEsc(e.message).replace(/\n/g, '<br>')}</p></li>`).join('')}</ul>` : '<p class="ext-faint">لا توجد رسائل بعد. ستظهر هنا ردود إدارة الشراكات.</p>'}
+    ${(r.files || []).length ? `<h2>الملفات المرسلة</h2><ul class="ext-flist ro">${r.files.map((f) => `<li><span class="ext-fic">${icon('file')}</span><b>${extEsc(f.name)}</b><small>${extFmtSize(+f.size || 0)}</small></li>`).join('')}</ul>` : ''}
     <div class="ext-actions"><button type="button" class="btn" ${opts.status ? 'disabled' : 'onclick="location.reload()"'}>${icon('history')} تحديث</button></div></div>`);
+  if (!r.canReply) return;
+  const getFiles = extFilesBind(d.querySelector('#exReplyF')), go = d.querySelector('#exReplyGo'), ta = d.querySelector('#exReplyT');
+  go.onclick = async () => {
+    const msg = ta.value.trim(), fl = getFiles(), f = ta.closest('.ext-f');
+    f.classList.remove('bad'); f.querySelector('.err').textContent = '';
+    if (!msg && !fl.length) { f.classList.add('bad'); f.querySelector('.err').textContent = 'اكتبوا ردًّا أو أرفقوا ملفًا.'; return; }
+    go.disabled = true; go.textContent = 'جارٍ الإرسال…';
+    let res; try {
+      if (opts.reply) res = await opts.reply(msg, fl);
+      else { const ids = await extUpload(trk, fl, (n, t) => { go.textContent = `جارٍ رفع الملفات ${n} / ${t}…`; }); res = await Cloud.rpc('shk_ext_reply', { p_track: trk, p_message: msg, p_files: ids }); }
+    } catch (e) { res = { error: 'net', msg: e && e.message }; }
+    if (!res || res.error) { go.disabled = false; go.innerHTML = `${icon('send')} إرسال الرد`; alert(res && res.error === 'closed' ? 'لم يعد المقترح بانتظار ردّكم.' : (res && res.msg) || 'تعذّر الإرسال، حاولوا مرة أخرى.'); return; }
+    extTrackPage(trk, opts);
+  };
 }
 
 /* ===== الإعدادات ← مقترحات الجهات الخارجية ===== */
@@ -17512,11 +17595,21 @@ async function extDemoSubmit(data) {
   const rec = { ...data, id: uid('pr-ext'), ref: `EXT-${today().getFullYear()}-${String(n).padStart(4, '0')}`, status: 'submitted', external: true, extLabel: data.partnerName, department: 'جهة خارجية', createdAt: t, submittedAt: t, updatedAt: t, createdByRole: 'external', demo: false, partnershipId: null, attachments: [],
     events: [{ id: uid('ev'), at: t, by: data.requesterName, role: 'external', type: 'submitted', message: 'قُدّم المقترح عبر رابط الدعوة الخارجي' }] };
   await Repo.save('proposals', rec);
+  await notify([{ grp: 'partnerships' }], { t: `مقترح شراكة من جهة خارجية ${rec.ref}`, b: `جهة خارجية — ${rec.partnerName}`, href: '#/proposals/' + rec.id, ic: 'send' });
   return { ref: rec.ref, track: 'demo' };
 }
 function extDemoStatus() {
   const x = D.proposals.filter((p) => p.external).pop(); if (!x) return { error: 'invalid' };
-  return { ref: x.ref, partnerName: x.partnerName, status: x.status, submittedAt: x.submittedAt, org: D.settings.org.name, events: (x.events || []).filter((e) => ['status', 'submitted'].includes(e.type) && (e.vis || 'all') === 'all').map((e) => ({ at: e.at, type: e.type, to: e.to, message: e.message })) };
+  return { ref: x.ref, partnerName: x.partnerName, status: x.status, submittedAt: x.submittedAt, org: D.settings.org.name, canReply: x.status === 'info', files: (x.attachments || []).filter((a) => a.category === 'مرفقات الجهة الخارجية').map((a) => ({ name: a.name, size: a.size })), events: (x.events || []).filter((e) => ['status', 'submitted', 'resubmitted'].includes(e.type) && (e.vis || 'all') === 'all').map((e) => ({ at: e.at, type: e.type, to: e.to, message: e.message })) };
+}
+/* الاستعراض: رد الجهة على طلب الاستكمال داخل النسخة المعزولة */
+async function extDemoReply(msg) {
+  const x = D.proposals.filter((p) => p.external).pop(); if (!x || x.status !== 'info') return { error: 'closed' };
+  x.status = 'submitted'; x.updatedAt = nowISO();
+  x.events = [...(x.events || []), { id: uid('ev'), at: nowISO(), by: x.requesterName, role: 'external', type: 'resubmitted', vis: 'all', message: msg }];
+  await Repo.save('proposals', x);
+  await notify([{ grp: 'partnerships' }], { t: `ردّت الجهة الخارجية على طلب الاستكمال: ${x.ref}`, b: `جهة خارجية — ${x.partnerName}`, href: '#/proposals/' + x.id, ic: 'msg' });
+  return { ok: true };
 }
 
 /* —— 05-ui.js —— */
@@ -21437,7 +21530,7 @@ function renderProposal(el, r) {
     if (['admin', 'team'].includes(Session.role()) && ['submitted', 'review', 'accepted'].includes(x.status)) A.push(['direct', isExistingReq(x) ? 'تسجيل الشراكة القائمة مباشرة' : 'تحويل مباشر', isExistingReq(x) ? 'primary' : '']);
     actionBox = `<div class="review-box no-print"><h3>إجراء إدارة الشراكات</h3>${x.external ? `<div class="note ext-note">${icon('send')}<span><b>المصدر: جهة خارجية</b> عبر رابط دعوة${x.extLabel ? ` باسم «${esc(x.extLabel)}»` : ''}، قدّمه ${esc(x.requesterName || '')}${x.requesterTitle ? ` (${esc(x.requesterTitle)})` : ''}${x.requesterEmail ? ` — <span dir="ltr">${esc(x.requesterEmail)}</span>` : ''}. يسير في المسار المعتمد كأي مقترح. الرسالة التي تكتبها عند تغيير الحالة تظهر للجهة في صفحة المتابعة الخاصة بها.</span></div>` : ''}
       ${x.status === 'converted' && pt ? `<p class="small" style="margin-bottom:12px">أُنشئ من المقترح سجل الشراكة <a href="#/partnerships/${pt.id}"><b class="code" style="color:inherit">${esc(pt.code)}</b></a>. مرحلة الشراكة الحالية: <b>${esc(stageLabel(pt.stage))}</b>.</p>` : ''}
-      ${x.status === 'info' ? `<p class="small muted" style="margin-bottom:12px">بانتظار استكمال الإدارة المقدمة منذ ${relDays(infoReq ? infoReq.at : x.updatedAt).replace('قبل ', '')}.</p>` : ''}
+      ${x.status === 'info' ? `<p class="small muted" style="margin-bottom:12px">بانتظار ${x.external ? 'رد الجهة الخارجية من صفحة المتابعة' : 'استكمال الإدارة المقدمة'} منذ ${relDays(infoReq ? infoReq.at : x.updatedAt).replace('قبل ', '')}.</p>` : ''}
       ${A.length ? `<div class="acts2">${A.map(([k, l, c]) => `<button class="btn ${c}" data-act="${k}" ${A.length === 1 || (A.length === 3 && k === A[2][0] && false) ? 'style="grid-column:1/-1"' : ''}>${esc(l)}</button>`).join('')}</div>` : ''}
       <div class="field" style="margin-top:14px"><label for="pnote">إضافة ملاحظة</label><textarea class="in" id="pnote" rows="3" style="min-height:76px" placeholder="ملاحظة على المقترح…"></textarea>
         <div class="row" style="justify-content:space-between;margin-top:4px"><label class="check small"><input type="checkbox" id="pvis"> مرئية للإدارة المقدمة</label><button class="btn sm" data-addnote>إضافة</button></div></div>
@@ -23610,6 +23703,7 @@ function extTourScenes() {
     { k: 'inbox', stage: 'x3', t: 'وصول المقترح إلى إدارة الشراكات', run: extTInbox },
     { k: 'reply', stage: 'x3', t: 'الرد على الجهة', run: extTReply },
     { k: 'track', stage: 'x4', t: 'الجهة تتابع الرد', run: extTTrack },
+    { k: 'back', stage: 'x4', t: 'وصل رد الجهة', run: extTBack },
     { k: 'decide', stage: 'x4', t: 'القرار يصل للجهة', run: extTDecide },
     { k: 'end', stage: 'x4', t: 'الخلاصة', run: extTEnd },
   ];
@@ -23660,7 +23754,7 @@ async function startExtTour() {
 /* صفحات الجهة داخل النسخة اليمنى */
 const extTW = () => rqW('r');
 async function extTShowForm() { extTW().extFormPage('demo', { label: EXT_DEMO.label, org: { name: D.settings.org.name } }, { submit: (d) => extTW().extDemoSubmit(d) }); await rqSleep(250); }
-async function extTShowTrack() { extTW().extTrackPage('demo', { status: () => extTW().extDemoStatus() }); await rqSleep(300); }
+async function extTShowTrack() { extTW().extTrackPage('demo', { status: () => extTW().extDemoStatus(), reply: (m) => extTW().extDemoReply(m) }); await rqSleep(300); }
 const extTRec = (sd) => rqW(sd).sbxD().proposals.filter((x) => x.external).pop();
 
 function extTInbox0(link) {
@@ -23707,7 +23801,7 @@ async function extTFill() {
   await rqPoint(sd, '.ext-card', { step: 'الجهة الخارجية', t: 'رقم المقترح ورابط المتابعة', b: `<p>تحصل الجهة على الرقم <b dir="ltr">${esc(x ? x.ref : '')}</b> ورابط متابعة خاص بها تعود إليه لمعرفة الحالة والرد.</p>` }, 3600);
 }
 async function extTInbox() {
-  const sd = 'l'; await rqSync('r', 'l', { bell: false });
+  const sd = 'l'; await rqSync('r', 'l', { title: 'إشعار: مقترح من جهة خارجية' });
   await rqGo(sd, '#/proposals'); await rqSleep(300);
   const row = rqDoc(sd).querySelector('.ext-chip'); const tr = row && row.closest('tr');
   await rqPoint(sd, tr || row, { step: wfActorName('partnerships') + ' · المقترحات الواردة', t: 'وصل المقترح', b: '<p>يظهر في «المقترحات الواردة» مع باقي المقترحات، بوسم <b>«جهة خارجية»</b> يبيّن مصدره.</p>' }, 3600);
@@ -23725,7 +23819,21 @@ async function extTReply() {
 async function extTTrack() {
   const sd = 'r'; await rqSync('l', 'r', { bell: false }); rqActive(sd); await extTShowTrack();
   await rqPoint(sd, '.ext-steps', { step: 'الجهة الخارجية · رابط المتابعة', t: 'أين وصل المقترح', b: '<p>ثلاث مراحل واضحة: تم الاستلام، قيد الدراسة، القرار.</p>' }, 2600);
-  await rqPoint(sd, '.ext-msgs', { step: 'الجهة الخارجية', t: 'رسالة إدارة الشراكات', b: '<p>ترى الجهة الحالة والرسائل الموجهة لها فقط، ولا ترى الملاحظات الداخلية أو بيانات المنصة.</p>' }, 3600);
+  await rqPoint(sd, '#exReply blockquote', { step: 'الجهة الخارجية', t: 'طلب الاستكمال', b: '<p>ترى الجهة الحالة والرسائل الموجهة لها فقط، ولا ترى الملاحظات الداخلية أو بيانات المنصة.</p>' }, 3200);
+  const d = rqDoc(sd);
+  RQ.cardStep = 'الجهة الخارجية · الرد'; RQ.cardT = 'الجهة ترد من الصفحة نفسها'; RQ.cardB = '<p>بلا حساب ولا بريد: تكتب الرد في صفحة المتابعة.</p>';
+  await rqType(sd, d.querySelector('#exReplyT'), 'نفّذنا خلال العامين الماضيين 6 مبادرات تشجير بالشراكة مع البلديات، والمواقع المقترحة مرفقة.');
+  await rqPoint(sd, '#exReplyF .ext-drop', { step: 'الجهة الخارجية · المرفقات', t: 'وإرفاق الملفات', b: '<p>عرض تقديمي، ملف تعريفي، خطاب… حتى 10 ملفات، ويُرفق كل ملف بالمقترح داخل المنصة تحت «مرفقات الجهة الخارجية».</p>' }, 3000);
+  const go = d.querySelector('#exReplyGo'); await rqPoint(sd, go, { step: 'الجهة الخارجية', t: 'إرسال الرد', b: '' }, 1000);
+  go.click(); await rqWaitFor(sd, '.ext-msgs li.mine', 4000);
+  await rqPoint(sd, '.ext-status', { step: 'الجهة الخارجية', t: 'وصل الرد', b: '<p>يعود المقترح إلى إدارة الشراكات لاستكمال الدراسة، ويظهر الرد في المراسلات.</p>' }, 3000);
+}
+async function extTBack() {
+  const sd = 'l', x = extTRec('r'); if (!x) return;
+  rqActive(sd); await rqSync('r', 'l', { title: 'إشعار: ردّت الجهة الخارجية' });
+  await rqGo(sd, '#/proposals/' + x.id); await rqSleep(400);
+  const tl = rqDoc(sd).querySelector('ul.history');
+  await rqPoint(sd, tl || '.review-box', { step: wfActorName('partnerships') + ' · صفحة المقترح', t: 'الرد في سجل المقترح', b: '<p>رد الجهة ومرفقاتها يظهران في المقترح، وتكمل الإدارة الدراسة كالمعتاد.</p>' }, 3400);
 }
 async function extTDecide() {
   const sd = 'l', w = rqW(sd), x = extTRec(sd); if (!x) return;
@@ -23737,7 +23845,7 @@ async function extTDecide() {
 }
 async function extTEnd() {
   RQ.ended = true; rqActive(null);
-  rqCard({ step: 'نهاية الاستعراض', t: 'دعوة الجهات الخارجية في سطور', wide: true, b: `<ul class="rq-ul"><li>رابط دعوة بمدة محددة وعدد مقترحات، يمكن إيقافه في أي وقت.</li><li>الجهة تقترح بلا حساب، وتحصل على رقم ورابط متابعة.</li><li>المقترح يدخل «المقترحات الواردة» بوسم «جهة خارجية» ويسير في المسار المعتمد.</li><li>رسائل تغيير الحالة تصل للجهة في صفحة المتابعة.</li></ul>
+  rqCard({ step: 'نهاية الاستعراض', t: 'دعوة الجهات الخارجية في سطور', wide: true, b: `<ul class="rq-ul"><li>رابط دعوة بمدة محددة وعدد مقترحات، يمكن إيقافه في أي وقت.</li><li>الجهة تقترح بلا حساب، وتحصل على رقم ورابط متابعة.</li><li>المقترح يدخل «المقترحات الواردة» بوسم «جهة خارجية» ويسير في المسار المعتمد.</li><li>رسائل تغيير الحالة تصل للجهة في صفحة المتابعة، وترد عليها وترفق ملفات.</li><li>إشعار في الجرس عند وصول المقترح وعند رد الجهة.</li></ul>
     <p class="small muted">كل ما جرى كان في نسخة معزولة؛ بيانات المنصة كما هي.</p><div class="row" style="gap:8px;margin-top:12px"><button class="btn" type="button" data-rqreplay>${icon('history')} إعادة الاستعراض</button><button class="btn primary" type="button" data-rqclose>إنهاء</button></div>` });
 }
 

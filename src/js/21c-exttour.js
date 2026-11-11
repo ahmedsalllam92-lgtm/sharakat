@@ -14,6 +14,7 @@ function extTourScenes() {
     { k: 'inbox', stage: 'x3', t: 'وصول المقترح إلى إدارة الشراكات', run: extTInbox },
     { k: 'reply', stage: 'x3', t: 'الرد على الجهة', run: extTReply },
     { k: 'track', stage: 'x4', t: 'الجهة تتابع الرد', run: extTTrack },
+    { k: 'back', stage: 'x4', t: 'وصل رد الجهة', run: extTBack },
     { k: 'decide', stage: 'x4', t: 'القرار يصل للجهة', run: extTDecide },
     { k: 'end', stage: 'x4', t: 'الخلاصة', run: extTEnd },
   ];
@@ -64,7 +65,7 @@ async function startExtTour() {
 /* صفحات الجهة داخل النسخة اليمنى */
 const extTW = () => rqW('r');
 async function extTShowForm() { extTW().extFormPage('demo', { label: EXT_DEMO.label, org: { name: D.settings.org.name } }, { submit: (d) => extTW().extDemoSubmit(d) }); await rqSleep(250); }
-async function extTShowTrack() { extTW().extTrackPage('demo', { status: () => extTW().extDemoStatus() }); await rqSleep(300); }
+async function extTShowTrack() { extTW().extTrackPage('demo', { status: () => extTW().extDemoStatus(), reply: (m) => extTW().extDemoReply(m) }); await rqSleep(300); }
 const extTRec = (sd) => rqW(sd).sbxD().proposals.filter((x) => x.external).pop();
 
 function extTInbox0(link) {
@@ -111,7 +112,7 @@ async function extTFill() {
   await rqPoint(sd, '.ext-card', { step: 'الجهة الخارجية', t: 'رقم المقترح ورابط المتابعة', b: `<p>تحصل الجهة على الرقم <b dir="ltr">${esc(x ? x.ref : '')}</b> ورابط متابعة خاص بها تعود إليه لمعرفة الحالة والرد.</p>` }, 3600);
 }
 async function extTInbox() {
-  const sd = 'l'; await rqSync('r', 'l', { bell: false });
+  const sd = 'l'; await rqSync('r', 'l', { title: 'إشعار: مقترح من جهة خارجية' });
   await rqGo(sd, '#/proposals'); await rqSleep(300);
   const row = rqDoc(sd).querySelector('.ext-chip'); const tr = row && row.closest('tr');
   await rqPoint(sd, tr || row, { step: wfActorName('partnerships') + ' · المقترحات الواردة', t: 'وصل المقترح', b: '<p>يظهر في «المقترحات الواردة» مع باقي المقترحات، بوسم <b>«جهة خارجية»</b> يبيّن مصدره.</p>' }, 3600);
@@ -129,7 +130,21 @@ async function extTReply() {
 async function extTTrack() {
   const sd = 'r'; await rqSync('l', 'r', { bell: false }); rqActive(sd); await extTShowTrack();
   await rqPoint(sd, '.ext-steps', { step: 'الجهة الخارجية · رابط المتابعة', t: 'أين وصل المقترح', b: '<p>ثلاث مراحل واضحة: تم الاستلام، قيد الدراسة، القرار.</p>' }, 2600);
-  await rqPoint(sd, '.ext-msgs', { step: 'الجهة الخارجية', t: 'رسالة إدارة الشراكات', b: '<p>ترى الجهة الحالة والرسائل الموجهة لها فقط، ولا ترى الملاحظات الداخلية أو بيانات المنصة.</p>' }, 3600);
+  await rqPoint(sd, '#exReply blockquote', { step: 'الجهة الخارجية', t: 'طلب الاستكمال', b: '<p>ترى الجهة الحالة والرسائل الموجهة لها فقط، ولا ترى الملاحظات الداخلية أو بيانات المنصة.</p>' }, 3200);
+  const d = rqDoc(sd);
+  RQ.cardStep = 'الجهة الخارجية · الرد'; RQ.cardT = 'الجهة ترد من الصفحة نفسها'; RQ.cardB = '<p>بلا حساب ولا بريد: تكتب الرد في صفحة المتابعة.</p>';
+  await rqType(sd, d.querySelector('#exReplyT'), 'نفّذنا خلال العامين الماضيين 6 مبادرات تشجير بالشراكة مع البلديات، والمواقع المقترحة مرفقة.');
+  await rqPoint(sd, '#exReplyF .ext-drop', { step: 'الجهة الخارجية · المرفقات', t: 'وإرفاق الملفات', b: '<p>عرض تقديمي، ملف تعريفي، خطاب… حتى 10 ملفات، ويُرفق كل ملف بالمقترح داخل المنصة تحت «مرفقات الجهة الخارجية».</p>' }, 3000);
+  const go = d.querySelector('#exReplyGo'); await rqPoint(sd, go, { step: 'الجهة الخارجية', t: 'إرسال الرد', b: '' }, 1000);
+  go.click(); await rqWaitFor(sd, '.ext-msgs li.mine', 4000);
+  await rqPoint(sd, '.ext-status', { step: 'الجهة الخارجية', t: 'وصل الرد', b: '<p>يعود المقترح إلى إدارة الشراكات لاستكمال الدراسة، ويظهر الرد في المراسلات.</p>' }, 3000);
+}
+async function extTBack() {
+  const sd = 'l', x = extTRec('r'); if (!x) return;
+  rqActive(sd); await rqSync('r', 'l', { title: 'إشعار: ردّت الجهة الخارجية' });
+  await rqGo(sd, '#/proposals/' + x.id); await rqSleep(400);
+  const tl = rqDoc(sd).querySelector('ul.history');
+  await rqPoint(sd, tl || '.review-box', { step: wfActorName('partnerships') + ' · صفحة المقترح', t: 'الرد في سجل المقترح', b: '<p>رد الجهة ومرفقاتها يظهران في المقترح، وتكمل الإدارة الدراسة كالمعتاد.</p>' }, 3400);
 }
 async function extTDecide() {
   const sd = 'l', w = rqW(sd), x = extTRec(sd); if (!x) return;
@@ -141,6 +156,6 @@ async function extTDecide() {
 }
 async function extTEnd() {
   RQ.ended = true; rqActive(null);
-  rqCard({ step: 'نهاية الاستعراض', t: 'دعوة الجهات الخارجية في سطور', wide: true, b: `<ul class="rq-ul"><li>رابط دعوة بمدة محددة وعدد مقترحات، يمكن إيقافه في أي وقت.</li><li>الجهة تقترح بلا حساب، وتحصل على رقم ورابط متابعة.</li><li>المقترح يدخل «المقترحات الواردة» بوسم «جهة خارجية» ويسير في المسار المعتمد.</li><li>رسائل تغيير الحالة تصل للجهة في صفحة المتابعة.</li></ul>
+  rqCard({ step: 'نهاية الاستعراض', t: 'دعوة الجهات الخارجية في سطور', wide: true, b: `<ul class="rq-ul"><li>رابط دعوة بمدة محددة وعدد مقترحات، يمكن إيقافه في أي وقت.</li><li>الجهة تقترح بلا حساب، وتحصل على رقم ورابط متابعة.</li><li>المقترح يدخل «المقترحات الواردة» بوسم «جهة خارجية» ويسير في المسار المعتمد.</li><li>رسائل تغيير الحالة تصل للجهة في صفحة المتابعة، وترد عليها وترفق ملفات.</li><li>إشعار في الجرس عند وصول المقترح وعند رد الجهة.</li></ul>
     <p class="small muted">كل ما جرى كان في نسخة معزولة؛ بيانات المنصة كما هي.</p><div class="row" style="gap:8px;margin-top:12px"><button class="btn" type="button" data-rqreplay>${icon('history')} إعادة الاستعراض</button><button class="btn primary" type="button" data-rqclose>إنهاء</button></div>` });
 }

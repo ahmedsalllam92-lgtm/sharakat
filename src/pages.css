@@ -4341,3 +4341,21 @@ html.share-mode [data-palette]{display:none!important}
 @media (max-width:760px){.ex-grid{grid-template-columns:1fr}}
 .ext-overlay{position:fixed;inset:0;z-index:99990;overflow:auto}
 .ext-mail-h{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #EFE9DB}.ext-mail-h small{display:block;color:#8C958E;font-size:12px}.ext-mail p{color:#2E3B35;line-height:1.9}.ext-mail .ext-link{max-width:none;margin-top:10px}
+/* مرفقات الجهة الخارجية ورد الاستكمال */
+.ext-form h2 small{font-size:12px;color:#8C958E;font-weight:500}
+.ext-files{grid-column:1/-1;display:flex;flex-direction:column;gap:10px}
+.ext-drop{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px dashed #CFC6AE;border-radius:12px;background:#FDFCF8;cursor:pointer;transition:.2s}
+.ext-drop:hover,.ext-files.over .ext-drop{border-color:#2F7A5E;background:#F1F6F2}
+.ext-drop svg{width:22px;height:22px;color:#2F7A5E;flex:none}
+.ext-drop span{display:flex;flex-direction:column;gap:2px}.ext-drop b{font-size:14px}.ext-drop small{font-size:12px;color:#8C958E}
+.ext-flist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.ext-flist li{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid #EFE9DB;border-radius:10px;background:#fff}
+.ext-flist .ext-fic svg{width:16px;height:16px;color:#A47C32}
+.ext-flist b{flex:1;min-width:0;font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ext-flist small{font-size:12px;color:#8C958E}
+.ext-flist button{border:0;background:none;cursor:pointer;color:#B5543C;padding:2px;display:grid;place-items:center}.ext-flist button svg{width:15px;height:15px}
+.ext-reply{border:1px solid #E9D9A8;background:#FBF7EC;border-radius:14px;padding:16px 18px;margin:18px 0;display:flex;flex-direction:column;gap:12px}
+.ext-reply h2{margin:0;display:flex;align-items:center;gap:8px;font-size:17px}.ext-reply h2 svg{width:18px;height:18px;color:#A47C32}
+.ext-reply blockquote{margin:0;padding:10px 14px;border-inline-start:3px solid #C9A85C;background:#fff;border-radius:8px;line-height:1.8;font-size:14px}
+.ext-reply .ext-actions{margin-top:0}
+.ext-msgs li.mine{background:#F1F6F2;border-color:#D5E4DA}.ext-msgs li.mine small{color:#2F7A5E}
