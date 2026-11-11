@@ -42,12 +42,12 @@ function taleChapters(nums, signed = 0) {
   nums.forEach((n, i) => N.push({ a: 0.775 + i * 0.037, b: 0.775 + (i + 1) * 0.037 - 0.004, cls: 'num', eye: '', h: n[1], s: n[2] }));
   return [
     { a: 0.000, b: 0.062, cls: 'open', eye: 'مؤسسة مروج الأهلية · إدارة الشراكات', h: '', s: 'حكاية الشراكة' },
-    { a: 0.080, b: 0.185, cls: 'sd', eye: 'الفصل الأول', h: 'أرضٌ واسعة، وفكرة تبحث عن شريك', s: 'كل شراكة تبدأ بخطوة في مكان لم يُزرع بعد.' },
-    { a: 0.205, b: 0.305, cls: 'sd', eye: 'الفصل الثاني', h: 'ثم امتدّت يد', s: 'شريكٌ يؤمن بالفكرة نفسها، فيلتقي الطريقان.' },
-    { a: 0.325, b: 0.435, cls: 'sd l', eye: 'الفصل الثالث', h: 'معًا… إلى العمق', s: 'منهجية واضحة تُبنى عليها كل مذكرة.' },
-    { a: 0.455, b: 0.555, cls: 'sd', eye: 'الفصل الرابع', h: 'اتفاقاتٌ تُوقَّع', s: signed ? `${plural(signed, 'مذكرة تفاهم واحدة', 'مذكرتا تفاهم', 'مذكرات تفاهم', 'مذكرة تفاهم')} موقّعة مع جهات وطنية رائدة.` : 'مذكرات تفاهم مع جهات وطنية رائدة.', k: 'signed' },
-    { a: 0.572, b: 0.690, cls: 'sd up', eye: 'الفصل الخامس', h: 'ثم تخضرّ الأرض', s: 'ليست المذكرات وحدها؛ مشاريع ومبادرات تُنفَّذ على أرض المملكة:' },
-    { a: 0.695, b: 0.765, cls: 'logo', eye: '', h: 'مؤسسة مروج الأهلية', s: 'نحو غطاءٍ نباتيٍّ مستدام' },
+    { a: 0.080, b: 0.185, cls: 'sd', eye: '', h: 'أرضٌ واسعة، وفكرة تبحث عن شريك', s: 'كل شراكة تبدأ بخطوة في مكان لم يُزرع بعد.' },
+    { a: 0.205, b: 0.305, cls: 'sd', eye: '', h: 'ثم امتدّت يد', s: 'شريكٌ يؤمن بالفكرة نفسها، فيلتقي الطريقان.' },
+    { a: 0.325, b: 0.435, cls: 'sd l', eye: '', h: 'معًا… إلى العمق', s: 'منهجية واضحة تُبنى عليها كل مذكرة.' },
+    { a: 0.455, b: 0.555, cls: 'sd', eye: '', h: 'اتفاقاتٌ تُوقَّع', s: signed ? `${plural(signed, 'مذكرة تفاهم واحدة', 'مذكرتا تفاهم', 'مذكرات تفاهم', 'مذكرة تفاهم')} موقّعة مع جهات وطنية رائدة.` : 'مذكرات تفاهم مع جهات وطنية رائدة.', k: 'signed' },
+    { a: 0.572, b: 0.690, cls: 'sd up', eye: '', h: 'ثم تخضرّ الأرض', s: 'ليست المذكرات وحدها؛ مشاريع ومبادرات تُنفَّذ على أرض المملكة:' },
+    { a: 0.695, b: 0.765, cls: 'logo', eye: '', h: '', s: 'نحو غطاءٍ نباتيٍّ مستدام' },
     ...N,
     { a: 0.895, b: 1.01, cls: 'end', eye: 'شركاء مروج', h: 'معًا… نحو غطاءٍ نباتيٍّ مستدام', s: 'كل شراكة لها أثرٌ يُقاس، ومسؤولٌ يتابعها، وقرارٌ في وقته.' },
   ];
@@ -117,7 +117,7 @@ function renderTale(el) {
       <div class="tz-bg tz-photos" data-bg="photos">${photos.map(([k, t], i) => `<figure class="tz-ph" data-i="${i}"><img src="${img(k)}" alt=""><figcaption><i></i>${esc(t)}</figcaption></figure>`).join('')}</div>
       <div class="tz-bg tz-green" data-bg="green">${greens.map((g, i) => `<div class="tz-g" data-i="${i}">${taleImgTag(g.fileId)}<span class="tz-gcap"><i></i>${esc(g.cap || '')}${g.credit ? `<small>${esc(g.credit)}</small>` : ''}</span></div>`).join('')}</div>
       <div class="tz-bg tz-glow" data-bg="glow"></div>
-      <canvas class="tz-cv" id="tzCv"></canvas>
+      <canvas class="tz-cv" id="tzCv"></canvas>${img('murooj-logo-white') ? `<img class="tz-logoimg" id="tzLogoImg" src="${img('murooj-logo-white')}" alt="مؤسسة مروج الأهلية">` : ''}
       <div class="tz-method" id="tzMethod"><svg viewBox="0 0 10 400" preserveAspectRatio="none"><line x1="5" y1="0" x2="5" y2="400" class="b"/><line x1="5" y1="0" x2="5" y2="400" class="f" id="tzMLine"/></svg>
         ${['منهجية بناء الشراكات', 'التقييم المبدئي للشريك', 'صياغة المذكرة ومراجعتها', 'الاعتماد والتوقيع'].map((t, i) => `<div class="tz-m" style="top:${i * 33.3}%"><b>${['٠١', '٠٢', '٠٣', '٠٤'][i]}</b><span>${t}</span></div>`).join('')}</div>
       <div class="tz-proj" id="tzProj">${projects.map(([ic, t, d, n], i) => `<div class="tz-pj" data-i="${i}"><span class="tz-pj-ic">${icon(ic)}</span><div><b>${t}</b><small>${d}</small></div><em data-pjn="${i}" ${n ? '' : 'hidden'}>${n ? plural(n, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة') : ''}</em></div>`).join('')}</div>
@@ -137,7 +137,7 @@ function renderTale(el) {
 
 /* ===== محرك الجزيئات ===== */
 function taleRun(el, { nums, chs, projects, mapMode, nPartners }) {
-  const root = $('#tale', el), cv = $('#tzCv', el), ctx = cv.getContext('2d');
+  const root = $('#tale', el), cv = $('#tzCv', el), ctx = cv.getContext('2d'), logoImg = $('#tzLogoImg', el);
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const small = innerWidth < 760;
   const N = small ? 1500 : 2800;
@@ -163,7 +163,7 @@ function taleRun(el, { nums, chs, projects, mapMode, nPartners }) {
     }
     return { p: out, c: col };
   };
-  const textShape = (txt, size, y, tint = GOLD, weight = 800) => fit(sample((g) => { g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.direction = 'rtl'; g.font = `${weight} ${size}px ${TL_FONT}`; g.fillText(txt, W / 2, y); }, size > 260 ? 4 : 3), tint);
+  const textShape = (txt, size, y, tint = GOLD, weight = 800) => fit(sample((g) => { g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.direction = 'rtl'; g.font = `${weight} ${size}px ${TL_FONT}`; const mw = g.measureText(txt).width, lim = W * 0.7; if (mw > lim) g.font = `${weight} ${Math.floor(size * lim / mw)}px ${TL_FONT}`; g.fillText(txt, W / 2, y); }, size > 260 ? 4 : 3), tint);
   const build = async () => {
     const r = cv.getBoundingClientRect(); DPR = Math.min(2, devicePixelRatio || 1); W = Math.max(320, Math.round(r.width)); H = Math.max(320, Math.round(r.height));
     cv.width = W * DPR; cv.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -183,7 +183,8 @@ function taleRun(el, { nums, chs, projects, mapMode, nPartners }) {
     /* شعار مروج بألوانه (مفتّحة قليلًا على الخلفية الداكنة) */
     { const im = new Image(); im.src = (ASSET_IMG['murooj-logo'] || ASSET_IMG['murooj-logo-white'] || {}).src || '';
       try { await im.decode(); } catch (_) { /* */ }
-      const s = sample((g) => { if (!im.width) return; const sc = Math.min(W * 0.62 / im.width, H * 0.46 / im.height); const w = im.width * sc, h = im.height * sc; g.drawImage(im, (W - w) / 2, H * 0.44 - h / 2, w, h); }, 3);
+      let box = null; const s = sample((g) => { if (!im.width) return; const sc = Math.min(W * 0.62 / im.width, H * 0.46 / im.height); const w = im.width * sc, h = im.height * sc; box = [(W - w) / 2, H * 0.44 - h / 2, w, h]; g.drawImage(im, ...box); }, 3);
+      if (box && logoImg) Object.assign(logoImg.style, { left: box[0] + 'px', top: box[1] + 'px', width: box[2] + 'px', height: box[3] + 'px' });
       for (let i = 0; i < s.cols.length; i++) s.cols[i] = Math.min(255, s.cols[i] * 0.75 + 70);
       shapes.logo = fit(s); }
     shapes.nums = nums.map(([v]) => textShape(Number(v).toLocaleString('ar-SA-u-nu-latn'), Math.min(H * 0.46, W / 3.2), H * 0.42, GOLD, 800));
@@ -277,7 +278,7 @@ function taleRun(el, { nums, chs, projects, mapMode, nPartners }) {
     const cur = K[ki], prev = K[Math.max(0, ki - 1)];
     const mt = ki === 0 ? 1 : tlS(p, cur[0], cur[1]);
     const morphing = mt < 1;
-    const fade = cur[2] === 'bokeh' ? 0.45 : cur[2] === 'orbit' ? 0.55 : 1;
+    const fade = cur[2] === 'bokeh' ? 0.45 : cur[2] === 'orbit' ? 0.55 : cur[2] === 'logo' ? 1 - 0.75 * tlS(p, 0.712, 0.728) : 1;
     const streak = cur[2] === 'warp';
     ctx.globalCompositeOperation = 'lighter';
     for (let i = 0; i < N; i++) {
@@ -321,9 +322,10 @@ function taleRun(el, { nums, chs, projects, mapMode, nPartners }) {
     const ml = tlS(p, 0.345, 0.42); mline.style.strokeDashoffset = (400 - ml * 400).toFixed(1);
     $$('.tz-m', meth).forEach((m, i) => m.classList.toggle('on', ml >= i / 3 - 0.001));
     orbit.style.opacity = tlS(p, 0.893, 0.91).toFixed(3); orbit.classList.toggle('on', p > 0.893);
-    { const n = plates.length, shown = p < 0.9 ? 0 : Math.min(n, Math.ceil(tlS(p, 0.9, 0.968) * n));
+    { const n = plates.length, shown = p < 0.9 ? 0 : Math.min(n, Math.ceil(tlS(p, 0.9, 0.93) * n));
       plates.forEach((e, k) => e.classList.toggle('in', k < shown));
       countEl.style.opacity = tlS(p, 0.895, 0.91).toFixed(3); countB.textContent = shown.toLocaleString('ar-SA-u-nu-latn'); }
+    if (logoImg) { const v = tlWin(p, 0.712, 0.768, 0.014); logoImg.style.opacity = v.toFixed(3); logoImg.style.transform = `scale(${(0.96 + 0.04 * tlS(p, 0.712, 0.74)).toFixed(4)})`; }
     cta.classList.toggle('on', p > 0.972);
     caps.forEach((c, i) => { const ch = chs[i], v = tlWin(p, ch.a, ch.b, 0.01); c.style.opacity = v.toFixed(3); c.style.transform = `translateY(${((1 - v) * 18).toFixed(1)}px)`; c.style.filter = v < 1 ? `blur(${((1 - v) * 6).toFixed(1)}px)` : ''; c.style.visibility = v > 0 ? 'visible' : 'hidden'; });
     root.classList.toggle('lit', p > 0.565 && p < 0.7);
