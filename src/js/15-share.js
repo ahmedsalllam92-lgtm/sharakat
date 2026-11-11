@@ -215,7 +215,7 @@ function renderShareDone(el, r) {
 function propTable(list, mine) {
   return `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>الرقم المرجعي</th><th>الجهة المستهدفة</th>${mine ? '' : '<th>الإدارة الطالبة</th>'}<th>مقدم الطلب</th><th>الحالة</th><th>آخر إجراء</th>${mine ? '<th></th>' : ''}</tr></thead><tbody>
     ${list.map((x) => { const age = propAgeDays(x); const old = ['submitted', 'info'].includes(x.status) && age > (D.settings.infoAgeDays || 7); const upd = x.events && x.events.length ? x.events[x.events.length - 1].at : x.updatedAt; const resub = x.status === 'submitted' && (x.events || []).some((e) => e.type === 'resubmitted');
-      return `<tr data-prop="${x.id}"><td><span class="code" style="font-size:13.5px;color:var(--ink)">${esc(x.ref)}</span> ${demoTag(x)}</td><td><b style="font-weight:600">${esc(x.partnerName || '—')}</b></td>${mine ? '' : `<td class="small">${esc(x.department)}</td>`}<td class="small">${esc(x.requesterName || '—')}</td>
+      return `<tr data-prop="${x.id}"><td><span class="code" style="font-size:13.5px;color:var(--ink)">${esc(x.ref)}</span> ${demoTag(x)}</td><td><b style="font-weight:600">${esc(x.partnerName || '—')}</b></td>${mine ? '' : `<td class="small">${x.external ? '<span class="chip ext-chip">جهة خارجية</span>' : esc(x.department)}</td>`}<td class="small">${esc(x.requesterName || '—')}</td>
       <td>${propChip(x.status)}${resub ? ' <span class="chip info plain" title="أعادت الإدارة تقديمه بعد الاستكمال">مُستكمل</span>' : ''}</td><td><span class="age ${old ? 'old' : ''}">${relDays(upd)}</span></td>
       ${mine ? `<td>${x.status === 'info' ? `<a class="btn sm gold" href="#/share/${x.id}/edit">استكمال</a>` : x.status === 'draft' ? `<a class="btn sm" href="#/share/${x.id}/edit">متابعة</a>` : ''}</td>` : ''}</tr>`; }).join('')}
   </tbody></table></div>`;
@@ -294,7 +294,7 @@ function renderProposal(el, r) {
       converted: [],
     }[x.status] || [];
     if (['admin', 'team'].includes(Session.role()) && ['submitted', 'review', 'accepted'].includes(x.status)) A.push(['direct', isExistingReq(x) ? 'تسجيل الشراكة القائمة مباشرة' : 'تحويل مباشر', isExistingReq(x) ? 'primary' : '']);
-    actionBox = `<div class="review-box no-print"><h3>إجراء إدارة الشراكات</h3>
+    actionBox = `<div class="review-box no-print"><h3>إجراء إدارة الشراكات</h3>${x.external ? `<div class="note ext-note">${icon('send')}<span><b>مقترح من جهة خارجية</b> عبر رابط دعوة${x.extLabel ? ` («${esc(x.extLabel)}»)` : ''}. الرسالة التي تكتبها عند تغيير الحالة تظهر للجهة في صفحة المتابعة الخاصة بها.</span></div>` : ''}
       ${x.status === 'converted' && pt ? `<p class="small" style="margin-bottom:12px">أُنشئ من المقترح سجل الشراكة <a href="#/partnerships/${pt.id}"><b class="code" style="color:inherit">${esc(pt.code)}</b></a>. مرحلة الشراكة الحالية: <b>${esc(stageLabel(pt.stage))}</b>.</p>` : ''}
       ${x.status === 'info' ? `<p class="small muted" style="margin-bottom:12px">بانتظار استكمال الإدارة المقدمة منذ ${relDays(infoReq ? infoReq.at : x.updatedAt).replace('قبل ', '')}.</p>` : ''}
       ${A.length ? `<div class="acts2">${A.map(([k, l, c]) => `<button class="btn ${c}" data-act="${k}" ${A.length === 1 || (A.length === 3 && k === A[2][0] && false) ? 'style="grid-column:1/-1"' : ''}>${esc(l)}</button>`).join('')}</div>` : ''}
