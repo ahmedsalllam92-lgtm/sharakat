@@ -4288,3 +4288,6 @@ html.share-mode [data-palette]{display:none!important}
 @media print{.gburst{display:none!important}}
 .pc-gold .gburst .sp,.rt-gold .gburst .sp{width:calc(var(--s) * 1.5);height:calc(var(--s) * 1.5);background:#FFE7A8;filter:drop-shadow(0 0 4px rgba(255,220,140,.95))}
 .pc-gold .gburst .ring{border-color:#FFE7A8;box-shadow:0 0 10px rgba(255,220,140,.8)}
+.pc-gold{padding:2px 8px 2px 6px!important;gap:4px!important;font-size:10px!important;bottom:10px!important;left:10px!important}
+.pc-gold svg{width:10px!important;height:10px!important}
+.pc-gold .gburst{inset-inline-start:12px}
