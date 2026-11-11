@@ -3543,6 +3543,31 @@ a.chip.cat:hover{background:var(--mist)}
 .bo-steps2::before,.bo-steps2::after{display:none!important;content:none!important}
 .bo-jr-path{top:30px!important;height:58px!important}
 .bo-steps2 small{color:#CFDFD8!important;opacity:1!important}
+/* طباعة الإحاطة المفصّلة بلا مساحات مهدرة: الفصول تتتابع في الصفحة نفسها بفاصل ذهبي، والكبيرة فقط تبدأ صفحة جديدة، ولا تنقسم الكتل بين صفحتين */
+@media print{
+  .bo-ch{break-before:auto!important;margin-top:16px!important;padding-top:12px!important;border-top:2px solid #A47C32!important}
+  .bo-ch[data-ch="sum"],.bo-ch[data-ch="net"],.bo-ch[data-ch="time"]{break-before:page!important;border-top:0!important;margin-top:0!important;padding-top:0!important}
+  .bo-chh{break-after:avoid;margin-bottom:10px!important}
+  .bo-msg,.bo-health,.bo-kpis,.bo-kpi,.bo-ins,.bo-rt tr,.bo-dec-l li,.bo-mx,.bo-mx tr,.bo-fn,.bo-pict,.bo-pict-g,.bo-eval>*,.bo-proc>*,.bo-orb,.bo-ln-row,.bo-sign,.bo-mx-wrap,.bo-proc-col,.bo-wfc{break-inside:avoid}
+  .bo-orb .orb{width:min(100%,calc(150mm * 1200 / 900))!important;margin:0 auto}
+  .bo-orb .orb *{animation:none!important;opacity:1!important;stroke-dashoffset:0!important}
+  .bo-mx-c,.bo-mx td.tot{height:56px!important}
+  .bo-ch[data-ch="time"]{zoom:.8!important}
+}
+@media print{
+  .bo-orb .orb{width:min(100%,calc(108mm * 1200 / 900))!important}
+  .bo-ch[data-ch="flow"] .bo-mx-c,.bo-ch[data-ch="flow"] .bo-mx td.tot{height:44px!important}
+  .bo-ch[data-ch="flow"] .bo-mx th,.bo-ch[data-ch="flow"] .bo-mx td{padding:4px 8px!important}
+  .bo-ch[data-ch="flow"] .bo-mx-b{width:calc(var(--d) * .78)!important;height:calc(var(--d) * .78)!important}
+  .bo-ch[data-ch="net"] .bo-ins,.bo-ch[data-ch="flow"] .bo-ins{margin-top:8px!important;padding:6px 12px!important}
+}
+@media print{
+  .bo-ch[data-ch="net"]{float:right;width:52%;clear:both}
+  .bo-ch[data-ch="flow"]{float:left;width:46%;border-top:0!important;margin-top:0!important;padding-top:0!important;break-before:avoid!important}
+  .bo-ch[data-ch="time"]{clear:both}
+  .bo-ch[data-ch="net"] .bo-orb .orb{width:100%!important}
+  .bo-ch[data-ch="flow"] .bo-mx .tot{min-width:0!important}.bo-ch[data-ch="flow"] .bo-mx-bar{display:none}
+}
 
 /* =====================================================================
    مركز الصور ومسار الشراكة — تعمل في الاتجاهات الستة عبر متغيرات الألوان
