@@ -81,7 +81,7 @@ function renderShareForm(el, r) {
     if (!sim.length) return `<div class="note" style="margin-top:6px">${icon('info')}<span>لا توجد جهة بهذا الاسم في سجل الجهات حاليًا.</span></div>`;
     return `<div class="note" style="margin-top:6px">${icon('building')}<span>جهة مسجلة لدى إدارة الشراكات: ${sim.slice(0, 3).map((x) => { const n = D.partnerships.filter((p) => p.partnerId === x.id && !p.isDraft).length; return `<b>${esc(x.name)}</b>${n ? ` (${plural(n, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')})` : ''}`; }).join('، ')}. سيُراعى ذلك عند دراسة المقترح.</span></div>`;
   };
-  const initOpts = () => { const L_ = goalInits(s.strategicGoal); return `<option value="">${s.strategicGoal ? 'اختر المبادرة' : '—'}</option>${L_.map((x) => `<option value="${esc(x.t)}" ${x.t === s.initiative ? 'selected' : ''}>${esc(x.c)} — ${esc(x.t)}</option>`).join('')}`; };
+  const initOpts = () => { const L_ = goalInits(s.strategicGoal); return `<option value="">${s.strategicGoal ? 'اختر المبادرة' : 'اختر الهدف الاستراتيجي أولًا'}</option>${L_.map((x) => `<option value="${esc(x.t)}" ${x.t === s.initiative ? 'selected' : ''}>${esc(x.c)} — ${esc(x.t)}</option>`).join('')}`; };
   const drawStep = () => {
     let body = '';
     if (fs.step !== 'review') {

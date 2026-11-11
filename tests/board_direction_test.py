@@ -23,7 +23,8 @@ async def main():
         # — الرئيسية —
         ok('home: hero with real signing photos', await E("document.querySelectorAll('.bo-hero-m img.photo').length") >= 1)
         lc = await E("liveCounts()")
-        ok('hero figures are live counts', await E("+document.querySelector('.bo-hero-facts b').dataset.v") == lc['active'] and await E("+document.querySelector('.bo-medal b').textContent") == lc['partners'])
+        yr = await E("(()=>{const td=isoDate(today());const y=String(today().getFullYear());return visiblePartnerships().filter(p=>p.stage==='signed'&&p.startDate&&String(p.startDate).slice(0,10)<=td&&String(p.startDate).slice(0,4)===y).length})()")
+        ok('hero figures are live counts (signed this year, latest signing) and medal = partners', (await E("(()=>{const b=document.querySelector('.bo-hero-facts b.cu');return b?+b.dataset.v:0})()")) == yr and await E("!!document.querySelector('.bo-hero-facts .txt a[href^=\"#/partnerships/\"]')") and await E("+document.querySelector('.bo-medal b').textContent") == lc['partners'], yr)
         ok('numbered home sections (figures, journey, partnerships, stories, partners)', await E("['.bo-figs','.bo-journey','.bo-feat','.bo-stories','.bo-wall'].every(s=>document.querySelector(s))"))
         ok('journey has four steps', await E("document.querySelectorAll('.bo-steps li').length") == 4)
         ok('partners wall lists every linked partner', await E("document.querySelectorAll('.bo-wall-l a').length") == await E("D.partners.filter(pr=>visiblePartnerships().some(p=>!p.isDraft&&p.partnerId===pr.id)).length"))

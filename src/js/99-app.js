@@ -232,15 +232,17 @@ const ROUTES = [
   { re: /^\/settings(?:\/([^/]+))?$/, name: 'settings', fn: renderSettings, keys: ['tab'] },
 ];
 function parseHash() {
-  const h = decodeURI(location.hash.replace(/^#/, '')) || '/';
+  const h0 = decodeURI(location.hash.replace(/^#/, '')) || '/';
+  /* رابط بموضع داخل الصفحة: #/partnerships/ID#profile — الموضع ليس جزءًا من المعرّف */
+  const ai = h0.indexOf('#'), anchor = ai > -1 ? h0.slice(ai + 1) : '', h = ai > -1 ? h0.slice(0, ai) : h0;
   const [path, qs] = h.split('?');
   const query = {};
   if (qs) qs.split('&').forEach((kv) => { const i = kv.indexOf('='); const k = i < 0 ? kv : kv.slice(0, i); const v = i < 0 ? '' : kv.slice(i + 1); try { query[decodeURIComponent(k)] = decodeURIComponent(v); } catch (_) { query[k] = v; } });
-  return { path: path || '/', query };
+  return { path: path || '/', query, anchor };
 }
 function route() {
   if (!AUTH.dev && !currentLogin()) { if (!$('#shkLogin')) showLogin(); return; }
-  const { path, query } = parseHash();
+  const { path, query, anchor } = parseHash();
   if (App.ret && !/^\/reports(\/marketing)?$/.test(path) && ('#' + path) !== App.ret.hash.split('?')[0]) App.ret = null;
   let def = null, m = null;
   for (const d of ROUTES) { m = d.re.exec(path); if (m) { def = d; break; } }
@@ -267,6 +269,7 @@ function route() {
   }
   if (App.share) page.querySelectorAll('a[href^="#/"]').forEach((x) => { const p = x.getAttribute('href').slice(1).split('?')[0] || '/'; const d = ROUTES.find((r) => r.re.test(p)); if (!d || !shareRouteOk(d.name)) x.style.display = 'none'; }); // رابط الاطلاع: لا روابط لأقسام غير مختارة
   updateNav();
+  if (anchor) setTimeout(() => { const t = document.getElementById(anchor); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 250);
   if (['home', 'achievements', 'news', 'stories'].includes(def.name)) requestAnimationFrame(() => revealify(page));
   boardRouteEnter(page, def.name);
   if (!$('.app').classList.contains('present') && def.name !== 'home') main.focus({ preventScroll: true });
