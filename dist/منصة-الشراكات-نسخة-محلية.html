@@ -3592,6 +3592,13 @@ a.chip.cat:hover{background:var(--mist)}
   .bo-ch[data-ch="dec"]{break-inside:auto}
 }
 @media print{.bo-dash{zoom:.56!important}.bo-dec-l li{padding:5px 4px!important}}
+/* غلاف لوحة الأداء في الوضع الليلي: درجات الثيم الداكن بدل الأخضر */
+:root[data-theme="dark"] .bo-cover{background:#18242C!important}
+:root[data-theme="dark"] .bo-cover-bg{background:radial-gradient(ellipse 70% 120% at 15% 30%,#22323B 0%,#18242C 50%,#10191F 100%)!important}
+:root[data-theme="dark"] .bo-cover .topo-path{stroke:rgba(212,176,106,.09)!important}
+:root[data-theme="dark"] .bo-cover-orn circle,:root[data-theme="dark"] .bo-cover-orn line{stroke:rgba(212,176,106,.28)}
+:root[data-theme="dark"] .bo-cover-wm{opacity:.08}
+:root[data-theme="dark"] .ob-views a.on,:root[data-theme="dark"] .bo-cover .ob-views a.on{background:var(--gold)!important;color:#0A1813!important}
 
 /* =====================================================================
    مركز الصور ومسار الشراكة — تعمل في الاتجاهات الستة عبر متغيرات الألوان
