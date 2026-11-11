@@ -54,6 +54,7 @@ function renderShell() {
   renderDesignSwitcher();
   updateNav();
   shareShell();
+  if (!window.__SBX && typeof asMount === 'function') asMount(); // مساعد الشراكات
   if (!App.navIntro) setTimeout(() => { App.navIntro = true; const n = $('.side .nav'); n && n.classList.remove('intro'); }, 1200);
 }
 function moveNavPill(animate = true) {
