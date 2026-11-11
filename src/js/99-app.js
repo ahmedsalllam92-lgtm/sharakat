@@ -406,6 +406,7 @@ async function boot() {
     /* المنصة المشتركة: التحديثات تُطبَّق بعد سحب بيانات الخادم (في cloudEnter) حتى تُرفع إليه، لا على نسخة الجهاز وحدها */
     if (!Cloud.on && migrate()) { await Repo.saveSettings(); for (const c of ['partnerships', 'achievements', 'partners']) await Store.putMany(c, D[c]); }
     if (!(await extBoot())) return; // روابط الجهات الخارجية: نموذج المقترح وصفحة المتابعة
+    if (!(await portalBoot())) return; // بوابة الشريك
     if (!(await shareBoot())) return; // رابط اطلاع: جلسة الرابط وحدها
     applyTheme();
     if (!authBoot()) { showLogin(); splashSync(false); return; }

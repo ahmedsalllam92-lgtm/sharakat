@@ -17,7 +17,7 @@ function renderPartnership(el, r) {
   const photos = partnershipPhotos(p);
   const kv = (label, val, full) => `<div class="${full ? 'full' : ''}"><dt>${esc(label)}</dt><dd>${val || '<span class="faint">—</span>'}</dd></div>`;
   const wfHTML = wfSectionHTML('partnership', p);
-  const secs = [wfHTML && ['wf', 'مسار المذكرة'], ['profile', 'التصنيف والتقييم'], ['ov', 'نظرة عامة'], internal && ['files', 'الملفات والصور'], ['coop', 'مجالات التعاون'], ['impact', 'الأثر والمخرجات'], internal && ['follow', 'المتابعة'], ['contact', 'التواصل'], stories.length && ['stories', 'الإنجازات'], prop && ['proposal', 'المقترح الأصلي'], internal && ['admin', 'بيانات إدارية'], internal && ['log', 'السجل']].filter(Boolean);
+  const secs = [wfHTML && ['wf', 'مسار المذكرة'], ['profile', 'التصنيف والتقييم'], ['ov', 'نظرة عامة'], internal && ['files', 'الملفات والصور'], internal && can('edit.partnership') && !App.share && ['portal', 'بوابة الشريك'], ['coop', 'مجالات التعاون'], ['impact', 'الأثر والمخرجات'], internal && ['follow', 'المتابعة'], ['contact', 'التواصل'], stories.length && ['stories', 'الإنجازات'], prop && ['proposal', 'المقترح الأصلي'], internal && ['admin', 'بيانات إدارية'], internal && ['log', 'السجل']].filter(Boolean);
   el.innerHTML = `
   <div class="dhead" data-tour="detail-head">${coverHTML(p.id + (pr ? pr.name : ''), p.coverFileId, { W: 1600, H: 420, levels: 18, cols: 90 })}<div class="shade"></div>
     <a class="back no-print" href="#/partnerships">${icon('arrowR')} سجل الشراكات</a>
@@ -57,6 +57,7 @@ function renderPartnership(el, r) {
         ${kv('تفعيل الشراكة', esc(p.activation))}
         ${kv('التقاطع مع الإدارات', (p.departments || []).length ? `<div class="tagline">${p.departments.map((d) => `<span class="chip plain">${esc(d)}</span>`).join('')}</div>` : '', true)}
       </dl></section>
+    ${internal && can('edit.partnership') && !App.share ? portalSectionHTML(p) : ''}
     ${internal ? `<section class="dsec" id="files" data-tour="detail-files"><h2>الملفات والصور <span class="src">تقارير الشراكة من ملف الحصر</span></h2>
       <p class="small muted" style="margin:-6px 0 16px">${canEdit ? 'ارفع الملفات مباشرة في التصنيف المناسب أو اسحبها إليه. تُحفظ في هذا المتصفح، ولا تظهر المستندات في الواجهة التعريفية؛ تظهر صور الشراكة فقط إذا كانت الشراكة منشورة.' : 'ملفات الشراكة وصورها.'}</p>
       ${filesSectionHTML(p, canEdit)}</section>` : ''}
@@ -108,6 +109,7 @@ function renderPartnership(el, r) {
   const anchors = $$('[data-anchor]', el);
   const obs = new IntersectionObserver((ents) => { if (el.classList.contains('tabbed')) return; ents.forEach((en) => { if (en.isIntersecting) anchors.forEach((a) => a.classList.toggle('on', a.dataset.anchor === en.target.id)); }); }, { rootMargin: '-140px 0px -60% 0px' });
   $$('.dsec', el).forEach((s) => s.id && obs.observe(s));
+  portalBind(el, p);
   el.onclick = async (e) => {
     const gs = e.target.closest('[data-gstar]'); if (gs) { e.preventDefault(); return toggleGolden(p, gs); }
     const fx = e.target.closest('[data-anchor-to]');

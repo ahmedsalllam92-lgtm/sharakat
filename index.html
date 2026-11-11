@@ -8252,6 +8252,46 @@ a.mp-row:hover{border-color:var(--line);background:var(--bg,#F7F4EC)}
 @media (prefers-reduced-motion:reduce){.mp-edge,.mp-arc,.mp-reg,.mp-pulse,.mp-hq-r{animation:none!important;stroke-dashoffset:0}}
 .mp-pulse{transform-box:fill-box;transform-origin:center}
 .mp-svg.seen .mp-reg,.mp-svg.seen .mp-edge{animation:none;stroke-dashoffset:0}.mp-svg.seen .mp-arc{animation:mpFlow 1.6s linear infinite}
+/* ===== بوابة الشريك ===== */
+.pt-page .ext-main{max-width:980px}
+.pt-hero{background:linear-gradient(135deg,#173A2E,#24523F 60%,#1d4637);color:#fff;border-radius:22px;padding:28px 30px;margin-bottom:20px;position:relative;overflow:hidden;box-shadow:0 24px 50px -30px rgba(15,68,51,.6)}
+.pt-hero::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 50% 80% at 85% 0%,rgba(226,190,120,.22),transparent 70%);pointer-events:none}
+.pt-hero-in{display:flex;align-items:center;gap:18px;position:relative;z-index:1}
+.pt-logo{width:86px;height:86px;border-radius:50%;background:#fff;display:grid;place-items:center;flex:none;box-shadow:0 0 0 4px rgba(226,190,120,.35);overflow:hidden}
+.pt-logo img{max-width:74%;max-height:74%;object-fit:contain}.pt-logo span{font-size:34px;font-weight:800;color:#173A2E}
+.pt-ht{flex:1;min-width:0}.pt-ht small{color:#E2C98A;font-weight:600;letter-spacing:.3px}.pt-ht h1{margin:6px 0 4px;font-size:clamp(22px,3vw,32px);color:#fff}.pt-ht p{margin:0;color:#C9DCD3;font-size:14px}
+.pt-st{align-self:flex-start;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:700;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25)}
+.pt-st.st-active{background:#2F7A5E;border-color:#5fa585}.pt-st.st-soon{background:#B88A3B;border-color:#e2c98a}.pt-st.st-ended{background:#7a3b31}
+.pt-term{position:relative;z-index:1;margin-top:22px}.pt-term-l{display:flex;justify-content:space-between;font-size:12.5px;color:#C9DCD3;margin-bottom:6px}.pt-term-l b{color:#E2C98A}
+.pt-bar{height:8px;border-radius:8px;background:rgba(255,255,255,.14);overflow:hidden}.pt-bar i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#E2C98A,#B88A3B)}
+.pt-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}
+.pt-page .ext-card>h2{display:flex;align-items:center;gap:8px;font-size:17px;margin:0 0 12px}.pt-page .ext-card h2 svg{width:18px;height:18px;color:#B88A3B}
+.pt-outs{margin:0;padding-inline-start:20px;display:flex;flex-direction:column;gap:8px;line-height:1.75;font-size:14px}.pt-outs li::marker{color:#B88A3B;font-weight:700}
+.pt-ev{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}.pt-ev li{display:flex;gap:12px;align-items:center}
+.pt-evd{width:46px;height:50px;border-radius:12px;background:#F1F6F2;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none}.pt-evd b{font-size:18px;line-height:1;color:#173A2E}.pt-evd small{font-size:11px;color:#2F7A5E}
+.pt-ev div{display:flex;flex-direction:column}.pt-ev div small{color:#8C958E;font-size:12px}
+.pt-areas{margin:0;padding-inline-start:18px;font-size:13.5px;line-height:1.8;color:#3b4a43}
+.pt-send{margin-top:18px}.pt-kinds{display:flex;gap:8px;margin:12px 0 16px;flex-wrap:wrap}
+.pt-kinds button{display:flex;align-items:center;gap:8px;border:1.5px solid #E7E1D3;background:#FDFCF8;border-radius:12px;padding:10px 16px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;color:#3b4a43}
+.pt-kinds button svg{width:17px;height:17px}.pt-kinds button.on{border-color:#2F7A5E;background:#F1F6F2;color:#173A2E}
+.pt-form{grid-template-columns:1fr 1fr}
+.pt-reps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}.pt-reps li,.ptl-rep{border:1px solid #EFE9DB;border-radius:14px;padding:12px 14px;background:#FDFCF8}
+.pt-rh{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.pt-k{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:13.5px}.pt-k svg{width:15px;height:15px;color:#B88A3B}.pt-rh small{color:#8C958E;font-size:12px}
+.pt-seen{margin-inline-start:auto;font-size:12px;color:#8C958E;background:#F3EFE4;border-radius:999px;padding:2px 10px}.pt-seen.y{color:#2F7A5E;background:#E8F1EB}
+.pt-ro{font-size:12.5px;color:#2F7A5E;margin-top:6px;display:flex;align-items:center;gap:6px}.pt-ro svg{width:13px;height:13px}
+.pt-reps p,.ptl-rep p{margin:8px 0 0;line-height:1.8;font-size:14px}
+.pt-fl{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.pt-fl span,.pt-flb{display:inline-flex;align-items:center;gap:5px;font-size:12px;background:#fff;border:1px solid #EFE9DB;border-radius:8px;padding:3px 9px;font-family:inherit;color:inherit}
+.pt-flb{cursor:pointer}.pt-flb:hover{border-color:#2F7A5E}.pt-fl svg{width:13px;height:13px}
+.pt-reply{margin-top:10px;border-inline-start:3px solid #B88A3B;background:#FBF7EC;border-radius:8px;padding:8px 12px}.pt-reply b{font-size:12.5px;color:#8C6421}.pt-reply p{margin:4px 0 0!important}
+@media (max-width:760px){.pt-grid,.pt-form{grid-template-columns:1fr}.pt-hero-in{flex-wrap:wrap}.pt-logo{width:64px;height:64px}}
+.ptl-box{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--paper,#fff)}
+.ptl-make{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13.5px}
+.ptl-url{margin-top:12px;display:flex;flex-direction:column;gap:6px;font-size:13px}.ptl-url b{display:flex;align-items:center;gap:6px;color:#2F7A5E}.ptl-url b svg{width:15px;height:15px}
+.ptl-url .ext-link{display:flex;gap:8px}.ptl-url input{flex:1;font:inherit;font-size:12.5px;direction:ltr;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg,#F7F4EC)}
+.ptl-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}.ptl-list:empty{display:none}
+.ptl-it{display:flex;align-items:center;gap:10px;font-size:13px;padding:6px 0;border-top:1px dashed var(--line)}.ptl-it span{display:inline-flex;align-items:center;gap:6px;font-weight:600}.ptl-it svg{width:14px;height:14px}.ptl-it small{color:var(--muted);flex:1}.ptl-it.off{opacity:.55}
+.ptl-reps{display:flex;flex-direction:column;gap:10px;margin-top:14px}.ptl-rep{background:var(--paper,#fff);border-color:var(--line)}.ptl-rep.new{border-color:#B88A3B;box-shadow:0 0 0 3px rgba(184,138,59,.1)}
+.ptl-act{display:flex;gap:8px;align-items:flex-end;margin-top:10px}.ptl-act textarea{flex:1;min-height:42px}
 </style>
 </head>
 <body>
@@ -17752,14 +17792,14 @@ function extFilesBind(box) {
   return () => files;
 }
 /* رفع الملفات إلى الخادم بمفتاح الدعوة أو المتابعة، ويعيد معرّفاتها */
-async function extUpload(key, files, onStep) {
+async function extUpload(key, files, onStep, { rpc = 'shk_ext_file_put', prefix = 'f-ext-', max = 'الحد الأقصى 10 ملفات.' } = {}) {
   const ids = [];
   for (let i = 0; i < files.length; i++) {
     const f = files[i]; onStep && onStep(i + 1, files.length);
     const b64 = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1] || ''); r.onerror = rej; r.readAsDataURL(f); });
-    const id = 'f-ext-' + [...crypto.getRandomValues(new Uint8Array(10))].map((x) => x.toString(16).padStart(2, '0')).join('');
-    const r = await Cloud.rpc('shk_ext_file_put', { p_key: key, p_id: id, p_meta: { name: f.name, type: f.type || 'application/octet-stream', size: f.size }, p_data: b64 });
-    if (!r || r.error) throw new Error(r && r.error === 'too_many' ? 'الحد الأقصى 10 ملفات.' : `تعذّر رفع «${f.name}».`);
+    const id = prefix + [...crypto.getRandomValues(new Uint8Array(10))].map((x) => x.toString(16).padStart(2, '0')).join('');
+    const r = await Cloud.rpc(rpc, { p_key: key, p_id: id, p_meta: { name: f.name, type: f.type || 'application/octet-stream', size: f.size }, p_data: b64 });
+    if (!r || r.error) throw new Error(r && r.error === 'too_many' ? max : `تعذّر رفع «${f.name}».`);
     ids.push(id);
   }
   return ids;
@@ -17911,6 +17951,133 @@ async function extDemoReply(msg) {
   await Repo.save('proposals', x);
   await notify([{ grp: 'partnerships' }], { t: `ردّت الجهة الخارجية على طلب الاستكمال: ${x.ref}`, b: `جهة خارجية — ${x.partnerName}`, href: '#/proposals/' + x.id, ic: 'msg' });
   return { ok: true };
+}
+
+/* —— 04e-portal.js —— */
+/* =====================================================================
+   بوابة الشريك: رابط خاص لكل شراكة (?portal=…) تفتحه الجهة الشريكة بلا حساب.
+   ترى: شراكتها ومدتها، ومجالات التعاون، والمخرجات المشتركة، والمواعيد القادمة، وما أرسلته من قبل وردّ الإدارة عليه.
+   ترسل: تقرير إنجاز (لمخرج محدد) أو صورًا ميدانية أو رسالة — مع مرفقات — فتصل بإشعار وتُضاف لملفات الشراكة.
+   لا ترى الجهة أي بيانات داخلية. الخادم يتحقق من كل شيء (supabase/partner_portal.sql).
+   ===================================================================== */
+const PORTAL_KINDS = { report: ['تقرير إنجاز', 'file'], photos: ['صور ميدانية', 'image'], message: ['رسالة', 'msg'] };
+const portalLines = (t) => String(t || '').split(/\n+|(?=\s\d+[.)-]\s)/).map((x) => x.replace(/^\s*(\d+[.)-]|[-•●▪])\s*/, '').trim()).filter((x) => x.length > 2);
+
+async function portalBoot() {
+  const key = new URLSearchParams(location.search).get('portal');
+  if (!key) return true;
+  if (!Cloud.on) { extMsg('الرابط يعمل على المنصة المشتركة فقط'); return false; }
+  await portalPage(key);
+  return false;
+}
+async function portalPage(key, opts = {}) {
+  let r; try { r = opts.view ? opts.view() : await Cloud.rpc('shk_portal_view', { p_key: key }); } catch (_) { extMsg('تعذّر فتح البوابة', 'تحقق من الاتصال بالإنترنت ثم أعد المحاولة.'); return; }
+  if (!r || r.error) { extMsg({ expired: 'انتهت صلاحية رابط البوابة', revoked: 'أُوقف رابط البوابة' }[r && r.error] || 'رابط البوابة غير صالح', 'تواصلوا مع إدارة الشراكات في مؤسسة مروج الأهلية للحصول على رابط جديد.'); return; }
+  const p = r.p || {}, fmt = (t) => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-gregory', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(t)); } catch (_) { return String(t || '').slice(0, 10); } };
+  const s0 = parseDate(p.startDate), e0 = parseDate(p.endDate), now = today();
+  const pct = s0 && e0 ? Math.max(0, Math.min(100, Math.round((now - s0) / Math.max(1, e0 - s0) * 100))) : null;
+  const left = e0 ? daysBetween(now, e0) : null;
+  const status = p.stage !== 'signed' ? ['قيد الإعداد', 'prep'] : left !== null && left < 0 ? ['منتهية', 'ended'] : left !== null && left <= 90 ? ['تنتهي قريبًا', 'soon'] : ['سارية', 'active'];
+  const outs = portalLines(typeof p.outputs === 'string' ? p.outputs : (p.outputs || []).map((x) => x.t || x.text || x).join('\n'));
+  const areas = portalLines(typeof p.cooperationAreas === 'string' ? p.cooperationAreas : '');
+  const ev = [...(p.meetings || []).map((m) => ({ d: m.date, t: m.title, sub: [m.time, m.place].filter(Boolean).join(' · ') })),
+    ...(e0 && left > 0 && left <= 120 ? [{ d: p.endDate, t: 'انتهاء مدة الشراكة', sub: 'نتواصل معكم قبلها لتقييم التجديد' }] : [])].sort((a, b) => String(a.d).localeCompare(String(b.d)));
+  const reps = (p.reports || []).slice().reverse();
+  const orgName = (r.org && r.org.name) || 'مؤسسة مروج الأهلية';
+  const d = extShell(`<div class="pt-hero"><div class="pt-hero-in">
+      <div class="pt-logo">${r.partner && r.partner.logo ? '<img id="ptLogo" alt="">' : `<span>${esc((r.partner && r.partner.name || 'ج').trim().charAt(0))}</span>`}</div>
+      <div class="pt-ht"><small>بوابة الشريك · ${esc(orgName)}</small><h1>${esc((r.partner && r.partner.name) || p.title || '')}</h1>
+        <p>${p.title && r.partner && p.title !== r.partner.name ? esc(p.title) + ' · ' : ''}<span dir="ltr">${esc(p.code || '')}</span>${p.classification ? ' · ' + esc(p.classification) : ''}</p></div>
+      <span class="pt-st st-${status[1]}">${status[0]}</span></div>
+      ${pct !== null ? `<div class="pt-term"><div class="pt-term-l"><span>${fmt(p.startDate)}</span><b>${left > 0 ? `متبقٍ ${left} يومًا` : left === 0 ? 'تنتهي اليوم' : 'انتهت المدة'}</b><span>${fmt(p.endDate)}</span></div><div class="pt-bar"><i style="width:${pct}%"></i></div></div>` : ''}</div>
+    <div class="pt-grid">
+      ${outs.length ? `<section class="ext-card pt-card"><h2>${icon('flag')} المخرجات المشتركة</h2><ol class="pt-outs">${outs.map((o) => `<li>${esc(o)}</li>`).join('')}</ol></section>` : ''}
+      <section class="ext-card pt-card"><h2>${icon('calendar')} المواعيد القادمة</h2>${ev.length ? `<ul class="pt-ev">${ev.map((x) => `<li><span class="pt-evd"><b>${parseDate(x.d) ? parseDate(x.d).getDate() : ''}</b><small>${parseDate(x.d) ? MONTHS[parseDate(x.d).getMonth()] : ''}</small></span><div><b>${esc(x.t || '')}</b>${x.sub ? `<small>${esc(x.sub)}</small>` : ''}</div></li>`).join('')}</ul>` : '<p class="ext-faint">لا مواعيد قادمة مسجّلة حاليًا.</p>'}
+      ${areas.length ? `<h2 style="margin-top:22px">${icon('layers')} مجالات التعاون</h2><ul class="pt-areas">${areas.slice(0, 8).map((a) => `<li>${esc(a)}</li>`).join('')}</ul>` : ''}</section>
+    </div>
+    <section class="ext-card pt-send" id="ptSend"><h2>${icon('send')} أرسلوا إلى إدارة الشراكات</h2><p class="ext-faint">تقارير الإنجاز والصور الميدانية تُضاف مباشرة إلى ملف الشراكة لدينا، ويصلنا إشعار بها.</p>
+      <div class="pt-kinds">${Object.entries(PORTAL_KINDS).map(([k, [l, ic]], i) => `<button type="button" class="${i ? '' : 'on'}" data-pk="${k}">${icon(ic)}<span>${l}</span></button>`).join('')}</div>
+      <div class="ext-form pt-form">
+        ${outs.length ? `<label class="ext-f full" data-only="report"><span>المخرج المرتبط</span><select id="ptOut"><option value="">عام — لا يرتبط بمخرج محدد</option>${outs.map((o) => `<option>${esc(o.slice(0, 120))}</option>`).join('')}</select></label>` : ''}
+        <label class="ext-f full"><span id="ptTxtL">ما الذي أُنجز؟</span><textarea id="ptTxt" rows="5" placeholder="اكتبوا ملخص الإنجاز: ما نُفّذ، والأرقام، والموقع، والتاريخ…"></textarea><em class="err"></em></label>
+        <label class="ext-f"><span>اسم المرسل</span><input id="ptBy" placeholder="الاسم والمنصب"></label>
+        ${extFilesHTML('ptFiles')}
+        <div class="ext-actions"><button type="button" class="btn primary" id="ptGo">${icon('send')} إرسال</button></div></div></section>
+    ${reps.length ? `<section class="ext-card"><h2>${icon('history')} ما أرسلتموه</h2><ul class="pt-reps">${reps.map((x) => `<li><div class="pt-rh"><span class="pt-k">${icon((PORTAL_KINDS[x.kind] || PORTAL_KINDS.report)[1])} ${(PORTAL_KINDS[x.kind] || PORTAL_KINDS.report)[0]}</span><small>${fmt(x.at)}${x.by ? ' · ' + esc(x.by) : ''}</small><span class="pt-seen ${x.seen ? 'y' : ''}">${x.seen ? 'اطّلعت عليه الإدارة' : 'وصل — بانتظار الاطلاع'}</span></div>
+      ${x.output ? `<div class="pt-ro">${icon('flag')} ${esc(x.output)}</div>` : ''}${x.text ? `<p>${esc(x.text).replace(/\n/g, '<br>')}</p>` : ''}${(x.files || []).length ? `<div class="pt-fl">${x.files.map((f) => `<span>${icon('file')} ${esc(f.name || '')}</span>`).join('')}</div>` : ''}
+      ${x.reply ? `<div class="pt-reply"><b>ردّ إدارة الشراكات</b><p>${esc(x.reply).replace(/\n/g, '<br>')}</p></div>` : ''}</li>`).join('')}</ul></section>` : ''}`);
+  d.classList.add('pt-page');
+  if (r.partner && r.partner.logo && !opts.view) { Cloud.rpc('shk_portal_file', { p_key: key, p_id: r.partner.logo }).then((f) => { if (f && f.data) { const m = f.meta || {}; const im = $('#ptLogo', d); if (im) im.src = `data:${m.type || 'image/png'};base64,${f.data}`; } }).catch(() => {}); }
+  else if (opts.logo) { const im = $('#ptLogo', d); if (im) im.src = opts.logo; }
+  let kind = 'report';
+  const getFiles = extFilesBind($('#ptFiles', d));
+  const setKind = (k) => {
+    kind = k; $$('[data-pk]', d).forEach((b) => b.classList.toggle('on', b.dataset.pk === k));
+    $$('[data-only]', d).forEach((x) => { x.hidden = x.dataset.only !== k; });
+    $('#ptTxtL', d).textContent = { report: 'ما الذي أُنجز؟', photos: 'وصف الصور (اختياري)', message: 'الرسالة' }[k];
+    $('#ptTxt', d).placeholder = { report: 'اكتبوا ملخص الإنجاز: ما نُفّذ، والأرقام، والموقع، والتاريخ…', photos: 'مثال: زراعة 500 شتلة في … بتاريخ …', message: 'اكتبوا رسالتكم لإدارة الشراكات…' }[k];
+  };
+  d.addEventListener('click', (e) => { const b = e.target.closest('[data-pk]'); if (b) setKind(b.dataset.pk); });
+  const go = $('#ptGo', d), ta = $('#ptTxt', d);
+  go.onclick = async () => {
+    const text = ta.value.trim(), fl = getFiles(), f = ta.closest('.ext-f');
+    f.classList.remove('bad'); f.querySelector('.err').textContent = '';
+    if (!text && !fl.length) { f.classList.add('bad'); f.querySelector('.err').textContent = kind === 'photos' ? 'أرفقوا صورة واحدة على الأقل.' : 'اكتبوا التفاصيل أو أرفقوا ملفًا.'; return; }
+    go.disabled = true; go.textContent = 'جارٍ الإرسال…';
+    let res; try {
+      if (opts.submit) res = await opts.submit({ kind, text, by: $('#ptBy', d).value.trim(), output: ($('#ptOut', d) || {}).value || '', files: fl });
+      else {
+        const ids = await extUpload(key, fl, (n, t) => { go.textContent = `جارٍ رفع الملفات ${n} / ${t}…`; }, { rpc: 'shk_portal_file_put', prefix: 'f-ptl-', max: 'بلغتم الحد الأقصى للملفات في هذا الرابط.' });
+        res = await Cloud.rpc('shk_portal_submit', { p_key: key, p_kind: kind, p_text: text, p_by: $('#ptBy', d).value.trim(), p_output: ($('#ptOut', d) || {}).value || '', p_files: ids });
+      }
+    } catch (e) { res = { error: 'net', msg: e && e.message }; }
+    if (!res || res.error) { go.disabled = false; go.innerHTML = `${icon('send')} إرسال`; alert((res && res.msg) || 'تعذّر الإرسال، حاولوا مرة أخرى.'); return; }
+    portalPage(key, opts).then(() => { const t = document.querySelector('.pt-reps'); if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  };
+}
+
+/* ===== داخل المنصة: قسم «بوابة الشريك» في صفحة الشراكة ===== */
+function portalSectionHTML(p) {
+  const reps = (p.partnerReports || []).slice().reverse(), unseen = reps.filter((x) => !x.seen).length;
+  return `<section class="dsec" id="portal"><h2>بوابة الشريك ${unseen ? `<span class="chip gold plain">${unseen} جديد</span>` : ''} <span class="src">رابط خاص ترفع منه الجهة تقاريرها وصورها</span></h2>
+    <div class="ptl-box"><div class="ptl-make">${Cloud.on ? `<span>رابط جديد صالح لمدة</span><div class="seg">${[['90', '3 أشهر'], ['180', '6 أشهر'], ['365', 'سنة'], ['end', 'حتى نهاية الشراكة']].map(([k, l], i) => `<button type="button" class="${i === 2 ? 'on' : ''}" data-ptdur="${k}">${l}</button>`).join('')}</div><button class="btn primary sm" type="button" data-ptmake>${icon('link')} إنشاء رابط البوابة</button>`
+      : `<span class="muted small">${icon('info')} روابط البوابة تعمل على المنصة المشتركة (عند فتح المنصة من رابطها على الإنترنت).</span>`}</div>
+      <div id="ptlNew"></div><div id="ptlList" class="ptl-list"></div></div>
+    ${reps.length ? `<div class="ptl-reps">${reps.map((x) => `<div class="ptl-rep ${x.seen ? '' : 'new'}" data-rep="${esc(x.id)}"><div class="pt-rh"><span class="pt-k">${icon((PORTAL_KINDS[x.kind] || PORTAL_KINDS.report)[1])} ${(PORTAL_KINDS[x.kind] || PORTAL_KINDS.report)[0]}</span><small>${fmtDT(x.at)}${x.by ? ' · ' + esc(x.by) : ''}</small>${x.seen ? '<span class="chip ok plain">تمت المراجعة</span>' : '<span class="chip gold plain">جديد</span>'}</div>
+      ${x.output ? `<div class="pt-ro">${icon('flag')} ${esc(x.output)}</div>` : ''}${x.text ? `<p>${esc(x.text).replace(/\n/g, '<br>')}</p>` : ''}
+      ${(x.files || []).length ? `<div class="pt-fl">${x.files.map((f) => `<button type="button" class="pt-flb" data-dl="${esc(f.fileId)}" data-name="${esc(f.name || '')}">${icon(/^image\//.test(f.type || '') ? 'image' : 'file')} ${esc(f.name || '')}</button>`).join('')}</div>` : ''}
+      ${x.reply ? `<div class="pt-reply"><b>ردّكم</b><p>${esc(x.reply)}</p></div>` : ''}
+      ${!x.seen ? `<div class="ptl-act"><textarea class="in" rows="2" data-reply="${esc(x.id)}" placeholder="ردّ يظهر للشريك في البوابة (اختياري)"></textarea><button class="btn sm primary" type="button" data-seen="${esc(x.id)}">${icon('check')} تمت المراجعة</button></div>` : ''}</div>`).join('')}</div>` : '<p class="muted small" style="margin-top:12px">لم يُرسل الشريك شيئًا بعد.</p>'}</section>`;
+}
+function portalBind(el, p) {
+  const box = $('#portal', el); if (!box) return;
+  const list = async () => {
+    const L_ = $('#ptlList', box); if (!L_ || !Cloud.on) return;
+    let r = []; try { r = await Cloud.rpc('shk_portal_list', { p_token: Cloud.token(), p_pid: p.id }) || []; } catch (_) { L_.innerHTML = '<p class="muted small">تعذّر جلب الروابط — تأكد من تشغيل ملف partner_portal.sql في Supabase.</p>'; return; }
+    L_.innerHTML = r.length ? r.map((x) => { const ex = new Date(x.expires) < new Date(); return `<div class="ptl-it ${x.revoked || ex ? 'off' : ''}"><span>${icon('link')} ${esc(x.label || 'رابط البوابة')}</span><small>${x.revoked ? 'موقوف' : ex ? 'منتهٍ' : `صالح حتى ${fmtDate(String(x.expires).slice(0, 10))}`} · فُتح ${x.opens || 0} مرة${x.last ? ` · آخرها ${relDays(x.last)}` : ''}</small>${!x.revoked && !ex ? `<button class="btn sm ghost" type="button" data-ptrev="${x.id}">إيقاف</button>` : ''}</div>`; }).join('') : '';
+  };
+  list();
+  let dur = '365';
+  box.addEventListener('click', async (e) => {
+    const dd = e.target.closest('[data-ptdur]'); if (dd) { dur = dd.dataset.ptdur; $$('[data-ptdur]', box).forEach((b) => b.classList.toggle('on', b === dd)); return; }
+    if (e.target.closest('[data-ptmake]')) {
+      const ex = dur === 'end' ? (parseDate(p.endDate) && parseDate(p.endDate) > today() ? new Date(parseDate(p.endDate).getTime() + 864e5 * 30) : new Date(Date.now() + 365 * 864e5)) : new Date(Date.now() + (+dur) * 864e5);
+      try {
+        const r = await Cloud.rpc('shk_portal_create', { p_token: Cloud.token(), p_pid: p.id, p_label: `بوابة ${partnerName(p)}`, p_expires_at: ex.toISOString() });
+        const url = `${location.origin}${location.pathname}?portal=${r.token}`;
+        $('#ptlNew', box).innerHTML = `<div class="ptl-url"><b>${icon('check')} رابط البوابة — يظهر مرة واحدة فقط، انسخه الآن وأرسله لضابط الاتصال لدى الشريك:</b><div class="ext-link"><input readonly value="${esc(url)}" id="ptlUrl"><button class="btn" type="button" data-ptcopy>${icon('copy')} نسخ</button></div></div>`;
+        list();
+      } catch (err) { toast(err && err.code === 'P0001' || /forbidden/.test(err && err.message) ? 'لا تملك صلاحية إنشاء رابط البوابة' : 'تعذّر إنشاء الرابط — تأكد من تشغيل ملف partner_portal.sql في Supabase', 'err'); }
+      return;
+    }
+    if (e.target.closest('[data-ptcopy]')) { const i = $('#ptlUrl', box); i.select(); try { await navigator.clipboard.writeText(i.value); } catch (_) { document.execCommand('copy'); } toast('نُسخ الرابط'); return; }
+    const rv = e.target.closest('[data-ptrev]'); if (rv) { if (!(await confirmDlg('إيقاف هذا الرابط؟ لن يتمكن الشريك من فتح البوابة به.', { title: 'إيقاف رابط البوابة', ok: 'إيقاف', danger: true }))) return; await Cloud.rpc('shk_portal_revoke', { p_token: Cloud.token(), p_id: rv.dataset.ptrev }); toast('أُوقف الرابط'); list(); return; }
+    const sn = e.target.closest('[data-seen]'); if (sn) {
+      const id = sn.dataset.seen, rep = (p.partnerReports || []).find((x) => x.id === id); if (!rep) return;
+      const ta = $(`[data-reply="${id}"]`, box); rep.seen = true; rep.seenAt = nowISO(); rep.seenBy = Session.userName(); if (ta && ta.value.trim()) rep.reply = ta.value.trim();
+      await Repo.save('partnerships', p); await Repo.log('portal.review', 'partnership', p.id, p.code, (PORTAL_KINDS[rep.kind] || PORTAL_KINDS.report)[0]); toast(rep.reply ? 'حُفظ الرد وسيظهر للشريك في البوابة' : 'عُلّم كمراجَع'); route();
+    }
+  });
 }
 
 /* —— 05-ui.js —— */
@@ -20909,7 +21076,7 @@ function renderPartnership(el, r) {
   const photos = partnershipPhotos(p);
   const kv = (label, val, full) => `<div class="${full ? 'full' : ''}"><dt>${esc(label)}</dt><dd>${val || '<span class="faint">—</span>'}</dd></div>`;
   const wfHTML = wfSectionHTML('partnership', p);
-  const secs = [wfHTML && ['wf', 'مسار المذكرة'], ['profile', 'التصنيف والتقييم'], ['ov', 'نظرة عامة'], internal && ['files', 'الملفات والصور'], ['coop', 'مجالات التعاون'], ['impact', 'الأثر والمخرجات'], internal && ['follow', 'المتابعة'], ['contact', 'التواصل'], stories.length && ['stories', 'الإنجازات'], prop && ['proposal', 'المقترح الأصلي'], internal && ['admin', 'بيانات إدارية'], internal && ['log', 'السجل']].filter(Boolean);
+  const secs = [wfHTML && ['wf', 'مسار المذكرة'], ['profile', 'التصنيف والتقييم'], ['ov', 'نظرة عامة'], internal && ['files', 'الملفات والصور'], internal && can('edit.partnership') && !App.share && ['portal', 'بوابة الشريك'], ['coop', 'مجالات التعاون'], ['impact', 'الأثر والمخرجات'], internal && ['follow', 'المتابعة'], ['contact', 'التواصل'], stories.length && ['stories', 'الإنجازات'], prop && ['proposal', 'المقترح الأصلي'], internal && ['admin', 'بيانات إدارية'], internal && ['log', 'السجل']].filter(Boolean);
   el.innerHTML = `
   <div class="dhead" data-tour="detail-head">${coverHTML(p.id + (pr ? pr.name : ''), p.coverFileId, { W: 1600, H: 420, levels: 18, cols: 90 })}<div class="shade"></div>
     <a class="back no-print" href="#/partnerships">${icon('arrowR')} سجل الشراكات</a>
@@ -20949,6 +21116,7 @@ function renderPartnership(el, r) {
         ${kv('تفعيل الشراكة', esc(p.activation))}
         ${kv('التقاطع مع الإدارات', (p.departments || []).length ? `<div class="tagline">${p.departments.map((d) => `<span class="chip plain">${esc(d)}</span>`).join('')}</div>` : '', true)}
       </dl></section>
+    ${internal && can('edit.partnership') && !App.share ? portalSectionHTML(p) : ''}
     ${internal ? `<section class="dsec" id="files" data-tour="detail-files"><h2>الملفات والصور <span class="src">تقارير الشراكة من ملف الحصر</span></h2>
       <p class="small muted" style="margin:-6px 0 16px">${canEdit ? 'ارفع الملفات مباشرة في التصنيف المناسب أو اسحبها إليه. تُحفظ في هذا المتصفح، ولا تظهر المستندات في الواجهة التعريفية؛ تظهر صور الشراكة فقط إذا كانت الشراكة منشورة.' : 'ملفات الشراكة وصورها.'}</p>
       ${filesSectionHTML(p, canEdit)}</section>` : ''}
@@ -21000,6 +21168,7 @@ function renderPartnership(el, r) {
   const anchors = $$('[data-anchor]', el);
   const obs = new IntersectionObserver((ents) => { if (el.classList.contains('tabbed')) return; ents.forEach((en) => { if (en.isIntersecting) anchors.forEach((a) => a.classList.toggle('on', a.dataset.anchor === en.target.id)); }); }, { rootMargin: '-140px 0px -60% 0px' });
   $$('.dsec', el).forEach((s) => s.id && obs.observe(s));
+  portalBind(el, p);
   el.onclick = async (e) => {
     const gs = e.target.closest('[data-gstar]'); if (gs) { e.preventDefault(); return toggleGolden(p, gs); }
     const fx = e.target.closest('[data-anchor-to]');
@@ -30008,6 +30177,7 @@ async function boot() {
     /* المنصة المشتركة: التحديثات تُطبَّق بعد سحب بيانات الخادم (في cloudEnter) حتى تُرفع إليه، لا على نسخة الجهاز وحدها */
     if (!Cloud.on && migrate()) { await Repo.saveSettings(); for (const c of ['partnerships', 'achievements', 'partners']) await Store.putMany(c, D[c]); }
     if (!(await extBoot())) return; // روابط الجهات الخارجية: نموذج المقترح وصفحة المتابعة
+    if (!(await portalBoot())) return; // بوابة الشريك
     if (!(await shareBoot())) return; // رابط اطلاع: جلسة الرابط وحدها
     applyTheme();
     if (!authBoot()) { showLogin(); splashSync(false); return; }

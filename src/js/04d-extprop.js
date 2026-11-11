@@ -45,14 +45,14 @@ function extFilesBind(box) {
   return () => files;
 }
 /* رفع الملفات إلى الخادم بمفتاح الدعوة أو المتابعة، ويعيد معرّفاتها */
-async function extUpload(key, files, onStep) {
+async function extUpload(key, files, onStep, { rpc = 'shk_ext_file_put', prefix = 'f-ext-', max = 'الحد الأقصى 10 ملفات.' } = {}) {
   const ids = [];
   for (let i = 0; i < files.length; i++) {
     const f = files[i]; onStep && onStep(i + 1, files.length);
     const b64 = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1] || ''); r.onerror = rej; r.readAsDataURL(f); });
-    const id = 'f-ext-' + [...crypto.getRandomValues(new Uint8Array(10))].map((x) => x.toString(16).padStart(2, '0')).join('');
-    const r = await Cloud.rpc('shk_ext_file_put', { p_key: key, p_id: id, p_meta: { name: f.name, type: f.type || 'application/octet-stream', size: f.size }, p_data: b64 });
-    if (!r || r.error) throw new Error(r && r.error === 'too_many' ? 'الحد الأقصى 10 ملفات.' : `تعذّر رفع «${f.name}».`);
+    const id = prefix + [...crypto.getRandomValues(new Uint8Array(10))].map((x) => x.toString(16).padStart(2, '0')).join('');
+    const r = await Cloud.rpc(rpc, { p_key: key, p_id: id, p_meta: { name: f.name, type: f.type || 'application/octet-stream', size: f.size }, p_data: b64 });
+    if (!r || r.error) throw new Error(r && r.error === 'too_many' ? max : `تعذّر رفع «${f.name}».`);
     ids.push(id);
   }
   return ids;
