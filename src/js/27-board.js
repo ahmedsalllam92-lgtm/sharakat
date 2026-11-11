@@ -18,6 +18,17 @@ function boDates(d = new Date()) {
 
 /* — الشريط العلوي: صف الهوية وصف التنقل المرقّم — */
 const BO_WALL_N = 10;
+/* حقائق الغلاف: مختلفة عن «المنظومة بالأرقام» — حداثة التوقيع وعمق العلاقة؛ ما لا قيمة له لا يظهر */
+function boHeroFacts(signed) {
+  const td = isoDate(today()), dated = signed.filter((p) => p.startDate && String(p.startDate).slice(0, 10) <= td).sort((a, b) => String(b.startDate).localeCompare(String(a.startDate)));
+  const yr = today().getFullYear(), thisYear = dated.filter((p) => String(p.startDate).slice(0, 4) === String(yr)).length;
+  const last = dated[0], first = dated[dated.length - 1];
+  const F = [];
+  if (thisYear) F.push(`<div><dt>وُقّعت في ${yr}</dt><dd><b class="cu" data-v="${thisYear}">${thisYear}</b></dd></div>`);
+  if (last) F.push(`<div class="txt"><dt>أحدث توقيع · ${esc(fmtDate(last.startDate, 'month'))}</dt><dd><a href="#/partnerships/${last.id}">${esc(partnerName(last))}</a></dd></div>`);
+  if (first && String(first.startDate).slice(0, 4) < String(yr)) F.push(`<div><dt>شراكات موثّقة منذ</dt><dd><b>${String(first.startDate).slice(0, 4)}</b></dd></div>`);
+  return F.length ? `<dl class="bo-hero-facts">${F.join('')}</dl>` : '';
+}
 function boardTopbarHTML(tourBtn, demo, roleBox) {
   const o = D.settings.org, dk = boardThemeKey() === 'dark';
   const groups = navGroups();
@@ -111,11 +122,7 @@ function renderHomeBoard(el) {
           <h1>${esc(h.heroTitle || 'نربط المؤسسة بشركاء يوسّعون أثرها البيئي')}</h1>
           <p class="bo-lead">${esc(h.heroText || '')}</p>
           <div class="bo-cta">${can('view.dashboard') ? `<a class="btn primary lg" href="#/dashboard">${icon('chart')} لوحة الأداء</a>` : ''}<a class="btn lg" href="#/partnerships">${icon('layers')} سجل الشراكات</a></div>
-          <dl class="bo-hero-facts">
-            <div><dt>شراكات سارية</dt><dd><b class="cu" data-v="${c.active}">${c.active}</b></dd></div>
-            <div><dt>جهات شريكة</dt><dd><b class="cu" data-v="${c.partners}">${c.partners}</b></dd></div>
-            <div><dt>قطاعات ممثلة</dt><dd><b class="cu" data-v="${secs.length}">${secs.length}</b></dd></div>
-          </dl>
+          ${boHeroFacts(signed)}
         </div>
         <div class="bo-hero-m">
           <figure class="bo-ph a">${heroRotHTML('board') || (photoA ? `<img class="photo" src="${photoA.src}" alt="${esc(photoA.title)}">` : coverHTML('bo-a', null, { W: 800, H: 600 }))}</figure>

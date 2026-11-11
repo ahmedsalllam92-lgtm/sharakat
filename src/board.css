@@ -1017,3 +1017,6 @@
 [data-theme="dark"] .bo-fx .w{opacity:.16}
 @media (prefers-reduced-motion:reduce){.bo-fx .w,.bo-fx .sh,.bo-fx .dm{animation:none}.bo-fx .sh,.bo-fx .dm{display:none}}
 @media print{.bo-fx{display:none}}
+.bo-hero-facts>div.txt{flex:1.6;min-width:0}
+.bo-hero-facts .txt a{display:block;font-family:var(--display);font-size:21px;font-weight:700;color:var(--petrol);line-height:1.35;margin-top:8px;text-decoration:none;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.bo-hero-facts .txt a:hover{color:var(--gold)}
