@@ -22808,6 +22808,8 @@ function setGeneral(b) {
       <div class="field"><label>مدة الظهور (ثوانٍ)</label><input type="number" min="2" max="8" class="in" id="gspl_d" value="${D.settings.splash.dur || 3}"></div>
       <label class="row" style="justify-content:space-between;grid-column:1/-1"><span>إظهار الأرقام الحية (السارية، الجهات، القطاعات)</span><span class="switch"><input type="checkbox" id="gspl_n" ${D.settings.splash.stats !== false ? 'checked' : ''}><i></i></span></label>
     </div></div></div>
+    <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>مساعد الشراكات</h3><span class="sub">الأيقونة العائمة للمساعد (Ctrl+J) — مخفية مبدئيًا</span></div><div class="panel-b">
+      <label class="row" style="justify-content:space-between"><span>إظهار مساعد الشراكات</span><span class="switch"><input type="checkbox" id="gas_on" ${D.settings.assistantOn ? 'checked' : ''}><i></i></span></label></div></div>
     <div class="row" style="margin-top:18px"><button class="btn primary" id="gsave">حفظ الإعدادات</button></div>`;
   hydrateFiles(b);
   const readSpl = () => ({ bgV2: true, bgV3: true, bgV4: true, on: $('#gspl_on', b).checked, text: $('#gspl_t', b).value.trim() || SPLASH_DEF.text, sub: $('#gspl_s', b).value.trim(), bg: $('#gspl_bg', b).value, stats: $('#gspl_n', b).checked, dur: Math.max(2, Math.min(8, +$('#gspl_d', b).value || 3)), bgV2: true });
@@ -22820,6 +22822,7 @@ function setGeneral(b) {
     D.settings.infoAgeDays = Math.max(1, Math.min(90, +$('#ginfo', b).value || 7));
     D.settings.alertDays = Math.max(1, Math.min(180, +$('#galert', b).value || 30));
     D.settings.splash = readSpl(); splashSync();
+    D.settings.assistantOn = $('#gas_on', b).checked; if (!D.settings.assistantOn) { ['#asFab', '#asWin', '#asTour'].forEach((x) => { const e = $(x); if (e) e.remove(); }); }
     await saveSet('الإعدادات العامة'); toast('حُفظت الإعدادات'); renderShell(); route();
   };
 }
@@ -29831,7 +29834,7 @@ const AS_P = { one: 'شراكة واحدة', two: 'شراكتان', few: 'شرا
 
 /* ===== الواجهة ===== */
 function asMount() {
-  if ($('#asFab') || App.share && !shareHas('home')) return;
+  if ($('#asFab') || !(D.settings && D.settings.assistantOn) || App.share && !shareHas('home')) return; // مخفي حتى يُفعَّل من الإعدادات العامة
   const fab = document.createElement('button'); fab.id = 'asFab'; fab.type = 'button'; fab.setAttribute('aria-label', 'مساعد الشراكات');
   fab.innerHTML = `<span class="as-orb"><i></i><i></i><i></i></span><span class="as-fab-t">مساعد الشراكات</span>`;
   document.body.appendChild(fab);
@@ -29849,7 +29852,7 @@ function asMount() {
   $('#asForm').onsubmit = (e) => { e.preventDefault(); const t = $('#asTxt'); const v = t.value.trim(); if (!v) return; t.value = ''; asAutoSize(); asAsk(v); };
   $('#asTxt').addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('#asForm').requestSubmit(); } });
   $('#asTxt').addEventListener('input', asAutoSize);
-  addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'j') { e.preventDefault(); asToggle(true); } });
+  addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'j' && $('#asFab')) { e.preventDefault(); asToggle(true); } });
 }
 function asAutoSize() { const t = $('#asTxt'); if (!t) return; t.style.height = 'auto'; t.style.height = Math.min(140, t.scrollHeight) + 'px'; }
 function asToggle(force) {
@@ -30268,7 +30271,7 @@ function palActions() {
     { t: 'استعراض المنصة', s: 'جولة تعريفية تفاعلية', ic: 'play', kw: 'جولة شرح', run: () => startTour() },
     { t: 'استعراض مسار طلب الشراكة', s: 'من «شارك» حتى الاعتماد أو الرفض', ic: 'convert', kw: 'جولة مسار طلب اعتماد رفض', run: () => startReqTour() },
     { t: 'استعراض دعوة جهة خارجية', s: 'رابط بلا حساب: الجهة تقترح وتتابع الرد', ic: 'send', kw: 'جولة جهة خارجية رابط دعوة مقترح', run: () => startExtTour() },
-    { t: 'مساعد الشراكات', s: 'اسأل أو اطلب أكثر من أمر — Ctrl+J', ic: 'bot', kw: 'مساعد ذكاء اصطناعي سؤال اكتب خطاب تقرير', run: () => asToggle(true) },
+    D.settings.assistantOn && { t: 'مساعد الشراكات', s: 'اسأل أو اطلب أكثر من أمر — Ctrl+J', ic: 'bot', kw: 'مساعد ذكاء اصطناعي سؤال اكتب خطاب تقرير', run: () => asToggle(true) },
     { t: 'خريطة الشراكات', s: 'انتشار الشراكات على مناطق المملكة', ic: 'map', kw: 'خريطة مناطق منطقة جغرافي الرياض جدة', run: () => { location.hash = '#/map'; } },
     { t: 'تقويم الشراكات', s: 'التوقيع والانتهاء والتجديد والاجتماعات', ic: 'calendar', kw: 'تقويم مواعيد اجتماع تجديد انتهاء outlook google', run: () => { location.hash = '#/calendar'; } },
     { t: 'حكاية الشراكة', s: 'صفحة تعريفية متحركة: من الرمل إلى الأثر', ic: 'play', kw: 'حكاية فيلم تعريفي لاندنج صحراء قصة', run: () => { location.hash = '#/tale'; } },

@@ -79,6 +79,8 @@ function setGeneral(b) {
       <div class="field"><label>مدة الظهور (ثوانٍ)</label><input type="number" min="2" max="8" class="in" id="gspl_d" value="${D.settings.splash.dur || 3}"></div>
       <label class="row" style="justify-content:space-between;grid-column:1/-1"><span>إظهار الأرقام الحية (السارية، الجهات، القطاعات)</span><span class="switch"><input type="checkbox" id="gspl_n" ${D.settings.splash.stats !== false ? 'checked' : ''}><i></i></span></label>
     </div></div></div>
+    <div class="panel" style="margin-top:18px"><div class="panel-h"><h3>مساعد الشراكات</h3><span class="sub">الأيقونة العائمة للمساعد (Ctrl+J) — مخفية مبدئيًا</span></div><div class="panel-b">
+      <label class="row" style="justify-content:space-between"><span>إظهار مساعد الشراكات</span><span class="switch"><input type="checkbox" id="gas_on" ${D.settings.assistantOn ? 'checked' : ''}><i></i></span></label></div></div>
     <div class="row" style="margin-top:18px"><button class="btn primary" id="gsave">حفظ الإعدادات</button></div>`;
   hydrateFiles(b);
   const readSpl = () => ({ bgV2: true, bgV3: true, bgV4: true, on: $('#gspl_on', b).checked, text: $('#gspl_t', b).value.trim() || SPLASH_DEF.text, sub: $('#gspl_s', b).value.trim(), bg: $('#gspl_bg', b).value, stats: $('#gspl_n', b).checked, dur: Math.max(2, Math.min(8, +$('#gspl_d', b).value || 3)), bgV2: true });
@@ -91,6 +93,7 @@ function setGeneral(b) {
     D.settings.infoAgeDays = Math.max(1, Math.min(90, +$('#ginfo', b).value || 7));
     D.settings.alertDays = Math.max(1, Math.min(180, +$('#galert', b).value || 30));
     D.settings.splash = readSpl(); splashSync();
+    D.settings.assistantOn = $('#gas_on', b).checked; if (!D.settings.assistantOn) { ['#asFab', '#asWin', '#asTour'].forEach((x) => { const e = $(x); if (e) e.remove(); }); }
     await saveSet('الإعدادات العامة'); toast('حُفظت الإعدادات'); renderShell(); route();
   };
 }

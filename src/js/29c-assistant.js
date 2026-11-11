@@ -17,7 +17,7 @@ const AS_P = { one: 'شراكة واحدة', two: 'شراكتان', few: 'شرا
 
 /* ===== الواجهة ===== */
 function asMount() {
-  if ($('#asFab') || App.share && !shareHas('home')) return;
+  if ($('#asFab') || !(D.settings && D.settings.assistantOn) || App.share && !shareHas('home')) return; // مخفي حتى يُفعَّل من الإعدادات العامة
   const fab = document.createElement('button'); fab.id = 'asFab'; fab.type = 'button'; fab.setAttribute('aria-label', 'مساعد الشراكات');
   fab.innerHTML = `<span class="as-orb"><i></i><i></i><i></i></span><span class="as-fab-t">مساعد الشراكات</span>`;
   document.body.appendChild(fab);
@@ -35,7 +35,7 @@ function asMount() {
   $('#asForm').onsubmit = (e) => { e.preventDefault(); const t = $('#asTxt'); const v = t.value.trim(); if (!v) return; t.value = ''; asAutoSize(); asAsk(v); };
   $('#asTxt').addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('#asForm').requestSubmit(); } });
   $('#asTxt').addEventListener('input', asAutoSize);
-  addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'j') { e.preventDefault(); asToggle(true); } });
+  addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key === 'j' && $('#asFab')) { e.preventDefault(); asToggle(true); } });
 }
 function asAutoSize() { const t = $('#asTxt'); if (!t) return; t.style.height = 'auto'; t.style.height = Math.min(140, t.scrollHeight) + 'px'; }
 function asToggle(force) {
