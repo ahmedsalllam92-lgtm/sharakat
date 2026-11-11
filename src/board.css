@@ -1001,3 +1001,19 @@
 @keyframes boWallIn{from{opacity:0;transform:translateY(-4px)}}
 .bo-wall-more{display:flex;justify-content:center;margin-top:18px}
 .bo-wall-more .btn{gap:8px;border-radius:999px;padding-inline:22px}
+/* شريط التنقل: حركة هادئة بألوانه الحالية — خطوط ذهبية تنساب، ولمعة تعبر، ومعيّنات تومض */
+.bo-row2{isolation:isolate}
+.bo-fx{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.bo-fx .w{position:absolute;inset:0;width:calc(100% + 520px);background:var(--gold);opacity:.22;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='44' viewBox='0 0 520 44'%3E%3Cg fill='none' stroke='%23000' stroke-width='1'%3E%3Cpath d='M0 30 C 90 14 170 40 260 24 S 430 10 520 30'/%3E%3Cpath d='M0 38 C 110 26 190 46 280 34 S 440 24 520 38' opacity='.55'/%3E%3C/g%3E%3C/svg%3E") 0 50%/520px 44px repeat-x;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='44' viewBox='0 0 520 44'%3E%3Cg fill='none' stroke='%23000' stroke-width='1'%3E%3Cpath d='M0 30 C 90 14 170 40 260 24 S 430 10 520 30'/%3E%3Cpath d='M0 38 C 110 26 190 46 280 34 S 440 24 520 38' opacity='.55'/%3E%3C/g%3E%3C/svg%3E") 0 50%/520px 44px repeat-x;
+  animation:boFxDrift 40s linear infinite}
+.bo-fx .sh{position:absolute;top:0;bottom:0;width:220px;left:-240px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--gold) 14%,transparent),transparent);animation:boFxSheen 10s ease-in-out infinite}
+.bo-fx .dm{position:absolute;width:5px;height:5px;background:var(--gold);transform:rotate(45deg) scale(.4);opacity:0;animation:boFxTw 7s ease-in-out infinite}
+.bo-fx .d1{top:9px;left:31%}.bo-fx .d2{top:30px;left:58%;animation-delay:2.4s}.bo-fx .d3{top:14px;left:83%;animation-delay:4.8s}
+@keyframes boFxDrift{to{transform:translateX(-520px)}}
+@keyframes boFxSheen{0%,50%{left:-240px}100%{left:calc(100% + 20px)}}
+@keyframes boFxTw{0%,70%,100%{opacity:0;transform:rotate(45deg) scale(.4)}82%{opacity:.55;transform:rotate(45deg) scale(1)}}
+[data-theme="dark"] .bo-fx .w{opacity:.16}
+@media (prefers-reduced-motion:reduce){.bo-fx .w,.bo-fx .sh,.bo-fx .dm{animation:none}.bo-fx .sh,.bo-fx .dm{display:none}}
+@media print{.bo-fx{display:none}}

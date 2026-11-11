@@ -38,7 +38,7 @@ function boardTopbarHTML(tourBtn, demo, roleBox) {
         ${tourBtn}${demo}
         <button class="icon-btn bo-theme" data-themetoggle type="button" title="${dk ? 'الوضع النهاري' : 'الوضع الليلي'}" aria-label="تبديل الوضع النهاري والليلي">${icon(dk ? 'sun' : 'moon')}</button>${roleBox}</div>
     </div>
-    <nav class="bo-row2" aria-label="التنقل الرئيسي"><span class="bo-ind" aria-hidden="true"></span>${main.map(link).join('')}
+    <nav class="bo-row2" aria-label="التنقل الرئيسي"><span class="bo-fx" aria-hidden="true"><i class="w"></i><i class="sh"></i><i class="dm d1"></i><i class="dm d2"></i><i class="dm d3"></i></span><span class="bo-ind" aria-hidden="true"></span>${main.map(link).join('')}
       ${rest.length ? `<div class="st-dd bo-more" data-gm="more"><button class="st-link st-ddt bo-link" type="button" aria-haspopup="true"><em>${boIdx(main.length + 1)}</em>المزيد${rest.some((x) => x.cnt) ? `<span class="cnt">${rest.reduce((t, x) => t + (x.cnt || 0), 0)}</span>` : ''}${icon('chevD')}</button>
         <div class="st-ddm bo-mega">${groups.map((g) => { const its = g.items.filter((it) => rest.includes(it)); return its.length ? `<div class="bo-mega-g"><h5>${esc(g.t)}</h5>${its.map((it) => `<a class="nav-a" href="${it.h}" data-m="${it.m.join(',')}" ${it.only ? `data-only="${it.only}"` : ''} ${it.not ? `data-not="${it.not}"` : ''}>${icon(it.ic)}<span>${esc(it.l)}</span>${it.cnt ? `<span class="cnt">${it.cnt}</span>` : ''}</a>`).join('')}</div>` : ''; }).join('')}</div></div>` : ''}
       <span class="bo-row2-sp"></span><div class="bo-date" aria-label="تاريخ اليوم"><span>${esc(dt.day)}</span><b>${esc(dt.hijri)}</b><i aria-hidden="true"></i><b>${esc(dt.greg)}</b></div></nav>`;
