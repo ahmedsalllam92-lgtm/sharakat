@@ -4449,3 +4449,38 @@ html:has(.tale2) [class^="dsw"]{display:none!important}
 /* تحت شريط المنصة الشفاف قليلًا: لون خلفية المنصة نفسه، فيبقى بلونه المعتاد فوق الفيلم الداكن */
 html:not([data-theme="dark"]):has(.tale2) #topbar{background:linear-gradient(rgba(255,255,255,.74),rgba(255,255,255,.74)),var(--bg,#F7F4EC)!important}
 html[data-theme="dark"]:has(.tale2) #topbar{background:var(--bg)!important}
+/* المنهجية: خلفية داكنة خفيفة تُبرز النص فوق الخطوط النازلة */
+.tz-method::before{content:"";position:absolute;inset:-14% -18% -14% -10%;background:radial-gradient(ellipse 70% 60% at 40% 50%,rgba(4,11,9,.82),rgba(4,11,9,.45) 60%,transparent 78%);z-index:-1}
+.tz-m span{text-shadow:0 2px 14px rgba(0,0,0,.8)}
+/* «ثم تخضرّ الأرض»: العنوان أعلى، ومشاريع مروج تحته */
+.tz-cap.sd.up{top:24%;translate:0 0}
+.tz-proj{position:absolute;z-index:5;inset-inline-start:7%;top:47%;width:min(560px,46vw);display:flex;flex-direction:column;gap:10px;opacity:0;pointer-events:none}
+.tz-pj{display:flex;align-items:center;gap:14px;padding:10px 14px;border-radius:14px;background:rgba(4,11,9,.55);border:1px solid rgba(226,190,120,.18);backdrop-filter:blur(6px);opacity:0;transform:translateX(-14px);transition:opacity .6s,transform .6s cubic-bezier(.2,.8,.2,1)}
+.tz-pj.on{opacity:1;transform:none}
+.tz-pj-ic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:rgba(226,190,120,.14);color:var(--tzg);flex:none}.tz-pj-ic svg{width:18px;height:18px}
+.tz-pj div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.tz-pj b{font-size:clamp(15px,1.3vw,18px);color:#FBF4E2;font-weight:700}
+.tz-pj small{font-size:12.5px;color:#BFB8A3}
+.tz-pj em{font-style:normal;font-size:12px;font-weight:700;color:#0B1C17;background:var(--tzg);padding:3px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:760px){.tz-proj{inset-inline:6%;width:auto;top:44%}.tz-pj small{display:none}}
+.tz-cap.sd.up{top:9%}
+.tz-cap.sd.up h2{font-size:clamp(30px,3.6vw,54px)}
+.tz-proj{top:37%;gap:8px}
+.tz-pj{padding:8px 12px}
+.tz-pj-ic{width:32px;height:32px}
+.tz-gi{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+html.tz-cinema .tz-pics{display:none}
+/* منتقي صور العرض */
+.tzp-sel{display:flex;flex-direction:column;gap:8px}
+.tzp-it{display:flex;align-items:center;gap:10px;padding:6px;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+.tzp-it img{width:84px;height:54px;object-fit:cover;border-radius:6px;flex:none;background:var(--line)}
+.tzp-it .in{flex:1;min-width:0}
+.tzp-n{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--gold,#B88A3B);color:#fff;font-size:12px;font-weight:700;flex:none}
+.tzp-b{display:flex;gap:2px}
+.tzp-pool{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;max-height:320px;overflow:auto;padding:2px}
+.tzp-p{position:relative;border:2px solid transparent;border-radius:10px;padding:0;overflow:hidden;background:var(--line);cursor:pointer;text-align:start}
+.tzp-p img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover}
+.tzp-p span{display:block;font-size:11.5px;padding:4px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--paper)}
+.tzp-p.on{border-color:var(--gold,#B88A3B)}
+.tzp-p.on::after{content:"✓";position:absolute;top:6px;inset-inline-start:6px;width:22px;height:22px;border-radius:50%;background:var(--gold,#B88A3B);color:#fff;display:grid;place-items:center;font-size:13px}
+.tz-gcap{bottom:auto;top:7%}

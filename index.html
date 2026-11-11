@@ -8076,6 +8076,41 @@ html:has(.tale2) [class^="dsw"]{display:none!important}
 /* تحت شريط المنصة الشفاف قليلًا: لون خلفية المنصة نفسه، فيبقى بلونه المعتاد فوق الفيلم الداكن */
 html:not([data-theme="dark"]):has(.tale2) #topbar{background:linear-gradient(rgba(255,255,255,.74),rgba(255,255,255,.74)),var(--bg,#F7F4EC)!important}
 html[data-theme="dark"]:has(.tale2) #topbar{background:var(--bg)!important}
+/* المنهجية: خلفية داكنة خفيفة تُبرز النص فوق الخطوط النازلة */
+.tz-method::before{content:"";position:absolute;inset:-14% -18% -14% -10%;background:radial-gradient(ellipse 70% 60% at 40% 50%,rgba(4,11,9,.82),rgba(4,11,9,.45) 60%,transparent 78%);z-index:-1}
+.tz-m span{text-shadow:0 2px 14px rgba(0,0,0,.8)}
+/* «ثم تخضرّ الأرض»: العنوان أعلى، ومشاريع مروج تحته */
+.tz-cap.sd.up{top:24%;translate:0 0}
+.tz-proj{position:absolute;z-index:5;inset-inline-start:7%;top:47%;width:min(560px,46vw);display:flex;flex-direction:column;gap:10px;opacity:0;pointer-events:none}
+.tz-pj{display:flex;align-items:center;gap:14px;padding:10px 14px;border-radius:14px;background:rgba(4,11,9,.55);border:1px solid rgba(226,190,120,.18);backdrop-filter:blur(6px);opacity:0;transform:translateX(-14px);transition:opacity .6s,transform .6s cubic-bezier(.2,.8,.2,1)}
+.tz-pj.on{opacity:1;transform:none}
+.tz-pj-ic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:rgba(226,190,120,.14);color:var(--tzg);flex:none}.tz-pj-ic svg{width:18px;height:18px}
+.tz-pj div{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.tz-pj b{font-size:clamp(15px,1.3vw,18px);color:#FBF4E2;font-weight:700}
+.tz-pj small{font-size:12.5px;color:#BFB8A3}
+.tz-pj em{font-style:normal;font-size:12px;font-weight:700;color:#0B1C17;background:var(--tzg);padding:3px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:760px){.tz-proj{inset-inline:6%;width:auto;top:44%}.tz-pj small{display:none}}
+.tz-cap.sd.up{top:9%}
+.tz-cap.sd.up h2{font-size:clamp(30px,3.6vw,54px)}
+.tz-proj{top:37%;gap:8px}
+.tz-pj{padding:8px 12px}
+.tz-pj-ic{width:32px;height:32px}
+.tz-gi{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+html.tz-cinema .tz-pics{display:none}
+/* منتقي صور العرض */
+.tzp-sel{display:flex;flex-direction:column;gap:8px}
+.tzp-it{display:flex;align-items:center;gap:10px;padding:6px;border:1px solid var(--line);border-radius:10px;background:var(--paper)}
+.tzp-it img{width:84px;height:54px;object-fit:cover;border-radius:6px;flex:none;background:var(--line)}
+.tzp-it .in{flex:1;min-width:0}
+.tzp-n{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--gold,#B88A3B);color:#fff;font-size:12px;font-weight:700;flex:none}
+.tzp-b{display:flex;gap:2px}
+.tzp-pool{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;max-height:320px;overflow:auto;padding:2px}
+.tzp-p{position:relative;border:2px solid transparent;border-radius:10px;padding:0;overflow:hidden;background:var(--line);cursor:pointer;text-align:start}
+.tzp-p img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover}
+.tzp-p span{display:block;font-size:11.5px;padding:4px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:var(--paper)}
+.tzp-p.on{border-color:var(--gold,#B88A3B)}
+.tzp-p.on::after{content:"✓";position:absolute;top:6px;inset-inline-start:6px;width:22px;height:22px;border-radius:50%;background:var(--gold,#B88A3B);color:#fff;display:grid;place-items:center;font-size:13px}
+.tz-gcap{bottom:auto;top:7%}
 </style>
 </head>
 <body>
@@ -18770,7 +18805,17 @@ function taleData() {
   const nums = [[pids.size, 'جهة شريكة', 'من القطاعات الحكومية والخاصة وغير الربحية'], [active, 'شراكة سارية', 'تُتابَع مخرجاتها والتزاماتها'], [outputs, 'مخرجًا مستهدفًا', 'في الشراكات الموقّعة'], [publicStories().length, 'قصة أثر موثّقة', 'نتائج ميدانية منشورة مرتبطة بشراكاتها']].filter((x) => x[0] > 0);
   const logos = D.partners.filter((pr) => pids.has(pr.id) && pr.logoFileId).slice(0, 14);
   const photos = [['border-guard-signing', 'المديرية العامة لحرس الحدود'], ['waqf-saitah-signing', 'وقف الأمير صيته بنت عبدالعزيز'], ['muhaidib-meet', 'مؤسسة عبدالقادر المهيدب الخيرية']].filter(([k]) => ASSET_IMG[k]);
-  return { nums, logos, photos, signed: signed.length };
+  /* مشاريع مروج على الأرض، ومع كل مشروع عدد الشراكات المرتبطة به في المنصة (يظهر إن وُجد) */
+  const txt = (p) => JSON.stringify([p.title, p.name, p.ptype, p.category, p.categories, p.domain, p.goals, p.outputs, p.scope, p.summary, partnerName(p)]);
+  const hits = (re) => signed.filter((p) => re.test(txt(p))).length;
+  const projects = [
+    ['leaf', 'زراعة المانجروف', 'على سواحل البحر الأحمر والخليج العربي', hits(/مانجروف|القرم|الشورى/)],
+    ['home', 'المساجد الخضراء وأنسنة المساجد', 'تشجير محيط المساجد وريّه بمياه الوضوء المعالجة', hits(/مسجد|مساجد|أنسنة/)],
+    ['award', 'التشجير بالأشجار المحلية', 'في المدن والطرق والمرافق والمسطحات الخضراء', hits(/تشجير|شجر|أشجار|غرس|زراعة/)],
+    ['flag', 'تأهيل المحميات ونثر البذور', 'إعادة الغطاء النباتي في المحميات الملكية', hits(/محمية|محميات|بذور|بذر|مراعي/)],
+    ['layers', 'الإدارة المستدامة للغابات', 'حماية الغابات الطبيعية في جبال السروات', hits(/غابة|غابات|العرعر|السروات/)],
+  ];
+  return { nums, logos, photos, signed: signed.length, projects };
 }
 
 /* الفصول: النص المعروض ونافذته على محور التقدم */
@@ -18783,35 +18828,86 @@ function taleChapters(nums, signed = 0) {
     { a: 0.205, b: 0.305, cls: 'sd', eye: 'الفصل الثاني', h: 'ثم امتدّت يد', s: 'شريكٌ يؤمن بالفكرة نفسها، فيلتقي الطريقان.' },
     { a: 0.325, b: 0.435, cls: 'sd l', eye: 'الفصل الثالث', h: 'معًا… إلى العمق', s: 'منهجية واضحة تُبنى عليها كل مذكرة.' },
     { a: 0.455, b: 0.555, cls: 'sd', eye: 'الفصل الرابع', h: 'اتفاقاتٌ تُوقَّع', s: signed ? `${plural(signed, 'مذكرة تفاهم واحدة', 'مذكرتا تفاهم', 'مذكرات تفاهم', 'مذكرة تفاهم')} موقّعة مع جهات وطنية رائدة.` : 'مذكرات تفاهم مع جهات وطنية رائدة.', k: 'signed' },
-    { a: 0.575, b: 0.675, cls: 'sd', eye: 'الفصل الخامس', h: 'ثم تخضرّ الأرض', s: 'تتحوّل المذكرة إلى عملٍ على الأرض — ومن أبرزه زراعة المانجروف على الساحل الغربي للمملكة.' },
+    { a: 0.572, b: 0.690, cls: 'sd up', eye: 'الفصل الخامس', h: 'ثم تخضرّ الأرض', s: 'ليست المذكرات وحدها؛ مشاريع ومبادرات تُنفَّذ على أرض المملكة:' },
     { a: 0.695, b: 0.765, cls: 'logo', eye: '', h: 'مؤسسة مروج الأهلية', s: 'نحو غطاءٍ نباتيٍّ مستدام' },
     ...N,
     { a: 0.895, b: 1.01, cls: 'end', eye: 'منظومة الشراكات', h: 'كل شراكة لها أثرٌ يُقاس', s: 'ومسؤولٌ يتابعها، وقرارٌ في وقته.' },
   ];
 }
 
+/* صور «ثم تخضرّ الأرض»: تختارها إدارة الشراكات من صور المنصة أو ترفعها؛ الافتراضي صور واس للمانجروف */
+const TALE_GREEN_DEF = [
+  { fileId: 'asset:ksa-farasan-mangrove', cap: 'غابة القندل · جزر فرسان', credit: 'تصوير: وكالة الأنباء السعودية (واس) · CC BY-SA 4.0' },
+  { fileId: 'asset:ksa-jazan-mangrove', cap: 'أشجار المانجروف · سواحل جازان', credit: 'تصوير: وكالة الأنباء السعودية (واس) · CC BY-SA 4.0' },
+];
+function taleGreens() {
+  const L_ = (D.settings && D.settings.taleGreens) || [];
+  return (L_.length ? L_ : TALE_GREEN_DEF).filter((g) => !g.fileId.startsWith('asset:') || ASSET_IMG[g.fileId.slice(6)]);
+}
+const taleImgTag = (id) => (id.startsWith('asset:') ? `<img class="tz-gi" src="${ASSET_IMG[id.slice(6)].src}" alt="">` : `<img class="tz-gi" data-file="${esc(id)}" alt="">`);
+async function pickTaleGreens() {
+  const cur = taleGreens().map((g) => ({ ...g }));
+  const pool = [...TALE_GREEN_DEF, ...mediaItems().filter((m) => !m.illus && !String(m.fileId).startsWith('lib:')).map((m) => ({ fileId: m.fileId, cap: m.pname || m.title || '' }))];
+  const seen = new Set(); const all = pool.filter((g) => (seen.has(g.fileId) ? false : seen.add(g.fileId)));
+  const m = Modal.open({
+    title: 'صور «ثم تخضرّ الأرض»', size: 'lg',
+    body: `<p class="small muted" style="margin-bottom:12px">اختر الصور التي تظهر في الفصل الخامس بالترتيب، واكتب تحت كل صورة اسم المكان أو المشروع. يُفضَّل صور فعلية لمشاريع المؤسسة داخل المملكة.</p>
+      <div class="tzp-sel" id="tzpSel"></div>
+      <div class="row" style="justify-content:space-between;margin:14px 0 8px"><b class="small">صور المنصة</b><label class="btn sm">${icon('upload')} رفع صورة<input type="file" accept="image/*" multiple hidden id="tzpUp"></label></div>
+      <div class="tzp-pool" id="tzpPool"></div>`,
+    foot: `<button class="btn" data-x>إلغاء</button><button class="btn" data-def>الصور الافتراضية</button><button class="btn primary" data-save>حفظ</button>`,
+    onClose: () => {},
+  });
+  const thumb = (id) => taleImgTag(id).replace('class="tz-gi"', '');
+  const draw = () => {
+    $('#tzpSel', m.el).innerHTML = cur.length ? cur.map((g, i) => `<div class="tzp-it"><span class="tzp-n">${i + 1}</span>${thumb(g.fileId)}<input class="in" data-cap="${i}" value="${esc(g.cap || '')}" placeholder="المكان أو المشروع"><div class="tzp-b"><button class="icon-btn" data-up="${i}" title="تقديم" ${i ? '' : 'disabled'}>${icon('chevR')}</button><button class="icon-btn" data-rm="${i}" title="إزالة">${icon('x')}</button></div></div>`).join('') : '<p class="small muted">لم تُختر صور؛ ستظهر الصور الافتراضية.</p>';
+    $('#tzpPool', m.el).innerHTML = all.map((g) => `<button type="button" class="tzp-p ${cur.some((c) => c.fileId === g.fileId) ? 'on' : ''}" data-add="${esc(g.fileId)}">${thumb(g.fileId)}<span>${esc(g.cap || '')}</span></button>`).join('');
+    hydrateFiles(m.el);
+  };
+  draw();
+  m.el.addEventListener('input', (e) => { const c = e.target.closest('[data-cap]'); if (c) cur[+c.dataset.cap].cap = c.value; });
+  m.el.addEventListener('click', async (e) => {
+    const a = e.target.closest('[data-add]'), r = e.target.closest('[data-rm]'), u = e.target.closest('[data-up]');
+    if (a) { const g = all.find((x) => x.fileId === a.dataset.add); const k = cur.findIndex((c) => c.fileId === g.fileId); if (k >= 0) cur.splice(k, 1); else cur.push({ ...g }); draw(); }
+    else if (r) { cur.splice(+r.dataset.rm, 1); draw(); }
+    else if (u) { const i = +u.dataset.up; [cur[i - 1], cur[i]] = [cur[i], cur[i - 1]]; draw(); }
+    else if (e.target.closest('[data-def]')) { cur.splice(0, cur.length, ...TALE_GREEN_DEF.map((g) => ({ ...g }))); draw(); }
+    else if (e.target.closest('[data-x]')) m.close();
+    else if (e.target.closest('[data-save]')) {
+      const same = JSON.stringify(cur) === JSON.stringify(TALE_GREEN_DEF);
+      D.settings.taleGreens = same ? [] : cur.map((g) => ({ fileId: g.fileId, cap: (g.cap || '').trim(), ...(g.credit ? { credit: g.credit } : {}) }));
+      await Repo.saveSettings(); m.close(); toast('حُفظت صور العرض'); route();
+    }
+  });
+  $('#tzpUp', m.el).onchange = async (e) => {
+    for (const f of [...e.target.files]) { try { const rec = await saveUpload(f); const g = { fileId: rec.id, cap: '' }; all.unshift(g); cur.push(g); } catch (err) { toast(err.message, 'err'); } }
+    e.target.value = ''; draw();
+  };
+}
+
 function renderTale(el) {
-  const { nums, logos, photos, signed } = taleData();
+  const { nums, logos, photos, signed, projects } = taleData();
   const chs = taleChapters(nums, signed);
   const lib = (k) => (IMG_LIB[k] || {}).src || '', img = (k) => (ASSET_IMG[k] || {}).src || '';
-  const greens = [['ksa-farasan-mangrove', 'غابة القندل · جزر فرسان'], ['ksa-jazan-mangrove', 'أشجار المانجروف · سواحل جازان']].filter(([k]) => img(k)).map(([k, t]) => [img(k), t]);
+  const greens = taleGreens();
   el.classList.add('full');
   el.innerHTML = `<div class="tale2" id="tale">
     <div class="tz-stage">
       <div class="tz-bg tz-dunes" data-bg="dunes" style="background-image:url('${lib('dunes')}')"></div>
       <div class="tz-bg tz-depth" data-bg="depth"></div>
       <div class="tz-bg tz-photos" data-bg="photos">${photos.map(([k, t], i) => `<figure class="tz-ph" data-i="${i}"><img src="${img(k)}" alt=""><figcaption><i></i>${esc(t)}</figcaption></figure>`).join('')}</div>
-      <div class="tz-bg tz-green" data-bg="green">${greens.map(([s, t], i) => `<div class="tz-g" data-i="${i}" style="background-image:url('${s}')"><span class="tz-gcap"><i></i>${t}<small>تصوير: وكالة الأنباء السعودية (واس) · CC BY-SA 4.0</small></span></div>`).join('')}</div>
+      <div class="tz-bg tz-green" data-bg="green">${greens.map((g, i) => `<div class="tz-g" data-i="${i}">${taleImgTag(g.fileId)}<span class="tz-gcap"><i></i>${esc(g.cap || '')}${g.credit ? `<small>${esc(g.credit)}</small>` : ''}</span></div>`).join('')}</div>
       <div class="tz-bg tz-glow" data-bg="glow"></div>
       <canvas class="tz-cv" id="tzCv"></canvas>
       <div class="tz-method" id="tzMethod"><svg viewBox="0 0 10 400" preserveAspectRatio="none"><line x1="5" y1="0" x2="5" y2="400" class="b"/><line x1="5" y1="0" x2="5" y2="400" class="f" id="tzMLine"/></svg>
         ${['منهجية بناء الشراكات', 'التقييم المبدئي للشريك', 'صياغة المذكرة ومراجعتها', 'الاعتماد والتوقيع'].map((t, i) => `<div class="tz-m" style="top:${i * 33.3}%"><b>${['٠١', '٠٢', '٠٣', '٠٤'][i]}</b><span>${t}</span></div>`).join('')}</div>
+      <div class="tz-proj" id="tzProj">${projects.map(([ic, t, d, n], i) => `<div class="tz-pj" data-i="${i}"><span class="tz-pj-ic">${icon(ic)}</span><div><b>${t}</b><small>${d}</small></div><em data-pjn="${i}" ${n ? '' : 'hidden'}>${n ? `${plural(n, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')} في المنصة` : ''}</em></div>`).join('')}</div>
       <div class="tz-orbit" id="tzOrbit">${img('murooj-logo-white') ? `<img class="tz-core" src="${img('murooj-logo-white')}" alt="">` : ''}
         ${logos.map((pr, k) => `<span class="tz-pl" style="--a:${(k / logos.length) * 360}deg;--r:${k % 2 ? 1 : 0.78}">${plateHTML(pr, 56)}</span>`).join('')}</div>
       <div class="tz-caps">${chs.map((c, i) => `<div class="tz-cap ${c.cls}" data-c="${i}" ${c.k ? `data-k="${c.k}"` : ''}>${c.eye ? `<small>${c.eye}</small>` : ''}${c.h ? `<h2>${c.h}</h2>` : ''}${c.s ? `<p>${c.s}</p>` : ''}</div>`).join('')}</div>
       <div class="tz-cta" id="tzCta">${can('proposal.create') ? `<a class="btn gold lg" href="#/share">${icon('send')} شارك بمقترح شراكة</a>` : ''}<a class="btn lg" href="#/partnerships">${icon('layers')} سجل الشراكات</a><button class="btn lg" type="button" data-tzreplay>${icon('history')} من البداية</button></div>
       <div class="tz-vig"></div><div class="tz-grain"></div>
-      <div class="tz-ui"><button type="button" class="tz-play" data-tzplay>${icon('play')}<span>تشغيل</span></button><div class="tz-prog"><i id="tzProg"></i></div><button type="button" class="tz-fs" data-tzfs title="ملء الشاشة (F)">${icon('expand')}<span>ملء الشاشة</span></button></div>
+      <div class="tz-ui"><button type="button" class="tz-play" data-tzplay>${icon('play')}<span>تشغيل</span></button><div class="tz-prog"><i id="tzProg"></i></div>${can('manage.content') && !App.share ? `<button type="button" class="tz-fs tz-pics" data-tzpics title="اختيار صور «ثم تخضرّ الأرض»">${icon('image')}<span>صور العرض</span></button>` : ''}<button type="button" class="tz-fs" data-tzfs title="ملء الشاشة (F)">${icon('expand')}<span>ملء الشاشة</span></button></div>
       <div class="tz-hint" id="tzHint"><i></i><span>مرّر للأسفل، أو اضغط «تشغيل» للعرض بملء الشاشة</span></div>
     </div>
   </div>`;
@@ -18937,7 +19033,7 @@ function taleRun(el, { nums, chs }) {
       const tw = 0.55 + 0.45 * Math.sin(t * 2 * P.sp[i] + P.ph[i]);
       const al = (cur[2] === 'dust' ? 0.35 : 0.85) * tw * fade;
       ctx.fillStyle = `rgba(${r | 0},${g | 0},${b | 0},${al.toFixed(3)})`;
-      if (streak && lt >= 1) ctx.fillRect(x, y, 1.2, 10 + P.sp[i] * 26);
+      if (streak && lt >= 1) { if (i % 3) continue; ctx.fillStyle = `rgba(${r | 0},${g | 0},${b | 0},${(al * 0.42).toFixed(3)})`; ctx.fillRect(x, y, 0.8, 6 + P.sp[i] * 14); }
       else { const s = cur[2] === 'bokeh' ? 1.5 + P.sz[i] * 3.5 : (cur[2] === 'title' || cur[2].startsWith('num') || cur[2] === 'logo' ? 1.4 : 1) * (1 + P.sz[i] * 1.6); ctx.fillRect(x - s / 2, y - s / 2, s, s); }
     }
     ctx.globalCompositeOperation = 'source-over';
@@ -18946,7 +19042,7 @@ function taleRun(el, { nums, chs }) {
 
   /* طبقات الصور والنصوص */
   const bgs = {}; $$('[data-bg]', el).forEach((b) => { bgs[b.dataset.bg] = b; });
-  const caps = $$('.tz-cap', el), phs = $$('.tz-ph', el), gs = $$('.tz-g', el), mline = $('#tzMLine', el), meth = $('#tzMethod', el), orbit = $('#tzOrbit', el), cta = $('#tzCta', el);
+  const proj = $('#tzProj', el), pjs = $$('.tz-pj', el), caps = $$('.tz-cap', el), phs = $$('.tz-ph', el), gs = $$('.tz-g', el), mline = $('#tzMLine', el), meth = $('#tzMethod', el), orbit = $('#tzOrbit', el), cta = $('#tzCta', el);
   const layers = (p) => {
     bgs.dunes.style.opacity = (Math.min(tlWin(p, 0.06, 0.315, 0.03), 1) * 0.62).toFixed(3);
     bgs.dunes.style.transform = `scale(${(1.08 + tlS(p, 0.06, 0.32) * 0.18).toFixed(4)}) rotate(${(tlS(p, 0.06, 0.32) * -3).toFixed(3)}deg)`;
@@ -18954,10 +19050,12 @@ function taleRun(el, { nums, chs }) {
     bgs.photos.style.opacity = tlWin(p, 0.445, 0.565, 0.015).toFixed(3);
     const pn = phs.length || 1;
     phs.forEach((f, i) => { const a = 0.45 + i * (0.11 / pn), b = a + 0.11 / pn + 0.012; const v = tlWin(p, a, b, 0.012); f.style.opacity = v.toFixed(3); f.querySelector('img').style.transform = `scale(${(1.04 + tlS(p, a, b) * 0.12).toFixed(4)}) translateX(${(tlS(p, a, b) * -2).toFixed(2)}%)`; });
-    bgs.green.style.opacity = tlWin(p, 0.565, 0.7, 0.012).toFixed(3);
-    gs.forEach((g, i) => { const a = 0.57 + i * 0.05; const r = tlE(tlS(p, a, a + 0.035)) * 150; g.classList.toggle('on', p > a + 0.03 && (i === gs.length - 1 || p < a + 0.05)); g.style.clipPath = `circle(${r.toFixed(2)}% at ${i % 2 ? 38 : 62}% ${i % 2 ? 55 : 45}%)`; g.style.transform = `scale(${(1.15 - tlS(p, a, 0.7) * 0.12).toFixed(4)})`; });
+    bgs.green.style.opacity = tlWin(p, 0.565, 0.705, 0.012).toFixed(3);
+    const gstep = 0.12 / Math.max(1, gs.length); gs.forEach((g, i) => { const a = 0.57 + i * gstep; const r = tlE(tlS(p, a, a + Math.min(0.035, gstep * 0.7))) * 150; g.classList.toggle('on', p > a + 0.02 && (i === gs.length - 1 || p < a + gstep)); g.style.clipPath = `circle(${r.toFixed(2)}% at ${i % 2 ? 38 : 62}% ${i % 2 ? 55 : 45}%)`; g.style.transform = `scale(${(1.15 - tlS(p, a, 0.7) * 0.12).toFixed(4)})`; });
     bgs.glow.style.opacity = tlWin(p, 0.68, 1.2, 0.03).toFixed(3);
     meth.style.opacity = tlWin(p, 0.335, 0.435, 0.012).toFixed(3);
+    proj.style.opacity = tlWin(p, 0.585, 0.69, 0.01).toFixed(3);
+    pjs.forEach((x, i) => x.classList.toggle('on', p >= 0.592 + i * 0.016));
     const ml = tlS(p, 0.345, 0.42); mline.style.strokeDashoffset = (400 - ml * 400).toFixed(1);
     $$('.tz-m', meth).forEach((m, i) => m.classList.toggle('on', ml >= i / 3 - 0.001));
     orbit.style.opacity = tlS(p, 0.9, 0.93).toFixed(3); orbit.classList.toggle('on', p > 0.9);
@@ -18989,7 +19087,7 @@ function taleRun(el, { nums, chs }) {
   const play = () => {
     if (getP() > 0.985) scrollTo(0, top0());
     playBtn.classList.add('on'); $('span', playBtn).textContent = 'إيقاف';
-    const DUR = 78000; let st = null; const p0 = getP();
+    const DUR = 92000; let st = null; const p0 = getP();
     const step = (ts) => { if (st === null) st = ts; const k = tlC(p0 + (ts - st) / DUR); scrollTo(0, top0() + span() * k); if (k < 1 && auto) auto = requestAnimationFrame(step); else stop(); };
     auto = requestAnimationFrame(step);
   };
@@ -19008,6 +19106,7 @@ function taleRun(el, { nums, chs }) {
   function enterCinema() { cinema(true); document.documentElement.requestFullscreen?.().catch(() => {}); fsBtn.classList.add('on'); $('span', fsBtn).textContent = 'خروج'; }
   function toggleCinema() { if (!document.documentElement.classList.contains('tz-cinema')) return enterCinema(); cinema(false); fsBtn.classList.remove('on'); $('span', fsBtn).textContent = 'ملء الشاشة'; if (document.fullscreenElement) document.exitFullscreen(); }
   const fsBtn = $('[data-tzfs]', el);
+  const picsBtn = $('[data-tzpics]', el); if (picsBtn) picsBtn.onclick = () => pickTaleGreens();
   fsBtn.onclick = toggleCinema;
   document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && document.documentElement.classList.contains('tz-cinema')) { cinema(false); fsBtn.classList.remove('on'); $('span', fsBtn).textContent = 'ملء الشاشة'; } });
   addEventListener('hashchange', () => document.documentElement.classList.remove('tz-cinema'), { once: true });
@@ -19016,6 +19115,7 @@ function taleRun(el, { nums, chs }) {
     const d = taleData();
     if (d.nums.length !== nums.length) return false;
     const sc = $('[data-k="signed"] p', el); if (sc) sc.textContent = taleChapters(d.nums, d.signed).find((c) => c.k === 'signed').s;
+    d.projects.forEach((pj, i) => { const n = pj[3], e = $(`[data-pjn="${i}"]`, el); if (!e) return; e.hidden = !n; if (n) e.textContent = `${plural(n, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')} في المنصة`; });
     if (d.nums.every((n, i) => n[0] === nums[i][0])) return true;
     d.nums.forEach((n, i) => { nums[i] = n; });
     shapes.nums = nums.map(([v]) => textShape(Number(v).toLocaleString('ar-SA-u-nu-latn'), Math.min(H * 0.46, W / 3.2), H * 0.42, GOLD, 800));
