@@ -292,6 +292,10 @@ function cloudRefreshUI() {
   const a = document.activeElement;
   const busy = (Modal.stack && Modal.stack.length) || App.dirty || $('#tour') || $('#rqTour') || $('#tourMenu') || (a && (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable)) || document.fullscreenElement;
   if (typeof refreshBell === 'function') try { refreshBell(); } catch (_) { /* */ }
+  if (!(Modal.stack && Modal.stack.length)) {
+    /* «حكاية الشراكة» مفتوحة: تُحدَّث أرقامها في مكانها ولا يُعاد الفيلم من أوله */
+    const tz = $('#tale'); if (tz && tz.__tzLive) { if (tz.__tzLive()) { Cloud.pendingUI = false; return; } if (document.documentElement.classList.contains('tz-cinema')) { Cloud.pendingUI = true; return; } }
+  }
   if (busy) { Cloud.pendingUI = true; return; }
   Cloud.pendingUI = false;
   const y = window.scrollY;

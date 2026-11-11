@@ -121,7 +121,7 @@ function renderHomeBoard(el) {
           <div class="bo-eyebrow"><i></i>${esc(o.name)} · ${esc(o.dept)}</div>
           <h1>${esc(h.heroTitle || 'نربط المؤسسة بشركاء يوسّعون أثرها البيئي')}</h1>
           <p class="bo-lead">${esc(h.heroText || '')}</p>
-          <div class="bo-cta">${can('view.dashboard') ? `<a class="btn primary lg" href="#/dashboard">${icon('chart')} لوحة الأداء</a>` : ''}<a class="btn lg" href="#/partnerships">${icon('layers')} سجل الشراكات</a></div>
+          <div class="bo-cta">${can('view.dashboard') ? `<a class="btn primary lg" href="#/dashboard">${icon('chart')} لوحة الأداء</a>` : ''}${!App.share || shareHas('tale') ? `<a class="btn lg bo-tale-b" href="#/tale">${icon('play')} حكاية الشراكة</a>` : ''}<a class="btn lg" href="#/partnerships">${icon('layers')} سجل الشراكات</a></div>
           ${boHeroFacts(signed)}
         </div>
         <div class="bo-hero-m">

@@ -7,6 +7,7 @@
 const SHARE_KEY = 'shk_share';
 const SHARE_SECTIONS = [
   { k: 'home', l: 'الرئيسية', m: ['home'], on: true },
+  { k: 'tale', l: 'حكاية الشراكة (العرض التعريفي)', m: ['tale'], on: true },
   { k: 'dashboard', l: 'لوحة الأداء', m: ['dashboard'], on: true },
   { k: 'partnerships', l: 'سجل الشراكات وصفحات الشراكات', m: ['partnerships', 'partnership'], on: true },
   { k: 'partners', l: 'الجهات الشريكة', m: ['partners', 'partner'], on: true },
@@ -22,7 +23,7 @@ const SHARE_DUR = [['1', 'يوم'], ['3', '3 أيام'], ['7', 'أسبوع'], ['
 const shareSaved = () => { try { return JSON.parse(sessionStorage.getItem(SHARE_KEY) || 'null'); } catch (_) { return null; } };
 const shareHas = (k) => !!(App.share && (App.share.sections || []).includes(k));
 const shareRouteOk = (name) => SHARE_SECTIONS.some((s) => shareHas(s.k) && s.m.includes(name));
-const shareFirst = () => { const s = SHARE_SECTIONS.find((x) => shareHas(x.k)); return s ? ({ home: '#/', dashboard: '#/dashboard', partnerships: '#/partnerships', partners: '#/partners', reports: '#/reports', stories: '#/stories', gallery: '#/gallery', media: '#/media', process: '#/process' })[s.k] : '#/'; };
+const shareFirst = () => { const s = SHARE_SECTIONS.find((x) => shareHas(x.k)); return s ? ({ home: '#/', tale: '#/tale', dashboard: '#/dashboard', partnerships: '#/partnerships', partners: '#/partners', reports: '#/reports', stories: '#/stories', gallery: '#/gallery', media: '#/media', process: '#/process' })[s.k] : '#/'; };
 /* صلاحيات جلسة الرابط: قراءة الأقسام المختارة فقط، دون تصدير أو تعديل */
 function shareCan(perm) {
   if (perm === 'view.dashboard') return shareHas('dashboard');

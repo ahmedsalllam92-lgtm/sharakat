@@ -16224,6 +16224,10 @@ function cloudRefreshUI() {
   const a = document.activeElement;
   const busy = (Modal.stack && Modal.stack.length) || App.dirty || $('#tour') || $('#rqTour') || $('#tourMenu') || (a && (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable)) || document.fullscreenElement;
   if (typeof refreshBell === 'function') try { refreshBell(); } catch (_) { /* */ }
+  if (!(Modal.stack && Modal.stack.length)) {
+    /* «حكاية الشراكة» مفتوحة: تُحدَّث أرقامها في مكانها ولا يُعاد الفيلم من أوله */
+    const tz = $('#tale'); if (tz && tz.__tzLive) { if (tz.__tzLive()) { Cloud.pendingUI = false; return; } if (document.documentElement.classList.contains('tz-cinema')) { Cloud.pendingUI = true; return; } }
+  }
   if (busy) { Cloud.pendingUI = true; return; }
   Cloud.pendingUI = false;
   const y = window.scrollY;
@@ -17384,6 +17388,7 @@ function authSettingsClick(e) {
 const SHARE_KEY = 'shk_share';
 const SHARE_SECTIONS = [
   { k: 'home', l: 'الرئيسية', m: ['home'], on: true },
+  { k: 'tale', l: 'حكاية الشراكة (العرض التعريفي)', m: ['tale'], on: true },
   { k: 'dashboard', l: 'لوحة الأداء', m: ['dashboard'], on: true },
   { k: 'partnerships', l: 'سجل الشراكات وصفحات الشراكات', m: ['partnerships', 'partnership'], on: true },
   { k: 'partners', l: 'الجهات الشريكة', m: ['partners', 'partner'], on: true },
@@ -17399,7 +17404,7 @@ const SHARE_DUR = [['1', 'يوم'], ['3', '3 أيام'], ['7', 'أسبوع'], ['
 const shareSaved = () => { try { return JSON.parse(sessionStorage.getItem(SHARE_KEY) || 'null'); } catch (_) { return null; } };
 const shareHas = (k) => !!(App.share && (App.share.sections || []).includes(k));
 const shareRouteOk = (name) => SHARE_SECTIONS.some((s) => shareHas(s.k) && s.m.includes(name));
-const shareFirst = () => { const s = SHARE_SECTIONS.find((x) => shareHas(x.k)); return s ? ({ home: '#/', dashboard: '#/dashboard', partnerships: '#/partnerships', partners: '#/partners', reports: '#/reports', stories: '#/stories', gallery: '#/gallery', media: '#/media', process: '#/process' })[s.k] : '#/'; };
+const shareFirst = () => { const s = SHARE_SECTIONS.find((x) => shareHas(x.k)); return s ? ({ home: '#/', tale: '#/tale', dashboard: '#/dashboard', partnerships: '#/partnerships', partners: '#/partners', reports: '#/reports', stories: '#/stories', gallery: '#/gallery', media: '#/media', process: '#/process' })[s.k] : '#/'; };
 /* صلاحيات جلسة الرابط: قراءة الأقسام المختارة فقط، دون تصدير أو تعديل */
 function shareCan(perm) {
   if (perm === 'view.dashboard') return shareHas('dashboard');
@@ -18762,14 +18767,14 @@ function taleData() {
   const active = signed.filter((p) => ['active', 'soon'].includes(pStatus(p))).length;
   const pids = new Set(signed.map((p) => p.partnerId).filter(Boolean));
   const outputs = signed.reduce((t, p) => t + richItems(p.outputs).length, 0);
-  const nums = [[pids.size, 'جهة شريكة', 'من القطاعات الحكومية والخاصة وغير الربحية'], [active, 'شراكة سارية', 'تُتابَع مخرجاتها والتزاماتها'], [outputs, 'مخرجًا مستهدفًا', 'في الشراكات الموقّعة']].filter((x) => x[0] > 0);
+  const nums = [[pids.size, 'جهة شريكة', 'من القطاعات الحكومية والخاصة وغير الربحية'], [active, 'شراكة سارية', 'تُتابَع مخرجاتها والتزاماتها'], [outputs, 'مخرجًا مستهدفًا', 'في الشراكات الموقّعة'], [publicStories().length, 'قصة أثر موثّقة', 'نتائج ميدانية منشورة مرتبطة بشراكاتها']].filter((x) => x[0] > 0);
   const logos = D.partners.filter((pr) => pids.has(pr.id) && pr.logoFileId).slice(0, 14);
   const photos = [['border-guard-signing', 'المديرية العامة لحرس الحدود'], ['waqf-saitah-signing', 'وقف الأمير صيته بنت عبدالعزيز'], ['muhaidib-meet', 'مؤسسة عبدالقادر المهيدب الخيرية']].filter(([k]) => ASSET_IMG[k]);
-  return { nums, logos, photos };
+  return { nums, logos, photos, signed: signed.length };
 }
 
 /* الفصول: النص المعروض ونافذته على محور التقدم */
-function taleChapters(nums) {
+function taleChapters(nums, signed = 0) {
   const N = [];
   nums.forEach((n, i) => N.push({ a: 0.775 + i * 0.037, b: 0.775 + (i + 1) * 0.037 - 0.004, cls: 'num', eye: '', h: n[1], s: n[2] }));
   return [
@@ -18777,7 +18782,7 @@ function taleChapters(nums) {
     { a: 0.080, b: 0.185, cls: 'sd', eye: 'الفصل الأول', h: 'أرضٌ واسعة، وفكرة تبحث عن شريك', s: 'كل شراكة تبدأ بخطوة في مكان لم يُزرع بعد.' },
     { a: 0.205, b: 0.305, cls: 'sd', eye: 'الفصل الثاني', h: 'ثم امتدّت يد', s: 'شريكٌ يؤمن بالفكرة نفسها، فيلتقي الطريقان.' },
     { a: 0.325, b: 0.435, cls: 'sd l', eye: 'الفصل الثالث', h: 'معًا… إلى العمق', s: 'منهجية واضحة تُبنى عليها كل مذكرة.' },
-    { a: 0.455, b: 0.555, cls: 'sd', eye: 'الفصل الرابع', h: 'اتفاقاتٌ تُوقَّع', s: 'مذكرات تفاهم مع جهات وطنية رائدة.' },
+    { a: 0.455, b: 0.555, cls: 'sd', eye: 'الفصل الرابع', h: 'اتفاقاتٌ تُوقَّع', s: signed ? `${plural(signed, 'مذكرة تفاهم واحدة', 'مذكرتا تفاهم', 'مذكرات تفاهم', 'مذكرة تفاهم')} موقّعة مع جهات وطنية رائدة.` : 'مذكرات تفاهم مع جهات وطنية رائدة.', k: 'signed' },
     { a: 0.575, b: 0.675, cls: 'sd', eye: 'الفصل الخامس', h: 'ثم تخضرّ الأرض', s: 'تتحوّل المذكرة إلى عملٍ على الأرض — ومن أبرزه زراعة المانجروف على الساحل الغربي للمملكة.' },
     { a: 0.695, b: 0.765, cls: 'logo', eye: '', h: 'مؤسسة مروج الأهلية', s: 'نحو غطاءٍ نباتيٍّ مستدام' },
     ...N,
@@ -18786,8 +18791,8 @@ function taleChapters(nums) {
 }
 
 function renderTale(el) {
-  const { nums, logos, photos } = taleData();
-  const chs = taleChapters(nums);
+  const { nums, logos, photos, signed } = taleData();
+  const chs = taleChapters(nums, signed);
   const lib = (k) => (IMG_LIB[k] || {}).src || '', img = (k) => (ASSET_IMG[k] || {}).src || '';
   const greens = [['ksa-farasan-mangrove', 'غابة القندل · جزر فرسان'], ['ksa-jazan-mangrove', 'أشجار المانجروف · سواحل جازان']].filter(([k]) => img(k)).map(([k, t]) => [img(k), t]);
   el.classList.add('full');
@@ -18803,7 +18808,7 @@ function renderTale(el) {
         ${['منهجية بناء الشراكات', 'التقييم المبدئي للشريك', 'صياغة المذكرة ومراجعتها', 'الاعتماد والتوقيع'].map((t, i) => `<div class="tz-m" style="top:${i * 33.3}%"><b>${['٠١', '٠٢', '٠٣', '٠٤'][i]}</b><span>${t}</span></div>`).join('')}</div>
       <div class="tz-orbit" id="tzOrbit">${img('murooj-logo-white') ? `<img class="tz-core" src="${img('murooj-logo-white')}" alt="">` : ''}
         ${logos.map((pr, k) => `<span class="tz-pl" style="--a:${(k / logos.length) * 360}deg;--r:${k % 2 ? 1 : 0.78}">${plateHTML(pr, 56)}</span>`).join('')}</div>
-      <div class="tz-caps">${chs.map((c, i) => `<div class="tz-cap ${c.cls}" data-c="${i}">${c.eye ? `<small>${c.eye}</small>` : ''}${c.h ? `<h2>${c.h}</h2>` : ''}${c.s ? `<p>${c.s}</p>` : ''}</div>`).join('')}</div>
+      <div class="tz-caps">${chs.map((c, i) => `<div class="tz-cap ${c.cls}" data-c="${i}" ${c.k ? `data-k="${c.k}"` : ''}>${c.eye ? `<small>${c.eye}</small>` : ''}${c.h ? `<h2>${c.h}</h2>` : ''}${c.s ? `<p>${c.s}</p>` : ''}</div>`).join('')}</div>
       <div class="tz-cta" id="tzCta">${can('proposal.create') ? `<a class="btn gold lg" href="#/share">${icon('send')} شارك بمقترح شراكة</a>` : ''}<a class="btn lg" href="#/partnerships">${icon('layers')} سجل الشراكات</a><button class="btn lg" type="button" data-tzreplay>${icon('history')} من البداية</button></div>
       <div class="tz-vig"></div><div class="tz-grain"></div>
       <div class="tz-ui"><button type="button" class="tz-play" data-tzplay>${icon('play')}<span>تشغيل</span></button><div class="tz-prog"><i id="tzProg"></i></div><button type="button" class="tz-fs" data-tzfs title="ملء الشاشة (F)">${icon('expand')}<span>ملء الشاشة</span></button></div>
@@ -19006,6 +19011,16 @@ function taleRun(el, { nums, chs }) {
   fsBtn.onclick = toggleCinema;
   document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && document.documentElement.classList.contains('tz-cinema')) { cinema(false); fsBtn.classList.remove('on'); $('span', fsBtn).textContent = 'ملء الشاشة'; } });
   addEventListener('hashchange', () => document.documentElement.classList.remove('tz-cinema'), { once: true });
+  /* تحديث حي: إن تغيّرت أرقام المنصة أثناء العرض تتبدّل الأرقام في مكانها دون إعادة الفيلم */
+  root.__tzLive = () => {
+    const d = taleData();
+    if (d.nums.length !== nums.length) return false;
+    const sc = $('[data-k="signed"] p', el); if (sc) sc.textContent = taleChapters(d.nums, d.signed).find((c) => c.k === 'signed').s;
+    if (d.nums.every((n, i) => n[0] === nums[i][0])) return true;
+    d.nums.forEach((n, i) => { nums[i] = n; });
+    shapes.nums = nums.map(([v]) => textShape(Number(v).toLocaleString('ar-SA-u-nu-latn'), Math.min(H * 0.46, W / 3.2), H * 0.42, GOLD, 800));
+    last = -1; kick(); return true;
+  };
   build();
 }
 
@@ -26069,7 +26084,7 @@ function renderHomeBoard(el) {
           <div class="bo-eyebrow"><i></i>${esc(o.name)} · ${esc(o.dept)}</div>
           <h1>${esc(h.heroTitle || 'نربط المؤسسة بشركاء يوسّعون أثرها البيئي')}</h1>
           <p class="bo-lead">${esc(h.heroText || '')}</p>
-          <div class="bo-cta">${can('view.dashboard') ? `<a class="btn primary lg" href="#/dashboard">${icon('chart')} لوحة الأداء</a>` : ''}<a class="btn lg" href="#/partnerships">${icon('layers')} سجل الشراكات</a></div>
+          <div class="bo-cta">${can('view.dashboard') ? `<a class="btn primary lg" href="#/dashboard">${icon('chart')} لوحة الأداء</a>` : ''}${!App.share || shareHas('tale') ? `<a class="btn lg bo-tale-b" href="#/tale">${icon('play')} حكاية الشراكة</a>` : ''}<a class="btn lg" href="#/partnerships">${icon('layers')} سجل الشراكات</a></div>
           ${boHeroFacts(signed)}
         </div>
         <div class="bo-hero-m">

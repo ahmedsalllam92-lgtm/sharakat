@@ -62,6 +62,19 @@ async def main():
         res = await G.evaluate("Cloud.rpc('shk_push',{p_token:Cloud.token(),p_rows:[{col:'partners',id:'x',data:{name:'x'}}]}).then(()=>'ok').catch(e=>e.code)")
         ok('server rejects writes from the link session', res == 'forbidden', res)
         ok('server counted the open', sql("select opens from shk_shares")[0][0] == 1)
+        # «حكاية الشراكة» متاحة في الرابط، وأرقامها حية
+        ok('tale offered in the menu and on the home hero', '#/tale' in nav and await G.evaluate("location.hash='#/'; new Promise(r=>setTimeout(()=>r(!!document.querySelector('.bo-hero a[href=\"#/tale\"]')),1200))"))
+        await G.evaluate("location.hash='#/tale'"); await G.wait_for_timeout(2500)
+        ok('tale opens for the guest', await G.evaluate("!!document.querySelector('#tale canvas') && location.hash==='#/tale'"))
+        n0 = await G.evaluate("taleData().nums.map(n=>n[0])")
+        el0 = await G.evaluate("window.__tz0 = document.getElementById('tale'); true")
+        await A.evaluate("""(async()=>{ const pr={id:'pr-live-test',name:'جهة اختبار الأرقام الحية',sector:'خاص'}; await Repo.save('partners',pr);
+          const p={...clone(D.partnerships.find(x=>x.stage==='signed'&&!x.isDraft)), id:'pt-live-test', code:'LIVE-1', partnerId:pr.id, demo:false}; await Repo.save('partnerships',p); Cloud.kick(); })()""")
+        await A.wait_for_timeout(2500)
+        await G.evaluate("cloudTick()"); await G.wait_for_timeout(3000)
+        n1 = await G.evaluate("taleData().nums.map(n=>n[0])")
+        ok('tale numbers update live from the platform', n1[0] == n0[0] + 1, (n0, n1))
+        ok('tale not restarted by the update', await G.evaluate("document.getElementById('tale') === window.__tz0"))
         # ===== الإيقاف =====
         await A.evaluate("location.hash='#/settings/share'"); await A.wait_for_timeout(1500)
         await A.click('[data-shrevoke]'); await A.wait_for_timeout(400); await A.click('.modal [data-ok]'); await A.wait_for_timeout(1500)
