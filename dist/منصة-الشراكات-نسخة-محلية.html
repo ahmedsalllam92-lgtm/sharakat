@@ -3568,6 +3568,30 @@ a.chip.cat:hover{background:var(--mist)}
   .bo-ch[data-ch="net"] .bo-orb .orb{width:100%!important}
   .bo-ch[data-ch="flow"] .bo-mx .tot{min-width:0!important}.bo-ch[data-ch="flow"] .bo-mx-bar{display:none}
 }
+/* طباعة مضغوطة: مقياس أصغر، وبلا فواصل صفحات إجبارية، ومخططات متجاورة */
+@media print{
+  .bo-dash{zoom:.6!important}
+  .bo-ch,.bo-ch[data-ch="sum"],.bo-ch[data-ch="net"],.bo-ch[data-ch="time"]{break-before:auto!important}
+  .bo-ch[data-ch="sum"]{border-top:0!important;margin-top:10px!important}
+  .bo-ch[data-ch="net"],.bo-ch[data-ch="time"]{border-top:2px solid #A47C32!important;margin-top:16px!important;padding-top:12px!important}
+  .bo-ch[data-ch="flow"]{border-top:2px solid #A47C32!important;margin-top:16px!important;padding-top:12px!important}
+  .bo-cover{padding:16px 22px!important}.bo-cover-t h1,.bo-cover h1{font-size:30px!important}
+  .bo-ch[data-ch="time"]{zoom:.85!important}
+  .bo-chh{margin-bottom:6px!important}
+  .bo-ins{margin-top:6px!important}
+  .bo-ch[data-ch="impact"],.bo-ch[data-ch="eval"]{break-inside:auto}
+}
+@media print{
+  .bo-cover{min-height:0!important;height:auto!important;break-after:auto!important}
+  .bo-cover-orn{width:300px!important;height:300px!important}.bo-cover-wm{display:none!important}
+  .bo-ch[data-ch="impact"]{break-inside:avoid!important}
+  .bo-ch[data-ch="time"]{zoom:.62!important}
+  .bo-ch[data-ch="time"] .bo-ln-row{padding:1px 0!important}
+  .bo-ch[data-ch="time"] .bo-ln-track{height:18px!important}
+  .bo-ch[data-ch="time"] .bo-ln-name small{display:none}
+  .bo-ch[data-ch="dec"]{break-inside:auto}
+}
+@media print{.bo-dash{zoom:.56!important}.bo-dec-l li{padding:5px 4px!important}}
 
 /* =====================================================================
    مركز الصور ومسار الشراكة — تعمل في الاتجاهات الستة عبر متغيرات الألوان
