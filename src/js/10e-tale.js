@@ -34,7 +34,7 @@ function taleChapters(nums) {
     { a: 0.205, b: 0.305, cls: 'sd', eye: 'الفصل الثاني', h: 'ثم امتدّت يد', s: 'شريكٌ يؤمن بالفكرة نفسها، فيلتقي الطريقان.' },
     { a: 0.325, b: 0.435, cls: 'sd l', eye: 'الفصل الثالث', h: 'معًا… إلى العمق', s: 'منهجية واضحة تُبنى عليها كل مذكرة.' },
     { a: 0.455, b: 0.555, cls: 'sd', eye: 'الفصل الرابع', h: 'اتفاقاتٌ تُوقَّع', s: 'مذكرات تفاهم مع جهات وطنية رائدة.' },
-    { a: 0.575, b: 0.675, cls: 'sd', eye: 'الفصل الخامس', h: 'ثم تخضرّ الأرض', s: 'تتحوّل المذكرة إلى تشجير وزراعة وعملٍ على أرض الواقع.' },
+    { a: 0.575, b: 0.675, cls: 'sd', eye: 'الفصل الخامس', h: 'ثم تخضرّ الأرض', s: 'تتحوّل المذكرة إلى عملٍ على الأرض — ومن أبرزه زراعة المانجروف على الساحل الغربي للمملكة.' },
     { a: 0.695, b: 0.765, cls: 'logo', eye: '', h: 'مؤسسة مروج الأهلية', s: 'نحو غطاءٍ نباتيٍّ مستدام' },
     ...N,
     { a: 0.895, b: 1.01, cls: 'end', eye: 'منظومة الشراكات', h: 'كل شراكة لها أثرٌ يُقاس', s: 'ومسؤولٌ يتابعها، وقرارٌ في وقته.' },
@@ -45,14 +45,14 @@ function renderTale(el) {
   const { nums, logos, photos } = taleData();
   const chs = taleChapters(nums);
   const lib = (k) => (IMG_LIB[k] || {}).src || '', img = (k) => (ASSET_IMG[k] || {}).src || '';
-  const greens = ['pivots', 'palms', 'afforest'].map(lib).filter(Boolean).concat(img('splash-forest') ? [img('splash-forest')] : []);
+  const greens = [['ksa-farasan-mangrove', 'غابة القندل · جزر فرسان'], ['ksa-jazan-mangrove', 'أشجار المانجروف · سواحل جازان']].filter(([k]) => img(k)).map(([k, t]) => [img(k), t]);
   el.classList.add('full');
   el.innerHTML = `<div class="tale2" id="tale">
     <div class="tz-stage">
       <div class="tz-bg tz-dunes" data-bg="dunes" style="background-image:url('${lib('dunes')}')"></div>
       <div class="tz-bg tz-depth" data-bg="depth"></div>
       <div class="tz-bg tz-photos" data-bg="photos">${photos.map(([k, t], i) => `<figure class="tz-ph" data-i="${i}"><img src="${img(k)}" alt=""><figcaption><i></i>${esc(t)}</figcaption></figure>`).join('')}</div>
-      <div class="tz-bg tz-green" data-bg="green">${greens.map((s, i) => `<div class="tz-g" data-i="${i}" style="background-image:url('${s}')"></div>`).join('')}</div>
+      <div class="tz-bg tz-green" data-bg="green">${greens.map(([s, t], i) => `<div class="tz-g" data-i="${i}" style="background-image:url('${s}')"><span class="tz-gcap"><i></i>${t}<small>تصوير: وكالة الأنباء السعودية (واس) · CC BY-SA 4.0</small></span></div>`).join('')}</div>
       <div class="tz-bg tz-glow" data-bg="glow"></div>
       <canvas class="tz-cv" id="tzCv"></canvas>
       <div class="tz-method" id="tzMethod"><svg viewBox="0 0 10 400" preserveAspectRatio="none"><line x1="5" y1="0" x2="5" y2="400" class="b"/><line x1="5" y1="0" x2="5" y2="400" class="f" id="tzMLine"/></svg>
@@ -62,8 +62,8 @@ function renderTale(el) {
       <div class="tz-caps">${chs.map((c, i) => `<div class="tz-cap ${c.cls}" data-c="${i}">${c.eye ? `<small>${c.eye}</small>` : ''}${c.h ? `<h2>${c.h}</h2>` : ''}${c.s ? `<p>${c.s}</p>` : ''}</div>`).join('')}</div>
       <div class="tz-cta" id="tzCta">${can('proposal.create') ? `<a class="btn gold lg" href="#/share">${icon('send')} شارك بمقترح شراكة</a>` : ''}<a class="btn lg" href="#/partnerships">${icon('layers')} سجل الشراكات</a><button class="btn lg" type="button" data-tzreplay>${icon('history')} من البداية</button></div>
       <div class="tz-vig"></div><div class="tz-grain"></div>
-      <div class="tz-ui"><button type="button" class="tz-play" data-tzplay>${icon('play')}<span>تشغيل</span></button><div class="tz-prog"><i id="tzProg"></i></div><button type="button" class="tz-fs" data-tzfs title="ملء الشاشة">${icon('expand')}</button></div>
-      <div class="tz-hint" id="tzHint"><i></i><span>مرّر للأسفل أو اضغط «تشغيل»</span></div>
+      <div class="tz-ui"><button type="button" class="tz-play" data-tzplay>${icon('play')}<span>تشغيل</span></button><div class="tz-prog"><i id="tzProg"></i></div><button type="button" class="tz-fs" data-tzfs title="ملء الشاشة (F)">${icon('expand')}<span>ملء الشاشة</span></button></div>
+      <div class="tz-hint" id="tzHint"><i></i><span>مرّر للأسفل، أو اضغط «تشغيل» للعرض بملء الشاشة</span></div>
     </div>
   </div>`;
   hydrateFiles(el);
@@ -206,7 +206,7 @@ function taleRun(el, { nums, chs }) {
     const pn = phs.length || 1;
     phs.forEach((f, i) => { const a = 0.45 + i * (0.11 / pn), b = a + 0.11 / pn + 0.012; const v = tlWin(p, a, b, 0.012); f.style.opacity = v.toFixed(3); f.querySelector('img').style.transform = `scale(${(1.04 + tlS(p, a, b) * 0.12).toFixed(4)}) translateX(${(tlS(p, a, b) * -2).toFixed(2)}%)`; });
     bgs.green.style.opacity = tlWin(p, 0.565, 0.7, 0.012).toFixed(3);
-    gs.forEach((g, i) => { const a = 0.57 + i * 0.026; const r = tlE(tlS(p, a, a + 0.03)) * 150; g.style.clipPath = `circle(${r.toFixed(2)}% at ${i % 2 ? 38 : 62}% ${i % 2 ? 55 : 45}%)`; g.style.transform = `scale(${(1.15 - tlS(p, a, 0.7) * 0.12).toFixed(4)})`; });
+    gs.forEach((g, i) => { const a = 0.57 + i * 0.05; const r = tlE(tlS(p, a, a + 0.035)) * 150; g.classList.toggle('on', p > a + 0.03 && (i === gs.length - 1 || p < a + 0.05)); g.style.clipPath = `circle(${r.toFixed(2)}% at ${i % 2 ? 38 : 62}% ${i % 2 ? 55 : 45}%)`; g.style.transform = `scale(${(1.15 - tlS(p, a, 0.7) * 0.12).toFixed(4)})`; });
     bgs.glow.style.opacity = tlWin(p, 0.68, 1.2, 0.03).toFixed(3);
     meth.style.opacity = tlWin(p, 0.335, 0.435, 0.012).toFixed(3);
     const ml = tlS(p, 0.345, 0.42); mline.style.strokeDashoffset = (400 - ml * 400).toFixed(1);
@@ -244,13 +244,23 @@ function taleRun(el, { nums, chs }) {
     const step = (ts) => { if (st === null) st = ts; const k = tlC(p0 + (ts - st) / DUR); scrollTo(0, top0() + span() * k); if (k < 1 && auto) auto = requestAnimationFrame(step); else stop(); };
     auto = requestAnimationFrame(step);
   };
-  playBtn.onclick = () => (auto ? stop() : play());
+  playBtn.onclick = () => { if (auto) return stop(); if (!document.documentElement.classList.contains('tz-cinema')) enterCinema(); setTimeout(play, 350); };
+  document.addEventListener('keydown', function tzKeys(e) {
+    if (!document.body.contains(root)) return document.removeEventListener('keydown', tzKeys);
+    if (e.target.closest && e.target.closest('input,textarea,select')) return;
+    if (e.key === 'f' || e.key === 'F' || e.key === 'ب') { e.preventDefault(); toggleCinema(); }
+    else if (e.key === ' ') { e.preventDefault(); playBtn.click(); }
+    else if (e.key === 'Escape' && document.documentElement.classList.contains('tz-cinema') && !document.fullscreenElement) toggleCinema();
+  });
   ['wheel', 'touchstart'].forEach((ev) => root.addEventListener(ev, stop, { passive: true }));
   $('[data-tzreplay]', el).onclick = () => { stop(); scrollTo({ top: top0(), behavior: 'auto' }); setTimeout(play, 300); };
   /* وضع العرض: يخفي شريط المنصة ويملأ الشاشة */
   const cinema = (on) => { document.documentElement.classList.toggle('tz-cinema', on); onResize(); };
-  $('[data-tzfs]', el).onclick = () => { const on = !document.documentElement.classList.contains('tz-cinema'); cinema(on); if (on) document.documentElement.requestFullscreen?.().catch(() => {}); else if (document.fullscreenElement) document.exitFullscreen(); };
-  document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && document.documentElement.classList.contains('tz-cinema')) cinema(false); });
+  function enterCinema() { cinema(true); document.documentElement.requestFullscreen?.().catch(() => {}); fsBtn.classList.add('on'); $('span', fsBtn).textContent = 'خروج'; }
+  function toggleCinema() { if (!document.documentElement.classList.contains('tz-cinema')) return enterCinema(); cinema(false); fsBtn.classList.remove('on'); $('span', fsBtn).textContent = 'ملء الشاشة'; if (document.fullscreenElement) document.exitFullscreen(); }
+  const fsBtn = $('[data-tzfs]', el);
+  fsBtn.onclick = toggleCinema;
+  document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && document.documentElement.classList.contains('tz-cinema')) { cinema(false); fsBtn.classList.remove('on'); $('span', fsBtn).textContent = 'ملء الشاشة'; } });
   addEventListener('hashchange', () => document.documentElement.classList.remove('tz-cinema'), { once: true });
   build();
 }
