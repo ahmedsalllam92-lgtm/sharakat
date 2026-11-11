@@ -8157,6 +8157,55 @@ html.tz-cinema .tz-cta{top:auto;bottom:5%}
 html.tz-cinema .page,html:has(.tale2) .page.full{transform:none!important;animation:none!important;filter:none!important}
 .tz-logoimg{position:absolute;z-index:4;object-fit:contain;opacity:0;pointer-events:none;filter:drop-shadow(0 0 26px rgba(226,190,120,.35));max-width:none}
 .tz-pl .plate{transition:transform .35s cubic-bezier(.3,1.6,.5,1),opacity .2s!important}
+/* ===== تقويم الشراكات ===== */
+.cal-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.cal-kpi{background:var(--paper,#fff);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:2px;position:relative;overflow:hidden}
+.cal-kpi::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:4px;background:var(--kc,#2F7A5E)}
+.cal-kpi.k-renew{--kc:#B88A3B}.cal-kpi.k-end{--kc:#B5543C}.cal-kpi.k-meet{--kc:#5B5BA8}
+.cal-kpi b{font-size:28px;font-weight:800;line-height:1.1;color:var(--ink)}.cal-kpi span{font-size:13px;color:var(--muted)}
+.cal-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.cal-nav{display:flex;align-items:center;gap:6px}
+.cal-nav h2{margin:0 8px;font-size:20px}.cal-nav h2 small{font-size:12.5px;color:var(--muted);font-weight:500;margin-inline-start:6px}
+.cal-types{display:flex;flex-wrap:wrap;gap:6px;margin-inline-start:auto}
+.cal-ty{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper,#fff);border-radius:999px;padding:5px 11px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.cal-ty i{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.cal-ty.off{opacity:.45;text-decoration:line-through}
+.cal-vw button{font-size:13px}
+.cal-panel{padding:0!important;overflow:hidden}
+.cal-wd{display:grid;grid-template-columns:repeat(7,1fr);background:var(--bg-2,#F3EFE4);border-bottom:1px solid var(--line)}
+.cal-wd span{padding:9px 10px;font-size:12.5px;font-weight:700;color:var(--muted)}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr)}
+.cal-d{min-height:118px;border-inline-start:1px solid var(--line);border-bottom:1px solid var(--line);padding:6px;display:flex;flex-direction:column;gap:4px;position:relative}
+.cal-d:nth-child(7n+1){border-inline-start:0}
+.cal-d.out{background:repeating-linear-gradient(135deg,transparent 0 8px,rgba(0,0,0,.018) 8px 9px)}
+.cal-d.we{background:rgba(184,138,59,.035)}
+.cal-d.today{background:rgba(47,122,94,.06);box-shadow:inset 0 0 0 2px #2F7A5E}
+.cal-dh{display:flex;align-items:baseline;gap:6px}
+.cal-dh b{font-size:15px;font-weight:700}.cal-d.today .cal-dh b{background:#2F7A5E;color:#fff;border-radius:999px;padding:0 8px}
+.cal-dh small{font-size:10.5px;color:var(--faint)}
+.cal-add{margin-inline-start:auto;border:0;background:none;color:var(--muted);cursor:pointer;opacity:0;padding:2px;display:grid;place-items:center;border-radius:6px}
+.cal-add svg{width:14px;height:14px}.cal-d:hover .cal-add{opacity:1}.cal-add:hover{background:var(--line);color:var(--ink)}
+.cal-evs{display:flex;flex-direction:column;gap:3px;min-width:0}
+.cal-ev{display:flex;align-items:center;gap:5px;border:0;text-align:start;font:inherit;font-size:11.5px;line-height:1.35;padding:3px 6px;border-radius:6px;cursor:pointer;background:color-mix(in srgb,var(--c) 12%,transparent);color:var(--ink);min-width:0}
+.cal-ev i{width:6px;height:6px;border-radius:50%;background:var(--c);flex:none}
+.cal-ev span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cal-ev:hover{background:color-mix(in srgb,var(--c) 22%,transparent)}
+.cal-more{border:0;background:none;font:inherit;font-size:11.5px;color:var(--muted);cursor:pointer;text-align:start;padding:1px 6px}
+.cal-agenda{padding:6px 18px 18px}
+.cal-agenda h3{font-size:15px;margin:18px 0 8px;display:flex;gap:10px;align-items:baseline}.cal-agenda h3 small{font-size:12px;color:var(--muted);font-weight:500}
+.cal-row{display:flex;align-items:center;gap:14px;width:100%;border:1px solid var(--line);background:var(--paper,#fff);border-radius:12px;padding:10px 14px;margin-bottom:6px;font:inherit;text-align:start;cursor:pointer;color:var(--ink);transition:.15s}
+.cal-row:hover{border-color:var(--c);transform:translateX(-2px)}
+.cal-date{display:flex;flex-direction:column;align-items:center;min-width:44px}.cal-date b{font-size:20px;line-height:1}.cal-date small{font-size:11px;color:var(--muted)}
+.cal-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);flex:none}.cal-ic svg{width:17px;height:17px}
+.cal-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.cal-tx b{font-weight:600;font-size:14px}.cal-tx small{font-size:12px;color:var(--muted)}
+.cal-left{font-size:12px;color:var(--muted);white-space:nowrap}.cal-left.hot{color:#B5543C;font-weight:700}
+.cal-exp{min-width:300px!important}.cal-exp-n{display:flex;gap:8px;font-size:12px;color:var(--muted);padding:10px 12px;border-top:1px solid var(--line);margin-top:6px;line-height:1.7}.cal-exp-n svg{width:16px;height:16px;flex:none;margin-top:3px}
+.cal-dlg-t{display:flex;align-items:center;gap:10px;margin-bottom:12px}.cal-dlg-t b{color:var(--c)}
+.cal-dl{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin:0 0 14px}.cal-dl dt{color:var(--muted);font-size:13px}.cal-dl dd{margin:0}
+.cal-add-to{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-top:12px;border-top:1px solid var(--line)}.cal-add-to span{font-size:13px;color:var(--muted)}
+@media (max-width:900px){.cal-kpis{grid-template-columns:repeat(2,1fr)}.cal-d{min-height:76px;padding:4px}.cal-ev span{display:none}.cal-ev{justify-content:center;padding:4px}.cal-dh small{display:none}.cal-types{margin-inline-start:0}}
+[data-theme="dark"] .cal-d.we{background:rgba(255,255,255,.02)}
+@media print{.cal-types,.cal-vw,.cal-add,.ph-actions{display:none!important}}
 </style>
 </head>
 <body>
@@ -17476,6 +17525,7 @@ const SHARE_SECTIONS = [
   { k: 'reports', l: 'التقارير والتقرير التسويقي', m: ['reports', 'reportsMk'], on: true },
   { k: 'stories', l: 'الإنجازات', m: ['stories'], on: true },
   { k: 'gallery', l: 'معرض الأثر', m: ['gallery'], on: true },
+  { k: 'calendar', l: 'تقويم الشراكات', m: ['calendar'], on: false },
   { k: 'media', l: 'مركز الصور', m: ['media'], on: false },
   { k: 'process', l: 'مسار الشراكة', m: ['process'], on: false },
 ];
@@ -17485,7 +17535,7 @@ const SHARE_DUR = [['1', 'يوم'], ['3', '3 أيام'], ['7', 'أسبوع'], ['
 const shareSaved = () => { try { return JSON.parse(sessionStorage.getItem(SHARE_KEY) || 'null'); } catch (_) { return null; } };
 const shareHas = (k) => !!(App.share && (App.share.sections || []).includes(k));
 const shareRouteOk = (name) => SHARE_SECTIONS.some((s) => shareHas(s.k) && s.m.includes(name));
-const shareFirst = () => { const s = SHARE_SECTIONS.find((x) => shareHas(x.k)); return s ? ({ home: '#/', tale: '#/tale', dashboard: '#/dashboard', partnerships: '#/partnerships', partners: '#/partners', reports: '#/reports', stories: '#/stories', gallery: '#/gallery', media: '#/media', process: '#/process' })[s.k] : '#/'; };
+const shareFirst = () => { const s = SHARE_SECTIONS.find((x) => shareHas(x.k)); return s ? ({ home: '#/', tale: '#/tale', dashboard: '#/dashboard', partnerships: '#/partnerships', partners: '#/partners', reports: '#/reports', stories: '#/stories', calendar: '#/calendar', gallery: '#/gallery', media: '#/media', process: '#/process' })[s.k] : '#/'; };
 /* صلاحيات جلسة الرابط: قراءة الأقسام المختارة فقط، دون تصدير أو تعديل */
 function shareCan(perm) {
   if (perm === 'view.dashboard') return shareHas('dashboard');
@@ -29088,6 +29138,193 @@ window.addEventListener('beforeprint', () => {
 });
 window.addEventListener('afterprint', () => { const st = $('#landPage'); if (st) st.textContent = ''; });
 
+/* —— 29a-calendar.js —— */
+/* =====================================================================
+   تقويم الشراكات: كل المواعيد في مكان واحد
+   — توقيع/بدء السريان، الانتهاء، تقييم التجديد (قبل 60 يومًا)، فترة خطة التفعيل، والاجتماعات المضافة.
+   — عرض شهري وأجندة، وفلاتر بالنوع، والتاريخ الهجري تحت الميلادي.
+   — تصدير ملف ‎.ics‎ (يُفتح في Outlook وGoogle وتقويم الجوال)، وإضافة أي موعد لتقويم Google أو Outlook مباشرة.
+   الاجتماعات تُحفظ داخل سجل الشراكة (p.meetings) فتتزامن مع المنصة المشتركة.
+   ===================================================================== */
+const CAL_TYPES = {
+  sign: { l: 'توقيع وبدء السريان', c: '#2F7A5E', ic: 'check' },
+  end: { l: 'انتهاء الشراكة', c: '#B5543C', ic: 'flag' },
+  renew: { l: 'تقييم التجديد', c: '#B88A3B', ic: 'history' },
+  act: { l: 'خطة التفعيل', c: '#3E7C93', ic: 'layers' },
+  meet: { l: 'اجتماع', c: '#5B5BA8', ic: 'users' },
+};
+const CAL_WD = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+const calHijri = (d) => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn', { day: 'numeric', month: 'long' }).format(d); } catch (_) { return ''; } };
+const calHijriMonth = (d) => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn', { month: 'long', year: 'numeric' }).format(d); } catch (_) { return ''; } };
+
+/* كل الأحداث من السجلات المرئية للحساب الحالي */
+function calEvents() {
+  const E = [];
+  const list = visiblePartnerships().filter((p) => !p.isDraft && p.stage !== 'cancel');
+  for (const p of list) {
+    const nm = partnerName(p), base = { pid: p.id, name: nm, code: p.code || '', href: '#/partnerships/' + p.id };
+    if (p.startDate) E.push({ ...base, id: 'sign-' + p.id, type: 'sign', date: String(p.startDate).slice(0, 10), t: `${p.stage === 'signed' ? 'بدء سريان الشراكة' : 'موعد بدء الشراكة'} مع ${nm}` });
+    if (p.endDate) {
+      E.push({ ...base, id: 'end-' + p.id, type: 'end', date: String(p.endDate).slice(0, 10), t: `انتهاء الشراكة مع ${nm}` });
+      const e = parseDate(p.endDate); if (e) E.push({ ...base, id: 'renew-' + p.id, type: 'renew', date: isoDate(addDays(e, -60)), t: `تقييم تجديد الشراكة مع ${nm}`, sub: 'قبل الانتهاء بـ60 يومًا' });
+    }
+    const act = p.forms && p.forms.activation && p.forms.activation.data;
+    if (act && act.from) E.push({ ...base, id: 'actf-' + p.id, type: 'act', date: String(act.from).slice(0, 10), t: `بدء خطة التفعيل — ${nm}`, ...(act.to ? { endDate: String(act.to).slice(0, 10) } : {}) });
+    if (act && act.to) E.push({ ...base, id: 'actt-' + p.id, type: 'act', date: String(act.to).slice(0, 10), t: `نهاية خطة التفعيل — ${nm}` });
+    (p.meetings || []).forEach((m) => E.push({ ...base, id: 'meet-' + m.id, mid: m.id, type: 'meet', date: m.date, time: m.time || '', dur: +m.dur || 60, place: m.place || '', notes: m.notes || '', t: m.title || `اجتماع مع ${nm}` }));
+  }
+  return E.filter((e) => /^\d{4}-\d{2}-\d{2}$/.test(e.date)).sort((a, b) => (a.date + (a.time || '')).localeCompare(b.date + (b.time || '')));
+}
+
+/* ===== التصدير للتقاويم ===== */
+const calICSDate = (d) => d.replace(/-/g, '');
+const calICSEsc = (s) => String(s || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/[,;]/g, (m) => '\\' + m);
+function calTimes(e) {
+  if (!e.time) { const d = parseDate(e.date), n = addDays(d, 1); return { allDay: true, s: calICSDate(e.date), e: calICSDate(isoDate(n)) }; }
+  const [h, mi] = e.time.split(':').map(Number); const d = parseDate(e.date); d.setHours(h, mi || 0, 0, 0); const n = new Date(d.getTime() + (e.dur || 60) * 60000);
+  const f = (x) => `${x.getFullYear()}${pad(x.getMonth() + 1)}${pad(x.getDate())}T${pad(x.getHours())}${pad(x.getMinutes())}00`;
+  return { allDay: false, s: f(d), e: f(n) };
+}
+function calICS(events) {
+  const L_ = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Murooj//Sharakat Calendar//AR', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:تقويم الشراكات — مروج', 'X-WR-TIMEZONE:Asia/Riyadh'];
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+  for (const e of events) {
+    const T = calTimes(e);
+    L_.push('BEGIN:VEVENT', `UID:${e.id}@sharakat-murooj`, `DTSTAMP:${stamp}`,
+      T.allDay ? `DTSTART;VALUE=DATE:${T.s}` : `DTSTART;TZID=Asia/Riyadh:${T.s}`, T.allDay ? `DTEND;VALUE=DATE:${T.e}` : `DTEND;TZID=Asia/Riyadh:${T.e}`,
+      `SUMMARY:${calICSEsc(e.t)}`, `DESCRIPTION:${calICSEsc([CAL_TYPES[e.type].l, e.code, e.sub, e.notes].filter(Boolean).join(' — '))}`, ...(e.place ? [`LOCATION:${calICSEsc(e.place)}`] : []),
+      ...(e.type === 'renew' || e.type === 'end' ? ['BEGIN:VALARM', 'TRIGGER:-P7D', 'ACTION:DISPLAY', `DESCRIPTION:${calICSEsc(e.t)}`, 'END:VALARM'] : []), 'END:VEVENT');
+  }
+  L_.push('END:VCALENDAR');
+  return L_.join('\r\n');
+}
+function calDownload(events, name = 'تقويم-الشراكات') {
+  const blob = new Blob([calICS(events)], { type: 'text/calendar;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name + '.ics'; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  toast(`صُدّر ${events.length} موعدًا — افتح الملف لإضافته إلى Outlook أو Google أو تقويم الجوال`);
+}
+function calGoogleURL(e) {
+  const T = calTimes(e);
+  return 'https://calendar.google.com/calendar/render?' + new URLSearchParams({ action: 'TEMPLATE', text: e.t, dates: `${T.s}/${T.e}`, details: [CAL_TYPES[e.type].l, e.code, e.notes].filter(Boolean).join(' — '), location: e.place || '', ctz: 'Asia/Riyadh' });
+}
+function calOutlookURL(e) {
+  const T = calTimes(e), iso = (s) => (s.length === 8 ? `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}` : `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}T${s.slice(9, 11)}:${s.slice(11, 13)}:00`);
+  return 'https://outlook.office.com/calendar/0/deeplink/compose?' + new URLSearchParams({ path: '/calendar/action/compose', rru: 'addevent', subject: e.t, startdt: iso(T.s), enddt: iso(T.e), allday: T.allDay ? 'true' : 'false', body: [CAL_TYPES[e.type].l, e.code, e.notes].filter(Boolean).join(' — '), location: e.place || '' });
+}
+
+/* ===== الصفحة ===== */
+function renderCalendar(el, r) {
+  const st = App.cal = App.cal || { view: 'month', y: today().getFullYear(), m: today().getMonth(), off: new Set() };
+  const q = r.query || {}; if (q.d && /^\d{4}-\d{2}/.test(q.d)) { st.y = +q.d.slice(0, 4); st.m = +q.d.slice(5, 7) - 1; }
+  const all = calEvents();
+  const canEdit = can('edit.partnership') && !App.share;
+  const draw = () => {
+    const ev = all.filter((e) => !st.off.has(e.type));
+    const td = isoDate(today());
+    const upcoming = ev.filter((e) => e.date >= td);
+    const in30 = upcoming.filter((e) => e.date <= isoDate(addDays(today(), 30)));
+    const first = new Date(st.y, st.m, 1), startPad = first.getDay(), days = new Date(st.y, st.m + 1, 0).getDate();
+    const cells = []; for (let i = 0; i < startPad; i++) cells.push(null); for (let d = 1; d <= days; d++) cells.push(new Date(st.y, st.m, d)); while (cells.length % 7) cells.push(null);
+    const byDay = {}; ev.forEach((e) => { (byDay[e.date] = byDay[e.date] || []).push(e); });
+    const chip = (e) => `<button type="button" class="cal-ev t-${e.type}" data-ev="${esc(e.id)}" style="--c:${CAL_TYPES[e.type].c}" title="${esc(e.t)}"><i></i><span>${e.time ? `<b>${e.time}</b> ` : ''}${esc(e.t)}</span></button>`;
+    const month = `<div class="cal-grid"><div class="cal-wd">${CAL_WD.map((w) => `<span>${w}</span>`).join('')}</div><div class="cal-days">${cells.map((d) => {
+      if (!d) return '<div class="cal-d out"></div>';
+      const k = isoDate(d), L_ = byDay[k] || [];
+      return `<div class="cal-d ${k === td ? 'today' : ''} ${d.getDay() === 5 || d.getDay() === 6 ? 'we' : ''}" data-day="${k}"><div class="cal-dh"><b>${d.getDate()}</b><small>${calHijri(d)}</small>${canEdit ? `<button type="button" class="cal-add" data-addday="${k}" title="إضافة اجتماع">${icon('plus')}</button>` : ''}</div>
+        <div class="cal-evs">${L_.slice(0, 3).map(chip).join('')}${L_.length > 3 ? `<button type="button" class="cal-more" data-more="${k}">+${L_.length - 3} أخرى</button>` : ''}</div></div>`;
+    }).join('')}</div></div>`;
+    const groups = {}; upcoming.slice(0, 160).forEach((e) => { const k = e.date.slice(0, 7); (groups[k] = groups[k] || []).push(e); });
+    const agenda = upcoming.length ? `<div class="cal-agenda">${Object.entries(groups).map(([k, L_]) => `<section><h3>${MONTHS[+k.slice(5) - 1]} ${k.slice(0, 4)} <small>${calHijriMonth(parseDate(k + '-15'))}</small></h3>
+      ${L_.map((e) => { const d = parseDate(e.date), left = daysBetween(today(), d); return `<button type="button" class="cal-row" data-ev="${esc(e.id)}" style="--c:${CAL_TYPES[e.type].c}">
+        <span class="cal-date"><b>${d.getDate()}</b><small>${CAL_WD[d.getDay()]}</small></span><span class="cal-ic">${icon(CAL_TYPES[e.type].ic)}</span>
+        <span class="cal-tx"><b>${esc(e.t)}</b><small>${CAL_TYPES[e.type].l}${e.time ? ` · ${e.time}` : ''}${e.place ? ` · ${esc(e.place)}` : ''}${e.code ? ` · ${esc(e.code)}` : ''}</small></span>
+        <span class="cal-left ${left <= 7 ? 'hot' : ''}">${left === 0 ? 'اليوم' : left === 1 ? 'غدًا' : `بعد ${left} يومًا`}</span></button>`; }).join('')}</section>`).join('')}</div>`
+      : emptyHTML({ ic: 'calendar', title: 'لا مواعيد قادمة', text: 'تظهر هنا مواعيد التوقيع والانتهاء والتجديد والاجتماعات.' });
+    el.innerHTML = `<div class="ph"><div><h1>تقويم الشراكات</h1><p>كل المواعيد في مكان واحد: التوقيع والانتهاء وتقييم التجديد وخطط التفعيل والاجتماعات — مع التاريخ الهجري.</p></div>
+      <div class="ph-actions">${canEdit ? `<button class="btn primary" type="button" data-addmeet>${icon('plus')} اجتماع جديد</button>` : ''}<div class="st-dd"><button class="btn st-ddt" type="button">${icon('download')} تصدير للتقويم</button><div class="st-ddm cal-exp">
+        <button type="button" class="nav-a" data-m="" data-ics="all">${icon('calendar')}<span><b>كل المواعيد القادمة</b><small>ملف ‎.ics‎ — ${upcoming.length} موعدًا</small></span></button>
+        <button type="button" class="nav-a" data-m="" data-ics="month">${icon('calendar')}<span><b>مواعيد ${MONTHS[st.m]}</b><small>الشهر المعروض فقط</small></span></button>
+        <div class="cal-exp-n">${icon('info')}<span>افتح الملف بعد تنزيله: يُضاف تلقائيًا إلى Outlook أو تقويم Google أو تقويم الجوال، مع تذكير قبل الانتهاء والتجديد بأسبوع.</span></div></div></div></div></div>
+      <div class="cal-kpis">${[['in30', 'خلال 30 يومًا', in30.length], ['renew', 'تقييمات تجديد قادمة', upcoming.filter((e) => e.type === 'renew').length], ['end', 'شراكات تنتهي', upcoming.filter((e) => e.type === 'end').length], ['meet', 'اجتماعات قادمة', upcoming.filter((e) => e.type === 'meet').length]].map(([k, l, n]) => `<div class="cal-kpi k-${k}"><b>${n}</b><span>${l}</span></div>`).join('')}</div>
+      <div class="cal-bar"><div class="cal-nav">${st.view === 'month' ? `<button class="icon-btn" type="button" data-mv="-1" title="الشهر السابق">${icon('chevR')}</button><button class="btn sm" type="button" data-mv="0">اليوم</button><button class="icon-btn" type="button" data-mv="1" title="الشهر التالي">${icon('chevL')}</button>
+        <h2>${MONTHS[st.m]} ${st.y} <small>${calHijriMonth(new Date(st.y, st.m, 15))}</small></h2>` : '<h2>المواعيد القادمة</h2>'}</div>
+        <div class="cal-types">${Object.entries(CAL_TYPES).map(([k, t]) => `<button type="button" class="cal-ty ${st.off.has(k) ? 'off' : ''}" data-ty="${k}" style="--c:${t.c}"><i></i>${t.l}</button>`).join('')}</div>
+        <div class="seg cal-vw"><button type="button" class="${st.view === 'month' ? 'on' : ''}" data-vw="month">شهري</button><button type="button" class="${st.view === 'agenda' ? 'on' : ''}" data-vw="agenda">أجندة</button></div></div>
+      <div class="panel cal-panel">${st.view === 'month' ? month : agenda}</div>`;
+    st.visible = ev;
+  };
+  draw();
+  el.onclick = async (e) => {
+    const t = e.target;
+    const mv = t.closest('[data-mv]'); if (mv) { const v = +mv.dataset.mv; if (!v) { st.y = today().getFullYear(); st.m = today().getMonth(); } else { const d = new Date(st.y, st.m + v, 1); st.y = d.getFullYear(); st.m = d.getMonth(); } return draw(); }
+    const vw = t.closest('[data-vw]'); if (vw) { st.view = vw.dataset.vw; return draw(); }
+    const ty = t.closest('[data-ty]'); if (ty) { const k = ty.dataset.ty; st.off.has(k) ? st.off.delete(k) : st.off.add(k); return draw(); }
+    const ics = t.closest('[data-ics]'); if (ics) { const td = isoDate(today()); const L_ = ics.dataset.ics === 'month' ? st.visible.filter((x) => x.date.startsWith(`${st.y}-${pad(st.m + 1)}`)) : st.visible.filter((x) => x.date >= td); return L_.length ? calDownload(L_, ics.dataset.ics === 'month' ? `تقويم-الشراكات-${MONTHS[st.m]}-${st.y}` : 'تقويم-الشراكات') : toast('لا مواعيد للتصدير', 'err'); }
+    const evb = t.closest('[data-ev]'); if (evb) { const x = all.find((y) => y.id === evb.dataset.ev); if (x) calEventDlg(x, () => route()); return; }
+    const more = t.closest('[data-more]'); if (more) { st.view = 'agenda'; return draw(); }
+    const ad = t.closest('[data-addday]'); if (ad) { e.stopPropagation(); return calMeetingDlg(null, { date: ad.dataset.addday }); }
+    if (t.closest('[data-addmeet]')) return calMeetingDlg(null, {});
+  };
+}
+
+/* تفاصيل موعد */
+function calEventDlg(e, after) {
+  const T = CAL_TYPES[e.type], d = parseDate(e.date), left = daysBetween(today(), d);
+  const canEdit = e.type === 'meet' && can('edit.partnership') && !App.share;
+  const m = Modal.open({
+    title: e.t, size: 'md',
+    body: `<div class="cal-dlg" style="--c:${T.c}"><div class="cal-dlg-t"><span class="cal-ic">${icon(T.ic)}</span><b>${T.l}</b>${e.code ? `<span class="code">${esc(e.code)}</span>` : ''}</div>
+      <dl class="cal-dl"><dt>التاريخ</dt><dd>${CAL_WD[d.getDay()]} ${fmtDate(e.date)} <small>(${calHijri(d)})</small>${e.time ? ` — الساعة ${e.time}` : ''}</dd>
+      <dt>المتبقي</dt><dd>${left < 0 ? `مضى منذ ${-left} يومًا` : left === 0 ? 'اليوم' : `بعد ${left} يومًا`}</dd>
+      ${e.place ? `<dt>المكان</dt><dd>${/^https?:\/\//.test(e.place) ? `<a href="${esc(e.place)}" target="_blank" rel="noopener">${esc(e.place)}</a>` : esc(e.place)}</dd>` : ''}
+      ${e.sub ? `<dt>ملاحظة</dt><dd>${esc(e.sub)}</dd>` : ''}${e.notes ? `<dt>التفاصيل</dt><dd style="white-space:pre-wrap">${esc(e.notes)}</dd>` : ''}</dl>
+      <div class="cal-add-to"><span>إضافة إلى:</span><a class="btn sm" href="${calGoogleURL(e)}" target="_blank" rel="noopener">Google</a><a class="btn sm" href="${calOutlookURL(e)}" target="_blank" rel="noopener">Outlook</a><button class="btn sm" type="button" data-one>ملف ‎.ics‎</button></div></div>`,
+    foot: `<a class="btn primary" href="${e.href}" data-go>${icon('layers')} فتح الشراكة</a>${canEdit ? `<button class="btn" type="button" data-edit>${icon('edit')} تعديل</button><span class="sp"></span><button class="btn danger" type="button" data-del>${icon('trash')} حذف</button>` : ''}<button class="btn ghost" type="button" data-mclose>إغلاق</button>`,
+  });
+  m.el.addEventListener('click', async (ev) => {
+    if (ev.target.closest('[data-one]')) calDownload([e], e.t.slice(0, 40));
+    if (ev.target.closest('[data-go]')) m.close();
+    if (ev.target.closest('[data-edit]')) { m.close(); const p = D.partnerships.find((x) => x.id === e.pid); calMeetingDlg(p, (p.meetings || []).find((x) => x.id === e.mid)); }
+    if (ev.target.closest('[data-del]')) {
+      if (!(await confirmDlg('حذف هذا الاجتماع من التقويم؟', { title: 'حذف الاجتماع', ok: 'حذف', danger: true }))) return;
+      const p = D.partnerships.find((x) => x.id === e.pid); p.meetings = (p.meetings || []).filter((x) => x.id !== e.mid);
+      await Repo.save('partnerships', p); await Repo.log('meeting.delete', 'partnership', p.id, p.code, e.t); m.close(); toast('حُذف الاجتماع'); after && after();
+    }
+  });
+}
+
+/* إضافة اجتماع أو تعديله */
+function calMeetingDlg(p, cur = {}) {
+  const isNew = !cur.id;
+  const opts = visiblePartnerships().filter((x) => !x.isDraft && x.stage !== 'cancel').map((x) => ({ value: x.id, label: partnerName(x), sub: x.code || '' }));
+  const m = Modal.open({
+    title: isNew ? 'اجتماع جديد' : 'تعديل الاجتماع', size: 'md',
+    body: `<div class="fgrid">
+      <div class="field span2"><label>الشراكة</label>${comboHTML('cal_p', { options: opts, value: p ? p.id : '', placeholder: 'اختر الشراكة أو ابحث…' })}</div>
+      <div class="field span2"><label for="cal_t">عنوان الاجتماع</label><input class="in" id="cal_t" value="${esc(cur.title || '')}" placeholder="مثال: الاجتماع التعريفي، مراجعة المخرجات الربعية…"></div>
+      <div class="field"><label for="cal_d">التاريخ</label><input class="in" type="date" id="cal_d" value="${esc(cur.date || isoDate(today()))}"></div>
+      <div class="field"><label for="cal_h">الوقت</label><input class="in" type="time" id="cal_h" value="${esc(cur.time || '10:00')}"></div>
+      <div class="field"><label for="cal_u">المدة</label><select class="in" id="cal_u">${[[30, 'نصف ساعة'], [60, 'ساعة'], [90, 'ساعة ونصف'], [120, 'ساعتان'], [180, 'ثلاث ساعات']].map(([v, l]) => `<option value="${v}" ${+(cur.dur || 60) === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+      <div class="field"><label for="cal_pl">المكان أو رابط الاجتماع</label><input class="in" id="cal_pl" value="${esc(cur.place || '')}" placeholder="مقر المؤسسة أو رابط Teams/Zoom"></div>
+      <div class="field span2"><label for="cal_n">ملاحظات</label><textarea class="in" id="cal_n" rows="3">${esc(cur.notes || '')}</textarea></div></div>`,
+    foot: `<button class="btn primary" type="button" data-ok>${icon('check')} حفظ</button><button class="btn ghost" type="button" data-mclose>إلغاء</button>`,
+  });
+  bindCombos(m.el);
+  $('[data-ok]', m.el).onclick = async () => {
+    const pid = ($('.cb', m.el) || {}).value || (p && p.id), date = $('#cal_d', m.el).value;
+    if (!pid) return toast('اختر الشراكة', 'err');
+    if (!date) return toast('حدد التاريخ', 'err');
+    const P = D.partnerships.find((x) => x.id === pid); if (!P) return;
+    const rec = { id: cur.id || uid('mt'), title: $('#cal_t', m.el).value.trim() || `اجتماع مع ${partnerName(P)}`, date, time: $('#cal_h', m.el).value, dur: +$('#cal_u', m.el).value, place: $('#cal_pl', m.el).value.trim(), notes: $('#cal_n', m.el).value.trim(), by: Session.userName(), at: nowISO() };
+    if (p && p.id !== P.id) p.meetings = (p.meetings || []).filter((x) => x.id !== rec.id);
+    P.meetings = [...(P.meetings || []).filter((x) => x.id !== rec.id), rec];
+    if (p && p.id !== P.id) await Repo.save('partnerships', p);
+    await Repo.save('partnerships', P); await Repo.log(isNew ? 'meeting.create' : 'meeting.update', 'partnership', P.id, P.code, rec.title);
+    m.close(); toast(isNew ? 'أُضيف الاجتماع إلى التقويم' : 'حُفظ الاجتماع'); route();
+  };
+}
+
 /* —— 30-palette.js —— */
 /* =====================================================================
    نافذة الوصول السريع (Ctrl+K): بحث في كل شيء وتنفيذ أي إجراء من مكان واحد
@@ -29116,6 +29353,7 @@ function palActions() {
     { t: 'استعراض المنصة', s: 'جولة تعريفية تفاعلية', ic: 'play', kw: 'جولة شرح', run: () => startTour() },
     { t: 'استعراض مسار طلب الشراكة', s: 'من «شارك» حتى الاعتماد أو الرفض', ic: 'convert', kw: 'جولة مسار طلب اعتماد رفض', run: () => startReqTour() },
     { t: 'استعراض دعوة جهة خارجية', s: 'رابط بلا حساب: الجهة تقترح وتتابع الرد', ic: 'send', kw: 'جولة جهة خارجية رابط دعوة مقترح', run: () => startExtTour() },
+    { t: 'تقويم الشراكات', s: 'التوقيع والانتهاء والتجديد والاجتماعات', ic: 'calendar', kw: 'تقويم مواعيد اجتماع تجديد انتهاء outlook google', run: () => { location.hash = '#/calendar'; } },
     { t: 'حكاية الشراكة', s: 'صفحة تعريفية متحركة: من الرمل إلى الأثر', ic: 'play', kw: 'حكاية فيلم تعريفي لاندنج صحراء قصة', run: () => { location.hash = '#/tale'; } },
     (isSysAdmin() || AUTH.dev) && { t: 'الدخول بحساب آخر للمعاينة', s: 'لمدير النظام', ic: 'user', kw: 'دور صلاحية مستخدم حساب', run: () => roleDialog() },
     ...Object.entries(DESIGNS).filter(([k]) => k !== design()).map(([k, d]) => ({ t: `شكل المنصة: ${d.name}`, s: d.tag, ic: 'palette', kw: 'تصميم اتجاه شكل', run: () => applyDesign(k) })),
@@ -29201,7 +29439,7 @@ function navGroups() {
   const newCount = can('proposal.review') ? props.filter((x) => x.status === 'submitted').length : dept ? props.filter((x) => x.department === Session.dept() && x.status === 'info').length : 0;
   return [
     { id: 'view', t: 'العرض', ic: 'eye', items: [{ h: '#/', ic: 'home', l: 'الرئيسية', m: ['home'] }, Session.role() !== 'viewer' && { h: '#/tasks', ic: 'flag', l: 'مهامي', m: ['tasks'], cnt: (() => { try { return wfTasks().filter((t) => !t.follow).length; } catch (_) { return 0; } })() }, can('view.dashboard') && { h: '#/dashboard', ic: 'chart', l: 'لوحة المؤشرات', m: ['dashboard'] }] },
-    { id: 'pt', t: 'الشراكات', ic: 'leaf', items: [{ h: '#/partnerships', ic: 'layers', l: 'سجل الشراكات', m: ['partnerships', 'partnership', 'pform'] }, can('view.reports') && { h: '#/reports', ic: 'file', l: 'التقارير', m: ['reports', 'reportsMk'] }, can('view.partners') && { h: '#/partners', ic: 'building', l: 'الجهات الشريكة', m: ['partners', 'partner'] }, { h: '#/stories', ic: 'award', l: 'الإنجازات', m: ['stories'] }, { h: '#/media', ic: 'image', l: 'مركز الصور', m: ['media'] }, { h: '#/tale', ic: 'play', l: 'حكاية الشراكة', m: ['tale'] }, { h: '#/gallery', ic: 'star', l: 'معرض الأثر', m: ['gallery'] }, { h: '#/process', ic: 'convert', l: 'مسار الشراكة', m: ['process'] }, can('manage.content') && { h: '#/content', ic: 'news', l: 'إدارة المحتوى', m: ['content'] }] },
+    { id: 'pt', t: 'الشراكات', ic: 'leaf', items: [{ h: '#/partnerships', ic: 'layers', l: 'سجل الشراكات', m: ['partnerships', 'partnership', 'pform'] }, can('view.reports') && { h: '#/reports', ic: 'file', l: 'التقارير', m: ['reports', 'reportsMk'] }, can('view.partners') && { h: '#/partners', ic: 'building', l: 'الجهات الشريكة', m: ['partners', 'partner'] }, { h: '#/stories', ic: 'award', l: 'الإنجازات', m: ['stories'] }, { h: '#/media', ic: 'image', l: 'مركز الصور', m: ['media'] }, { h: '#/calendar', ic: 'calendar', l: 'تقويم الشراكات', m: ['calendar'] }, { h: '#/tale', ic: 'play', l: 'حكاية الشراكة', m: ['tale'] }, { h: '#/gallery', ic: 'star', l: 'معرض الأثر', m: ['gallery'] }, { h: '#/process', ic: 'convert', l: 'مسار الشراكة', m: ['process'] }, can('manage.content') && { h: '#/content', ic: 'news', l: 'إدارة المحتوى', m: ['content'] }] },
     { id: 'share', t: 'شارك', ic: 'msg', items: [{ h: '#/share', ic: 'send', l: 'شارك بمقترح', m: ['share', 'shareForm', 'shareDone'] }, (can('proposal.review') || dept) && { h: '#/proposals', ic: 'inbox', l: dept ? 'مقترحاتي' : 'المقترحات الواردة', m: ['proposals', 'proposal'], cnt: newCount }] },
     { id: 'adm', t: 'الإدارة', ic: 'lock', items: [can('manage.lists') && { h: '#/settings/lists', ic: 'list', l: 'القوائم', m: ['settings'], only: 'lists' }, (can('manage.lists') || can('manage.content')) && { h: '#/settings', ic: 'settings', l: 'الإعدادات', m: ['settings'], not: 'audit,lists' }, can('view.audit') && { h: '#/settings/audit', ic: 'history', l: 'سجل التغييرات', m: ['settings'], only: 'audit' }] },
   ].map((g) => ({ ...g, items: g.items.filter(Boolean).filter((it) => !App.share || shareNavOk(it)) })).filter((g) => g.items.length);
@@ -29414,6 +29652,7 @@ const ROUTES = [
   { re: /^\/media$/, name: 'media', fn: renderMedia },
   { re: /^\/gallery$/, name: 'gallery', fn: renderGallery, full: true },
   { re: /^\/tale$/, name: 'tale', fn: renderTale, full: true },
+  { re: /^\/calendar$/, name: 'calendar', fn: renderCalendar },
   { re: /^\/tasks$/, name: 'tasks', fn: renderTasks },
   { re: /^\/process$/, name: 'process', fn: renderProcess },
   { re: /^\/content$/, name: 'content', fn: renderContent },
