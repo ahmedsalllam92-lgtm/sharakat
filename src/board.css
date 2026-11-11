@@ -995,3 +995,9 @@
 :root[data-theme="dark"] .bo-cover-orn circle,:root[data-theme="dark"] .bo-cover-orn line{stroke:rgba(212,176,106,.28)}
 :root[data-theme="dark"] .bo-cover-wm{opacity:.08}
 :root[data-theme="dark"] .ob-views a.on,:root[data-theme="dark"] .bo-cover .ob-views a.on{background:var(--gold)!important;color:#0A1813!important}
+/* شركاؤنا: أول 10 في كل قطاع، والباقي بزر «إظهار المزيد» */
+.bo-wall:not(.all) .bo-wall-l a.more{display:none}
+.bo-wall.all .bo-wall-l a.more{animation:boWallIn .35s ease both}
+@keyframes boWallIn{from{opacity:0;transform:translateY(-4px)}}
+.bo-wall-more{display:flex;justify-content:center;margin-top:18px}
+.bo-wall-more .btn{gap:8px;border-radius:999px;padding-inline:22px}

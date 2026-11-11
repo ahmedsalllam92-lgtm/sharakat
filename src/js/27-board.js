@@ -17,6 +17,7 @@ function boDates(d = new Date()) {
 }
 
 /* — الشريط العلوي: صف الهوية وصف التنقل المرقّم — */
+const BO_WALL_N = 10;
 function boardTopbarHTML(tourBtn, demo, roleBox) {
   const o = D.settings.org, dk = boardThemeKey() === 'dark';
   const groups = navGroups();
@@ -155,7 +156,7 @@ function renderHomeBoard(el) {
 
     ${partners.length ? `<section class="bo-wall bo-rv">
       <header class="bo-sh"><span class="bo-num">${boIdx(3 + !!feat.length + !!stories.length)}</span><div><h2>شركاؤنا</h2><p>جهات حكومية وخاصة وغير ربحية تتكامل مع المؤسسة</p></div></header>
-      <div class="bo-wall-g">${[...L('sectors'), ''].map((s) => { const ps = partners.filter((pr) => (pr.sector || '') === s); return ps.length ? `<div class="bo-wall-s"><h4><i style="background:${SEC_VAR(s)}"></i>${esc(s || 'غير محدد')}<span>${ps.length}</span></h4><div class="bo-wall-l">${ps.map((pr) => `<a href="${can('view.partners') ? '#/partners/' + pr.id : '#/partnerships'}" title="${esc(pr.name)}">${plateHTML(pr, 48)}<span>${esc(pr.name)}</span></a>`).join('')}</div></div>` : ''; }).join('')}</div></section>` : ''}
+      <div class="bo-wall-g">${[...L('sectors'), ''].map((s) => { const ps = partners.filter((pr) => (pr.sector || '') === s).sort((a, b) => !!b.logoFileId - !!a.logoFileId); return ps.length ? `<div class="bo-wall-s"><h4><i style="background:${SEC_VAR(s)}"></i>${esc(s || 'غير محدد')}<span>${ps.length}</span></h4><div class="bo-wall-l">${ps.map((pr, k) => `<a ${k >= BO_WALL_N ? 'class="more"' : ''} href="${can('view.partners') ? '#/partners/' + pr.id : '#/partnerships'}" title="${esc(pr.name)}">${plateHTML(pr, 48)}<span>${esc(pr.name)}</span></a>`).join('')}</div></div>` : ''; }).join('')}</div>${(() => { const hid = [...L('sectors'), ''].reduce((t, sc) => t + Math.max(0, partners.filter((pr) => (pr.sector || '') === sc).length - BO_WALL_N), 0); return hid ? `<div class="bo-wall-more"><button type="button" class="btn" data-wallmore data-n="${hid}">${icon('chevD')} إظهار المزيد (${hid})</button></div>` : ''; })()}</section>` : ''}
 
     <section class="bo-close bc2 bo-rv">
       <div class="bc-bg" aria-hidden="true"><svg width="100%" height="100%"><defs><pattern id="bcStar" width="120" height="120" patternUnits="userSpaceOnUse"><g fill="none" stroke-width="1"><rect x="30" y="30" width="60" height="60"/><rect x="30" y="30" width="60" height="60" transform="rotate(45 60 60)"/><circle cx="60" cy="60" r="10"/></g></pattern></defs><rect width="100%" height="100%" fill="url(#bcStar)"/></svg>
@@ -172,7 +173,7 @@ function renderHomeBoard(el) {
   boReveal(el);
   initHeroRot(el);
   if (cuReduce()) $$('animateTransform', el).forEach((a) => a.remove());
-  el.onclick = (e) => { const s = e.target.closest('[data-story]'); if (s) { e.preventDefault(); openStory(s.dataset.story); } };
+  el.onclick = (e) => { const wm = e.target.closest('[data-wallmore]'); if (wm) { const w = wm.closest('.bo-wall'), on = w.classList.toggle('all'); wm.innerHTML = on ? `<span style="display:inline-flex;transform:rotate(180deg)">${icon('chevD')}</span> إظهار أقل` : `${icon('chevD')} إظهار المزيد (${wm.dataset.n})`; if (!on) w.scrollIntoView({ block: 'start', behavior: 'smooth' }); return; } const s = e.target.closest('[data-story]'); if (s) { e.preventDefault(); openStory(s.dataset.story); } };
 }
 /* اختصارات العمل اليومي: كل بطاقة تذهب إلى المهمة مباشرة وتعرض ما ينتظر */
 function boQuickHTML() {

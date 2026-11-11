@@ -199,7 +199,7 @@ function homeLogos() {
   const pub = publicPartnerships();
   const seen = new Map();
   pub.forEach((p) => { const pr = partnerById(p.partnerId); if (pr && !seen.has(pr.id)) seen.set(pr.id, { pr, p }); });
-  const items = [...seen.values()];
+  const items = [...seen.values()].sort((a, b) => !!b.pr.logoFileId - !!a.pr.logoFileId);
   if (!items.length) return '';
   const secs = L('sectors').filter((s) => items.some((i) => i.pr.sector === s));
   return `<section class="hsec" aria-label="الشركاء">
