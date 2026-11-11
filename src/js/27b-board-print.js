@@ -7,7 +7,7 @@ function boPrintHTML(list) {
   const n = X.nd.length || 1;
   const pct = (a, b) => (b ? Math.round(a / b * 100) : 0);
   const bar = (v, max, col = '#0F4433') => `<span class="bp-bar"><i style="width:${Math.max(2, pct(v, max))}%;background:${col}"></i></span>`;
-  const card = (t, body, cls = '') => `<section class="bp-card ${cls}"><h3>${t}</h3>${body}</section>`;
+  const card = (t, body, cls = '', ch = '') => { const i = BO_CH.findIndex((c) => c.id === ch); return `<section class="bp-card ${cls}"><h3>${i > -1 ? `<span class="bp-n">${boIdx(i + 1)}</span>` : ''}${t}</h3>${body}</section>`; };
   /* المؤشرات */
   const kpis = [
     [X.act.length, 'شراكة سارية', `من ${X.signed.length} موقّعة`],
@@ -20,23 +20,23 @@ function boPrintHTML(list) {
     [X.complete + '%', 'اكتمال البيانات', ''],
   ];
   /* سلامة المحفظة */
-  const health = card('مؤشر سلامة المحفظة', `<div class="bp-health"><div class="bp-ring" style="--v:${X.score}"><b>${X.score}%</b></div><ul>${X.health.map((h) => `<li><span>${h.l}</span>${bar(h.v, 100, h.v >= 70 ? '#2E8B6E' : h.v >= 50 ? '#B8913F' : '#B5543C')}<b>${h.v}%</b></li>`).join('')}</ul></div>`);
+  const health = card('الملخص التنفيذي <small>مؤشر سلامة المحفظة</small>', `<div class="bp-health"><div class="bp-ring" style="--v:${X.score}"><b>${X.score}%</b></div><ul>${X.health.map((h) => `<li><span>${h.l}</span>${bar(h.v, 100, h.v >= 70 ? '#2E8B6E' : h.v >= 50 ? '#B8913F' : '#B5543C')}<b>${h.v}%</b></li>`).join('')}</ul></div>`);
   /* التوزيع: القطاع × الحالة */
   const SG = [['active', 'سارية', ['active']], ['soon', 'قريبًا', ['soon']], ['pipe', 'إعداد/توقيع', ['prep', 'sign', 'hold', 'nodates', 'upcoming']], ['ended', 'منتهية', ['ended', 'cancel']]];
   const secs = Object.keys(X.secMap).length ? [...L('sectors'), 'غير محدد'].filter((s) => X.nd.some((p) => (pSector(p) || 'غير محدد') === s)) : [];
   const cnt = (s, ks) => X.nd.filter((p) => (pSector(p) || 'غير محدد') === s && ks.includes(pStatus(p))).length;
-  const dist = card('توزيع المحفظة', `<table class="bp-tbl"><thead><tr><th>القطاع</th>${SG.map(([, l]) => `<th>${l}</th>`).join('')}<th>الكل</th></tr></thead><tbody>${secs.map((s) => `<tr><th><i style="background:${SEC_VAR(s)}"></i>${esc(s)}</th>${SG.map(([, , ks]) => { const c = cnt(s, ks); return `<td>${c || '<span class="z">·</span>'}</td>`; }).join('')}<td><b>${X.nd.filter((p) => (pSector(p) || 'غير محدد') === s).length}</b></td></tr>`).join('')}</tbody>
+  const dist = card('توزيع المحفظة <small>القطاع × المرحلة</small>', `<table class="bp-tbl"><thead><tr><th>القطاع</th>${SG.map(([, l]) => `<th>${l}</th>`).join('')}<th>الكل</th></tr></thead><tbody>${secs.map((s) => `<tr><th><i style="background:${SEC_VAR(s)}"></i>${esc(s)}</th>${SG.map(([, , ks]) => { const c = cnt(s, ks); return `<td>${c || '<span class="z">·</span>'}</td>`; }).join('')}<td><b>${X.nd.filter((p) => (pSector(p) || 'غير محدد') === s).length}</b></td></tr>`).join('')}</tbody>
     <tfoot><tr><th>المجموع</th>${SG.map(([, , ks]) => `<td>${X.nd.filter((p) => ks.includes(pStatus(p))).length}</td>`).join('')}<td><b>${X.nd.length}</b></td></tr></tfoot></table>`);
   /* سير الإجراءات */
   const pmax = Math.max(1, ...PL.phases.map((x) => x.items.length), PL.activating);
-  const proc = card('سير الإجراءات', `<ul class="bp-rows">${PL.phases.map(({ ph, items }, i) => `<li><span><em>${i + 1}</em>${esc(ph.t)}</span>${bar(items.length, pmax, '#1A5C46')}<b>${items.length}</b></li>`).join('')}<li><span><em>∞</em>تفعيل وتقارير</span>${bar(PL.activating, pmax, '#B8913F')}<b>${PL.activating}</b></li></ul>${PL.late.length ? `<p class="bp-note">متأخرة: ${PL.late.slice(0, 4).map((x) => esc(x.name)).join('، ')}</p>` : ''}`);
+  const proc = card('سير الإجراءات <small>أين تقف كل مذكرة</small>', `<ul class="bp-rows">${PL.phases.map(({ ph, items }, i) => `<li><span><em>${i + 1}</em>${esc(ph.t)}</span>${bar(items.length, pmax, '#1A5C46')}<b>${items.length}</b></li>`).join('')}<li><span><em>∞</em>تفعيل وتقارير</span>${bar(PL.activating, pmax, '#B8913F')}<b>${PL.activating}</b></li></ul>${PL.late.length ? `<p class="bp-note">متأخرة: ${PL.late.slice(0, 4).map((x) => esc(x.name)).join('، ')}</p>` : ''}`);
   /* المقترحات */
   const P = X.props, fs = [['مقدّمة', P.length], ['قيد الدراسة', P.filter((x) => ['submitted', 'review', 'info'].includes(x.status)).length], ['مقبولة', P.filter((x) => ['accepted', 'converted'].includes(x.status)).length], ['حُوّلت لشراكات', P.filter((x) => x.status === 'converted').length]];
   const fmax = Math.max(1, ...fs.map((x) => x[1]));
   const funnel = card('مقترحات الإدارات', `<ul class="bp-rows">${fs.map(([l, v]) => `<li><span>${l}</span>${bar(v, fmax, '#2F7A5E')}<b>${v}</b></li>`).join('')}</ul>`);
   /* القيمة والتقييم */
   const typ = V.types.slice(0, 4), tmax = Math.max(1, ...typ.map((x) => x.n));
-  const value = card('القيمة والتقييم', `<div class="bp-mini"><div><small>القيمة</small><b>${V.fin.total ? sarShort(V.fin.total) : '—'}</b></div><div><small>مساهمة الشركاء</small><b>${V.fin.partner ? sarShort(V.fin.partner) : '—'}</b></div><div><small>متوسط التقييم</small><b>${V.avg !== null ? V.avg : '—'}</b></div></div>
+  const value = card('تقييم الشراكات وقيمتها', `<div class="bp-mini"><div><small>القيمة</small><b>${V.fin.total ? sarShort(V.fin.total) : '—'}</b></div><div><small>مساهمة الشركاء</small><b>${V.fin.partner ? sarShort(V.fin.partner) : '—'}</b></div><div><small>متوسط التقييم</small><b>${V.avg !== null ? V.avg : '—'}</b></div></div>
     <ul class="bp-rows">${typ.map((t) => `<li><span>${esc(t.k)}</span>${bar(t.n, tmax, '#A47C32')}<b>${t.n}</b></li>`).join('')}</ul>`);
   /* الأثر */
   const hls = X.nd.filter((p) => p.highlight && p.highlight.value).slice(0, 5);
@@ -60,17 +60,27 @@ function boPrintHTML(list) {
   const risks = boRisks(X, list).slice(0, 8), sev = { h: 'مرتفعة', m: 'متوسطة', l: 'منخفضة' };
   const riskT = card('سجل المتابعة والمخاطر', `<table class="bp-tbl l r"><thead><tr><th>البند</th><th>الأهمية</th><th>المسؤول</th><th>الموعد</th></tr></thead><tbody>${risks.map((r) => `<tr><th>${esc(r.t)}</th><td class="s-${r.s}">${sev[r.s] || ''}</td><td>${esc(r.o || '—')}</td><td>${r.due ? fmtDate(r.due, 'short') : '—'}</td></tr>`).join('')}</tbody></table>`);
   const decs = X.soon.map((p) => ['قرار', `تجديد الشراكة مع «${partnerName(p)}» أو إنهاؤها`]).concat(X.props.filter((x) => x.status === 'accepted').length ? [['قرار', 'اعتماد تحويل المقترحات المقبولة إلى شراكات']] : []).concat(X.act.filter((p) => p.activation && p.activation !== 'مفعّلة').length ? [['توجيه', `تفعيل ${X.act.filter((p) => p.activation && p.activation !== 'مفعّلة').length} شراكة سارية غير مفعّلة`]] : []).concat(X.complete < 80 ? [['توجيه', `استكمال البيانات الأساسية (الاكتمال ${X.complete}%)`]] : []).slice(0, 8);
-  const decT = card('القرارات والتوصيات', `<ol class="bp-dec">${decs.map(([k, t]) => `<li><em class="${k === 'قرار' ? 'd' : 'g'}">${k}</em>${esc(t)}</li>`).join('') || '<li>لا توجد قرارات معلّقة.</li>'}</ol>`);
+  const decT = card('القرارات والتوصيات <small>ما يُعرض للاعتماد أو التوجيه</small>', `<ol class="bp-dec">${decs.map(([k, t]) => `<li><em class="${k === 'قرار' ? 'd' : 'g'}">${k}</em>${esc(t)}</li>`).join('') || '<li>لا توجد قرارات معلّقة.</li>'}</ol>`, '', 'dec');
   const head = (pg) => `<header class="bp-hd"><div><small>${esc(o.name)} · ${esc(o.dept)}</small><h1>محفظة الشراكات الاستراتيجية${pg > 1 ? ' — تابع' : ''}</h1></div><dl><div><dt>التاريخ</dt><dd>${esc(dt.hijri)} · ${esc(dt.greg)}</dd></div><div><dt>النطاق</dt><dd>${X.nd.length} شراكة</dd></div><div><dt>صفحة</dt><dd>${pg} من 2</dd></div></dl></header>`;
-  return `<article class="bp" dir="rtl">
+  /* منظومة الشركاء: الجهات حسب القطاع، وأكثرها شراكات */
+  const byP = {}; X.nd.forEach((p) => { if (p.partnerId) byP[p.partnerId] = (byP[p.partnerId] || 0) + 1; });
+  const secP = {}; Object.keys(byP).forEach((id) => { const pr = partnerById(id); const s0 = (pr && pr.sector) || 'غير محدد'; secP[s0] = (secP[s0] || 0) + 1; });
+  const smax = Math.max(1, ...Object.values(secP));
+  const topP = Object.entries(byP).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const net = `<section class="bp-card"><h3><span class="bp-n">${boIdx(BO_CH.findIndex((c) => c.id === 'net') + 1)}</span>منظومة الشركاء <small>${Object.keys(byP).length} جهة</small></h3><ul class="bp-rows">${Object.entries(secP).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<li><span><i class="bp-dot" style="background:${SEC_VAR(k)}"></i>${esc(k)}</span>${bar(v, smax, '#1A5C46')}<b>${v}</b></li>`).join('')}</ul>
+    ${topP.length ? `<p class="bp-sub">الأكثر شراكات</p><ul class="bp-top">${topP.map(([id, n]) => `<li><span>${esc((partnerById(id) || {}).name || '')}</span><b>${n}</b></li>`).join('')}</ul>` : ''}</section>`;
+  const chn = (id) => boIdx(BO_CH.findIndex((c) => c.id === id) + 1);
+  const tag = (html, id) => html.replace('<h3>', `<h3><span class="bp-n">${chn(id)}</span>`);
+  const dark = (typeof boardThemeKey === 'function' && boardThemeKey() === 'dark') || document.documentElement.dataset.theme === 'dark';
+  return `<article class="bp ${dark ? 'dark' : ''}" dir="rtl">
     <div class="bp-pg">${head(1)}
       <section class="bp-kpis">${kpis.map(([v, l, s]) => `<div><b>${esc(String(v))}</b><span>${l}</span>${s ? `<small>${esc(s)}</small>` : ''}</div>`).join('')}</section>
-      <div class="bp-grid g3">${health}${dist}${proc}</div>
-      <div class="bp-grid g4">${impact}${value}${funnel}${dues}</div>
+      <div class="bp-grid g3">${tag(health, 'sum')}${tag(impact, 'impact')}${tag(value, 'eval')}</div>
+      <div class="bp-grid g3b"><div class="bp-stack">${tag(proc, 'proc')}${funnel}</div>${net}${tag(dist, 'flow')}</div>
     </div>
     <div class="bp-pg">${head(2)}
-      ${card(`المسار الزمني للشراكات <em>${rows.length} شراكة بتواريخ</em>`, lanes || '<p class="bp-note">لا توجد شراكات بتواريخ.</p>', 'wide')}
-      <div class="bp-grid g2">${riskT}${decT}</div>
+      ${card(`<span class="bp-n">${chn('time')}</span>المسار الزمني والاستحقاقات <em>${rows.length} شراكة بتواريخ</em>`, lanes || '<p class="bp-note">لا توجد شراكات بتواريخ.</p>', 'wide')}
+      <div class="bp-grid g3c">${dues}${riskT}${decT}</div>
       <footer class="bp-ft"><span>المصدر: سجلات منظومة الشراكات لحظة الطباعة</span><span>${esc(o.platform)}</span></footer>
     </div>
   </article>`;
@@ -79,10 +89,12 @@ function printBoardBrief(list) {
   document.querySelectorAll('#bpPrint').forEach((x) => x.remove());
   const host = document.createElement('div'); host.id = 'bpPrint'; host.innerHTML = boPrintHTML(list);
   document.body.appendChild(host);
-  const html = document.documentElement; html.classList.add('printing-bp');
+  /* ملاءمة كل صفحة لورقة A4 أفقية (281×194 مم بعد الهوامش) فتبقى صفحتين دائمًا */
+  printFit(host, [...host.querySelectorAll('.bp-pg')], 1062, 650, 0.6);
+  const html = document.documentElement; html.classList.add('printing-bp'); html.classList.toggle('bp-dark', !!host.querySelector('.bp.dark'));
   let st = $('#bpPage'); if (!st) { st = document.createElement('style'); st.id = 'bpPage'; document.head.appendChild(st); }
   st.textContent = '@page{size:A4 landscape;margin:8mm}';
-  const done = () => { html.classList.remove('printing-bp'); st.textContent = ''; host.remove(); removeEventListener('afterprint', done); };
+  const done = () => { html.classList.remove('printing-bp', 'bp-dark'); st.textContent = ''; host.remove(); removeEventListener('afterprint', done); };
   addEventListener('afterprint', done);
   window.print();
 }

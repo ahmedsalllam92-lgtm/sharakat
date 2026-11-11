@@ -48,6 +48,7 @@ async function printPartnershipCard(p) {
   const host = document.createElement('div'); host.id = 'pcPrint'; host.innerHTML = await pcPrintHTML(p);
   document.body.appendChild(host);
   await Promise.all([...host.querySelectorAll('img')].map((im) => (im.complete ? 0 : new Promise((r) => { im.onload = im.onerror = r; setTimeout(r, 2500); }))));
+  printFit(host, [host.firstElementChild || host], 718, 940); // A4 رأسي بهامش 10 مم: صفحة واحدة
   const html = document.documentElement; html.classList.add('printing-card');
   let stp = $('#pcPage'); if (!stp) { stp = document.createElement('style'); stp.id = 'pcPage'; document.head.appendChild(stp); }
   stp.textContent = '@page{size:A4;margin:10mm}';

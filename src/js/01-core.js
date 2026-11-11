@@ -486,3 +486,23 @@ function download(name, blob) {
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
+
+/* ملاءمة نسخة مطبوعة لعدد صفحاتها: يقاس كل جزء بعرض الورقة الفعلي ويُصغَّر عند الحاجة (حتى 78%) حتى لا تتسرب
+   أسطر قليلة إلى صفحة جديدة. host مخفي على الشاشة، فيُعرض مؤقتًا خارجها للقياس. */
+function printFit(host, parts, widthPx, maxH, minZoom = 0.78) {
+  const keep = host.style.cssText;
+  host.style.cssText = `display:block;position:absolute;left:-20000px;top:0;width:${widthPx}px`;
+  parts.forEach((pg) => { pg.style.zoom = ''; const h = pg.scrollHeight; if (h > maxH) { const z = maxH / h; if (z >= minZoom) pg.style.zoom = z.toFixed(3); } });
+  host.style.cssText = keep;
+}
+
+/* الطباعة في الشكل الكلاسيكي بالوضع الليلي: الورق يُطبع بالثيم الفاتح كاملًا (لا خلفية داكنة حول بطاقات بيضاء)،
+   ثم يعود الوضع الليلي بعد الطباعة. الشكل العلوي يُطبع بثيمه كما هو على الشاشة. */
+window.addEventListener('beforeprint', () => {
+  const r = document.documentElement;
+  if (r.dataset.design !== 'board' && r.dataset.theme === 'dark') { r.dataset.printTheme = 'dark'; r.dataset.theme = 'light'; }
+});
+window.addEventListener('afterprint', () => {
+  const r = document.documentElement;
+  if (r.dataset.printTheme) { r.dataset.theme = r.dataset.printTheme; delete r.dataset.printTheme; }
+});
