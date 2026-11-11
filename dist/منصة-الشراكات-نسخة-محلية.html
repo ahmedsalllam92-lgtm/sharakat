@@ -7663,9 +7663,8 @@ html.share-mode [data-palette]{display:none!important}
 :root[data-theme="dark"] .dhead.dh-live .shade{background:linear-gradient(180deg,rgba(16,25,31,0) 30%,rgba(16,25,31,.55))!important}
 @media (prefers-reduced-motion:reduce){.dhead.dh-live .cover svg.topo,.dhead.dh-live .topo-path.hi{animation:none}}
 /* الصورة الصغيرة في الرئيسية: اسم الشراكة */
-.bo-ph.b{position:relative}
-.bo-ph-cap{position:absolute;inset-inline:10px;bottom:10px;padding:4px 10px;border-radius:7px;background:rgba(12,30,24,.72);color:#F3EBD8;font-size:11px;font-weight:600;line-height:1.4;backdrop-filter:blur(4px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .4s}
-.bo-ph-cap:empty{display:none}
+.bo-ph .bo-ph-cap{display:block;margin:6px 2px 0;font-size:11px;font-weight:600;line-height:1.4;color:var(--ink-2);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bo-ph .bo-ph-cap:empty{display:none}
 /* ===== بطاقة الشراكة للطباعة ===== */
 #pcPrint{display:none}
 @media print{
@@ -7713,6 +7712,9 @@ html.share-mode [data-palette]{display:none!important}
 .pcp-steps li.d{color:#14201B}.pcp-steps li.d i{background:#0F4433;border-color:#0F4433;color:#fff}
 .pcp-steps li.c{color:#14201B;font-weight:700}.pcp-steps li.c i{background:#E6C786;border-color:#A47C32;color:#3D2C08}
 .pcp-ft{display:flex;justify-content:space-between;font-size:9px;color:#8C958E;border-top:1px solid #E2DCCB;padding-top:6px}
+.bo-ph.b{display:flex;flex-direction:column;background:var(--paper)}
+.bo-ph.b>img{flex:1;min-height:0;width:100%;height:auto!important;object-fit:cover}
+.bo-ph.b .bo-ph-cap{flex:none;margin:0;padding:5px 6px 1px;background:var(--paper)}
 </style>
 </head>
 <body>
