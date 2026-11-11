@@ -78,7 +78,7 @@ async def main():
         # — الطباعة —
         await pg.emulate_media(media='print'); await E("window.dispatchEvent(new Event('beforeprint'))"); await pg.wait_for_timeout(300)
         ok('print uses the briefing itself (not the A3 sheet)', not await E("!!document.querySelector('#printSheet')"))
-        ok('print: one page per chapter', await E("getComputedStyle(document.querySelector('.bo-ch')).breakBefore") == 'page')
+        ok('print: chapters flow (no forced page per chapter), blocks never split', await E("getComputedStyle(document.querySelector('.bo-ch')).breakBefore") != 'page' and await E("getComputedStyle(document.querySelector('.bo-ch[data-ch=impact]')).breakInside") == 'avoid')
         await E("window.dispatchEvent(new Event('afterprint'))"); await pg.emulate_media(media='screen')
         # — الوضع الليلي —
         await pg.click('[data-themetoggle]'); await pg.wait_for_timeout(900)
