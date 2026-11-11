@@ -25313,7 +25313,7 @@ function renderDashBoard(el) {
         <div class="bo-eyebrow"><i></i>إحاطة مجلس الإدارة<span class="bo-class">${icon('lock')} للعرض الرسمي</span></div>
         <h1>محفظة الشراكات الاستراتيجية</h1>
         <p class="bo-cover-s">${esc(D.settings.org.name)} — ${esc(D.settings.org.dept)}</p>
-        <dl class="bo-cover-meta"><div><dt>تاريخ الإحاطة</dt><dd>${esc(dt.hijri)} · ${esc(dt.greg)}</dd></div><div><dt>آخر تحديث للبيانات</dt><dd>${lu ? fmtDT(lu) : '—'}</dd></div><div><dt>النطاق</dt><dd id="boScope">—</dd></div>${showDemo() ? '<div class="bo-demo">تشمل بيانات تجريبية</div>' : ''}</dl>
+        <dl class="bo-cover-meta"><div><dt>التاريخ</dt><dd>${esc(dt.hijri)} · ${esc(dt.greg)}</dd></div><div><dt>آخر تحديث للبيانات</dt><dd>${lu ? fmtDT(lu) : '—'}</dd></div><div><dt>النطاق</dt><dd id="boScope">—</dd></div>${showDemo() ? '<div class="bo-demo">تشمل بيانات تجريبية</div>' : ''}</dl>
       </div>
       <div class="bo-cover-tools no-print"><button class="btn primary" data-bopresent type="button">${icon('play')} عرض تقديمي</button>${can('export') ? `<button class="btn" data-print type="button">${icon('print')} طباعة أو PDF</button><button class="btn" data-xls type="button">${icon('download')} Excel</button>` : ''}</div>
       <nav class="bo-toc no-print" aria-label="محاور الإحاطة">${BO_CH.map((c, i) => `<a href="#" data-boch="${i}"><em>${boIdx(i + 1)}</em><span>${c.t}</span></a>`).join('')}</nav>
