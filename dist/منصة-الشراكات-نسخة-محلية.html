@@ -7807,6 +7807,58 @@ html.share-mode [data-palette]{display:none!important}
 .bo-ph.b{display:flex;flex-direction:column;background:var(--paper)}
 .bo-ph.b>img{flex:1;min-height:0;width:100%;height:auto!important;object-fit:cover}
 .bo-ph.b .bo-ph-cap{flex:none;margin:0;padding:5px 6px 1px;background:var(--paper)}
+/* ===== طباعة الإحاطة: نسخة الورق ===== */
+#bpPrint{display:none}
+@media print{
+  html.printing-bp,html.printing-bp body{background:#fff!important;overflow:visible!important;height:auto!important}
+  html.printing-bp body>*:not(#bpPrint){display:none!important}
+  html.printing-bp #bpPrint{display:block!important}
+}
+.bp{font-family:'SaudiRiyal','Expo Arabic','IBM Plex Sans Arabic',Tahoma,sans-serif;color:#14201B;font-size:9.5px;line-height:1.5;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.bp-pg{display:flex;flex-direction:column;gap:7px;break-after:page;page-break-after:always}.bp-pg:last-child{break-after:auto;page-break-after:auto}
+.bp-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 14px;border-radius:8px;background:linear-gradient(90deg,#0A2E24,#0F4433 60%,#1A5C46);color:#fff;border-bottom:3px solid #C9A24F}
+.bp-hd small{color:#D9C08A;font-size:9px}.bp-hd h1{margin:0;font-size:17px;line-height:1.3;color:#fff}
+.bp-hd dl{display:flex;gap:16px;margin:0}.bp-hd dt{font-size:8px;color:#B9CEC5}.bp-hd dd{margin:0;font-size:10px;font-weight:700}
+.bp-kpis{display:grid;grid-template-columns:repeat(8,1fr);border:1px solid #E2DCCB;border-radius:8px;overflow:hidden}
+.bp-kpis>div{padding:6px 8px;border-inline-start:1px solid #E2DCCB;display:flex;flex-direction:column}.bp-kpis>div:first-child{border-inline-start:0}
+.bp-kpis b{font-size:17px;color:#0F4433;line-height:1.2}.bp-kpis span{font-size:9px;font-weight:700}.bp-kpis small{font-size:8px;color:#8C958E}
+.bp-grid{display:grid;gap:7px}.bp-grid.g2{grid-template-columns:1.3fr 1fr}.bp-grid.g3{grid-template-columns:1fr 1.25fr 1fr}.bp-grid.g4{grid-template-columns:repeat(4,1fr)}
+.bp-card{border:1px solid #E2DCCB;border-radius:8px;padding:7px 10px;break-inside:avoid}
+.bp-card h3{margin:0 0 5px;font-size:10.5px;color:#0F4433;display:flex;align-items:baseline;gap:8px;border-bottom:1px solid #EFE9DB;padding-bottom:3px}
+.bp-card h3 em{font-style:normal;font-size:8.5px;color:#A47C32;margin-inline-start:auto}
+.bp-health{display:flex;align-items:center;gap:12px}
+.bp-ring{flex:none;width:70px;height:70px;border-radius:50%;background:conic-gradient(#B8913F calc(var(--v)*1%),#EDE7D8 0);display:grid;place-items:center;position:relative}
+.bp-ring::before{content:"";position:absolute;inset:8px;border-radius:50%;background:#fff}.bp-ring b{position:relative;font-size:15px;color:#0F4433}
+.bp-health ul,.bp-rows{list-style:none;margin:0;padding:0;flex:1;display:flex;flex-direction:column;gap:4px}
+.bp-health li,.bp-rows li{display:grid;grid-template-columns:minmax(0,1fr) 70px 26px;align-items:center;gap:6px}
+.bp-rows li span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bp-rows em{font-style:normal;display:inline-grid;place-items:center;width:13px;height:13px;border-radius:50%;background:#0F4433;color:#fff;font-size:7.5px;margin-inline-end:4px}
+.bp-health li b,.bp-rows li b{text-align:left;font-size:10px}
+.bp-bar{display:block;height:6px;border-radius:3px;background:#EDE7D8;overflow:hidden}.bp-bar i{display:block;height:100%;border-radius:3px;margin-inline-start:0}
+.bp-tbl{width:100%;border-collapse:collapse}.bp-tbl th,.bp-tbl td{padding:3px 4px;border-bottom:1px solid #F0EADC;text-align:center;font-size:9px}
+.bp-tbl thead th{color:#6B756F;font-weight:700;font-size:8.5px}.bp-tbl tbody th,.bp-tbl tfoot th{text-align:right;font-weight:700}
+.bp-tbl tbody th i{display:inline-block;width:7px;height:7px;border-radius:2px;margin-inline-end:5px}
+.bp-tbl tfoot td,.bp-tbl tfoot th{border-bottom:0;color:#6B756F}.bp-tbl .z{color:#D9D2C0}
+.bp-tbl.l td,.bp-tbl.l th{text-align:right}.bp-tbl tr.w th{color:#8A6626}.bp-tbl .s-h{color:#B5543C;font-weight:700}.bp-tbl .s-m{color:#A47C32;font-weight:700}.bp-tbl .s-l{color:#2F7A5E}
+.bp-tbl.r tbody th{font-weight:600}
+.bp-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:6px}.bp-mini div{background:#FBF8F1;border-radius:6px;padding:3px 6px}.bp-mini small{display:block;font-size:8px;color:#6B756F}.bp-mini b{font-size:12px;color:#0F4433}
+.bp-imp{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}.bp-imp li{display:flex;gap:7px;align-items:baseline}.bp-imp b{font-size:13px;color:#A47C32;min-width:52px}.bp-imp span{font-weight:600}.bp-imp small{display:block;font-weight:400;color:#8C958E;font-size:8px}
+.bp-note{margin:4px 0 0;color:#8C958E;font-size:8.5px}
+.bp-gantt2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.bp-gh,.bp-gr{display:grid;grid-template-columns:150px 1fr;gap:6px;align-items:center}
+.bp-gh>div,.bp-gr>div{position:relative;height:12px}
+.bp-gh em{position:absolute;top:0;font-style:normal;font-size:7.5px;color:#8C958E;transform:translateX(50%)}
+.bp-gr{border-bottom:1px dashed #F0EADC}.bp-gr span{font-size:8.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bp-gr>div i{position:absolute;top:3px;height:6px;border-radius:3px}
+.bp-gh i.now,.bp-gr i.now{position:absolute;top:0;bottom:0;width:1.5px;background:#A47C32;height:100%;border-radius:0}
+.bp-lg{display:flex;gap:12px;margin-top:5px;font-size:8.5px;color:#6B756F}.bp-lg i{display:inline-block;width:10px;height:5px;border-radius:2px;margin-inline-end:4px;vertical-align:1px}.bp-lg i.ln{width:2px;height:9px;background:#A47C32}
+.bp-dec{margin:0;padding-inline-start:16px;display:flex;flex-direction:column;gap:4px}.bp-dec li{font-weight:600}
+.bp-dec em{font-style:normal;font-size:8px;padding:1px 6px;border-radius:999px;margin-inline-end:6px;color:#fff}.bp-dec em.d{background:#0F4433}.bp-dec em.g{background:#A47C32}
+.bp-ft{display:flex;justify-content:space-between;font-size:8px;color:#8C958E;border-top:1px solid #E2DCCB;padding-top:4px}
+.bp{font-size:10.5px}.bp-kpis b{font-size:21px}.bp-kpis span{font-size:10px}.bp-card{padding:9px 12px}.bp-card h3{font-size:12px;margin-bottom:7px}
+.bp-health li,.bp-rows li{grid-template-columns:minmax(0,1fr) 90px 28px}.bp-health ul,.bp-rows{gap:7px}.bp-bar{height:8px}
+.bp-ring{width:92px;height:92px}.bp-ring b{font-size:19px}.bp-ring::before{inset:10px}
+.bp-tbl th,.bp-tbl td{padding:5px 5px;font-size:10px}.bp-imp{gap:7px}.bp-imp b{font-size:15px}.bp-mini b{font-size:14px}
+.bp-dec{gap:6px}.bp-gr span{font-size:9px}
 </style>
 </head>
 <body>
@@ -25305,7 +25357,7 @@ function renderDashBoard(el) {
     const st = e.target.closest('[data-story]'); if (st) { e.preventDefault(); return openStory(st.dataset.story); }
     const hr = e.target.closest('[data-href]'); if (hr) return go(hr.dataset.href);
     if (e.target.closest('[data-bopresent]')) return boPresent(true);
-    if (e.target.closest('[data-print]')) return window.print();
+    if (e.target.closest('[data-print]')) return printBoardBrief(applyFilters(base(), App.dashF)); // نسخة مصممة للورق
     if (e.target.closest('[data-xls]')) return exportPartnershipsXlsx(applyFilters(base(), App.dashF), 'إحاطة-المجلس');
   };
   bindTips(el);
@@ -25684,6 +25736,96 @@ document.addEventListener('keydown', (e) => {
 });
 document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && App.boPresent) boPresent(false); });
 window.addEventListener('hashchange', () => { if (App.boPresent) boPresent(false); });
+
+/* —— 27b-board-print.js —— */
+/* =====================================================================
+   طباعة الإحاطة المفصّلة: نسخة مصممة للورق (A4 أفقي) بدل تصغير الشاشة.
+   صفحتان كثيفتان: مؤشرات + شبكة مخططات صغيرة متجاورة، ثم المسار الزمني والمخاطر والقرارات.
+   ===================================================================== */
+function boPrintHTML(list) {
+  const X = boStats(list), V = valueData(X.nd), PL = wfPipeline(X.nd), o = D.settings.org, dt = boDates();
+  const n = X.nd.length || 1;
+  const pct = (a, b) => (b ? Math.round(a / b * 100) : 0);
+  const bar = (v, max, col = '#0F4433') => `<span class="bp-bar"><i style="width:${Math.max(2, pct(v, max))}%;background:${col}"></i></span>`;
+  const card = (t, body, cls = '') => `<section class="bp-card ${cls}"><h3>${t}</h3>${body}</section>`;
+  /* المؤشرات */
+  const kpis = [
+    [X.act.length, 'شراكة سارية', `من ${X.signed.length} موقّعة`],
+    [X.partners.size, 'جهة شريكة', `${Object.keys(X.secMap).length} قطاعات`],
+    [X.soon.length, 'تنتهي خلال 90 يومًا', 'قرار تجديد'],
+    [PL.items.length, 'قيد الإجراء', `${PL.late.length} متأخرة`],
+    [X.score + '%', 'سلامة المحفظة', ''],
+    [V.avg !== null ? V.avg + '/100' : '—', 'متوسط التقييم', `${V.ev.length} مقيّمة`],
+    [V.fin.total ? sarShort(V.fin.total) : '—', 'القيمة التقديرية', V.fin.cash ? `صُرف ${pct(V.fin.spent, V.fin.cash)}%` : ''],
+    [X.complete + '%', 'اكتمال البيانات', ''],
+  ];
+  /* سلامة المحفظة */
+  const health = card('مؤشر سلامة المحفظة', `<div class="bp-health"><div class="bp-ring" style="--v:${X.score}"><b>${X.score}%</b></div><ul>${X.health.map((h) => `<li><span>${h.l}</span>${bar(h.v, 100, h.v >= 70 ? '#2E8B6E' : h.v >= 50 ? '#B8913F' : '#B5543C')}<b>${h.v}%</b></li>`).join('')}</ul></div>`);
+  /* التوزيع: القطاع × الحالة */
+  const SG = [['active', 'سارية', ['active']], ['soon', 'قريبًا', ['soon']], ['pipe', 'إعداد/توقيع', ['prep', 'sign', 'hold', 'nodates', 'upcoming']], ['ended', 'منتهية', ['ended', 'cancel']]];
+  const secs = Object.keys(X.secMap).length ? [...L('sectors'), 'غير محدد'].filter((s) => X.nd.some((p) => (pSector(p) || 'غير محدد') === s)) : [];
+  const cnt = (s, ks) => X.nd.filter((p) => (pSector(p) || 'غير محدد') === s && ks.includes(pStatus(p))).length;
+  const dist = card('توزيع المحفظة', `<table class="bp-tbl"><thead><tr><th>القطاع</th>${SG.map(([, l]) => `<th>${l}</th>`).join('')}<th>الكل</th></tr></thead><tbody>${secs.map((s) => `<tr><th><i style="background:${SEC_VAR(s)}"></i>${esc(s)}</th>${SG.map(([, , ks]) => { const c = cnt(s, ks); return `<td>${c || '<span class="z">·</span>'}</td>`; }).join('')}<td><b>${X.nd.filter((p) => (pSector(p) || 'غير محدد') === s).length}</b></td></tr>`).join('')}</tbody>
+    <tfoot><tr><th>المجموع</th>${SG.map(([, , ks]) => `<td>${X.nd.filter((p) => ks.includes(pStatus(p))).length}</td>`).join('')}<td><b>${X.nd.length}</b></td></tr></tfoot></table>`);
+  /* سير الإجراءات */
+  const pmax = Math.max(1, ...PL.phases.map((x) => x.items.length), PL.activating);
+  const proc = card('سير الإجراءات', `<ul class="bp-rows">${PL.phases.map(({ ph, items }, i) => `<li><span><em>${i + 1}</em>${esc(ph.t)}</span>${bar(items.length, pmax, '#1A5C46')}<b>${items.length}</b></li>`).join('')}<li><span><em>∞</em>تفعيل وتقارير</span>${bar(PL.activating, pmax, '#B8913F')}<b>${PL.activating}</b></li></ul>${PL.late.length ? `<p class="bp-note">متأخرة: ${PL.late.slice(0, 4).map((x) => esc(x.name)).join('، ')}</p>` : ''}`);
+  /* المقترحات */
+  const P = X.props, fs = [['مقدّمة', P.length], ['قيد الدراسة', P.filter((x) => ['submitted', 'review', 'info'].includes(x.status)).length], ['مقبولة', P.filter((x) => ['accepted', 'converted'].includes(x.status)).length], ['حُوّلت لشراكات', P.filter((x) => x.status === 'converted').length]];
+  const fmax = Math.max(1, ...fs.map((x) => x[1]));
+  const funnel = card('مقترحات الإدارات', `<ul class="bp-rows">${fs.map(([l, v]) => `<li><span>${l}</span>${bar(v, fmax, '#2F7A5E')}<b>${v}</b></li>`).join('')}</ul>`);
+  /* القيمة والتقييم */
+  const typ = V.types.slice(0, 4), tmax = Math.max(1, ...typ.map((x) => x.n));
+  const value = card('القيمة والتقييم', `<div class="bp-mini"><div><small>القيمة</small><b>${V.fin.total ? sarShort(V.fin.total) : '—'}</b></div><div><small>مساهمة الشركاء</small><b>${V.fin.partner ? sarShort(V.fin.partner) : '—'}</b></div><div><small>متوسط التقييم</small><b>${V.avg !== null ? V.avg : '—'}</b></div></div>
+    <ul class="bp-rows">${typ.map((t) => `<li><span>${esc(t.k)}</span>${bar(t.n, tmax, '#A47C32')}<b>${t.n}</b></li>`).join('')}</ul>`);
+  /* الأثر */
+  const hls = X.nd.filter((p) => p.highlight && p.highlight.value).slice(0, 5);
+  const impact = card('الأثر المتحقق', hls.length ? `<ul class="bp-imp">${hls.map((p) => `<li><b>${esc(p.highlight.value)}</b><span>${esc(p.highlight.label || '')}<small>${esc(partnerName(p))}</small></span></li>`).join('')}</ul>` : '<p class="bp-note">لم تُسجَّل أرقام أثر بعد.</p>');
+  /* الاستحقاقات */
+  const soonL = X.nd.filter((p) => p.endDate && ['active', 'soon'].includes(pStatus(p))).sort((a, b) => (a.endDate < b.endDate ? -1 : 1)).slice(0, 7);
+  const dues = card('أقرب الاستحقاقات', `<table class="bp-tbl l"><tbody>${soonL.map((p) => { const d = daysLeft(p); return `<tr class="${d !== null && d <= 90 ? 'w' : ''}"><th>${esc(partnerName(p))}</th><td>${fmtDate(p.endDate, 'short')}</td><td>${d !== null ? nf(d) + ' يومًا' : '—'}</td></tr>`; }).join('')}</tbody></table>`);
+  /* المسار الزمني المضغوط */
+  const rows = X.nd.filter((p) => p.startDate && p.endDate).sort((a, b) => (a.endDate < b.endDate ? -1 : 1));
+  let lanes = '';
+  if (rows.length) {
+    const t = today(), y0 = Math.min(...rows.map((p) => parseDate(p.startDate).getFullYear()), t.getFullYear()), y1 = Math.max(...rows.map((p) => parseDate(p.endDate).getFullYear()), t.getFullYear()) + 1;
+    const T0 = +new Date(y0, 0, 1), T1 = +new Date(y1, 0, 1), Pp = (d) => ((+d - T0) / (T1 - T0) * 100).toFixed(2);
+    const years = []; for (let y = y0; y < y1; y++) years.push(y);
+    const col = (p) => ({ active: '#2E8B6E', soon: '#C9A24F', ended: '#C9C2B2', upcoming: '#9CC9B4' }[pStatus(p)] || '#8FA39A');
+    const half = Math.ceil(rows.length / 2);
+    const block = (rs) => `<div class="bp-gantt"><div class="bp-gh"><span></span><div>${years.map((y) => `<em style="right:${Pp(new Date(y, 0, 1))}%">${y}</em>`).join('')}<i class="now" style="right:${Pp(t)}%"></i></div></div>${rs.map((p) => `<div class="bp-gr"><span>${esc(partnerName(p))}</span><div><i style="right:${Pp(parseDate(p.startDate))}%;width:${Math.max(0.8, Pp(parseDate(p.endDate)) - Pp(parseDate(p.startDate)))}%;background:${col(p)}"></i><i class="now" style="right:${Pp(t)}%"></i></div></div>`).join('')}</div>`;
+    lanes = `<div class="bp-gantt2">${block(rows.slice(0, half))}${block(rows.slice(half))}</div><div class="bp-lg"><span><i style="background:#2E8B6E"></i>سارية</span><span><i style="background:#C9A24F"></i>تنتهي قريبًا</span><span><i style="background:#9CC9B4"></i>لم يبدأ</span><span><i style="background:#C9C2B2"></i>منتهية</span><span><i class="ln"></i>اليوم</span></div>`;
+  }
+  /* المخاطر والقرارات */
+  const risks = boRisks(X, list).slice(0, 8), sev = { h: 'مرتفعة', m: 'متوسطة', l: 'منخفضة' };
+  const riskT = card('سجل المتابعة والمخاطر', `<table class="bp-tbl l r"><thead><tr><th>البند</th><th>الأهمية</th><th>المسؤول</th><th>الموعد</th></tr></thead><tbody>${risks.map((r) => `<tr><th>${esc(r.t)}</th><td class="s-${r.s}">${sev[r.s] || ''}</td><td>${esc(r.o || '—')}</td><td>${r.due ? fmtDate(r.due, 'short') : '—'}</td></tr>`).join('')}</tbody></table>`);
+  const decs = X.soon.map((p) => ['قرار', `تجديد الشراكة مع «${partnerName(p)}» أو إنهاؤها`]).concat(X.props.filter((x) => x.status === 'accepted').length ? [['قرار', 'اعتماد تحويل المقترحات المقبولة إلى شراكات']] : []).concat(X.act.filter((p) => p.activation && p.activation !== 'مفعّلة').length ? [['توجيه', `تفعيل ${X.act.filter((p) => p.activation && p.activation !== 'مفعّلة').length} شراكة سارية غير مفعّلة`]] : []).concat(X.complete < 80 ? [['توجيه', `استكمال البيانات الأساسية (الاكتمال ${X.complete}%)`]] : []).slice(0, 8);
+  const decT = card('القرارات والتوصيات', `<ol class="bp-dec">${decs.map(([k, t]) => `<li><em class="${k === 'قرار' ? 'd' : 'g'}">${k}</em>${esc(t)}</li>`).join('') || '<li>لا توجد قرارات معلّقة.</li>'}</ol>`);
+  const head = (pg) => `<header class="bp-hd"><div><small>${esc(o.name)} · ${esc(o.dept)}</small><h1>محفظة الشراكات الاستراتيجية${pg > 1 ? ' — تابع' : ''}</h1></div><dl><div><dt>التاريخ</dt><dd>${esc(dt.hijri)} · ${esc(dt.greg)}</dd></div><div><dt>النطاق</dt><dd>${X.nd.length} شراكة</dd></div><div><dt>صفحة</dt><dd>${pg} من 2</dd></div></dl></header>`;
+  return `<article class="bp" dir="rtl">
+    <div class="bp-pg">${head(1)}
+      <section class="bp-kpis">${kpis.map(([v, l, s]) => `<div><b>${esc(String(v))}</b><span>${l}</span>${s ? `<small>${esc(s)}</small>` : ''}</div>`).join('')}</section>
+      <div class="bp-grid g3">${health}${dist}${proc}</div>
+      <div class="bp-grid g4">${impact}${value}${funnel}${dues}</div>
+    </div>
+    <div class="bp-pg">${head(2)}
+      ${card(`المسار الزمني للشراكات <em>${rows.length} شراكة بتواريخ</em>`, lanes || '<p class="bp-note">لا توجد شراكات بتواريخ.</p>', 'wide')}
+      <div class="bp-grid g2">${riskT}${decT}</div>
+      <footer class="bp-ft"><span>المصدر: سجلات منظومة الشراكات لحظة الطباعة</span><span>${esc(o.platform)}</span></footer>
+    </div>
+  </article>`;
+}
+function printBoardBrief(list) {
+  document.querySelectorAll('#bpPrint').forEach((x) => x.remove());
+  const host = document.createElement('div'); host.id = 'bpPrint'; host.innerHTML = boPrintHTML(list);
+  document.body.appendChild(host);
+  const html = document.documentElement; html.classList.add('printing-bp');
+  let st = $('#bpPage'); if (!st) { st = document.createElement('style'); st.id = 'bpPage'; document.head.appendChild(st); }
+  st.textContent = '@page{size:A4 landscape;margin:8mm}';
+  const done = () => { html.classList.remove('printing-bp'); st.textContent = ''; host.remove(); removeEventListener('afterprint', done); };
+  addEventListener('afterprint', done);
+  window.print();
+}
 
 /* —— 28-media.js —— */
 /* =====================================================================

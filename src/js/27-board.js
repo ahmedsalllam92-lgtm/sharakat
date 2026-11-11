@@ -287,7 +287,7 @@ function renderDashBoard(el) {
     const st = e.target.closest('[data-story]'); if (st) { e.preventDefault(); return openStory(st.dataset.story); }
     const hr = e.target.closest('[data-href]'); if (hr) return go(hr.dataset.href);
     if (e.target.closest('[data-bopresent]')) return boPresent(true);
-    if (e.target.closest('[data-print]')) return window.print();
+    if (e.target.closest('[data-print]')) return printBoardBrief(applyFilters(base(), App.dashF)); // نسخة مصممة للورق
     if (e.target.closest('[data-xls]')) return exportPartnershipsXlsx(applyFilters(base(), App.dashF), 'إحاطة-المجلس');
   };
   bindTips(el);

@@ -78,7 +78,7 @@ async def main():
         # — الطباعة —
         await pg.emulate_media(media='print'); await E("window.dispatchEvent(new Event('beforeprint'))"); await pg.wait_for_timeout(300)
         ok('print uses the briefing itself (not the A3 sheet)', not await E("!!document.querySelector('#printSheet')"))
-        ok('print: chapters flow (no forced page per chapter), blocks never split', await E("getComputedStyle(document.querySelector('.bo-ch')).breakBefore") != 'page' and await E("getComputedStyle(document.querySelector('.bo-ch[data-ch=impact]')).breakInside") == 'avoid')
+        ok('print: dedicated paper version (2 dense pages)', await E("(()=>{window.__op=window.print; window.print=()=>{}; printBoardBrief(applyFilters(visiblePartnerships(),{})); const ok=!!document.querySelector('#bpPrint .bp') && document.querySelectorAll('#bpPrint .bp-pg').length===2 && document.querySelectorAll('#bpPrint .bp-card').length>=8; window.dispatchEvent(new Event('afterprint')); window.print=window.__op; return ok})()"))
         await E("window.dispatchEvent(new Event('afterprint'))"); await pg.emulate_media(media='screen')
         # — الوضع الليلي —
         await pg.click('[data-themetoggle]'); await pg.wait_for_timeout(900)
