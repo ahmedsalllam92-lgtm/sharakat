@@ -18113,7 +18113,7 @@ function openPShow(list, title, start = 0) {
       <div class="ps-ctl"><button type="button" class="ps-btn" data-psplay aria-label="إيقاف مؤقت">${icon('pause')}</button><button type="button" class="ps-btn" data-psclose aria-label="إغلاق">${icon('x')}</button></div></header>
     ${list.length > 1 ? `<button type="button" class="ps-nav prev" data-psgo="-1" aria-label="السابقة">${icon('chevR')}</button><button type="button" class="ps-nav next" data-psgo="1" aria-label="التالية">${icon('chevL')}</button>` : ''}
     <footer class="ps-foot">${list.length > 1 ? `<div class="ps-thumbs">${list.map((p, k) => `<button type="button" class="ps-th" data-psi="${k}" title="${esc(partnerName(p))}"><span>${logoOrMono(partnerById(p.partnerId) || {}, partnerName(p))}</span><i class="ps-prog"></i></button>`).join('')}</div>` : ''}</footer>`;
-  document.body.appendChild(el);
+  document.body.appendChild(el); hydrateFiles($('.ps-foot', el) || el); // شعارات الشراكات في الشريط السفلي
   document.documentElement.classList.add('ps-lock');
   const stage = $('.ps-stage', el);
   const show = (n, dir = 1) => {
