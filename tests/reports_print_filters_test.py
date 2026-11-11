@@ -150,7 +150,7 @@ async def main():
             await E("window.dispatchEvent(new Event('afterprint'))"); await pg.wait_for_timeout(300)
             info = subprocess.run(['pdfinfo',f'/tmp/sheet-{dz}.pdf'],capture_output=True,text=True).stdout
             if dz == 'classic': ok(f'{dz}: dashboard prints on ONE A3 landscape page', pages(f'/tmp/sheet-{dz}.pdf') == 1 and 'A3' in info, info.split('Page size:')[-1].split('\n')[0])
-            else: ok(f'{dz}: board briefing prints as A4 landscape chapters', pages(f'/tmp/sheet-{dz}.pdf') >= 7 and '841.92 x 594.96' in info, info.split('Page size:')[-1].split('\n')[0])
+            else: ok(f'{dz}: board briefing prints as its dedicated 2-page A4 landscape version', pages(f'/tmp/sheet-{dz}.pdf') == 2 and '841.92 x 594.96' in info, info.split('Page size:')[-1].split('\n')[0])
         t = subprocess.run(['pdftotext','/tmp/sheet-classic.pdf','-'],capture_output=True,text=True).stdout
         act = await E("visiblePartnerships().filter(p=>!p.isDraft&&['active','soon'].includes(pStatus(p))).length")
         ok('sheet shows key numbers & sections', all(k in t for k in ['السارية','بيانات','المحفظة','أفق']) and str(act) in t)

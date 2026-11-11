@@ -133,7 +133,7 @@ function rqFrame(side, sess, hash) {
     f.className = 'rq-frame'; f.setAttribute('title', side === 'r' ? 'الجهة الطالبة' : 'الجهة التي عليها الدور'); f.setAttribute('tabindex', '-1');
     const boot = `<script>(function(){var mk=function(){var m=new Map();return{getItem:function(k){return m.has(k)?m.get(k):null},setItem:function(k,v){m.set(k,String(v))},removeItem:function(k){m.delete(k)},clear:function(){m.clear()},key:function(i){return Array.from(m.keys())[i]||null},get length(){return m.size}}};
       try{Object.defineProperty(window,'localStorage',{configurable:true,value:mk()});Object.defineProperty(window,'sessionStorage',{configurable:true,value:mk()});}catch(e){}
-      document.addEventListener('keydown',function(e){if(['Escape',' ','ArrowLeft','ArrowRight'].indexOf(e.key)>-1&&!(e.target.closest&&e.target.closest('input,textarea,select'))){e.preventDefault();e.stopPropagation();try{parent.document.dispatchEvent(new parent.KeyboardEvent('keydown',{key:e.key,bubbles:true}));}catch(_){}}},true);
+      document.addEventListener('keydown',function(e){if(e.key==='Escape'||(['Escape',' ','ArrowLeft','ArrowRight'].indexOf(e.key)>-1&&!(e.target.closest&&e.target.closest('input,textarea,select')))){e.preventDefault();e.stopPropagation();try{parent.document.dispatchEvent(new parent.KeyboardEvent('keydown',{key:e.key,bubbles:true}));}catch(_){}}},true);
       window.__SBX={side:${JSON.stringify(side)},account:${JSON.stringify(sess.accountId)},sess:${JSON.stringify(sess)},data:function(){return parent.__shkSbx.data();}};
       location.hash=${JSON.stringify(hash)};})();<\/script>`;
     f.srcdoc = '<!DOCTYPE html>' + window.__APP_SRC.replace(/<head>/i, '<head>' + boot);
