@@ -4291,3 +4291,10 @@ html.share-mode [data-palette]{display:none!important}
 .pc-gold{padding:2px 8px 2px 6px!important;gap:4px!important;font-size:10px!important;bottom:10px!important;left:10px!important}
 .pc-gold svg{width:10px!important;height:10px!important}
 .pc-gold .gburst{inset-inline-start:12px}
+/* الشعارات الطويلة أو العريضة تظهر كاملة داخل إطارها */
+.plate img,.pc-lg img,.mg img,.orb-n .mg img,.gc-logo img,.hp-logo img,.ps-th img,.wl-t i img,.mx-node i img{height:100%!important;width:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;display:block}
+.plate:has(> img){background:#fff;overflow:hidden}
+.bo-pl .plate:has(> img),.pl-logos .plate:has(> img),.hlogos .plate:has(> img){border-radius:50%}
+.plate:has(> img) img{padding:14%!important}
+.plate,.pc-lg,.mg,.orb-n .mg,.gc-logo,.hp-logo,.ps-th>span,.wl-t i,.mx-node i,.dsx-lg,.pcp-lg,.hrot-cap i{grid-template-rows:minmax(0,1fr)!important;grid-template-columns:minmax(0,1fr)!important}
+.bo-wall .plate:has(> img){border-radius:50%!important;border:1px solid var(--line-2)}
