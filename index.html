@@ -3624,6 +3624,18 @@ a.chip.cat:hover{background:var(--mist)}
 .bo-hero-facts>div.txt{flex:1.6;min-width:0}
 .bo-hero-facts .txt a{display:block;font-family:var(--display);font-size:21px;font-weight:700;color:var(--petrol);line-height:1.35;margin-top:8px;text-decoration:none;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .bo-hero-facts .txt a:hover{color:var(--gold)}
+/* شركاؤنا: الجهات تنزل واحدة واحدة عند الوصول للقسم — صفًّا بعد صف، والشعار يبرز بعد الاسم */
+.bo-wall.bo-rv .bo-wall-l a{opacity:0;transform:translateY(-18px)}
+.bo-wall.bo-rv .bo-wall-l a .plate{transform:scale(.4) rotate(-12deg);opacity:0}
+.bo-wall.bo-on .bo-wall-l a{animation:boWallDrop .6s cubic-bezier(.25,1.35,.5,1) forwards;animation-delay:calc(.25s + var(--k) * .11s + var(--s) * .05s)}
+.bo-wall.bo-on .bo-wall-l a .plate{animation:boWallPop .55s cubic-bezier(.3,1.6,.5,1) forwards;animation-delay:calc(.4s + var(--k) * .11s + var(--s) * .05s)}
+.bo-wall.bo-on h4{animation:boUp .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.1s + var(--s, 0) * .05s)}
+@keyframes boWallDrop{0%{opacity:0;transform:translateY(-18px)}100%{opacity:1;transform:none}}
+@keyframes boWallPop{0%{opacity:0;transform:scale(.4) rotate(-12deg)}100%{opacity:1;transform:none}}
+.bo-wall.all .bo-wall-l a.more{animation:boWallDrop .5s cubic-bezier(.25,1.35,.5,1) forwards;animation-delay:calc(var(--k) * .06s)}
+.bo-wall.all .bo-wall-l a.more .plate{animation:boWallPop .5s cubic-bezier(.3,1.6,.5,1) forwards;animation-delay:calc(.1s + var(--k) * .06s)}
+@media (prefers-reduced-motion:reduce){.bo-wall .bo-wall-l a,.bo-wall .bo-wall-l a .plate{opacity:1!important;transform:none!important;animation:none!important}}
+@media print{.bo-wall .bo-wall-l a,.bo-wall .bo-wall-l a .plate{opacity:1!important;transform:none!important;animation:none!important}}
 
 /* =====================================================================
    مركز الصور ومسار الشراكة — تعمل في الاتجاهات الستة عبر متغيرات الألوان
@@ -26226,7 +26238,7 @@ function renderHomeBoard(el) {
 
     ${partners.length ? `<section class="bo-wall bo-rv">
       <header class="bo-sh"><span class="bo-num">${boIdx(3 + !!feat.length + !!stories.length)}</span><div><h2>شركاؤنا</h2><p>جهات حكومية وخاصة وغير ربحية تتكامل مع المؤسسة</p></div></header>
-      <div class="bo-wall-g">${[...L('sectors'), ''].map((s) => { const ps = partners.filter((pr) => (pr.sector || '') === s).sort((a, b) => !!b.logoFileId - !!a.logoFileId); return ps.length ? `<div class="bo-wall-s"><h4><i style="background:${SEC_VAR(s)}"></i>${esc(s || 'غير محدد')}<span>${ps.length}</span></h4><div class="bo-wall-l">${ps.map((pr, k) => `<a ${k >= BO_WALL_N ? 'class="more"' : ''} href="${can('view.partners') ? '#/partners/' + pr.id : '#/partnerships'}" title="${esc(pr.name)}">${plateHTML(pr, 48)}<span>${esc(pr.name)}</span></a>`).join('')}</div></div>` : ''; }).join('')}</div>${(() => { const hid = [...L('sectors'), ''].reduce((t, sc) => t + Math.max(0, partners.filter((pr) => (pr.sector || '') === sc).length - BO_WALL_N), 0); return hid ? `<div class="bo-wall-more"><button type="button" class="btn" data-wallmore data-n="${hid}">${icon('chevD')} إظهار المزيد (${hid})</button></div>` : ''; })()}</section>` : ''}
+      <div class="bo-wall-g">${[...L('sectors'), ''].map((s, si) => { const ps = partners.filter((pr) => (pr.sector || '') === s).sort((a, b) => !!b.logoFileId - !!a.logoFileId); return ps.length ? `<div class="bo-wall-s"><h4><i style="background:${SEC_VAR(s)}"></i>${esc(s || 'غير محدد')}<span>${ps.length}</span></h4><div class="bo-wall-l">${ps.map((pr, k) => `<a ${k >= BO_WALL_N ? 'class="more"' : ''} style="--k:${k % BO_WALL_N};--s:${si}" href="${can('view.partners') ? '#/partners/' + pr.id : '#/partnerships'}" title="${esc(pr.name)}">${plateHTML(pr, 48)}<span>${esc(pr.name)}</span></a>`).join('')}</div></div>` : ''; }).join('')}</div>${(() => { const hid = [...L('sectors'), ''].reduce((t, sc) => t + Math.max(0, partners.filter((pr) => (pr.sector || '') === sc).length - BO_WALL_N), 0); return hid ? `<div class="bo-wall-more"><button type="button" class="btn" data-wallmore data-n="${hid}">${icon('chevD')} إظهار المزيد (${hid})</button></div>` : ''; })()}</section>` : ''}
 
     <section class="bo-close bc2 bo-rv">
       <div class="bc-bg" aria-hidden="true"><svg width="100%" height="100%"><defs><pattern id="bcStar" width="120" height="120" patternUnits="userSpaceOnUse"><g fill="none" stroke-width="1"><rect x="30" y="30" width="60" height="60"/><rect x="30" y="30" width="60" height="60" transform="rotate(45 60 60)"/><circle cx="60" cy="60" r="10"/></g></pattern></defs><rect width="100%" height="100%" fill="url(#bcStar)"/></svg>
