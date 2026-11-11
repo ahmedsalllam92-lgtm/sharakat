@@ -8206,6 +8206,52 @@ html.tz-cinema .page,html:has(.tale2) .page.full{transform:none!important;animat
 @media (max-width:900px){.cal-kpis{grid-template-columns:repeat(2,1fr)}.cal-d{min-height:76px;padding:4px}.cal-ev span{display:none}.cal-ev{justify-content:center;padding:4px}.cal-dh small{display:none}.cal-types{margin-inline-start:0}}
 [data-theme="dark"] .cal-d.we{background:rgba(255,255,255,.02)}
 @media print{.cal-types,.cal-vw,.cal-add,.ph-actions{display:none!important}}
+/* ===== خريطة الشراكات ===== */
+.mp-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.mp-legend{display:flex;gap:14px;font-size:12.5px;color:var(--muted)}.mp-legend span{display:inline-flex;align-items:center;gap:6px}
+.mp-legend i{width:11px;height:11px;border-radius:50%;display:inline-block}.lg-a{background:#2F7A5E}.lg-o{background:#B88A3B}.lg-hq{background:#fff;border:2px solid #B5543C}
+.mp-wrap{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}
+.mp-map{position:relative;padding:8px!important;overflow:hidden;--mp-land:#EDE6D4;--mp-land2:#F7F2E6;background:radial-gradient(ellipse at 50% 40%,var(--paper,#fff),var(--bg,#F7F4EC))}
+.mp-svg{width:100%;height:auto;display:block}
+.mp-land{fill:url(#mpG);stroke:none}.mp-dots{fill:url(#mpDots)}.mp-dot{fill:#C9B88E;opacity:.45}
+.mp-edge{fill:none;stroke:#B88A3B;stroke-width:2;stroke-linejoin:round;stroke-dasharray:3000;stroke-dashoffset:3000;animation:mpDraw 2.2s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes mpDraw{to{stroke-dashoffset:0}}
+.mp-arc{fill:none;stroke:#B88A3B;stroke-width:1.3;opacity:.55;stroke-dasharray:4 6;animation:mpFlow 1.6s linear infinite,mpFade .8s ease both;animation-delay:0s,calc(1.2s + var(--i) * .08s)}
+@keyframes mpFlow{to{stroke-dashoffset:-20}}@keyframes mpFade{from{opacity:0}}
+.mp-hq circle{fill:#fff;stroke:#B5543C;stroke-width:2.5}.mp-hq-r{fill:none!important;animation:mpRing 2.4s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes mpRing{from{transform:scale(1);opacity:.9}to{transform:scale(4.5);opacity:0}}
+.mp-reg{cursor:pointer;outline:none;animation:mpPop .6s cubic-bezier(.3,1.5,.5,1) both;animation-delay:calc(.9s + var(--i) * .07s);transform-box:fill-box;transform-origin:center}
+@keyframes mpPop{from{transform:scale(0);opacity:0}}
+.mp-b{fill:color-mix(in srgb,#2F7A5E calc(var(--a) * 100%),#B88A3B);fill-opacity:.88;stroke:#fff;stroke-width:2.5;transition:.25s;filter:drop-shadow(0 4px 10px rgba(23,58,46,.25))}
+.mp-reg.zero .mp-b{fill:#CFC4A8;filter:none;stroke-width:1.5}
+.mp-reg:hover .mp-b,.mp-reg:focus .mp-b,.mp-reg.on .mp-b{stroke:#173A2E;stroke-width:3.5}
+.mp-reg.on .mp-b{fill:#173A2E}
+.mp-pulse{fill:none;stroke:#2F7A5E;stroke-width:2;opacity:0;animation:mpRing 3s ease-out infinite;animation-delay:calc(var(--i) * .3s)}
+.mp-n{fill:#fff;font-weight:800;font-size:17px;text-anchor:middle;pointer-events:none}
+.mp-l{fill:var(--ink);font-size:13px;font-weight:700;text-anchor:middle;paint-order:stroke;stroke:var(--paper,#fff);stroke-width:4px;pointer-events:none}
+.mp-reg.zero .mp-l{fill:var(--faint);font-weight:500;font-size:11.5px}
+.mp-tip{position:absolute;transform:translate(-50%,-100%);background:#173A2E;color:#fff;border-radius:10px;padding:7px 12px;font-size:12.5px;pointer-events:none;display:flex;flex-direction:column;gap:2px;white-space:nowrap;box-shadow:0 8px 20px -8px rgba(0,0,0,.4);z-index:5}
+.mp-tip span{color:#E2C98A;font-size:12px}
+.mp-side{padding:16px!important;max-height:calc(100vh - var(--top,0px) - 40px);overflow:auto;position:sticky;top:calc(var(--top,0px) + 16px)}
+.mp-ph{display:flex;align-items:center;gap:10px;margin-bottom:12px}.mp-ph h3{margin:0;font-size:18px}.mp-ph small{color:var(--muted);font-size:12.5px}
+.mp-rank{display:flex;flex-direction:column;gap:6px}
+.mp-rank button{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);background:var(--paper,#fff);border-radius:10px;padding:9px 12px;font:inherit;font-size:14px;cursor:pointer;overflow:hidden;color:var(--ink)}
+.mp-rank button i{position:absolute;inset-inline-start:0;top:0;bottom:0;background:rgba(47,122,94,.1);z-index:0}.mp-rank button span,.mp-rank button b{position:relative;z-index:1}
+.mp-rank button:hover{border-color:#2F7A5E}
+.mp-nat{display:flex;align-items:center;gap:10px;width:100%;margin-top:12px;border:1px dashed #B88A3B;background:rgba(184,138,59,.06);border-radius:12px;padding:10px 12px;font:inherit;cursor:pointer;text-align:start;color:var(--ink)}
+.mp-nat svg{width:18px;height:18px;color:#B88A3B}.mp-nat span{flex:1;display:flex;flex-direction:column}.mp-nat small{color:var(--muted);font-size:12px}
+.mp-none{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:6px;font-size:13px}.mp-none b{display:flex;align-items:center;gap:6px}.mp-none b svg{width:15px;height:15px}.mp-none>span{color:var(--muted);font-size:12.5px}
+.mp-secs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}.mp-secs span{display:inline-flex;align-items:center;gap:5px;font-size:12px;background:var(--bg,#F7F4EC);border-radius:999px;padding:3px 10px}.mp-secs i{width:8px;height:8px;border-radius:50%}
+.mp-list{display:flex;flex-direction:column;gap:6px}
+.mp-row{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:10px;border:1px solid transparent;text-decoration:none!important;color:var(--ink)!important}
+a.mp-row:hover{border-color:var(--line);background:var(--bg,#F7F4EC)}
+.mp-row.ro{justify-content:space-between;padding:4px 0}.mp-row.ro a{font-size:13px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mp-row.ro select{width:150px;flex:none}
+.mp-rt{flex:1;min-width:0;display:flex;flex-direction:column}.mp-rt b{font-size:13.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mp-rt small{font-size:11.5px;color:var(--muted)}.mp-rt em{font-style:normal;color:#B88A3B}
+[data-theme="dark"] .mp-map{--mp-land:#1B2C26;--mp-land2:#22372F}[data-theme="dark"] .mp-dot{fill:#5d7a6c}
+@media (max-width:1000px){.mp-wrap{grid-template-columns:1fr}.mp-side{position:static;max-height:none}}
+@media (prefers-reduced-motion:reduce){.mp-edge,.mp-arc,.mp-reg,.mp-pulse,.mp-hq-r{animation:none!important;stroke-dashoffset:0}}
+.mp-pulse{transform-box:fill-box;transform-origin:center}
+.mp-svg.seen .mp-reg,.mp-svg.seen .mp-edge{animation:none;stroke-dashoffset:0}.mp-svg.seen .mp-arc{animation:mpFlow 1.6s linear infinite}
 </style>
 </head>
 <body>
@@ -15489,6 +15535,9 @@ function matchQ(hay, q) {
 
 /* ===== الأيقونات (خطية) ===== */
 const ICONS = {
+  map: '<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.4"/>',
+  bot: '<rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 4v4"/><circle cx="12" cy="3.2" r="1"/><circle cx="9" cy="13.5" r="1.2"/><circle cx="15" cy="13.5" r="1.2"/><path d="M2 13v2M22 13v2"/>',
+  spark: '<path d="M12 3l1.8 4.6L18.5 9.5l-4.7 1.9L12 16l-1.8-4.6L5.5 9.5l4.7-1.9Z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8Z"/>',
   home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>',
   chart: '<path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-8"/><path d="M22 20H2"/>',
   list: '<path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.5" cy="6" r="1"/><circle cx="3.5" cy="12" r="1"/><circle cx="3.5" cy="18" r="1"/>',
@@ -17525,6 +17574,7 @@ const SHARE_SECTIONS = [
   { k: 'reports', l: 'التقارير والتقرير التسويقي', m: ['reports', 'reportsMk'], on: true },
   { k: 'stories', l: 'الإنجازات', m: ['stories'], on: true },
   { k: 'gallery', l: 'معرض الأثر', m: ['gallery'], on: true },
+  { k: 'map', l: 'خريطة الشراكات', m: ['map'], on: true },
   { k: 'calendar', l: 'تقويم الشراكات', m: ['calendar'], on: false },
   { k: 'media', l: 'مركز الصور', m: ['media'], on: false },
   { k: 'process', l: 'مسار الشراكة', m: ['process'], on: false },
@@ -17535,7 +17585,7 @@ const SHARE_DUR = [['1', 'يوم'], ['3', '3 أيام'], ['7', 'أسبوع'], ['
 const shareSaved = () => { try { return JSON.parse(sessionStorage.getItem(SHARE_KEY) || 'null'); } catch (_) { return null; } };
 const shareHas = (k) => !!(App.share && (App.share.sections || []).includes(k));
 const shareRouteOk = (name) => SHARE_SECTIONS.some((s) => shareHas(s.k) && s.m.includes(name));
-const shareFirst = () => { const s = SHARE_SECTIONS.find((x) => shareHas(x.k)); return s ? ({ home: '#/', tale: '#/tale', dashboard: '#/dashboard', partnerships: '#/partnerships', partners: '#/partners', reports: '#/reports', stories: '#/stories', calendar: '#/calendar', gallery: '#/gallery', media: '#/media', process: '#/process' })[s.k] : '#/'; };
+const shareFirst = () => { const s = SHARE_SECTIONS.find((x) => shareHas(x.k)); return s ? ({ home: '#/', tale: '#/tale', dashboard: '#/dashboard', partnerships: '#/partnerships', partners: '#/partners', reports: '#/reports', stories: '#/stories', calendar: '#/calendar', map: '#/map', gallery: '#/gallery', media: '#/media', process: '#/process' })[s.k] : '#/'; };
 /* صلاحيات جلسة الرابط: قراءة الأقسام المختارة فقط، دون تصدير أو تعديل */
 function shareCan(perm) {
   if (perm === 'view.dashboard') return shareHas('dashboard');
@@ -20891,6 +20941,7 @@ function renderPartnership(el, r) {
         ${kv('اسم الشراكة', esc(p.title))}
         ${kv('القطاع', esc(pSector(p)))}
         ${kv('تصنيف المذكرة', esc(p.classification))}
+        ${(() => { const g = pRegion(p); return kv('المنطقة', g.r ? `<a href="#/map">${esc(g.r)}</a>${g.inferred ? ' <span class="chip plain" style="height:20px;font-size:11px">مستنتجة</span>' : ''}` : ''); })()}
         ${kv('تصنيف الشراكة', (p.categories || []).length ? `<div class="tagline">${p.categories.map((c) => `<a class="chip plain cat" href="#/partnerships?category=${encodeURIComponent(c)}">${esc(c)}</a>`).join('')}</div>` : (canEdit ? `<a href="#/partnerships/${p.id}/edit">إضافة تصنيف</a>` : ''))}
         ${kv('تاريخ بدء الشراكة', p.startDate ? fmtDate(p.startDate) : '')}
         ${kv('تاريخ انتهاء الشراكة', p.endDate ? fmtDate(p.endDate) : '')}
@@ -21137,6 +21188,7 @@ function renderPartnershipForm(el, r) {
         ${field('title', 'اسم الشراكة', `<input class="in" id="f_title" data-k="title" value="${esc(s.title)}" placeholder="${esc(pName() || 'يُستخدم اسم الجهة إن تُرك فارغًا')}">`, { hint: 'في ملف الحصر يحمل هذا العمود اسم الجهة الشريكة؛ يمكن تمييز الشراكة باسم مختلف عند تعدد الشراكات مع الجهة نفسها.', full: true })}
         ${lst('sector', 'القطاع', 'sectors', fs.sector, { hint: otherCount ? `يُحفظ على مستوى الجهة، ويسري على ${plural(otherCount, 'شراكة أخرى', 'شراكتين أخريين', 'شراكات أخرى', 'شراكة أخرى')} لها.` : 'يُحفظ على مستوى الجهة.' })}
         ${lst('classification', 'تصنيف المذكرة', 'classifications', s.classification)}
+        ${field('region', 'المنطقة', comboHTML('region', { options: KSA_REGION_NAMES, value: s.region || '', placeholder: (() => { const g = pRegion(s); return g.r ? `مستنتجة: ${g.r} — اختر لتثبيتها` : 'اختر المنطقة'; })() }), { hint: 'تحدد موضع الشراكة على «خريطة الشراكات».' })}
         <div class="span2 cat-field">${lst('categories', 'تصنيف الشراكة', 'categories', s.categories, { multi: true, full: true, add: 'إضافة تصنيف جديد', hint: 'يمكن اختيار أكثر من تصنيف. التصنيف الجديد الذي تكتبه هنا يُحفظ في «القوائم» ويصبح متاحًا لجميع الشراكات.' })}<span class="chip gold plain cat-badge">حقل إضافي</span></div>
       </div>`;
     } else if (st.id === 'term') {
@@ -29325,6 +29377,123 @@ function calMeetingDlg(p, cur = {}) {
   };
 }
 
+/* —— 29b-map.js —— */
+/* =====================================================================
+   خريطة الشراكات التفاعلية: الشراكات على مناطق المملكة الثلاث عشرة
+   — المنطقة من حقل «المنطقة» في الشراكة، وإن لم تُحدَّد تُستنتج من اسم الجهة ونصوص الشراكة (وتظهر «مستنتجة»).
+   — فقاعة لكل منطقة بحجم عدد شراكاتها، وخطوط من الرياض (مقر المؤسسة)، ولوحة جانبية بالشراكات عند النقر.
+   ===================================================================== */
+const KSA_NATIONAL = 'على مستوى المملكة';
+const KSA_REGIONS = [
+  ['الرياض', 46.72, 24.69, ['الرياض', 'الخرج', 'الدرعية', 'المجمعة', 'الزلفي', 'وادي الدواسر', 'الدوادمي', 'شقراء', 'القويعية', 'عفيف']],
+  ['مكة المكرمة', 40.2, 21.6, ['مكة', 'جدة', 'الطائف', 'رابغ', 'الليث', 'القنفذة', 'الكامل', 'خليص', 'الهدا', 'الشفا']],
+  ['المدينة المنورة', 39.3, 24.9, ['المدينة المنورة', 'ينبع', 'العلا', 'خيبر', 'الحناكية']],
+  ['القصيم', 43.97, 26.33, ['القصيم', 'بريدة', 'عنيزة', 'الرس', 'البكيرية']],
+  ['المنطقة الشرقية', 49.6, 25.6, ['المنطقة الشرقية', 'الدمام', 'الخبر', 'الظهران', 'الأحساء', 'الاحساء', 'الهفوف', 'الجبيل', 'القطيف', 'حفر الباطن', 'الخفجي', 'رأس تنورة']],
+  ['عسير', 42.6, 18.6, ['عسير', 'أبها', 'ابها', 'خميس مشيط', 'بيشة', 'النماص', 'تنومة', 'السودة', 'محايل', 'رجال ألمع']],
+  ['تبوك', 36.6, 28.1, ['تبوك', 'نيوم', 'أملج', 'ضباء', 'تيماء']],
+  ['حائل', 41.7, 27.5, ['حائل']],
+  ['الحدود الشمالية', 41.6, 30.4, ['الحدود الشمالية', 'عرعر', 'طريف', 'رفحاء']],
+  ['جازان', 42.6, 17.1, ['جازان', 'جيزان', 'فرسان', 'صبيا', 'أبو عريش', 'صامطة']],
+  ['نجران', 45.0, 17.9, ['نجران', 'شرورة']],
+  ['الباحة', 41.47, 20.0, ['الباحة', 'بلجرشي', 'المندق', 'رغدان']],
+  ['الجوف', 39.3, 29.9, ['الجوف', 'سكاكا', 'دومة الجندل', 'القريات']],
+];
+const KSA_REGION_NAMES = [KSA_NATIONAL, ...KSA_REGIONS.map((r) => r[0])];
+/* كلمة كاملة (مع حروف الجر الملتصقة) — حتى لا تُطابق «الرس» داخل «الرسمي» */
+const MAP_RE = {}; const mapWordRe = (k) => MAP_RE[k] || (MAP_RE[k] = new RegExp(`(^|[^\\u0600-\\u06FF])[وبلف]?${mapNorm(k)}(?=$|[^\\u0600-\\u06FF])`, 'g'));
+const mapNorm = (s) => String(s || '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي');
+/* منطقة الشراكة: المحددة، أو المستنتجة من النصوص */
+function pRegion(p) {
+  if (p.region) return { r: p.region, inferred: false };
+  const pr = partnerById(p.partnerId);
+  const txt = mapNorm([pr && pr.name, p.title, p.cooperationAreas, p.outputs, p.expectedImpact, p.notes].map((x) => (typeof x === 'string' ? x : JSON.stringify(x || ''))).join(' '));
+  let best = null, bestN = 0;
+  for (const [name, , , kws] of KSA_REGIONS) { const n = kws.reduce((t, k) => t + (txt.match(mapWordRe(k)) || []).length, 0); if (n > bestN) { bestN = n; best = name; } }
+  if (best) return { r: best, inferred: true };
+  if (/المملكه|كافه المناطق|جميع المناطق|وطني|الوطنيه|السعوديه/.test(txt)) return { r: KSA_NATIONAL, inferred: true };
+  return { r: '', inferred: true };
+}
+
+function renderMap(el) {
+  const st = App.map = App.map || { sel: '', status: '' };
+  const canEdit = can('edit.partnership') && !App.share;
+  const STATUS = [['', 'الكل'], ['active', 'سارية'], ['soon', 'تنتهي قريبًا'], ['expired', 'منتهية'], ['prep', 'قيد الإعداد']];
+  const base = visiblePartnerships().filter((p) => !p.isDraft && p.stage !== 'cancel');
+  const draw = () => {
+    const list = base.filter((p) => !st.status || (st.status === 'prep' ? ['prep', 'sign'].includes(pStatus(p)) : pStatus(p) === st.status));
+    const R = {}; list.forEach((p) => { const g = pRegion(p); (R[g.r || ''] = R[g.r || ''] || []).push({ p, inferred: g.inferred }); });
+    const max = Math.max(1, ...KSA_REGIONS.map(([n]) => (R[n] || []).length));
+    /* الإسقاط: نفس إسقاط «حكاية الشراكة» */
+    const W = 1000, H = 760, lon0 = 34.4, lon1 = 55.8, lat0 = 16.2, lat1 = 32.3, k = Math.cos(24 * Math.PI / 180);
+    const sc = Math.min((W - 60) / ((lon1 - lon0) * k), (H - 60) / (lat1 - lat0));
+    const ox = (W - (lon1 - lon0) * k * sc) / 2, oy = (H - (lat1 - lat0) * sc) / 2;
+    const xy = (lon, lat) => [ox + (lon - lon0) * k * sc, oy + (lat1 - lat) * sc];
+    const path = TALE_KSA.map(([a, b], i) => { const [x, y] = xy(a, b); return `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`; }).join('') + 'Z';
+    const [hx, hy] = xy(46.72, 24.69);
+    const bubbles = KSA_REGIONS.map(([n, lon, lat], i) => {
+      const L_ = R[n] || [], c = L_.length, [x, y] = xy(lon, lat), r = c ? 14 + Math.sqrt(c / max) * 30 : 6;
+      const act = L_.filter((o) => ['active', 'soon'].includes(pStatus(o.p))).length;
+      const arc = n === 'الرياض' || !c ? '' : `<path class="mp-arc" d="M${hx.toFixed(1)} ${hy.toFixed(1)} Q${((hx + x) / 2).toFixed(1)} ${(Math.min(hy, y) - 60).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}" style="--i:${i}"/>`;
+      return { arc, g: `<g class="mp-reg ${st.sel === n ? 'on' : ''} ${c ? '' : 'zero'}" data-reg="${esc(n)}" style="--i:${i}" tabindex="0" role="button" aria-label="${esc(n)}: ${c} شراكة">
+        ${c ? `<circle class="mp-pulse" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}"/>` : ''}
+        <circle class="mp-b" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" style="--a:${c ? (act / c).toFixed(2) : 0}"/>
+        ${c ? `<text class="mp-n" x="${x.toFixed(1)}" y="${(y + 6).toFixed(1)}">${c}</text>` : ''}
+        <text class="mp-l" x="${x.toFixed(1)}" y="${(y + r + 18).toFixed(1)}">${esc(n)}</text></g>` };
+    });
+    const nat = R[KSA_NATIONAL] || [], none = R[''] || [];
+    const inferredN = list.filter((p) => !p.region && pRegion(p).r).length;
+    const sel = st.sel, items = sel ? (R[sel] || []) : [];
+    const secs = (L_) => { const m = {}; L_.forEach((o) => { const s = pSector(o.p) || 'غير محدد'; m[s] = (m[s] || 0) + 1; }); return Object.entries(m).sort((a, b) => b[1] - a[1]); };
+    const top = KSA_REGIONS.map(([n]) => [n, (R[n] || []).length]).filter((x) => x[1]).sort((a, b) => b[1] - a[1]);
+    const row = ({ p, inferred }) => { const pr = partnerById(p.partnerId); return `<a class="mp-row" href="#/partnerships/${p.id}">${plateHTML(pr, 40)}<span class="mp-rt"><b>${esc(partnerName(p))}</b><small>${esc(p.code || '')}${inferred ? ' · <em>منطقة مستنتجة</em>' : ''}</small></span>${statusChip(p)}</a>`; };
+    const panel = sel ? `<div class="mp-ph"><button class="icon-btn" type="button" data-mpclose title="رجوع">${icon('chevR')}</button><div><h3>${esc(sel)}</h3><small>${plural(items.length, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')}</small></div></div>
+        ${items.length ? `<div class="mp-secs">${secs(items).map(([s, n]) => `<span><i style="background:${SEC_VAR(s)}"></i>${esc(s)} <b>${n}</b></span>`).join('')}</div><div class="mp-list">${items.map(row).join('')}</div>` : '<p class="muted small">لا توجد شراكات في هذه المنطقة ضمن التصفية الحالية.</p>'}`
+      : `<div class="mp-ph"><div><h3>المناطق</h3><small>اضغط على أي منطقة لعرض شراكاتها</small></div></div>
+        <div class="mp-rank">${top.map(([n, c]) => `<button type="button" data-reg="${esc(n)}"><span>${esc(n)}</span><i style="width:${(c / (top[0] ? top[0][1] : 1) * 100).toFixed(0)}%"></i><b>${c}</b></button>`).join('') || '<p class="muted small">لا توجد شراكات بمنطقة محددة بعد.</p>'}</div>
+        ${nat.length ? `<button type="button" class="mp-nat" data-reg="${KSA_NATIONAL}">${icon('flag')}<span><b>${KSA_NATIONAL}</b><small>شراكات يمتد أثرها لكل المناطق</small></span><b>${nat.length}</b></button>` : ''}
+        ${none.length ? `<div class="mp-none"><b>${icon('info')} ${plural(none.length, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')} بلا منطقة</b>${canEdit ? '<span>حدّد منطقتها لتظهر على الخريطة:</span>' : ''}
+          <div class="mp-list">${none.slice(0, 40).map(({ p }) => `<div class="mp-row ro"><a href="#/partnerships/${p.id}">${esc(partnerName(p))}</a>${canEdit ? `<select class="in sm" data-setreg="${p.id}"><option value="">المنطقة…</option>${KSA_REGION_NAMES.map((n) => `<option>${esc(n)}</option>`).join('')}</select>` : ''}</div>`).join('')}</div></div>` : ''}`;
+    el.innerHTML = `<div class="ph"><div><h1>خريطة الشراكات</h1><p>انتشار الشراكات على مناطق المملكة. ${inferredN ? `${plural(inferredN, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')} مستنتجة المنطقة من اسم الجهة ونصوص الشراكة — حدّدها من نموذج الشراكة لتثبيتها.` : ''}</p></div></div>
+      <div class="mp-bar"><div class="seg">${STATUS.map(([k, l]) => `<button type="button" class="${st.status === k ? 'on' : ''}" data-mpst="${k}">${l}</button>`).join('')}</div>
+        <div class="mp-legend"><span><i class="lg-a"></i>سارية</span><span><i class="lg-o"></i>أخرى</span><span><i class="lg-hq"></i>مقر المؤسسة</span></div></div>
+      <div class="mp-wrap"><div class="mp-map panel"><svg viewBox="0 0 ${W} ${H}" class="mp-svg ${st.seen ? 'seen' : ''}" role="img" aria-label="خريطة المملكة بالشراكات">
+          <defs><radialGradient id="mpG" cx="50%" cy="45%" r="70%"><stop offset="0" stop-color="var(--mp-land2)"/><stop offset="1" stop-color="var(--mp-land)"/></radialGradient>
+            <pattern id="mpDots" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" class="mp-dot"/></pattern></defs>
+          <path class="mp-land" d="${path}"/><path class="mp-dots" d="${path}"/><path class="mp-edge" d="${path}"/>
+          ${bubbles.map((b) => b.arc).join('')}
+          <g class="mp-hq"><circle cx="${hx.toFixed(1)}" cy="${hy.toFixed(1)}" r="5"/><circle class="mp-hq-r" cx="${hx.toFixed(1)}" cy="${hy.toFixed(1)}" r="5"/></g>
+          ${bubbles.map((b) => b.g).join('')}
+        </svg><div class="mp-tip" id="mpTip" hidden></div></div>
+        <aside class="mp-side panel">${panel}</aside></div>`;
+    hydrateFiles(el);
+    st.seen = true;
+  };
+  st.seen = false;
+  draw();
+  el.onclick = (e) => {
+    const g = e.target.closest('[data-reg]'); if (g) { st.sel = st.sel === g.dataset.reg ? '' : g.dataset.reg; return draw(); }
+    if (e.target.closest('[data-mpclose]')) { st.sel = ''; return draw(); }
+    const s = e.target.closest('[data-mpst]'); if (s) { st.status = s.dataset.mpst; return draw(); }
+  };
+  el.onkeydown = (e) => { const g = e.target.closest('[data-reg]'); if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); g.click(); } };
+  el.onchange = async (e) => {
+    const s = e.target.closest('[data-setreg]'); if (!s || !s.value) return;
+    const p = D.partnerships.find((x) => x.id === s.dataset.setreg); if (!p) return;
+    p.region = s.value; await Repo.save('partnerships', p); await Repo.log('partnership.update', 'partnership', p.id, p.code, 'المنطقة: ' + p.region);
+    toast(`حُددت منطقة ${partnerName(p)}: ${p.region}`); draw();
+  };
+  el.onmousemove = (e) => {
+    const tip = $('#mpTip', el); if (!tip) return;
+    const g = e.target.closest('.mp-reg');
+    if (!g) { tip.hidden = true; return; }
+    const n = g.dataset.reg, L_ = base.filter((p) => pRegion(p).r === n);
+    const act = L_.filter((p) => ['active', 'soon'].includes(pStatus(p))).length;
+    tip.innerHTML = `<b>${esc(n)}</b><span>${plural(L_.length, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')}${L_.length ? ` · ${act} سارية` : ''}</span>`;
+    const r = $('.mp-map', el).getBoundingClientRect(); tip.style.left = (e.clientX - r.left) + 'px'; tip.style.top = (e.clientY - r.top - 14) + 'px'; tip.hidden = false;
+  };
+}
+
 /* —— 30-palette.js —— */
 /* =====================================================================
    نافذة الوصول السريع (Ctrl+K): بحث في كل شيء وتنفيذ أي إجراء من مكان واحد
@@ -29353,6 +29522,7 @@ function palActions() {
     { t: 'استعراض المنصة', s: 'جولة تعريفية تفاعلية', ic: 'play', kw: 'جولة شرح', run: () => startTour() },
     { t: 'استعراض مسار طلب الشراكة', s: 'من «شارك» حتى الاعتماد أو الرفض', ic: 'convert', kw: 'جولة مسار طلب اعتماد رفض', run: () => startReqTour() },
     { t: 'استعراض دعوة جهة خارجية', s: 'رابط بلا حساب: الجهة تقترح وتتابع الرد', ic: 'send', kw: 'جولة جهة خارجية رابط دعوة مقترح', run: () => startExtTour() },
+    { t: 'خريطة الشراكات', s: 'انتشار الشراكات على مناطق المملكة', ic: 'map', kw: 'خريطة مناطق منطقة جغرافي الرياض جدة', run: () => { location.hash = '#/map'; } },
     { t: 'تقويم الشراكات', s: 'التوقيع والانتهاء والتجديد والاجتماعات', ic: 'calendar', kw: 'تقويم مواعيد اجتماع تجديد انتهاء outlook google', run: () => { location.hash = '#/calendar'; } },
     { t: 'حكاية الشراكة', s: 'صفحة تعريفية متحركة: من الرمل إلى الأثر', ic: 'play', kw: 'حكاية فيلم تعريفي لاندنج صحراء قصة', run: () => { location.hash = '#/tale'; } },
     (isSysAdmin() || AUTH.dev) && { t: 'الدخول بحساب آخر للمعاينة', s: 'لمدير النظام', ic: 'user', kw: 'دور صلاحية مستخدم حساب', run: () => roleDialog() },
@@ -29439,7 +29609,7 @@ function navGroups() {
   const newCount = can('proposal.review') ? props.filter((x) => x.status === 'submitted').length : dept ? props.filter((x) => x.department === Session.dept() && x.status === 'info').length : 0;
   return [
     { id: 'view', t: 'العرض', ic: 'eye', items: [{ h: '#/', ic: 'home', l: 'الرئيسية', m: ['home'] }, Session.role() !== 'viewer' && { h: '#/tasks', ic: 'flag', l: 'مهامي', m: ['tasks'], cnt: (() => { try { return wfTasks().filter((t) => !t.follow).length; } catch (_) { return 0; } })() }, can('view.dashboard') && { h: '#/dashboard', ic: 'chart', l: 'لوحة المؤشرات', m: ['dashboard'] }] },
-    { id: 'pt', t: 'الشراكات', ic: 'leaf', items: [{ h: '#/partnerships', ic: 'layers', l: 'سجل الشراكات', m: ['partnerships', 'partnership', 'pform'] }, can('view.reports') && { h: '#/reports', ic: 'file', l: 'التقارير', m: ['reports', 'reportsMk'] }, can('view.partners') && { h: '#/partners', ic: 'building', l: 'الجهات الشريكة', m: ['partners', 'partner'] }, { h: '#/stories', ic: 'award', l: 'الإنجازات', m: ['stories'] }, { h: '#/media', ic: 'image', l: 'مركز الصور', m: ['media'] }, { h: '#/calendar', ic: 'calendar', l: 'تقويم الشراكات', m: ['calendar'] }, { h: '#/tale', ic: 'play', l: 'حكاية الشراكة', m: ['tale'] }, { h: '#/gallery', ic: 'star', l: 'معرض الأثر', m: ['gallery'] }, { h: '#/process', ic: 'convert', l: 'مسار الشراكة', m: ['process'] }, can('manage.content') && { h: '#/content', ic: 'news', l: 'إدارة المحتوى', m: ['content'] }] },
+    { id: 'pt', t: 'الشراكات', ic: 'leaf', items: [{ h: '#/partnerships', ic: 'layers', l: 'سجل الشراكات', m: ['partnerships', 'partnership', 'pform'] }, can('view.reports') && { h: '#/reports', ic: 'file', l: 'التقارير', m: ['reports', 'reportsMk'] }, can('view.partners') && { h: '#/partners', ic: 'building', l: 'الجهات الشريكة', m: ['partners', 'partner'] }, { h: '#/stories', ic: 'award', l: 'الإنجازات', m: ['stories'] }, { h: '#/media', ic: 'image', l: 'مركز الصور', m: ['media'] }, { h: '#/calendar', ic: 'calendar', l: 'تقويم الشراكات', m: ['calendar'] }, { h: '#/map', ic: 'map', l: 'خريطة الشراكات', m: ['map'] }, { h: '#/tale', ic: 'play', l: 'حكاية الشراكة', m: ['tale'] }, { h: '#/gallery', ic: 'star', l: 'معرض الأثر', m: ['gallery'] }, { h: '#/process', ic: 'convert', l: 'مسار الشراكة', m: ['process'] }, can('manage.content') && { h: '#/content', ic: 'news', l: 'إدارة المحتوى', m: ['content'] }] },
     { id: 'share', t: 'شارك', ic: 'msg', items: [{ h: '#/share', ic: 'send', l: 'شارك بمقترح', m: ['share', 'shareForm', 'shareDone'] }, (can('proposal.review') || dept) && { h: '#/proposals', ic: 'inbox', l: dept ? 'مقترحاتي' : 'المقترحات الواردة', m: ['proposals', 'proposal'], cnt: newCount }] },
     { id: 'adm', t: 'الإدارة', ic: 'lock', items: [can('manage.lists') && { h: '#/settings/lists', ic: 'list', l: 'القوائم', m: ['settings'], only: 'lists' }, (can('manage.lists') || can('manage.content')) && { h: '#/settings', ic: 'settings', l: 'الإعدادات', m: ['settings'], not: 'audit,lists' }, can('view.audit') && { h: '#/settings/audit', ic: 'history', l: 'سجل التغييرات', m: ['settings'], only: 'audit' }] },
   ].map((g) => ({ ...g, items: g.items.filter(Boolean).filter((it) => !App.share || shareNavOk(it)) })).filter((g) => g.items.length);
@@ -29653,6 +29823,7 @@ const ROUTES = [
   { re: /^\/gallery$/, name: 'gallery', fn: renderGallery, full: true },
   { re: /^\/tale$/, name: 'tale', fn: renderTale, full: true },
   { re: /^\/calendar$/, name: 'calendar', fn: renderCalendar },
+  { re: /^\/map$/, name: 'map', fn: renderMap },
   { re: /^\/tasks$/, name: 'tasks', fn: renderTasks },
   { re: /^\/process$/, name: 'process', fn: renderProcess },
   { re: /^\/content$/, name: 'content', fn: renderContent },

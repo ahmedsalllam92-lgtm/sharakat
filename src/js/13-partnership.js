@@ -49,6 +49,7 @@ function renderPartnership(el, r) {
         ${kv('اسم الشراكة', esc(p.title))}
         ${kv('القطاع', esc(pSector(p)))}
         ${kv('تصنيف المذكرة', esc(p.classification))}
+        ${(() => { const g = pRegion(p); return kv('المنطقة', g.r ? `<a href="#/map">${esc(g.r)}</a>${g.inferred ? ' <span class="chip plain" style="height:20px;font-size:11px">مستنتجة</span>' : ''}` : ''); })()}
         ${kv('تصنيف الشراكة', (p.categories || []).length ? `<div class="tagline">${p.categories.map((c) => `<a class="chip plain cat" href="#/partnerships?category=${encodeURIComponent(c)}">${esc(c)}</a>`).join('')}</div>` : (canEdit ? `<a href="#/partnerships/${p.id}/edit">إضافة تصنيف</a>` : ''))}
         ${kv('تاريخ بدء الشراكة', p.startDate ? fmtDate(p.startDate) : '')}
         ${kv('تاريخ انتهاء الشراكة', p.endDate ? fmtDate(p.endDate) : '')}
@@ -295,6 +296,7 @@ function renderPartnershipForm(el, r) {
         ${field('title', 'اسم الشراكة', `<input class="in" id="f_title" data-k="title" value="${esc(s.title)}" placeholder="${esc(pName() || 'يُستخدم اسم الجهة إن تُرك فارغًا')}">`, { hint: 'في ملف الحصر يحمل هذا العمود اسم الجهة الشريكة؛ يمكن تمييز الشراكة باسم مختلف عند تعدد الشراكات مع الجهة نفسها.', full: true })}
         ${lst('sector', 'القطاع', 'sectors', fs.sector, { hint: otherCount ? `يُحفظ على مستوى الجهة، ويسري على ${plural(otherCount, 'شراكة أخرى', 'شراكتين أخريين', 'شراكات أخرى', 'شراكة أخرى')} لها.` : 'يُحفظ على مستوى الجهة.' })}
         ${lst('classification', 'تصنيف المذكرة', 'classifications', s.classification)}
+        ${field('region', 'المنطقة', comboHTML('region', { options: KSA_REGION_NAMES, value: s.region || '', placeholder: (() => { const g = pRegion(s); return g.r ? `مستنتجة: ${g.r} — اختر لتثبيتها` : 'اختر المنطقة'; })() }), { hint: 'تحدد موضع الشراكة على «خريطة الشراكات».' })}
         <div class="span2 cat-field">${lst('categories', 'تصنيف الشراكة', 'categories', s.categories, { multi: true, full: true, add: 'إضافة تصنيف جديد', hint: 'يمكن اختيار أكثر من تصنيف. التصنيف الجديد الذي تكتبه هنا يُحفظ في «القوائم» ويصبح متاحًا لجميع الشراكات.' })}<span class="chip gold plain cat-badge">حقل إضافي</span></div>
       </div>`;
     } else if (st.id === 'term') {

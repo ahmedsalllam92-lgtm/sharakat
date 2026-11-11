@@ -14,6 +14,7 @@ const SHARE_SECTIONS = [
   { k: 'reports', l: 'التقارير والتقرير التسويقي', m: ['reports', 'reportsMk'], on: true },
   { k: 'stories', l: 'الإنجازات', m: ['stories'], on: true },
   { k: 'gallery', l: 'معرض الأثر', m: ['gallery'], on: true },
+  { k: 'map', l: 'خريطة الشراكات', m: ['map'], on: true },
   { k: 'calendar', l: 'تقويم الشراكات', m: ['calendar'], on: false },
   { k: 'media', l: 'مركز الصور', m: ['media'], on: false },
   { k: 'process', l: 'مسار الشراكة', m: ['process'], on: false },
@@ -24,7 +25,7 @@ const SHARE_DUR = [['1', 'يوم'], ['3', '3 أيام'], ['7', 'أسبوع'], ['
 const shareSaved = () => { try { return JSON.parse(sessionStorage.getItem(SHARE_KEY) || 'null'); } catch (_) { return null; } };
 const shareHas = (k) => !!(App.share && (App.share.sections || []).includes(k));
 const shareRouteOk = (name) => SHARE_SECTIONS.some((s) => shareHas(s.k) && s.m.includes(name));
-const shareFirst = () => { const s = SHARE_SECTIONS.find((x) => shareHas(x.k)); return s ? ({ home: '#/', tale: '#/tale', dashboard: '#/dashboard', partnerships: '#/partnerships', partners: '#/partners', reports: '#/reports', stories: '#/stories', calendar: '#/calendar', gallery: '#/gallery', media: '#/media', process: '#/process' })[s.k] : '#/'; };
+const shareFirst = () => { const s = SHARE_SECTIONS.find((x) => shareHas(x.k)); return s ? ({ home: '#/', tale: '#/tale', dashboard: '#/dashboard', partnerships: '#/partnerships', partners: '#/partners', reports: '#/reports', stories: '#/stories', calendar: '#/calendar', map: '#/map', gallery: '#/gallery', media: '#/media', process: '#/process' })[s.k] : '#/'; };
 /* صلاحيات جلسة الرابط: قراءة الأقسام المختارة فقط، دون تصدير أو تعديل */
 function shareCan(perm) {
   if (perm === 'view.dashboard') return shareHas('dashboard');
