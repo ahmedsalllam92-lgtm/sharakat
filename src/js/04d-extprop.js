@@ -7,11 +7,11 @@
 const EXT_STATUS = { submitted: ['تم الاستلام', 'وصل مقترحكم وسيُدرس قريبًا.', 1], review: ['قيد الدراسة', 'تدرس إدارة الشراكات مقترحكم.', 2], info: ['مطلوب معلومات إضافية', 'تواصلت معكم إدارة الشراكات لاستكمال بعض البيانات.', 2], accepted: ['مقبول مبدئيًا', 'قُبل المقترح مبدئيًا، وستتواصل معكم إدارة الشراكات للخطوات التالية.', 3], converted: ['مقبول — بدأت إجراءات الشراكة', 'بدأت إجراءات الشراكة رسميًا.', 3], rejected: ['نعتذر عن عدم القبول', 'شكرًا لاهتمامكم؛ لم يُقبل المقترح في الوقت الحالي.', 3] };
 const extEsc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
 function extShell(inner) {
-  const b = $('#boot'); if (b) b.remove();
-  ['#app', '#shkLogin', '#shkSplash'].forEach((s) => { const e = $(s); if (e) e.remove(); });
-  document.documentElement.classList.remove('sp-lock');
+  const old = $('#extPage'); if (old) old.remove();
+  if (window.__SBX) { /* الاستعراض: الصفحة الخارجية فوق النسخة المعزولة دون إزالتها */ }
+  else { const b = $('#boot'); if (b) b.remove(); ['#app', '#shkLogin', '#shkSplash'].forEach((s) => { const e = $(s); if (e) e.remove(); }); document.documentElement.classList.remove('sp-lock'); }
   const logo = (ASSET_IMG['murooj-logo'] || {}).src;
-  const d = document.createElement('div'); d.className = 'ext-page'; d.id = 'extPage';
+  const d = document.createElement('div'); d.className = 'ext-page' + (window.__SBX ? ' ext-overlay' : ''); d.id = 'extPage';
   d.innerHTML = `<header class="ext-hd">${logo ? `<img src="${logo}" alt="">` : ''}<span>منظومة الشراكات</span></header><main class="ext-main">${inner}</main><footer class="ext-ft">مؤسسة مروج الأهلية — إدارة الشراكات</footer>`;
   document.body.appendChild(d); return d;
 }
@@ -26,7 +26,7 @@ async function extBoot() {
   if (!r || r.error) { extMsg({ expired: 'انتهت صلاحية رابط الدعوة', revoked: 'أُوقف رابط الدعوة', used: 'استُخدم رابط الدعوة من قبل' }[r && r.error] || 'رابط الدعوة غير صالح'); return false; }
   extFormPage(inv, r); return false;
 }
-function extFormPage(inv, info) {
+function extFormPage(inv, info, opts = {}) {
   const sectors = (info.sectors && info.sectors.length ? info.sectors : ['حكومي', 'شبه حكومي', 'خاص', 'غير ربحي', 'تعليمي']);
   const F = [
     ['h', 'بيانات الجهة'],
@@ -50,17 +50,17 @@ function extFormPage(inv, info) {
     if (bad) { const f = form.querySelector('.ext-f.bad'); f && f.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
     data.contactName = data.requesterName; data.contactEmail = data.requesterEmail;
     const btn = form.querySelector('[type=submit]'); btn.disabled = true; btn.textContent = 'جارٍ الإرسال…';
-    let r; try { r = await Cloud.rpc('shk_ext_submit', { p_invite: inv, p_data: data }); } catch (_) { r = { error: 'net' }; }
+    let r; try { r = opts.submit ? await opts.submit(data) : await Cloud.rpc('shk_ext_submit', { p_invite: inv, p_data: data }); } catch (_) { r = { error: 'net' }; }
     if (!r || r.error) { btn.disabled = false; btn.innerHTML = `${icon('send')} إرسال المقترح`; alert(r && r.error === 'missing' ? 'استكملوا الحقول المطلوبة.' : r && r.error === 'invalid' ? 'انتهت صلاحية رابط الدعوة.' : 'تعذّر الإرسال، حاولوا مرة أخرى.'); return; }
     const link = `${location.origin}${location.pathname}?track=${r.track}`;
-    history.replaceState(null, '', location.pathname + '?track=' + r.track);
+    if (!opts.submit) history.replaceState(null, '', location.pathname + '?track=' + r.track);
     d.querySelector('.ext-main').innerHTML = `<div class="ext-card ext-center"><span class="ext-ic ok">${icon('check')}</span><h1>وصل مقترحكم</h1><p>رقم المقترح <b dir="ltr">${extEsc(r.ref)}</b>. احتفظوا برابط المتابعة لمعرفة الحالة ورد إدارة الشراكات:</p>
       <div class="ext-link"><input readonly value="${extEsc(link)}"><button type="button" class="btn" data-copy>${icon('copy')} نسخ</button></div><a class="btn primary" href="${extEsc(link)}">متابعة المقترح</a></div>`;
     d.querySelector('[data-copy]').onclick = async (ev) => { const i = d.querySelector('.ext-link input'); i.select(); try { await navigator.clipboard.writeText(i.value); } catch (_) { document.execCommand('copy'); } ev.target.closest('button').textContent = 'نُسخ'; };
   };
 }
-async function extTrackPage(trk) {
-  let r; try { r = await Cloud.rpc('shk_ext_status', { p_track: trk }); } catch (_) { extMsg('تعذّر فتح صفحة المتابعة', 'تحقق من الاتصال بالإنترنت ثم أعد المحاولة.'); return; }
+async function extTrackPage(trk, opts = {}) {
+  let r; try { r = opts.status ? opts.status() : await Cloud.rpc('shk_ext_status', { p_track: trk }); } catch (_) { extMsg('تعذّر فتح صفحة المتابعة', 'تحقق من الاتصال بالإنترنت ثم أعد المحاولة.'); return; }
   if (!r || r.error) { extMsg('رابط المتابعة غير صالح'); return; }
   const S = EXT_STATUS[r.status] || EXT_STATUS.submitted, step = S[2];
   const steps = [['تم الاستلام', 1], ['قيد الدراسة', 2], ['القرار', 3]];
@@ -70,36 +70,43 @@ async function extTrackPage(trk) {
     <ol class="ext-steps">${steps.map(([l, n]) => `<li class="${n < step ? 'd' : n === step ? 'c' : ''} ${n === 3 && step === 3 ? (r.status === 'rejected' ? 'no' : 'yes') : ''}"><i>${n < step || (n === 3 && step === 3) ? '✓' : n}</i><span>${n === 3 && step === 3 ? S[0] : l}</span></li>`).join('')}</ol>
     <div class="ext-status st-${extEsc(r.status)}"><b>${S[0]}</b><p>${S[1]}</p></div>
     <h2>رسائل إدارة الشراكات</h2>${msgs.length ? `<ul class="ext-msgs">${msgs.map((e) => `<li><small>${fmt(e.at)}${e.to && EXT_STATUS[e.to] ? ' · ' + EXT_STATUS[e.to][0] : ''}</small><p>${extEsc(e.message).replace(/\n/g, '<br>')}</p></li>`).join('')}</ul>` : '<p class="ext-faint">لا توجد رسائل بعد. ستظهر هنا ردود إدارة الشراكات.</p>'}
-    <div class="ext-actions"><button type="button" class="btn" onclick="location.reload()">${icon('history')} تحديث</button></div></div>`);
+    <div class="ext-actions"><button type="button" class="btn" ${opts.status ? 'disabled' : 'onclick="location.reload()"'}>${icon('history')} تحديث</button></div></div>`);
 }
 
 /* ===== الإعدادات ← مقترحات الجهات الخارجية ===== */
+function extExpiry(st) { if (st.days === 'date') { if (!st.date) return null; const d = new Date(st.date + 'T23:59:59'); return d > new Date() ? d : null; } return new Date(Date.now() + (+st.days) * 864e5); }
 function setExtTab(b) {
-  if (!Cloud.on) { b.innerHTML = `<div class="panel"><div class="panel-b">${emptyHTML({ ic: 'send', title: 'روابط الجهات الخارجية تعمل على المنصة المشتركة', text: 'افتح المنصة من رابطها على الإنترنت وسجّل الدخول بحساب إدارة الشراكات.' })}</div></div>`; return; }
-  const st = { label: '', days: '30', uses: '1', made: null, list: null, err: '' };
+  if (!Cloud.on && !window.__SBX) { b.innerHTML = `<div class="panel"><div class="panel-b">${emptyHTML({ ic: 'send', title: 'روابط الجهات الخارجية تعمل على المنصة المشتركة', text: 'افتح المنصة من رابطها على الإنترنت وسجّل الدخول بحساب إدارة الشراكات.' })}</div></div>`; return; }
+  const st = { label: '', days: '30', date: '', uses: '1', made: null, list: null, err: '' };
   const draw = () => {
     b.innerHTML = `<div class="panel sh-new"><div class="panel-h"><h3>${icon('send')} رابط دعوة لجهة خارجية</h3><span class="sub">تقترح الجهة شراكة دون حساب، وتتابع الرد من رابط خاص بها</span></div><div class="panel-b">
-      <div class="grid2"><div class="field"><label for="exLabel">اسم الجهة المدعوة</label><input class="in" id="exLabel" maxlength="120" placeholder="مثال: شركة …" value="${esc(st.label)}"><span class="hint">يظهر مسبقًا في خانة «اسم الجهة» ويمكنها تعديله.</span></div>
-        <div class="field"><label>صلاحية الرابط</label><div class="sh-chips">${[['7', 'أسبوع'], ['30', 'شهر'], ['90', '3 أشهر']].map(([k, l]) => `<button type="button" class="ff-chip ${st.days === k ? 'on' : ''}" data-exd="${k}">${l}</button>`).join('')}</div></div>
-        <div class="field"><label>عدد المقترحات المسموح بها من الرابط</label><div class="sh-chips">${[['1', 'مقترح واحد'], ['5', 'حتى 5'], ['50', 'مفتوح']].map(([k, l]) => `<button type="button" class="ff-chip ${st.uses === k ? 'on' : ''}" data-exu="${k}">${l}</button>`).join('')}</div></div></div>
+      <div class="ex-grid">
+        <div class="field"><label for="exLabel">اسم الجهة المدعوة</label><input class="in" id="exLabel" maxlength="120" placeholder="مثال: شركة …" value="${esc(st.label)}"><span class="hint">يظهر مسبقًا في خانة «اسم الجهة» ويمكنها تعديله.</span></div>
+        <div class="field"><label>صلاحية الرابط</label><div class="sh-chips">${[['1', 'يوم'], ['7', 'أسبوع'], ['30', 'شهر'], ['90', '3 أشهر'], ['date', 'حتى تاريخ']].map(([k, l]) => `<button type="button" class="ff-chip ${st.days === k ? 'on' : ''}" data-exd="${k}">${l}</button>`).join('')}${st.days === 'date' ? `<input class="in" type="date" id="exDate" min="${isoDate(new Date(Date.now() + 864e5))}" max="${isoDate(new Date(Date.now() + 180 * 864e5))}" value="${esc(st.date)}">` : ''}</div>
+          <span class="hint">${(() => { const ex = extExpiry(st); return ex ? `ينتهي الرابط ${esc(fmtDT(ex.toISOString()))} — ويمكن إيقافه في أي وقت من القائمة أدناه` : 'اختر تاريخ الانتهاء من التقويم'; })()}</span></div>
+        <div class="field"><label>عدد المقترحات المسموح بها من الرابط</label><div class="sh-chips">${[['1', 'مقترح واحد'], ['5', 'حتى 5'], ['50', 'مفتوح']].map(([k, l]) => `<button type="button" class="ff-chip ${st.uses === k ? 'on' : ''}" data-exu="${k}">${l}</button>`).join('')}</div></div>
+      </div>
       ${st.err ? `<div class="note warn">${icon('alert')}<span>${esc(st.err)}</span></div>` : ''}
-      <button type="button" class="btn primary" data-exmake>${icon('plus')} إنشاء رابط الدعوة</button>
+      <div class="ex-make"><button type="button" class="btn primary" data-exmake ${extExpiry(st) ? '' : 'disabled'}>${icon('plus')} إنشاء رابط الدعوة</button></div>
       ${st.made ? `<div class="sh-made"><b>${icon('check')} الرابط جاهز — انسخه وأرسله للجهة</b><div class="sh-url"><input class="in" readonly value="${esc(st.made)}" id="exUrl"><button type="button" class="btn" data-excopy>${icon('copy')} نسخ</button></div><small>تصل مقترحات الجهة إلى «المقترحات الواردة» بوسم «جهة خارجية»، والرسالة التي تكتبها عند تغيير حالة المقترح تظهر لها في صفحة المتابعة.</small></div>` : ''}
     </div></div>
     <div class="panel"><div class="panel-h"><h3>روابط الدعوة</h3><span class="sub">${st.list ? st.list.length : '…'}</span></div><div class="panel-b">${!st.list ? '<p class="muted small">جارٍ التحميل…</p>' : !st.list.length ? '<p class="muted small">لم يُنشأ أي رابط بعد.</p>' : `<div class="tbl-wrap"><table class="tbl sh-tbl"><thead><tr><th>الجهة</th><th>الاستخدام</th><th>ينتهي</th><th>الحالة</th><th></th></tr></thead><tbody>${st.list.map((x) => { const live = !x.revoked && new Date(x.expires) > new Date() && x.uses < x.max; return `<tr class="${live ? '' : 'off'}"><td><b>${esc(x.label || 'جهة خارجية')}</b><small class="muted xs" style="display:block">${esc(fmtDT(x.at))}</small></td><td class="small">${x.uses} من ${x.max >= 50 ? '∞' : x.max}</td><td class="small">${esc(fmtDT(x.expires))}</td><td>${x.revoked ? '<span class="chip">موقوف</span>' : live ? '<span class="chip ok">سارٍ</span>' : '<span class="chip">منتهٍ</span>'}</td><td>${live ? `<button type="button" class="btn sm ghost" data-exrevoke="${esc(x.id)}">${icon('x')} إيقاف</button>` : ''}</td></tr>`; }).join('')}</tbody></table></div>`}</div></div>`;
   };
-  const load = async () => { try { st.list = await Cloud.rpc('shk_invite_list', { p_token: Cloud.token() }); } catch (e) { st.list = []; st.err = e.code === 'forbidden' ? 'متاح لإدارة الشراكات ومدير النظام.' : 'لم تُفعَّل روابط الجهات الخارجية على الخادم بعد — يلزم تشغيل ملف supabase/external_proposals.sql مرة واحدة.'; } draw(); };
+  const demo = !!window.__SBX; window.__extDemoList = window.__extDemoList || [];
+  const load = async () => { if (demo) { st.list = window.__extDemoList.slice(); draw(); return; } try { st.list = await Cloud.rpc('shk_invite_list', { p_token: Cloud.token() }); } catch (e) { st.list = []; st.err = e.code === 'forbidden' ? 'متاح لإدارة الشراكات ومدير النظام.' : 'لم تُفعَّل روابط الجهات الخارجية على الخادم بعد — يلزم تشغيل ملف supabase/external_proposals.sql مرة واحدة.'; } draw(); };
   draw(); load();
-  b.oninput = (e) => { if (e.target.id === 'exLabel') st.label = e.target.value; };
+  b.oninput = (e) => { if (e.target.id === 'exLabel') st.label = e.target.value; if (e.target.id === 'exDate') { st.date = e.target.value; draw(); } };
   b.onclick = async (e) => {
     const d = e.target.closest('[data-exd]'); if (d) { st.days = d.dataset.exd; draw(); return; }
     const u = e.target.closest('[data-exu]'); if (u) { st.uses = u.dataset.exu; draw(); return; }
     if (e.target.closest('[data-excopy]')) { const i = $('#exUrl', b); i.select(); try { await navigator.clipboard.writeText(i.value); } catch (_) { document.execCommand('copy'); } toast('نُسخ الرابط'); return; }
     if (e.target.closest('[data-exmake]')) {
+      if (demo) { const ex = extExpiry(st); if (!ex) return; st.made = `${location.origin.replace(/^null|^about:?/, 'https://sharakat-murooj.github.io')}/?propose=a1b2c3d4e5f6…`; window.__extDemoList.unshift({ id: 'demo', label: st.label || 'جهة خارجية', at: nowISO(), expires: ex.toISOString(), max: +st.uses, uses: 0, revoked: false }); await load(); return; }
       try {
-        const r = await Cloud.rpc('shk_invite_create', { p_token: Cloud.token(), p_label: st.label.trim(), p_expires_at: new Date(Date.now() + (+st.days) * 864e5).toISOString(), p_uses: +st.uses });
+        const ex = extExpiry(st); if (!ex) return;
+        const r = await Cloud.rpc('shk_invite_create', { p_token: Cloud.token(), p_label: st.label.trim(), p_expires_at: ex.toISOString(), p_uses: +st.uses });
         st.made = `${location.origin}${location.pathname}?propose=${r.token}`; st.err = '';
-        await Repo.log('invite.create', 'invite', r.id, st.label.trim() || 'جهة خارجية', `صلاحية ${st.days} يومًا`);
+        await Repo.log('invite.create', 'invite', r.id, st.label.trim() || 'جهة خارجية', `حتى ${fmtDT(ex.toISOString())}`);
       } catch (err) { st.err = err.code === 'forbidden' ? 'متاح لإدارة الشراكات ومدير النظام.' : 'تعذّر إنشاء الرابط.'; }
       await load(); return;
     }
@@ -109,4 +116,17 @@ function setExtTab(b) {
       await load();
     }
   };
+}
+
+/* الاستعراض: إرسال المقترح ومتابعته داخل النسخة المعزولة (بلا خادم) */
+async function extDemoSubmit(data) {
+  const t = nowISO(), n = D.proposals.filter((x) => x.external).length + 1;
+  const rec = { ...data, id: uid('pr-ext'), ref: `EXT-${today().getFullYear()}-${String(n).padStart(4, '0')}`, status: 'submitted', external: true, extLabel: data.partnerName, department: 'جهة خارجية', createdAt: t, submittedAt: t, updatedAt: t, createdByRole: 'external', demo: false, partnershipId: null, attachments: [],
+    events: [{ id: uid('ev'), at: t, by: data.requesterName, role: 'external', type: 'submitted', message: 'قُدّم المقترح عبر رابط الدعوة الخارجي' }] };
+  await Repo.save('proposals', rec);
+  return { ref: rec.ref, track: 'demo' };
+}
+function extDemoStatus() {
+  const x = D.proposals.filter((p) => p.external).pop(); if (!x) return { error: 'invalid' };
+  return { ref: x.ref, partnerName: x.partnerName, status: x.status, submittedAt: x.submittedAt, org: D.settings.org.name, events: (x.events || []).filter((e) => ['status', 'submitted'].includes(e.type) && (e.vis || 'all') === 'all').map((e) => ({ at: e.at, type: e.type, to: e.to, message: e.message })) };
 }

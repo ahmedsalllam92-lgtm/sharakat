@@ -15,13 +15,15 @@ function toggleTourMenu() {
   m = document.createElement('div'); m.id = 'tourMenu'; m.className = 'tour-menu'; m.setAttribute('role', 'menu');
   m.innerHTML = `<div class="tm-h">اختر الاستعراض</div>
     <button type="button" role="menuitem" data-tour-start><span class="tm-ic">${icon('play')}</span><span class="tm-t"><b>استعراض المنصة</b><small>جولة على صفحات المنصة ومميزاتها</small></span><kbd>Alt+T</kbd></button>
-    <button type="button" role="menuitem" data-rqtour-start><span class="tm-ic">${icon('convert')}</span><span class="tm-t"><b>مسار طلب الشراكة</b><small>من «شارك» حتى الاعتماد أو الرفض — ${WF_STEPS.indexOf(fin) + 1} مراحل، في شاشة مقسومة</small></span></button>`;
+    <button type="button" role="menuitem" data-rqtour-start><span class="tm-ic">${icon('convert')}</span><span class="tm-t"><b>مسار طلب الشراكة</b><small>من «شارك» حتى الاعتماد أو الرفض — ${WF_STEPS.indexOf(fin) + 1} مراحل، في شاشة مقسومة</small></span></button>
+    <button type="button" role="menuitem" data-exttour-start><span class="tm-ic">${icon('send')}</span><span class="tm-t"><b>دعوة جهة خارجية</b><small>رابط بلا حساب: الجهة تقترح الشراكة وتتابع الرد</small></span></button>`;
   document.body.appendChild(m);
   const b = $('#topbar [data-tourmenu]');
   if (b) { const r = b.getBoundingClientRect(); m.style.top = Math.round(r.bottom + 8) + 'px'; m.style.left = Math.max(12, Math.min(innerWidth - 332, Math.round(r.left + r.width / 2 - 160))) + 'px'; }
   m.onclick = (e) => {
     if (e.target.closest('[data-tour-start]')) { m.remove(); return startTour(); }
     if (e.target.closest('[data-rqtour-start]')) { m.remove(); return startReqTour(); }
+    if (e.target.closest('[data-exttour-start]')) { m.remove(); return startExtTour(); }
   };
   return m;
 }
@@ -84,7 +86,7 @@ async function startReqTour() {
   if (!window.__APP_SRC) return toast('تعذّر تجهيز نسخة الاستعراض.', 'err');
   if (App.tour) endTour();
   RQ.token++; const tk = RQ.token;
-  Object.assign(RQ, { tk, scenes: rqScenes(), i: 0, ended: false, waitChoice: null, accs: {}, paused: false, fast: false, snaps: [], choice: null, rec: null, kind: 'proposal', speed: window.__rqSpeed || +(D.settings.tourSpeed || 1) });
+  Object.assign(RQ, { stageIds: null, tk, scenes: rqScenes(), i: 0, ended: false, waitChoice: null, accs: {}, paused: false, fast: false, snaps: [], choice: null, rec: null, kind: 'proposal', speed: window.__rqSpeed || +(D.settings.tourSpeed || 1) });
   window.__shkGetFile = (id) => Store.getFile(id);
   RQ.base = new Set((D.settings.notifs || []).map((n) => n.id)); RQ.shown = new Set();
   const data = sbxExport();
@@ -233,7 +235,7 @@ function rqProgress() {
   const sc = RQ.scenes[RQ.i], root = $('#rqTour'); if (!root) return;
   $('.tb-txt', root).textContent = `${RQ.i + 1} / ${RQ.scenes.length} · ${sc.t}`;
   $$('.rq-track button', root).forEach((b, k) => { b.classList.toggle('on', k === RQ.i); b.classList.toggle('done', k < RQ.i); });
-  const si = WF_STEPS.findIndex((s) => s.id === sc.stage);
+  const si = RQ.stageIds ? RQ.stageIds.indexOf(sc.stage) : WF_STEPS.findIndex((s) => s.id === sc.stage);
   $$('.rq-stages li', root).forEach((li, k) => { li.classList.toggle('on', k === si); li.classList.toggle('done', k < si); });
   const on = $('.rq-stages li.on', root); on && on.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
 }

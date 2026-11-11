@@ -397,7 +397,12 @@ function setTourTab(b) {
         <div class="row wrap" style="margin-top:16px;gap:10px"><button class="btn primary lg" data-rqtour-start type="button">${icon('play')} بدء استعراض المسار</button></div></div>
         <ol class="tour-list">${WF_STEPS.slice(0, WF_STEPS.indexOf(wfFinal()) + 1).map((s) => `<li><span>${s.n}</span>${esc(s.t)}</li>`).join('')}</ol></div>
       <div class="note" style="margin-top:16px">${icon('info')}<span>أثناء الجولة: المسافة للإيقاف والاستكمال، والسهمان للتنقل، وEsc للإنهاء. ويمكن بدء الجولة من زر «اتجاه التصميم» أسفل الشاشة أو بالاختصار Alt+T.</span></div></div></div>`;
+  b.insertAdjacentHTML('beforeend', `<div class="panel ext-tset" style="margin-top:18px" data-tour="settings-exttour"><div class="panel-h"><h3>دعوة جهة خارجية</h3><span class="sub">استعراض مستقل: رابط بلا حساب تقترح منه جهة خارجية شراكة وتتابع الرد</span></div><div class="panel-b">
+      <div class="tour-intro"><div><p style="line-height:1.9">شاشة مقسومة: يسارًا إدارة الشراكات داخل المنصة، ويمينًا متصفح الجهة الخارجية كما يظهر لها. من إنشاء رابط الدعوة، إلى تعبئة المقترح وإرساله، ووصوله إلى المقترحات الواردة، ثم الرد ومتابعة الجهة للحالة والقرار.</p>
+        <p class="small muted" style="margin-top:8px">يجري في نسخة معزولة: لا تُحفظ أي بيانات ولا يُنشأ أي رابط حقيقي.</p>
+        <div class="row wrap" style="margin-top:16px;gap:10px"><button class="btn primary lg" data-exttour-start type="button">${icon('play')} بدء الاستعراض</button></div></div>
+        <ol class="tour-list"><li><span>1</span>إنشاء رابط الدعوة</li><li><span>2</span>الجهة تفتح الرابط وتملأ المقترح</li><li><span>3</span>وصول المقترح إلى المقترحات الواردة</li><li><span>4</span>الرد على الجهة</li><li><span>5</span>الجهة تتابع الرد والقرار</li></ol></div></div></div>`);
   const sp = $('#tourSpeed', b); sp.value = String(D.settings.tourSpeed || 1);
   sp.onchange = async () => { D.settings.tourSpeed = +sp.value; await Repo.saveSettings(); };
-  b.onclick = (e) => { if (e.target.closest('[data-tour-start]')) startTour(); if (e.target.closest('[data-rqtour-start]')) startReqTour(); };
+  b.onclick = (e) => { if (e.target.closest('[data-tour-start]')) startTour(); if (e.target.closest('[data-rqtour-start]')) startReqTour(); if (e.target.closest('[data-exttour-start]')) startExtTour(); };
 }

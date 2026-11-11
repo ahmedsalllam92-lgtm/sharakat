@@ -24,6 +24,7 @@ function palActions() {
     { t: 'تبديل الوضع النهاري والليلي', s: 'حسب الشكل الحالي', ic: 'moon', kw: 'ليلي نهاري داكن فاتح', run: () => { const b = $('[data-themetoggle]'); b && b.click(); } },
     { t: 'استعراض المنصة', s: 'جولة تعريفية تفاعلية', ic: 'play', kw: 'جولة شرح', run: () => startTour() },
     { t: 'استعراض مسار طلب الشراكة', s: 'من «شارك» حتى الاعتماد أو الرفض', ic: 'convert', kw: 'جولة مسار طلب اعتماد رفض', run: () => startReqTour() },
+    { t: 'استعراض دعوة جهة خارجية', s: 'رابط بلا حساب: الجهة تقترح وتتابع الرد', ic: 'send', kw: 'جولة جهة خارجية رابط دعوة مقترح', run: () => startExtTour() },
     (isSysAdmin() || AUTH.dev) && { t: 'الدخول بحساب آخر للمعاينة', s: 'لمدير النظام', ic: 'user', kw: 'دور صلاحية مستخدم حساب', run: () => roleDialog() },
     ...Object.entries(DESIGNS).filter(([k]) => k !== design()).map(([k, d]) => ({ t: `شكل المنصة: ${d.name}`, s: d.tag, ic: 'palette', kw: 'تصميم اتجاه شكل', run: () => applyDesign(k) })),
   ];
