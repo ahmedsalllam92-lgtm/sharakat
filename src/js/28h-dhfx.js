@@ -7,7 +7,11 @@ function dhFxMount(el) {
   const head = el.querySelector('.dhead'); if (!head) return;
   const cover = head.querySelector('.cover'); if (!cover || cover.querySelector('img.photo')) return; // للصور غلافها
   head.classList.add('dh-live');
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  fxCurrents(cover, head);
+}
+/* تيارات ذهبية متحركة على أي خلفية داكنة (رأس الشراكة، غلاف لوحة الأداء) */
+function fxCurrents(cover, head = cover) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches || cover.querySelector(':scope > .dh-fx')) return;
   const cv = document.createElement('canvas'); cv.className = 'dh-fx'; cv.setAttribute('aria-hidden', 'true');
   cover.appendChild(cv);
   const ctx = cv.getContext('2d'); if (!ctx) return;
@@ -57,3 +61,6 @@ function dhFxMount(el) {
 }
 const _dhfxRender = renderPartnership;
 renderPartnership = function (el, r) { _dhfxRender(el, r); try { dhFxMount(el); } catch (e) { console.warn(e); } };
+/* غلاف لوحة الأداء المفصّلة: تيارات ذهبية متحركة */
+const _boDashRender = renderDashBoard;
+renderDashBoard = function (el, r) { const out = _boDashRender(el, r); try { const c = el.querySelector('.bo-cover-bg'); if (c) fxCurrents(c, el.querySelector('.bo-cover')); } catch (e) { console.warn(e); } return out; };

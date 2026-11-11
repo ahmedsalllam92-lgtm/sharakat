@@ -37,7 +37,7 @@ async def main():
         await go('#/', 1800)
         ok('board home «شركاؤنا» wall shows logo', await E("document.querySelectorAll('#main .plate img').length>=1"))
         await go('#/dashboard?v=brief', 2000)
-        ok('board briefing network shows logo', await E("[...document.querySelectorAll('.bo-net-n image')].some(i=>(i.getAttribute('href')||'').startsWith('blob:'))"))
+        ok('board briefing network shows logo', await E("[...document.querySelectorAll('.bo-orb .orb-n img')].some(i=>(i.getAttribute('src')||'').startsWith('blob:') || (i.getAttribute('src')||'').startsWith('data:'))"))
         # dossier cover
         await go(f'#/partnerships/{pid}')
         await pg.click('[data-dossier]'); await pg.wait_for_timeout(300); await pg.click('[data-dosgo]')

@@ -3,7 +3,7 @@
    رأس داكن بالشعار والاسم، شريط حقائق، المدة والمسار، الهدف والمجالات والمخرجات والأثر، الفريق.
    لا تتضمن أقسام «البيانات الناقصة» ولا مناطق الرفع ولا السجل.
    ===================================================================== */
-async function pcardHTML(p) {
+async function pcPrintHTML(p) {
   const pr = partnerById(p.partnerId) || {}, o = D.settings.org, name = partnerName(p);
   const st = pStatus(p), dl = daysLeft(p), tp = termProgress(p), P = pProfile(p), f = P.fin || {};
   const W = wfStateOf('partnership', p);
@@ -45,7 +45,7 @@ async function pcardHTML(p) {
 }
 async function printPartnershipCard(p) {
   document.querySelectorAll('#pcPrint').forEach((x) => x.remove());
-  const host = document.createElement('div'); host.id = 'pcPrint'; host.innerHTML = await pcardHTML(p);
+  const host = document.createElement('div'); host.id = 'pcPrint'; host.innerHTML = await pcPrintHTML(p);
   document.body.appendChild(host);
   await Promise.all([...host.querySelectorAll('img')].map((im) => (im.complete ? 0 : new Promise((r) => { im.onload = im.onerror = r; setTimeout(r, 2500); }))));
   const html = document.documentElement; html.classList.add('printing-card');

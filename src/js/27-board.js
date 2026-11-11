@@ -139,7 +139,8 @@ function renderHomeBoard(el) {
 
     <section class="bo-journey bo-rv">
       <header class="bo-sh"><span class="bo-num">02</span><div><h2>رحلة الشراكة</h2><p>من فكرة في إدارة إلى أثر موثّق على أرض الواقع</p></div></header>
-      <ol class="bo-steps">${steps.map((s, i) => `<li style="--i:${i}"><a href="${s.h}"><span class="bo-step-n"><i>${BO_AR(i + 1)}</i></span><b class="cu" data-v="${s.n}">${s.n}</b><strong>${s.t}</strong><small>${s.d}</small></a></li>`).join('')}</ol>
+      <div class="bo-jr"><svg class="bo-jr-path" viewBox="0 0 1000 120" preserveAspectRatio="none" aria-hidden="true"><path d="M990 60 C 860 -10, 760 130, 630 60 S 380 -10, 250 60 S 60 130, 10 60" class="base"/><path d="M990 60 C 860 -10, 760 130, 630 60 S 380 -10, 250 60 S 60 130, 10 60" class="flow"/></svg>
+      <ol class="bo-steps bo-steps2">${steps.map((s, i) => { const mx = Math.max(1, ...steps.map((x) => x.n)); return `<li style="--i:${i}"><a href="${s.h}"><span class="bo-jr-ic">${icon(['send', 'layers', 'leaf', 'award'][i] || 'flag')}<em>${BO_AR(i + 1)}</em></span><b class="cu" data-v="${s.n}">${s.n}</b><strong>${s.t}</strong><small>${s.d}</small><span class="bo-jr-bar"><i style="width:${Math.round(s.n / mx * 100)}%"></i></span></a></li>`; }).join('')}</ol></div>
     </section>
 
     ${(D.settings.home.sections.find((x) => x.id === 'golden') || { on: true }).on ? goldSectionHTML(true) : ''}${homeInsightsHTML(true)}
@@ -235,7 +236,9 @@ function renderDashBoard(el) {
   const dt = boDates();
   el.innerHTML = `<div class="bo-dash" id="boDash">
     <header class="bo-cover">
-      <div class="bo-cover-bg" aria-hidden="true">${topoSVG('bo-cover', { W: 1400, H: 520, levels: 12, cols: 60, focus: 'left', cls: 'topo bo-topo' })}</div>
+      <div class="bo-cover-bg" aria-hidden="true">${topoSVG('bo-cover', { W: 1400, H: 520, levels: 12, cols: 60, focus: 'left', cls: 'topo bo-topo' })}
+        <svg class="bo-cover-orn" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet">${[260, 215, 170, 125].map((r, i) => `<circle cx="300" cy="300" r="${r}" class="r${i}"/>`).join('')}${Array.from({ length: 72 }, (_, i) => { const a = i / 72 * Math.PI * 2, r1 = 268, r2 = i % 6 ? 276 : 286; return `<line x1="${(300 + Math.cos(a) * r1).toFixed(1)}" y1="${(300 + Math.sin(a) * r1).toFixed(1)}" x2="${(300 + Math.cos(a) * r2).toFixed(1)}" y2="${(300 + Math.sin(a) * r2).toFixed(1)}"/>`; }).join('')}<path d="M300 40 L320 280 L560 300 L320 320 L300 560 L280 320 L40 300 L280 280Z" class="star"/></svg>
+        ${(ASSET_IMG['murooj-logo-white'] || {}).src ? `<img class="bo-cover-wm" src="${ASSET_IMG['murooj-logo-white'].src}" alt="">` : ''}</div>
       <div class="bo-cover-t">
         <div class="bo-eyebrow"><i></i>إحاطة مجلس الإدارة<span class="bo-class">${icon('lock')} للعرض الرسمي</span></div>
         <h1>محفظة الشراكات الاستراتيجية</h1>
@@ -307,10 +310,10 @@ function boStats(list) {
   let trend = null;
   if (ser) { const ci = Math.max(0, ser.rows.findIndex((r) => r.current)); trend = { now: act.length, ago: ser.rows[Math.max(0, ci - 12)].total, ahead: ser.rows[Math.min(ser.rows.length - 1, ci + 6)].total }; }
   const health = [
-    { k: 'cont', l: 'الاستمرارية', d: 'الموقّعة غير المنتهية', v: signed.length ? Math.round((signed.length - ended.length) / signed.length * 100) : 0 },
-    { k: 'act', l: 'التفعيل', d: 'السارية المفعّلة فعليًا', v: act.length ? Math.round(activated / act.length * 100) : 0 },
-    { k: 'data', l: 'اكتمال البيانات', d: 'حقول ملف الحصر المعبأة', v: complete },
-    { k: 'renew', l: 'أمان الاستحقاقات', d: 'السارية غير المهددة بالانتهاء', v: act.length ? Math.round((act.length - soon.length) / act.length * 100) : 0 },
+    { k: 'cont', l: 'الاستمرارية', d: 'الموقّعة غير المنتهية', how: 'جدّد الشراكات الناجحة قبل انتهائها عبر «تقييم التجديد»، ولا تتركها تنتهي دون قرار.', v: signed.length ? Math.round((signed.length - ended.length) / signed.length * 100) : 0 },
+    { k: 'act', l: 'التفعيل', d: 'السارية المفعّلة فعليًا', how: 'أقرّ «خطة تفعيل المذكرة» (الخطوة 12) وحدّث حالة التفعيل إلى «مفعّلة» عند بدء التنفيذ.', v: act.length ? Math.round(activated / act.length * 100) : 0 },
+    { k: 'data', l: 'اكتمال البيانات', d: 'حقول ملف الحصر المعبأة', how: 'استكمل الحقول الأساسية الناقصة في الشراكات (ضابط الاتصال والبريد والجوال والتواريخ).', v: complete },
+    { k: 'renew', l: 'أمان الاستحقاقات', d: 'السارية غير المهددة بالانتهاء', how: 'اتخذ قرارات التجديد مبكرًا للشراكات التي تنتهي خلال 90 يومًا.', v: act.length ? Math.round((act.length - soon.length) / act.length * 100) : 0 },
   ];
   const score = Math.round(health.reduce((t, h) => t + h.v, 0) / health.length);
   return { nd, signed, act, soon, up, ended, pipe, partners, secMap, complete, activated, props, inProc, ser, trend, health, score };
@@ -352,8 +355,8 @@ function boChSummary(X) {
       <div class="bo-health">
         <div class="bo-health-h"><h3>مؤشر سلامة المحفظة</h3><span class="bo-lvl ${lvl[1]}">${lvl[0]}</span></div>
         <div class="bo-gauge"><svg viewBox="0 0 180 180" aria-hidden="true"><circle cx="90" cy="90" r="${R}" class="bg"/>${Array.from({ length: 40 }, (_, i) => { const a = i / 40 * Math.PI * 2; return `<line x1="${(90 + 80 * Math.sin(a)).toFixed(1)}" y1="${(90 - 80 * Math.cos(a)).toFixed(1)}" x2="${(90 + 84 * Math.sin(a)).toFixed(1)}" y2="${(90 - 84 * Math.cos(a)).toFixed(1)}" class="tk ${i / 40 * 100 < X.score ? 'on' : ''}"/>`; }).join('')}<circle cx="90" cy="90" r="${R}" class="v ${lvl[1]}" stroke-dasharray="${(X.score / 100 * C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 90 90)" style="--c:${C.toFixed(1)}"/></svg>
-          <div class="bo-gauge-t"><b class="cu" data-v="${X.score}" data-fmt="pct">${X.score}%</b><span>من 100</span></div></div>
-        <ul class="bo-hl">${X.health.map((h) => `<li ${tipAttr(`<b>${h.l}</b><br>${h.d}: ${h.v}%`)}><span>${h.l}</span><i><em style="width:${h.v}%" class="${h.v >= 70 ? 'g' : h.v >= 50 ? 'w' : 'r'}"></em></i><b>${h.v}%</b></li>`).join('')}</ul>
+          <div class="bo-gauge-t"><b class="cu" data-v="${X.score}" data-fmt="pct">${X.score}%</b><span>من 100</span></div><span class="bo-gauge-hit" ${tipAttr(`<b>مؤشر سلامة المحفظة — ${X.score}%</b><br><span>متوسط العناصر الأربعة أدناه بأوزان متساوية.</span><br><span>لرفعه: ابدأ بأضعف عنصر — «${esc(X.health.slice().sort((a, b) => a.v - b.v)[0].l)}». مرّر المؤشر على أي عنصر لمعرفة طريقة حسابه وكيف ترفعه.</span>`)}></span></div>
+        <ul class="bo-hl">${X.health.map((h) => `<li class="bo-hl-tip" ${tipAttr(`<b>${h.l} — ${h.v}%</b><br><span>يُحسب: نسبة ${h.d}.</span><br><span>لرفعه: ${h.how}</span>`)}><span>${h.l}</span><i><em style="width:${h.v}%" class="${h.v >= 70 ? 'g' : h.v >= 50 ? 'w' : 'r'}"></em></i><b>${h.v}%</b></li>`).join('')}</ul>
         <p class="bo-note">مؤشر مركّب من ${plural(X.health.length, 'عنصر واحد', 'عنصرين', 'عناصر', 'عنصرًا')} بأوزان متساوية، يُحسب من السجلات المعروضة.</p>
       </div>
     </div>
@@ -492,58 +495,14 @@ function boChProc(X) {
     ${boInsight(tot ? `${P.top ? `أكبر عدد من المذكرات لدى «${esc(P.top[0])}» (${P.top[1]})` : ''}${P.late.length ? `، و${plural(P.late.length, 'مذكرة واحدة تجاوزت', 'مذكرتان تجاوزتا', 'مذكرات تجاوزت', 'مذكرة تجاوزت')} ${lim} يومًا دون انتقال، ويُقترح توجيه الجهات المعنية بتسريعها.` : '، ولا توجد مذكرات متأخرة عن المدة المرجعية.'}` : 'لا توجد طلبات أو مذكرات قيد الإجراء حاليًا.')}`;
 }
 function boChNetwork(X) {
-  const by = new Map();
-  X.nd.forEach((p) => { const pr = partnerById(p.partnerId); if (!pr) return; const e = by.get(pr.id) || { pr, ps: [] }; e.ps.push(p); by.set(pr.id, e); });
-  const secs = [...L('sectors'), 'غير محدد'].filter((s) => [...by.values()].some((e) => (e.pr.sector || 'غير محدد') === s));
-  const W = 980, H = 560, cx = W / 2, cy = H / 2 + 6, RX = 330, RY = 205;
-  const total = by.size || 1;
-  const gapA = 0.22;
-  let a = -Math.PI / 2 + 0.0001;
-  const span = Math.PI * 2 - gapA * secs.length;
-  let arcs = '', links = '', nodes = '', labels = '';
-  const stC = (s) => ST_VAR(s);
-  secs.forEach((s) => {
-    const es = [...by.values()].filter((e) => (e.pr.sector || 'غير محدد') === s).sort((x, y) => y.ps.length - x.ps.length);
-    const a0 = a, a1 = a + span * es.length / total;
-    const P = (ang, rx = RX, ry = RY) => [cx + rx * Math.cos(ang), cy + ry * Math.sin(ang)];
-    const steps = 24; const arcPts = Array.from({ length: steps + 1 }, (_, k) => P(a0 + (a1 - a0) * k / steps, RX + 46, RY + 38));
-    arcs += `<path d="M${arcPts.map((p) => p.map((v) => v.toFixed(1)).join(' ')).join('L')}" class="bo-net-arc" style="stroke:${SEC_VAR(s)}"/>`;
-    const am = (a0 + a1) / 2, [lx, ly] = P(am, RX + 72, RY + 58);
-    labels += `<text x="${lx.toFixed(1)}" y="${(ly + 4).toFixed(1)}" text-anchor="middle" class="bo-net-sec" data-cf="sector|${esc(s)}">${esc(s)} · ${es.length}</text>`;
-    es.forEach((e, k) => {
-      const ang = es.length === 1 ? am : a0 + (a1 - a0) * (k + 0.5) / es.length;
-      const [x, y] = P(ang);
-      const sts = e.ps.map(pStatus); const st = ST_PRIO.find((q) => sts.includes(q)) || sts[0];
-      const r = 15 + Math.min(4, e.ps.length - 1) * 5;
-      const live = ['active', 'soon'].includes(st);
-      const mx = cx + (x - cx) * 0.45 + (y - cy) * 0.12, my = cy + (y - cy) * 0.45 - (x - cx) * 0.06;
-      links += `<path d="M${cx} ${cy}Q${mx.toFixed(1)} ${my.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}" class="bo-net-ln ${live ? 'live' : ''}" style="stroke:${SEC_VAR(s)};stroke-width:${(1.2 + e.ps.length * 1.1).toFixed(1)};--d:${k}"/>`;
-      const href = e.ps.length > 1 && can('view.partners') ? '#/partners/' + e.pr.id : '#/partnerships/' + e.ps[0].id;
-      nodes += `<g class="bo-net-n" data-href="${href}" ${tipAttr(`<b>${esc(e.pr.name)}</b><br>${esc(s)} — ${plural(e.ps.length, 'شراكة واحدة', 'شراكتان', 'شراكات', 'شراكة')}<br>${esc(statusLabel(st))}${e.pr.demo ? ' — تجريبي' : ''}`)} transform="translate(${x.toFixed(1)},${y.toFixed(1)})"><circle r="${r + 4}" class="halo" style="stroke:${stC(st)}"/><circle r="${r}" class="core" style="fill:${SEC_VAR(s)}"/>${e.pr.logoFileId ? `<circle r="${r - 1}" class="lgbg"/><image data-file="${esc(e.pr.logoFileId)}" x="${-(r - 4)}" y="${-(r - 4)}" width="${2 * (r - 4)}" height="${2 * (r - 4)}" preserveAspectRatio="xMidYMid meet"/>` : `<svg x="${-r * 0.5}" y="${-r * 0.5}" width="${r}" height="${r}" viewBox="0 0 24 24" class="bo-net-emb" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[embIcon(e.pr)]}</svg>`}</g>`;
-      const out = Math.cos(ang) > 0.25 ? 'start' : Math.cos(ang) < -0.25 ? 'end' : 'middle';
-      const nm = e.pr.name.length > 22 ? e.pr.name.slice(0, 21) + '…' : e.pr.name;
-      const ox = out === 'start' ? r + 9 : out === 'end' ? -(r + 9) : 0, oy = out === 'middle' ? (Math.sin(ang) > 0 ? r + 17 : -(r + 9)) : 4;
-      labels += `<text x="${(x + ox).toFixed(1)}" y="${(y + oy).toFixed(1)}" text-anchor="${out === 'start' ? 'end' : out === 'end' ? 'start' : 'middle'}" class="bo-net-lab">${esc(nm)}</text>`;
-    });
-    a = a1 + gapA;
-  });
-  const logo = (ASSET_IMG[boardLogoKey()] || {}).src;
-  const multi = [...by.values()].filter((e) => e.ps.length > 1).length;
-  const topSec = secs.map((s) => [s, [...by.values()].filter((e) => (e.pr.sector || 'غير محدد') === s).length]).sort((p, q) => q[1] - p[1])[0];
-  const stUsed = ST_PRIO.filter((k) => X.nd.some((p) => pStatus(p) === k));
+  /* كوكبة الشركاء: المؤسسة في المركز، ولكل قطاع شريحة، والجهات موزعة على حلقات بالتساوي (نفس كوكبة لوحة المؤشرات) */
+  const secs = [...L('sectors'), 'غير محدد'];
+  const g = {}; X.nd.forEach((p) => { const s_ = pSector(p) || 'غير محدد'; (g[s_] = g[s_] || []).push(p); });
+  const order = [...secs.filter((s_) => g[s_]), ...Object.keys(g).filter((s_) => !secs.includes(s_))].sort((a, b) => g[b].length - g[a].length);
+  const topS = order[0];
   return `${boChHead('net')}
-    <div class="bo-net" data-tour="dash-status">
-      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="شبكة الجهات الشريكة حول المؤسسة"><defs><radialGradient id="boNetG"><stop offset="0" class="g0"/><stop offset="1" class="g1"/></radialGradient></defs>
-        <ellipse cx="${cx}" cy="${cy}" rx="${RX}" ry="${RY}" class="bo-net-orbit"/><ellipse cx="${cx}" cy="${cy}" rx="${RX * 0.55}" ry="${RY * 0.55}" class="bo-net-orbit inr"/>
-        ${arcs}${links}
-        <g class="bo-net-c"><circle cx="${cx}" cy="${cy}" r="74" fill="url(#boNetG)"/><circle cx="${cx}" cy="${cy}" r="58" class="plate"/>${logo ? `<image href="${logo}" x="${cx - 44}" y="${cy - 30}" width="88" height="60" preserveAspectRatio="xMidYMid meet"/>` : `<text x="${cx}" y="${cy + 6}" text-anchor="middle" class="bo-net-org">${esc(D.settings.org.name)}</text>`}</g>
-        ${nodes}${labels}</svg>
-      <aside class="bo-net-lg"><h4>قراءة الشبكة</h4><ul>
-        <li><i class="ln"></i>خط متصل: شراكة سارية، ومتقطع: غير سارية</li><li><i class="sz"></i>حجم الدائرة وسماكة الخط: عدد الشراكات مع الجهة</li><li><i class="cl"></i>لون الدائرة: قطاع الجهة، ولون الإطار: حالة شراكتها</li></ul>
-        <div class="bo-net-k">${secs.map((s) => `<button type="button" data-cf="sector|${esc(s)}"><i style="background:${SEC_VAR(s)}"></i>${esc(s)}</button>`).join('')}</div>
-        <div class="bo-net-k st">${stUsed.map((k) => `<span><i style="border-color:${ST_VAR(k)}"></i>${esc(statusLabel(k))}</span>`).join('')}</div></aside>
-    </div>
-    ${boInsight(`ترتبط المؤسسة بـ${boB(by.size)} ${nounFor(by.size, ['جهة', 'جهة', 'جهات', 'جهة'])}${topSec ? `، أكثرها من القطاع ${esc(boSecName(topSec[0]))} (${boB(topSec[1])})` : ''}${multi ? `، ${multi === 1 ? 'واحدة منها تجمعها' : `و${boB(multi)} منها تجمعها`} بالمؤسسة أكثر من شراكة` : ''}. اضغط القطاع لتصفية الإحاطة كلها.`)}`;
+    <div class="bo-orb" data-tour="dash-status">${obOrbit(order, g)}</div>
+    ${boInsight(`ترتبط المؤسسة بـ${boB(new Set(X.nd.map((p) => p.partnerId)).size)} جهة في ${plural(order.length, 'قطاع واحد', 'قطاعين', 'قطاعات', 'قطاعًا')}${topS ? `، أكبرها القطاع ${esc(topS)} بـ${boB(g[topS].length)} ${nounFor(g[topS].length, ['شراكة', 'شراكة', 'شراكات', 'شراكة'])}` : ''}. اضغط القطاع في المفتاح لتصفية الإحاطة، أو الجهة لفتح شراكتها.`)}`;
 }
 
 /* 04 — توزيع المحفظة: مصفوفة القطاع × الحالة (فقاعة لكل خانة بحجم عددها) — أين تتركز الشراكات وفي أي مرحلة هي */
