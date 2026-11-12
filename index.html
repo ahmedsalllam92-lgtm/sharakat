@@ -602,7 +602,7 @@ table.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:14px}
 .dhead .cover{position:absolute;inset:0}
 .dhead .shade{position:absolute;inset:0;background:linear-gradient(0deg,color-mix(in srgb,var(--hero) 94%,transparent) 0%,color-mix(in srgb,var(--hero) 45%,transparent) 62%,color-mix(in srgb,var(--hero) 15%,transparent)),linear-gradient(270deg,color-mix(in srgb,var(--hero) 60%,transparent),transparent 55%)}
 .dhead .illus{top:18px;bottom:auto;left:32px}
-.dhead .cover img.photo{object-position:50% 50%}
+.dhead .cover img.photo{object-position:50% 24%}
 .dhead-in{position:relative;z-index:2;width:100%;max-width:1440px;margin:0 auto;padding:40px 32px 30px;display:flex;gap:24px;align-items:flex-end}
 .dhead h1{color:var(--hero-ink);font-size:clamp(24px,2.6vw,34px);font-weight:500;line-height:1.35}
 .dhead .sub{color:var(--hero-mut);font-size:14px;margin-top:6px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -16333,6 +16333,20 @@ async function restoreBackup(file) {
   for (const c of COLS.filter((x) => x !== 'settings')) { D[c] = p.data[c] || []; await Store.putMany(c, D[c]); }
   await Repo.log('restore', 'system', 'restore', 'استعادة نسخة احتياطية', `نسخة بتاريخ ${fmtDT(p.exportedAt)}`);
 }
+
+/* أي صورة ملف تُضاف للصفحة لاحقًا (نوافذ منبثقة، قوائم، بطاقات…) تُحمّل تلقائيًا حتى لو نسي الكود استدعاء hydrateFiles */
+(() => {
+  if (typeof MutationObserver !== 'function') return;
+  let q = new Set(), t = 0;
+  const flush = () => { t = 0; const roots = [...q]; q = new Set(); roots.forEach((r) => { if (r.isConnected) hydrateFiles(r); }); };
+  new MutationObserver((ms) => {
+    for (const m of ms) for (const n of m.addedNodes) {
+      if (n.nodeType !== 1) continue;
+      if ((n.matches && n.matches('[data-file]')) || (n.querySelector && n.querySelector('[data-file]'))) q.add(n.matches('[data-file]') ? n.parentNode || n : n);
+    }
+    if (q.size && !t) t = requestAnimationFrame(flush);
+  }).observe(document.documentElement, { childList: true, subtree: true });
+})();
 
 /* —— 02b-cloud.js —— */
 /* =====================================================================

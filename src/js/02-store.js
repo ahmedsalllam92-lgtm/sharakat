@@ -169,3 +169,17 @@ async function restoreBackup(file) {
   for (const c of COLS.filter((x) => x !== 'settings')) { D[c] = p.data[c] || []; await Store.putMany(c, D[c]); }
   await Repo.log('restore', 'system', 'restore', 'استعادة نسخة احتياطية', `نسخة بتاريخ ${fmtDT(p.exportedAt)}`);
 }
+
+/* أي صورة ملف تُضاف للصفحة لاحقًا (نوافذ منبثقة، قوائم، بطاقات…) تُحمّل تلقائيًا حتى لو نسي الكود استدعاء hydrateFiles */
+(() => {
+  if (typeof MutationObserver !== 'function') return;
+  let q = new Set(), t = 0;
+  const flush = () => { t = 0; const roots = [...q]; q = new Set(); roots.forEach((r) => { if (r.isConnected) hydrateFiles(r); }); };
+  new MutationObserver((ms) => {
+    for (const m of ms) for (const n of m.addedNodes) {
+      if (n.nodeType !== 1) continue;
+      if ((n.matches && n.matches('[data-file]')) || (n.querySelector && n.querySelector('[data-file]'))) q.add(n.matches('[data-file]') ? n.parentNode || n : n);
+    }
+    if (q.size && !t) t = requestAnimationFrame(flush);
+  }).observe(document.documentElement, { childList: true, subtree: true });
+})();
