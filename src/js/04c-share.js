@@ -15,6 +15,7 @@ const SHARE_SECTIONS = [
   { k: 'stories', l: 'الإنجازات', m: ['stories'], on: true },
   { k: 'gallery', l: 'معرض الأثر', m: ['gallery'], on: true },
   { k: 'map', l: 'خريطة الشراكات', m: ['map'], on: true },
+  { k: 'strategy', l: 'الارتباط الاستراتيجي', m: ['strategy'], on: false },
   { k: 'calendar', l: 'تقويم الشراكات', m: ['calendar'], on: false },
   { k: 'media', l: 'مركز الصور', m: ['media'], on: false },
   { k: 'process', l: 'مسار الشراكة', m: ['process'], on: false },

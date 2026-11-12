@@ -130,7 +130,7 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
     const coop = richItems(p.cooperationAreas), outs = richItems(p.outputs), imps = richItems(p.expectedImpact);
     const short = (it, n = 90) => { const s = (it.title || it.text || '').replace(/\s+/g, ' ').trim(); return s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : s; };
     const ico = (t) => (typeof mkIconFor === 'function' ? mkIconFor(t) : 'link');
-    const goals = (p.goalsLinked || []).map((k) => (goalCodes().find((g) => g.k === k) || {}).t).filter(Boolean);
+    const goals = pStrat(p).goals.map((k) => (goalCodes().find((g) => g.k === k) || {}).t).filter(Boolean);
     const years = p.startDate && p.endDate ? Math.max(1, Math.round((parseDate(p.endDate) - parseDate(p.startDate)) / (365.25 * 864e5) * 10) / 10) : null;
     const signed = st.S.signed && st.S.signed.status === 'done' && !st.S.signed.legacy ? st.S.signed.at : null;
     const renews = p.renewals || [];

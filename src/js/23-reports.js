@@ -5,6 +5,7 @@ const RPT_SECTIONS = [
   { k: 'portfolio', l: 'لمحة عن المحفظة المختارة (رسوم)', g: 'التقرير' },
   { k: 'summary', l: 'ملخص الشراكات المختارة', g: 'التقرير' },
   { k: 'partners', l: 'الجهات الشريكة وشعاراتها', g: 'التقرير' },
+  { k: 'strategy', l: 'الارتباط بالأهداف الاستراتيجية', g: 'التقرير' },
   { k: 'gallery', l: 'معرض صور الشراكات', g: 'التقرير' },
   { k: 'pcover', l: 'غلاف لكل شراكة', g: 'الشراكة' },
   { k: 'story', l: 'قصة الأثر (شريحة تسويقية)', g: 'الشراكة' },
@@ -126,6 +127,7 @@ function rptSlides() {
     const prs = Object.keys(cnt).map((id) => ({ pr: partnerById(id), n: cnt[id] })).filter((x) => x.pr).sort((a, b) => (!!b.pr.logoFileId - !!a.pr.logoFileId) || b.n - a.n || a.pr.name.localeCompare(b.pr.name, 'ar'));
     if (prs.length) chunk(prs, 15).forEach((part, i, all) => add({ t: 'partners', kicker: D.settings.org.dept, title: 'الجهات الشريكة' + (all.length > 1 ? ` (${i + 1}/${all.length})` : ''), rows: part, total: prs.length }));
   }
+  if (rptOn('strategy') && ps.length && typeof stratSummary === 'function') { const SS = stratSummary(ps); if (SS.goals.length) add({ t: 'strategy', kicker: D.settings.org.dept, title: 'الارتباط بالأهداف الاستراتيجية', S: SS }); }
   ps.forEach((p) => {
     const id = p.id, pr = partnerById(p.partnerId), name = rptVal(`${id}.name`, partnerName(p));
     const head = { pid: id, pname: name, code: p.code || '' };
@@ -177,7 +179,7 @@ function rptSlides() {
   S.forEach((s) => { if (s.t === 'toc') s.pages = firstIdx; });
   return S.map((s, i) => ({ ...s, nav: navLabel(s), theme: rptThemeKey(), bg: RC.page, els: specFor(s, i, S.length) }));
 }
-function navLabel(s) { return { story: 'قصة الأثر', hero: 'الرقم البطل', cover: 'الغلاف', toc: 'الفهرس', portfolio: 'لمحة المحفظة', summary: 'ملخص الشراكات', partners: 'الجهات الشريكة', gallery: 'معرض الصور', perf: 'الأداء والتقييم', end: 'الخاتمة', pcover: `غلاف: ${s.pname}`, exec: 'الملخص التنفيذي', overview: 'نظرة عامة', partner: 'الجهة الشريكة', team: 'الفريق', activity: 'الإنجازات', history: 'السجل' }[s.t] || (s.title || ''); }
+function navLabel(s) { return { story: 'قصة الأثر', hero: 'الرقم البطل', cover: 'الغلاف', toc: 'الفهرس', portfolio: 'لمحة المحفظة', summary: 'ملخص الشراكات', partners: 'الجهات الشريكة', strategy: 'الأهداف الاستراتيجية', gallery: 'معرض الصور', perf: 'الأداء والتقييم', end: 'الخاتمة', pcover: `غلاف: ${s.pname}`, exec: 'الملخص التنفيذي', overview: 'نظرة عامة', partner: 'الجهة الشريكة', team: 'الفريق', activity: 'الإنجازات', history: 'السجل' }[s.t] || (s.title || ''); }
 
 /* — مواصفة كل شريحة: قائمة عناصر بإحداثيات ثابتة — */
 function specFor(s, i, total) {
@@ -240,6 +242,20 @@ function specFor(s, i, total) {
       E.push(card(x, y, cw, chh), ...logoEl(x + (cw - d) / 2, y + 12, d, pr));
       E.push(P.text(x + 12, y + 12 + d + 6, cw - 24, chh - d - 50, pr.name, { size: fitSize(pr.name, cw - 24, chh - d - 50, 15, 10, 1.25), bold: true, align: 'center', valign: 'middle', lh: 1.25 }));
       E.push(P.text(x + 12, y + chh - 26, cw - 24, 20, `${pr.sector || ''}${pr.sector ? ' · ' : ''}${n === 1 ? 'شراكة واحدة' : n === 2 ? 'شراكتان' : n + ' شراكات'}`, { size: 12, color: RC.mut, align: 'center', lh: 1.3 }));
+    });
+    return frame(E, s, s.title, i, total);
+  }
+  if (s.t === 'strategy') {
+    const S = s.S, n = S.goals.length, gap = 12, rh = Math.min(84, (BH - 70 - (n - 1) * gap) / n), maxG = Math.max(1, ...S.goals.map((g) => g.ps.length)), W = SW - 2 * MX;
+    const pct = S.total ? Math.round(S.linked.length / S.total * 100) : 0;
+    E.push(P.text(rx(MX, W), BY, W, 40, `${pct}% من الشراكات المختارة مرتبطة بالأهداف (${S.linked.length} من ${S.total})  ·  ${S.goalsOn} من ${n} أهداف تخدمها شراكات  ·  ${S.initsOn} من ${S.initsAll} مبادرات`, { size: 16, bold: true, color: RC.priT, valign: 'middle', lh: 1.3 }));
+    S.goals.forEach((g, k) => {
+      const y = BY + 56 + k * (rh + gap), on = g.ps.length > 0, bw = 300, gi = g.inits.filter((i) => i.ps.length).length;
+      E.push(card(MX, y, W, rh, { r: 12 }), P.circ(SW - MX - 18 - 52, y + (rh - 52) / 2, 52, on ? RC.pri : RC.track), P.text(SW - MX - 18 - 52, y + (rh - 52) / 2, 52, 52, g.k, { size: 15, bold: true, color: on ? RC.white : RC.mut, align: 'center', valign: 'middle', lh: 1 }));
+      E.push(P.text(MX + bw + 150, y, W - bw - 150 - 90, rh, g.t, { size: fitSize(g.t, W - bw - 240, rh - 16, 16, 11, 1.35), bold: true, color: on ? RC.ink : RC.mut, valign: 'middle', lh: 1.35 }));
+      E.push(P.rect(MX + 130, y + rh / 2 - 6, bw, 12, RC.track, { r: 6 }));
+      if (on) E.push(P.rect(MX + 130 + bw * (1 - g.ps.length / maxG), y + rh / 2 - 6, Math.max(10, bw * g.ps.length / maxG), 12, RC.petrol2, { r: 6 }));
+      E.push(P.text(MX + 18, y, 104, rh, on ? `${g.ps.length} ${g.ps.length === 1 ? 'شراكة' : 'شراكات'}\n${gi}/${g.inits.length} مبادرات` : 'فجوة\nبلا شراكات', { size: 14, bold: true, color: on ? RC.priT : RC.clay, align: 'left', valign: 'middle', lh: 1.4, firstBold: true }));
     });
     return frame(E, s, s.title, i, total);
   }
@@ -521,7 +537,7 @@ function FileCache_src(id) { if (id.startsWith('lib:')) return (IMG_LIB[id.slice
 /* — الصفحة — */
 /* — قوالب القصة الجاهزة — */
 const RPT_PRESETS = [
-  { k: 'brief', t: 'التقرير الموجز', d: 'صورة سريعة للمحفظة وشعارات الجهات، ثم شريحة واحدة لكل شراكة بصورتها وحالتها وأرقامها، ومعرض صور ختامي.', who: 'للقيادة والاجتماعات', use: 'PowerPoint وPDF · شرائح قليلة ومركّزة', ic: 'chart', secs: ['cover', 'toc', 'partners', 'portfolio', 'summary', 'exec', 'gallery', 'end'] },
+  { k: 'brief', t: 'التقرير الموجز', d: 'صورة سريعة للمحفظة وشعارات الجهات، ثم شريحة واحدة لكل شراكة بصورتها وحالتها وأرقامها، ومعرض صور ختامي.', who: 'للقيادة والاجتماعات', use: 'PowerPoint وPDF · شرائح قليلة ومركّزة', ic: 'chart', secs: ['cover', 'toc', 'partners', 'portfolio', 'strategy', 'summary', 'exec', 'gallery', 'end'] },
   { k: 'full', t: 'التقرير التفصيلي', d: 'كل مكونات كل شراكة: الغلاف والقصة والبيانات والتقييم ومسار الإجراء والمواعيد والفريق والإنجازات والصور والسجل، مع شعارات الجهات.', who: 'للتوثيق والأرشفة والمراجعة', use: 'PDF للطباعة · أشمل تقرير', ic: 'layers', secs: null },
 ];
 const RPT_QUICK = [

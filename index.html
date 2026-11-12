@@ -8478,6 +8478,63 @@ html.printing-bp.bp-dark,html.printing-bp.bp-dark body{background:#0E1613!import
 .dos-opt input{width:15px;height:15px;flex:none;margin:0}
 .dos-opt em{flex:none;font-size:11px;padding:0 7px}
 .dos-opt.wide{margin-top:6px}
+/* ===== الارتباط الاستراتيجي ===== */
+.sg-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.sg-k{background:var(--paper,#fff);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:2px;position:relative;overflow:hidden}
+.sg-k::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:4px;background:var(--petrol-3,#2F7A5E)}
+.sg-k.pri::before{background:var(--gold,#B08A3E)}.sg-k.warn::before{background:#B5543C}
+.sg-k b{font-size:28px;font-weight:800;line-height:1.1;color:var(--ink)}.sg-k span{font-size:13px;color:var(--muted)}.sg-k small{font-size:12px;color:var(--faint)}
+.sg-goals{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.sg-g{background:var(--paper,#fff);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.sg-g.gap{border-style:dashed}
+.sg-g header{display:flex;align-items:flex-start;gap:12px}
+.sg-code{flex:none;display:inline-grid;place-items:center;min-width:44px;height:30px;padding:0 8px;border-radius:9px;background:var(--petrol,#0F4433);color:#fff;font-size:13px;font-weight:800;letter-spacing:.5px;direction:ltr}
+.sg-g.gap .sg-code{background:var(--paper-3,#E6EDEA);color:var(--muted)}
+.sg-g h3{flex:1;margin:3px 0 0;font-size:14.5px;line-height:1.55;font-weight:700}
+.sg-n{flex:none;text-align:center;line-height:1}.sg-n b{display:block;font-size:26px;font-weight:800;color:var(--petrol-3,#2F7A5E)}.sg-n small{font-size:11px;color:var(--muted)}
+.sg-g.gap .sg-n b{color:var(--faint)}
+.sg-bar{height:6px;border-radius:3px;background:var(--paper-3,#EEF3F1);margin:12px 0 10px;overflow:hidden}.sg-bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--petrol-3,#2F7A5E),var(--gold,#B08A3E))}
+.sg-inits{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.sg-inits li{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px dashed var(--line)}
+.sg-it{flex:1;min-width:0;font-size:13px;color:var(--ink-2);display:flex;gap:8px;align-items:baseline}
+.sg-it em{font-style:normal;font-size:11px;font-weight:700;color:var(--gold-ink,#8A5E10);background:var(--sand,#F5EDDB);border-radius:6px;padding:0 6px;flex:none}
+.sg-inits li.gap .sg-it{color:var(--muted)}
+.sg-ps{display:flex;gap:4px;align-items:center;flex-wrap:wrap;justify-content:flex-end;max-width:58%}
+.sg-ps.wrap{max-width:none;justify-content:flex-start;gap:8px}
+.sg-p{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper,#fff);border-radius:999px;padding:2px 10px 2px 3px;font:inherit;font-size:12px;color:var(--ink);text-decoration:none;cursor:pointer;max-width:220px}
+.sg-p span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sg-p .plate{flex:none}.sg-p .ic{width:14px;height:14px;color:var(--petrol-3)}
+.sg-p:hover{border-color:var(--petrol-3)}
+.sg-inits .sg-p > span{display:none}.sg-inits .sg-p{padding:2px;border-radius:50%}
+.sg-more{font-size:11.5px;color:var(--muted);font-weight:700;padding:0 4px}
+.sg-gap{font-size:11.5px;font-weight:700;color:#B5543C;background:color-mix(in srgb,#B5543C 10%,transparent);border-radius:999px;padding:2px 10px;white-space:nowrap}
+.sg-noinit{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}.sg-noinit small{display:block;color:var(--muted);margin-bottom:6px;font-size:12px}.sg-noinit .sg-ps{max-width:none;justify-content:flex-start}
+.sg-un h2{display:flex;align-items:center;gap:8px;font-size:16px;margin:0 0 12px}.sg-un h2 .ic{width:18px;height:18px;color:#B5543C}
+.sg-mx-s{overflow:auto;max-height:70vh}
+.sg-mx{width:100%;border-collapse:separate;border-spacing:0;font-size:13px}
+.sg-mx th{position:sticky;top:0;background:var(--paper-2,#F3EFE4);padding:9px 8px;font-weight:700;text-align:center;z-index:1;direction:ltr}
+.sg-mx th:first-child{text-align:start;direction:rtl}
+.sg-mx td{padding:5px 8px;border-bottom:1px solid var(--line);text-align:center}
+.sg-mx td:first-child{text-align:start}
+.sg-mx-p{display:inline-flex;align-items:center;gap:8px}.sg-mx-p a{color:var(--ink);text-decoration:none;font-weight:600}.sg-mx-p a:hover{color:var(--petrol-3)}
+.sg-cell{width:34px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--paper,#fff);cursor:pointer;display:inline-grid;place-items:center;color:transparent;transition:.15s}
+.sg-cell .ic{width:16px;height:16px}
+.sg-cell:hover:not(:disabled){border-color:var(--petrol-3)}
+.sg-cell.on{background:var(--petrol-3,#2F7A5E);border-color:var(--petrol-3,#2F7A5E);color:#fff}
+.sg-cell:disabled{cursor:default}
+.sg-vw button .ic{width:15px;height:15px}
+.sg-dlg{display:flex;flex-direction:column;gap:8px}
+.sg-dg{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.sg-dg.on{border-color:var(--petrol-3);background:color-mix(in srgb,var(--petrol-3) 6%,var(--paper))}
+.sg-dgh{display:flex;align-items:center;gap:10px;cursor:pointer}.sg-dgh b{font-size:13.5px;line-height:1.5}
+.sg-di{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 2px;padding-inline-start:28px}
+.sg-di label{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--ink-2);cursor:pointer;line-height:1.5}
+.sg-dg input{accent-color:var(--petrol)}
+.sg-pg{display:flex;flex-direction:column;gap:10px}
+.sg-pgi{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--paper-2,#F7F4EC)}
+.sg-pgi b{font-size:14px;line-height:1.6}.sg-pgi ul{margin:6px 0 0;padding-inline-start:18px;font-size:13px;color:var(--ink-2)}
+@media (max-width:900px){.sg-kpis{grid-template-columns:1fr 1fr}.sg-goals{grid-template-columns:1fr}.sg-di{grid-template-columns:1fr}.sg-ps{max-width:50%}}
+@media print{.sg-vw,.ph-actions{display:none!important}.sg-g{break-inside:avoid}}
 </style>
 </head>
 <body>
@@ -17835,6 +17892,7 @@ const SHARE_SECTIONS = [
   { k: 'stories', l: 'الإنجازات', m: ['stories'], on: true },
   { k: 'gallery', l: 'معرض الأثر', m: ['gallery'], on: true },
   { k: 'map', l: 'خريطة الشراكات', m: ['map'], on: true },
+  { k: 'strategy', l: 'الارتباط الاستراتيجي', m: ['strategy'], on: false },
   { k: 'calendar', l: 'تقويم الشراكات', m: ['calendar'], on: false },
   { k: 'media', l: 'مركز الصور', m: ['media'], on: false },
   { k: 'process', l: 'مسار الشراكة', m: ['process'], on: false },
@@ -21401,7 +21459,7 @@ function renderPartnership(el, r) {
   const photos = partnershipPhotos(p);
   const kv = (label, val, full) => `<div class="${full ? 'full' : ''}"><dt>${esc(label)}</dt><dd>${val || '<span class="faint">—</span>'}</dd></div>`;
   const wfHTML = wfSectionHTML('partnership', p);
-  const secs = [wfHTML && ['wf', 'مسار المذكرة'], ['profile', 'التصنيف والتقييم'], ['ov', 'نظرة عامة'], internal && ['files', 'الملفات والصور'], internal && can('edit.partnership') && !App.share && ['portal', 'بوابة الشريك'], ['coop', 'مجالات التعاون'], ['impact', 'الأثر والمخرجات'], internal && ['follow', 'المتابعة'], ['contact', 'التواصل'], stories.length && ['stories', 'الإنجازات'], prop && ['proposal', 'المقترح الأصلي'], internal && ['admin', 'بيانات إدارية'], internal && ['log', 'السجل']].filter(Boolean);
+  const secs = [wfHTML && ['wf', 'مسار المذكرة'], ['profile', 'التصنيف والتقييم'], ['ov', 'نظرة عامة'], ['strat', 'الاستراتيجية'], internal && ['files', 'الملفات والصور'], internal && can('edit.partnership') && !App.share && ['portal', 'بوابة الشريك'], ['coop', 'مجالات التعاون'], ['impact', 'الأثر والمخرجات'], internal && ['follow', 'المتابعة'], ['contact', 'التواصل'], stories.length && ['stories', 'الإنجازات'], prop && ['proposal', 'المقترح الأصلي'], internal && ['admin', 'بيانات إدارية'], internal && ['log', 'السجل']].filter(Boolean);
   el.innerHTML = `
   <div class="dhead" data-tour="detail-head">${coverHTML(p.id + (pr ? pr.name : ''), p.coverFileId, { W: 1600, H: 420, levels: 18, cols: 90 })}<div class="shade"></div>
     <a class="back no-print" href="#/partnerships">${icon('arrowR')} سجل الشراكات</a>
@@ -21441,6 +21499,7 @@ function renderPartnership(el, r) {
         ${kv('تفعيل الشراكة', esc(p.activation))}
         ${kv('التقاطع مع الإدارات', (p.departments || []).length ? `<div class="tagline">${p.departments.map((d) => `<span class="chip plain">${esc(d)}</span>`).join('')}</div>` : '', true)}
       </dl></section>
+    ${stratSectionHTML(p, canEdit)}
     ${internal && can('edit.partnership') && !App.share ? portalSectionHTML(p) : ''}
     ${internal ? `<section class="dsec" id="files" data-tour="detail-files"><h2>الملفات والصور <span class="src">تقارير الشراكة من ملف الحصر</span></h2>
       <p class="small muted" style="margin:-6px 0 16px">${canEdit ? 'ارفع الملفات مباشرة في التصنيف المناسب أو اسحبها إليه. تُحفظ في هذا المتصفح، ولا تظهر المستندات في الواجهة التعريفية؛ تظهر صور الشراكة فقط إذا كانت الشراكة منشورة.' : 'ملفات الشراكة وصورها.'}</p>
@@ -21496,6 +21555,7 @@ function renderPartnership(el, r) {
   portalBind(el, p);
   el.onclick = async (e) => {
     const gs = e.target.closest('[data-gstar]'); if (gs) { e.preventDefault(); return toggleGolden(p, gs); }
+    if (e.target.closest('[data-sgedit]')) return stratLinkDlg(p, () => rerenderKeep());
     const lt = e.target.closest('[data-logtg]'); if (lt) { const sec = lt.closest('.dlog'); const on = sec.classList.toggle('open'); lt.setAttribute('aria-expanded', on); return; }
     const fx = e.target.closest('[data-anchor-to]');
     if (fx) { e.preventDefault(); const t = $('#' + fx.dataset.anchorTo, el); if (t) window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 124, behavior: 'smooth' }); return; }
@@ -22000,7 +22060,7 @@ async function dossierHTML(p, { secs = new Set(DOS_SECS.filter((x) => x[2]).map(
     const coop = richItems(p.cooperationAreas), outs = richItems(p.outputs), imps = richItems(p.expectedImpact);
     const short = (it, n = 90) => { const s = (it.title || it.text || '').replace(/\s+/g, ' ').trim(); return s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : s; };
     const ico = (t) => (typeof mkIconFor === 'function' ? mkIconFor(t) : 'link');
-    const goals = (p.goalsLinked || []).map((k) => (goalCodes().find((g) => g.k === k) || {}).t).filter(Boolean);
+    const goals = pStrat(p).goals.map((k) => (goalCodes().find((g) => g.k === k) || {}).t).filter(Boolean);
     const years = p.startDate && p.endDate ? Math.max(1, Math.round((parseDate(p.endDate) - parseDate(p.startDate)) / (365.25 * 864e5) * 10) / 10) : null;
     const signed = st.S.signed && st.S.signed.status === 'done' && !st.S.signed.legacy ? st.S.signed.at : null;
     const renews = p.renewals || [];
@@ -25162,6 +25222,7 @@ const RPT_SECTIONS = [
   { k: 'portfolio', l: 'لمحة عن المحفظة المختارة (رسوم)', g: 'التقرير' },
   { k: 'summary', l: 'ملخص الشراكات المختارة', g: 'التقرير' },
   { k: 'partners', l: 'الجهات الشريكة وشعاراتها', g: 'التقرير' },
+  { k: 'strategy', l: 'الارتباط بالأهداف الاستراتيجية', g: 'التقرير' },
   { k: 'gallery', l: 'معرض صور الشراكات', g: 'التقرير' },
   { k: 'pcover', l: 'غلاف لكل شراكة', g: 'الشراكة' },
   { k: 'story', l: 'قصة الأثر (شريحة تسويقية)', g: 'الشراكة' },
@@ -25283,6 +25344,7 @@ function rptSlides() {
     const prs = Object.keys(cnt).map((id) => ({ pr: partnerById(id), n: cnt[id] })).filter((x) => x.pr).sort((a, b) => (!!b.pr.logoFileId - !!a.pr.logoFileId) || b.n - a.n || a.pr.name.localeCompare(b.pr.name, 'ar'));
     if (prs.length) chunk(prs, 15).forEach((part, i, all) => add({ t: 'partners', kicker: D.settings.org.dept, title: 'الجهات الشريكة' + (all.length > 1 ? ` (${i + 1}/${all.length})` : ''), rows: part, total: prs.length }));
   }
+  if (rptOn('strategy') && ps.length && typeof stratSummary === 'function') { const SS = stratSummary(ps); if (SS.goals.length) add({ t: 'strategy', kicker: D.settings.org.dept, title: 'الارتباط بالأهداف الاستراتيجية', S: SS }); }
   ps.forEach((p) => {
     const id = p.id, pr = partnerById(p.partnerId), name = rptVal(`${id}.name`, partnerName(p));
     const head = { pid: id, pname: name, code: p.code || '' };
@@ -25334,7 +25396,7 @@ function rptSlides() {
   S.forEach((s) => { if (s.t === 'toc') s.pages = firstIdx; });
   return S.map((s, i) => ({ ...s, nav: navLabel(s), theme: rptThemeKey(), bg: RC.page, els: specFor(s, i, S.length) }));
 }
-function navLabel(s) { return { story: 'قصة الأثر', hero: 'الرقم البطل', cover: 'الغلاف', toc: 'الفهرس', portfolio: 'لمحة المحفظة', summary: 'ملخص الشراكات', partners: 'الجهات الشريكة', gallery: 'معرض الصور', perf: 'الأداء والتقييم', end: 'الخاتمة', pcover: `غلاف: ${s.pname}`, exec: 'الملخص التنفيذي', overview: 'نظرة عامة', partner: 'الجهة الشريكة', team: 'الفريق', activity: 'الإنجازات', history: 'السجل' }[s.t] || (s.title || ''); }
+function navLabel(s) { return { story: 'قصة الأثر', hero: 'الرقم البطل', cover: 'الغلاف', toc: 'الفهرس', portfolio: 'لمحة المحفظة', summary: 'ملخص الشراكات', partners: 'الجهات الشريكة', strategy: 'الأهداف الاستراتيجية', gallery: 'معرض الصور', perf: 'الأداء والتقييم', end: 'الخاتمة', pcover: `غلاف: ${s.pname}`, exec: 'الملخص التنفيذي', overview: 'نظرة عامة', partner: 'الجهة الشريكة', team: 'الفريق', activity: 'الإنجازات', history: 'السجل' }[s.t] || (s.title || ''); }
 
 /* — مواصفة كل شريحة: قائمة عناصر بإحداثيات ثابتة — */
 function specFor(s, i, total) {
@@ -25397,6 +25459,20 @@ function specFor(s, i, total) {
       E.push(card(x, y, cw, chh), ...logoEl(x + (cw - d) / 2, y + 12, d, pr));
       E.push(P.text(x + 12, y + 12 + d + 6, cw - 24, chh - d - 50, pr.name, { size: fitSize(pr.name, cw - 24, chh - d - 50, 15, 10, 1.25), bold: true, align: 'center', valign: 'middle', lh: 1.25 }));
       E.push(P.text(x + 12, y + chh - 26, cw - 24, 20, `${pr.sector || ''}${pr.sector ? ' · ' : ''}${n === 1 ? 'شراكة واحدة' : n === 2 ? 'شراكتان' : n + ' شراكات'}`, { size: 12, color: RC.mut, align: 'center', lh: 1.3 }));
+    });
+    return frame(E, s, s.title, i, total);
+  }
+  if (s.t === 'strategy') {
+    const S = s.S, n = S.goals.length, gap = 12, rh = Math.min(84, (BH - 70 - (n - 1) * gap) / n), maxG = Math.max(1, ...S.goals.map((g) => g.ps.length)), W = SW - 2 * MX;
+    const pct = S.total ? Math.round(S.linked.length / S.total * 100) : 0;
+    E.push(P.text(rx(MX, W), BY, W, 40, `${pct}% من الشراكات المختارة مرتبطة بالأهداف (${S.linked.length} من ${S.total})  ·  ${S.goalsOn} من ${n} أهداف تخدمها شراكات  ·  ${S.initsOn} من ${S.initsAll} مبادرات`, { size: 16, bold: true, color: RC.priT, valign: 'middle', lh: 1.3 }));
+    S.goals.forEach((g, k) => {
+      const y = BY + 56 + k * (rh + gap), on = g.ps.length > 0, bw = 300, gi = g.inits.filter((i) => i.ps.length).length;
+      E.push(card(MX, y, W, rh, { r: 12 }), P.circ(SW - MX - 18 - 52, y + (rh - 52) / 2, 52, on ? RC.pri : RC.track), P.text(SW - MX - 18 - 52, y + (rh - 52) / 2, 52, 52, g.k, { size: 15, bold: true, color: on ? RC.white : RC.mut, align: 'center', valign: 'middle', lh: 1 }));
+      E.push(P.text(MX + bw + 150, y, W - bw - 150 - 90, rh, g.t, { size: fitSize(g.t, W - bw - 240, rh - 16, 16, 11, 1.35), bold: true, color: on ? RC.ink : RC.mut, valign: 'middle', lh: 1.35 }));
+      E.push(P.rect(MX + 130, y + rh / 2 - 6, bw, 12, RC.track, { r: 6 }));
+      if (on) E.push(P.rect(MX + 130 + bw * (1 - g.ps.length / maxG), y + rh / 2 - 6, Math.max(10, bw * g.ps.length / maxG), 12, RC.petrol2, { r: 6 }));
+      E.push(P.text(MX + 18, y, 104, rh, on ? `${g.ps.length} ${g.ps.length === 1 ? 'شراكة' : 'شراكات'}\n${gi}/${g.inits.length} مبادرات` : 'فجوة\nبلا شراكات', { size: 14, bold: true, color: on ? RC.priT : RC.clay, align: 'left', valign: 'middle', lh: 1.4, firstBold: true }));
     });
     return frame(E, s, s.title, i, total);
   }
@@ -25678,7 +25754,7 @@ function FileCache_src(id) { if (id.startsWith('lib:')) return (IMG_LIB[id.slice
 /* — الصفحة — */
 /* — قوالب القصة الجاهزة — */
 const RPT_PRESETS = [
-  { k: 'brief', t: 'التقرير الموجز', d: 'صورة سريعة للمحفظة وشعارات الجهات، ثم شريحة واحدة لكل شراكة بصورتها وحالتها وأرقامها، ومعرض صور ختامي.', who: 'للقيادة والاجتماعات', use: 'PowerPoint وPDF · شرائح قليلة ومركّزة', ic: 'chart', secs: ['cover', 'toc', 'partners', 'portfolio', 'summary', 'exec', 'gallery', 'end'] },
+  { k: 'brief', t: 'التقرير الموجز', d: 'صورة سريعة للمحفظة وشعارات الجهات، ثم شريحة واحدة لكل شراكة بصورتها وحالتها وأرقامها، ومعرض صور ختامي.', who: 'للقيادة والاجتماعات', use: 'PowerPoint وPDF · شرائح قليلة ومركّزة', ic: 'chart', secs: ['cover', 'toc', 'partners', 'portfolio', 'strategy', 'summary', 'exec', 'gallery', 'end'] },
   { k: 'full', t: 'التقرير التفصيلي', d: 'كل مكونات كل شراكة: الغلاف والقصة والبيانات والتقييم ومسار الإجراء والمواعيد والفريق والإنجازات والصور والسجل، مع شعارات الجهات.', who: 'للتوثيق والأرشفة والمراجعة', use: 'PDF للطباعة · أشمل تقرير', ic: 'layers', secs: null },
 ];
 const RPT_QUICK = [
@@ -26206,7 +26282,7 @@ function mkSlidesOne(p) {
       ${!deps.length ? `<div class="tn-n d empty" style="left:${CX - 400}px;top:${CY}px"><i>${icon('building')}</i><b>لم تُحدَّد إدارات</b></div>` : ''}`]);
   }
   /* 6د. الارتباط بالأهداف الاستراتيجية */
-  const gl = (p.goalsLinked || []).map((g) => (goalCodes().find((x) => x.k === g) || {}).t || g).filter(Boolean);
+  const gl = pStrat(p).goals.map((g) => (goalCodes().find((x) => x.k === g) || {}).t || g).filter(Boolean);
   if (gl.length || p.strategicGoal || p.initiative) S.push(['pgoal', 'deep', 'الأهداف الاستراتيجية', `
     <h2 class="mx-h">${mkE(k('gl.h'), 'الارتباط بأهداف المؤسسة')}</h2>
     <div class="px-goals">${[...(p.strategicGoal ? [['الهدف الاستراتيجي', p.strategicGoal]] : []), ...(p.initiative ? [['المبادرة', p.initiative]] : []), ...gl.map((g) => ['هدف مرتبط', g])].slice(0, 6).map(([l, t], i) => `<div style="--i:${i}"><small>${esc(l)}</small><b>${esc(String(t).slice(0, 110))}</b></div>`).join('')}</div>`]);
@@ -30523,6 +30599,131 @@ function asTourStart() {
 }
 function asTourStop() { if (AS.tour) clearTimeout(AS.tour.tm); AS.tour = null; const b = $('#asTour'); if (b) b.remove(); }
 
+/* —— 29d-strategy.js —— */
+/* =====================================================================
+   الارتباط الاستراتيجي: كيف تخدم الشراكات أهداف المؤسسة ومبادراتها
+   المصدر بالترتيب: ربط يدوي من إدارة الشراكات (stratLinks) إن وُجد، وإلا
+   نموذج المواءمة الاستراتيجية (goalsLinked) + الهدف والمبادرة في المقترح الأصلي.
+   ===================================================================== */
+if (typeof AUDIT_LABELS === 'object') AUDIT_LABELS['partnership.strategy'] = 'الارتباط الاستراتيجي';
+
+const stratGoals = () => goalCodes().map((g) => ({ k: g.k, t: String(g.t).replace(/^[A-Z]{1,3}\d?\s*[:：]\s*/, ''), full: g.t, inits: goalInits(g.t) }));
+/* المبادرة النصية ← رمز هدفها */
+function stratInitGoal(txt) {
+  const n = normAr(txt || ''); if (!n) return '';
+  for (const g of stratGoals()) if (g.inits.some((i) => normAr(i.t) === n)) return g.k;
+  return '';
+}
+function pStrat(p) {
+  if (p.stratLinks) return { goals: [...(p.stratLinks.goals || [])], inits: [...(p.stratLinks.inits || [])], src: 'manual' };
+  const prop = p.proposalId ? D.proposals.find((x) => x.id === p.proposalId) : null;
+  const G = new Set(), I = new Set(); let src = '';
+  [p, prop].filter(Boolean).forEach((r) => {
+    (r.goalsLinked || []).forEach((k) => { G.add(k); src = src || 'form'; });
+    if (r.strategicGoal) { G.add(goalCode(r.strategicGoal)); src = src || 'proposal'; }
+    if (r.initiative) { I.add(r.initiative); const g = stratInitGoal(r.initiative); if (g) G.add(g); }
+  });
+  const valid = new Set(stratGoals().map((g) => g.k));
+  return { goals: [...G].filter((k) => valid.has(k)), inits: [...I], src };
+}
+const STRAT_SRC = { manual: 'ربط إدارة الشراكات', form: 'نموذج المواءمة الاستراتيجية', proposal: 'المقترح الأصلي' };
+
+/* ملخص المحفظة */
+function stratSummary(list) {
+  const G = stratGoals();
+  const rows = list.map((p) => ({ p, s: pStrat(p) }));
+  const goals = G.map((g) => {
+    const ps = rows.filter((r) => r.s.goals.includes(g.k));
+    const inits = g.inits.map((i) => ({ ...i, ps: rows.filter((r) => r.s.inits.some((x) => normAr(x) === normAr(i.t))).map((r) => r.p) }));
+    const noInit = ps.filter((r) => !r.s.inits.some((x) => g.inits.some((i) => normAr(i.t) === normAr(x)))).map((r) => r.p);
+    return { ...g, ps: ps.map((r) => r.p), inits, noInit };
+  });
+  const linked = rows.filter((r) => r.s.goals.length).map((r) => r.p), unlinked = rows.filter((r) => !r.s.goals.length).map((r) => r.p);
+  const initsAll = goals.flatMap((g) => g.inits), initsOn = initsAll.filter((i) => i.ps.length).length;
+  return { goals, linked, unlinked, total: list.length, goalsOn: goals.filter((g) => g.ps.length).length, initsAll: initsAll.length, initsOn };
+}
+
+const stratChip = (p) => { const pr = partnerById(p.partnerId); return `<a class="sg-p" href="#/partnerships/${p.id}" title="${esc(partnerName(p))}">${plateHTML(pr, 28)}<span>${esc(partnerName(p))}</span></a>`; };
+
+function renderStrategy(el) {
+  const st = App.strat = App.strat || { view: 'map' };
+  const canEdit = can('edit.partnership') && !App.share;
+  const base = () => visiblePartnerships().filter((p) => !p.isDraft && p.stage !== 'cancel');
+  const draw = () => {
+    const list = base(), S = stratSummary(list), pct = S.total ? Math.round(S.linked.length / S.total * 100) : 0;
+    const maxG = Math.max(1, ...S.goals.map((g) => g.ps.length));
+    const kpi = (v, l, s, tone = '') => `<div class="sg-k ${tone}"><b>${v}</b><span>${l}</span>${s ? `<small>${s}</small>` : ''}</div>`;
+    const mapView = `<div class="sg-goals">${S.goals.map((g) => `<section class="sg-g ${g.ps.length ? '' : 'gap'}">
+        <header><span class="sg-code">${esc(g.k)}</span><h3>${esc(g.t)}</h3><div class="sg-n"><b>${g.ps.length}</b><small>${g.ps.length === 1 ? 'شراكة' : 'شراكات'}</small></div></header>
+        <div class="sg-bar"><i style="width:${(g.ps.length / maxG * 100).toFixed(1)}%"></i></div>
+        ${g.inits.length ? `<ul class="sg-inits">${g.inits.map((i) => `<li class="${i.ps.length ? '' : 'gap'}"><span class="sg-it"><em>${esc(i.c.split('.')[1] || '')}</em>${esc(i.t)}</span><span class="sg-ps">${i.ps.length ? i.ps.slice(0, 5).map(stratChip).join('') + (i.ps.length > 5 ? `<span class="sg-more">+${i.ps.length - 5}</span>` : '') : '<span class="sg-gap">فجوة: لا توجد شراكة</span>'}</span></li>`).join('')}</ul>` : ''}
+        ${g.noInit.length ? `<div class="sg-noinit"><small>مرتبطة بالهدف دون تحديد مبادرة</small><div class="sg-ps">${g.noInit.map(stratChip).join('')}</div></div>` : ''}
+      </section>`).join('')}</div>
+      <section class="panel sg-un"><h2>${icon('flag')} شراكات بلا ارتباط استراتيجي <span class="muted small">${S.unlinked.length}</span></h2>
+        ${S.unlinked.length ? `<div class="sg-ps wrap">${S.unlinked.map((p) => canEdit ? `<button type="button" class="sg-p" data-sglink="${p.id}" title="ربط بالأهداف">${plateHTML(partnerById(p.partnerId), 28)}<span>${esc(partnerName(p))}</span>${icon('plus')}</button>` : stratChip(p)).join('')}</div>` : '<p class="muted small">كل الشراكات مرتبطة بهدف واحد على الأقل.</p>'}</section>`;
+    const G = stratGoals();
+    const rows = list.map((p) => ({ p, s: pStrat(p) })).sort((a, b) => (a.s.goals.length ? 1 : 0) - (b.s.goals.length ? 1 : 0) || partnerName(a.p).localeCompare(partnerName(b.p), 'ar'));
+    const matrix = `<div class="panel sg-mx-w"><p class="small muted" style="margin:0 0 12px">اضغط على الخانة لربط الشراكة بالهدف أو إلغاء الربط؛ يُحفظ فورًا. لتحديد المبادرات اضغط «تفصيل».</p><div class="sg-mx-s"><table class="sg-mx"><thead><tr><th>الشراكة</th>${G.map((g) => `<th title="${esc(g.full)}">${esc(g.k)}</th>`).join('')}<th></th></tr></thead><tbody>
+      ${rows.map(({ p, s }) => `<tr><td><span class="sg-mx-p">${plateHTML(partnerById(p.partnerId), 28)}<a href="#/partnerships/${p.id}">${esc(partnerName(p))}</a></span></td>${G.map((g) => `<td><button type="button" class="sg-cell ${s.goals.includes(g.k) ? 'on' : ''}" data-sgcell="${p.id}|${g.k}" ${canEdit ? '' : 'disabled'} aria-pressed="${s.goals.includes(g.k)}" title="${esc(g.full)}">${icon('check')}</button></td>`).join('')}<td>${canEdit ? `<button type="button" class="linkbtn" data-sglink="${p.id}">تفصيل</button>` : ''}</td></tr>`).join('')}</tbody></table></div></div>`;
+    el.innerHTML = `<div class="ph"><div><h1>الارتباط الاستراتيجي</h1><p>كيف تخدم الشراكات أهداف المؤسسة الاستراتيجية ومبادراتها، وأين الفجوات التي تحتاج شراكات جديدة.</p></div>
+      <div class="ph-actions">${canEdit ? `<div class="seg sg-vw"><button type="button" data-sgv="map" class="${st.view === 'map' ? 'on' : ''}">${icon('flag')} الخريطة</button><button type="button" data-sgv="mx" class="${st.view === 'mx' ? 'on' : ''}">${icon('grid')} الربط السريع</button></div>` : ''}<button class="btn" type="button" onclick="window.print()">${icon('print')} طباعة</button></div></div>
+      <div class="sg-kpis">${kpi(pct + '%', 'من الشراكات مرتبطة بالأهداف', `${S.linked.length} من ${S.total}`, 'pri')}${kpi(`${S.goalsOn}/${S.goals.length}`, 'أهداف تخدمها شراكات', S.goals.length - S.goalsOn ? `${S.goals.length - S.goalsOn} بلا شراكات` : 'كل الأهداف مغطاة')}${kpi(`${S.initsOn}/${S.initsAll}`, 'مبادرات تخدمها شراكات', S.initsAll - S.initsOn ? `${S.initsAll - S.initsOn} فجوة` : '')}${kpi(S.unlinked.length, 'شراكة بلا ارتباط', S.unlinked.length ? 'تحتاج ربطًا' : '', S.unlinked.length ? 'warn' : '')}</div>
+      ${st.view === 'mx' && canEdit ? matrix : mapView}`;
+    hydrateFiles(el);
+  };
+  draw();
+  el.onclick = async (e) => {
+    const v = e.target.closest('[data-sgv]'); if (v) { st.view = v.dataset.sgv; return draw(); }
+    const c = e.target.closest('[data-sgcell]');
+    if (c && canEdit) {
+      const [pid, k] = c.dataset.sgcell.split('|'), p = D.partnerships.find((x) => x.id === pid); if (!p) return;
+      const s = pStrat(p), on = s.goals.includes(k);
+      const goals = on ? s.goals.filter((x) => x !== k) : [...s.goals, k];
+      const inits = on ? s.inits.filter((x) => stratInitGoal(x) !== k) : s.inits;
+      p.stratLinks = { goals, inits, by: Session.userName(), at: nowISO() };
+      c.classList.toggle('on', !on); c.setAttribute('aria-pressed', !on);
+      await Repo.save('partnerships', p); await Repo.log('partnership.strategy', 'partnership', p.id, p.code, `${on ? 'إلغاء الربط بـ' : 'ربط بـ'}${k}`);
+      return;
+    }
+    const l = e.target.closest('[data-sglink]'); if (l) { const p = D.partnerships.find((x) => x.id === l.dataset.sglink); if (p) stratLinkDlg(p, draw); }
+  };
+}
+
+/* نافذة ربط شراكة بالأهداف ومبادراتها */
+function stratLinkDlg(p, done) {
+  const s = pStrat(p), G = stratGoals();
+  const on = (t) => s.inits.some((x) => normAr(x) === normAr(t));
+  const m = Modal.open({
+    title: `الارتباط الاستراتيجي — ${partnerName(p)}`, size: 'lg',
+    body: `<p class="small muted" style="margin:0 0 12px">اختر الأهداف التي تخدمها الشراكة، ثم المبادرات تحت كل هدف إن وُجدت.${s.src && s.src !== 'manual' ? ` الاختيار الحالي مأخوذ من ${STRAT_SRC[s.src]}.` : ''}</p>
+      <div class="sg-dlg">${G.map((g) => `<div class="sg-dg ${s.goals.includes(g.k) ? 'on' : ''}"><label class="sg-dgh"><input type="checkbox" data-g="${g.k}" ${s.goals.includes(g.k) ? 'checked' : ''}><span class="sg-code">${esc(g.k)}</span><b>${esc(g.t)}</b></label>
+        ${g.inits.length ? `<div class="sg-di">${g.inits.map((i) => `<label><input type="checkbox" data-i="${esc(i.t)}" data-ig="${g.k}" ${on(i.t) ? 'checked' : ''}><span>${esc(i.t)}</span></label>`).join('')}</div>` : ''}</div>`).join('')}</div>`,
+    foot: `<button class="btn" data-x>إلغاء</button><button class="btn primary" data-save>حفظ الربط</button>`,
+  });
+  m.el.addEventListener('change', (e) => {
+    const i = e.target.closest('[data-i]'); if (i && i.checked) { const g = $(`[data-g="${i.dataset.ig}"]`, m.el); g.checked = true; }
+    const g = e.target.closest('[data-g]'); if (g && !g.checked) $$(`[data-ig="${g.dataset.g}"]`, m.el).forEach((x) => { x.checked = false; });
+    $$('.sg-dg', m.el).forEach((d) => d.classList.toggle('on', $('[data-g]', d).checked));
+  });
+  m.el.addEventListener('click', async (e) => {
+    if (e.target.closest('[data-x]')) return m.close();
+    if (!e.target.closest('[data-save]')) return;
+    const goals = $$('[data-g]:checked', m.el).map((x) => x.dataset.g), inits = $$('[data-i]:checked', m.el).map((x) => x.dataset.i);
+    p.stratLinks = { goals, inits, by: Session.userName(), at: nowISO() };
+    await Repo.save('partnerships', p); await Repo.log('partnership.strategy', 'partnership', p.id, p.code, goals.length ? goals.join('، ') : 'بلا ارتباط');
+    m.close(); toast('حُفظ الارتباط الاستراتيجي'); if (done) done();
+  });
+}
+
+/* قسم صفحة الشراكة */
+function stratSectionHTML(p, canEdit) {
+  const s = pStrat(p), G = stratGoals().filter((g) => s.goals.includes(g.k));
+  return `<section class="dsec" id="strat"><h2>الارتباط الاستراتيجي ${s.src ? `<span class="src">${STRAT_SRC[s.src]}</span>` : ''}</h2>
+    ${G.length ? `<div class="sg-pg">${G.map((g) => { const its = g.inits.filter((i) => s.inits.some((x) => normAr(x) === normAr(i.t))); return `<div class="sg-pgi"><span class="sg-code">${esc(g.k)}</span><div><b>${esc(g.t)}</b>${its.length ? `<ul>${its.map((i) => `<li>${esc(i.t)}</li>`).join('')}</ul>` : ''}</div></div>`; }).join('')}</div>`
+      : `<p class="muted small">لم تُربط الشراكة بأهداف المؤسسة الاستراتيجية بعد.</p>`}
+    <div class="row" style="gap:8px;margin-top:12px">${canEdit ? `<button type="button" class="btn sm" data-sgedit>${icon('edit')} ${G.length ? 'تعديل الربط' : 'ربط بالأهداف'}</button>` : ''}<a class="btn sm ghost" href="#/strategy">${icon('flag')} الارتباط الاستراتيجي للمحفظة</a></div></section>`;
+}
+
 /* —— 30-palette.js —— */
 /* =====================================================================
    نافذة الوصول السريع (Ctrl+K): بحث في كل شيء وتنفيذ أي إجراء من مكان واحد
@@ -30553,6 +30754,7 @@ function palActions() {
     { t: 'استعراض دعوة جهة خارجية', s: 'رابط بلا حساب: الجهة تقترح وتتابع الرد', ic: 'send', kw: 'جولة جهة خارجية رابط دعوة مقترح', run: () => startExtTour() },
     D.settings.assistantOn && { t: 'مساعد الشراكات', s: 'اسأل أو اطلب أكثر من أمر — Ctrl+J', ic: 'bot', kw: 'مساعد ذكاء اصطناعي سؤال اكتب خطاب تقرير', run: () => asToggle(true) },
     { t: 'خريطة الشراكات', s: 'انتشار الشراكات على مناطق المملكة', ic: 'map', kw: 'خريطة مناطق منطقة جغرافي الرياض جدة', run: () => { location.hash = '#/map'; } },
+    { t: 'الارتباط الاستراتيجي', s: 'كيف تخدم الشراكات أهداف المؤسسة ومبادراتها', ic: 'flag', kw: 'استراتيجية أهداف هدف مبادرات مواءمة فجوات ربط', run: () => { location.hash = '#/strategy'; } },
     { t: 'تقويم الشراكات', s: 'التوقيع والانتهاء والتجديد والاجتماعات', ic: 'calendar', kw: 'تقويم مواعيد اجتماع تجديد انتهاء outlook google', run: () => { location.hash = '#/calendar'; } },
     { t: 'حكاية الشراكة', s: 'صفحة تعريفية متحركة: من الرمل إلى الأثر', ic: 'play', kw: 'حكاية فيلم تعريفي لاندنج صحراء قصة', run: () => { location.hash = '#/tale'; } },
     (isSysAdmin() || AUTH.dev) && { t: 'الدخول بحساب آخر للمعاينة', s: 'لمدير النظام', ic: 'user', kw: 'دور صلاحية مستخدم حساب', run: () => roleDialog() },
@@ -30639,7 +30841,7 @@ function navGroups() {
   const newCount = can('proposal.review') ? props.filter((x) => x.status === 'submitted').length : dept ? props.filter((x) => x.department === Session.dept() && x.status === 'info').length : 0;
   return [
     { id: 'view', t: 'العرض', ic: 'eye', items: [{ h: '#/', ic: 'home', l: 'الرئيسية', m: ['home'] }, Session.role() !== 'viewer' && { h: '#/tasks', ic: 'flag', l: 'مهامي', m: ['tasks'], cnt: (() => { try { return wfTasks().filter((t) => !t.follow).length; } catch (_) { return 0; } })() }, can('view.dashboard') && { h: '#/dashboard', ic: 'chart', l: 'لوحة المؤشرات', m: ['dashboard'] }] },
-    { id: 'pt', t: 'الشراكات', ic: 'leaf', items: [{ h: '#/partnerships', ic: 'layers', l: 'سجل الشراكات', m: ['partnerships', 'partnership', 'pform'] }, can('view.reports') && { h: '#/reports', ic: 'file', l: 'التقارير', m: ['reports', 'reportsMk'] }, can('view.partners') && { h: '#/partners', ic: 'building', l: 'الجهات الشريكة', m: ['partners', 'partner'] }, { h: '#/stories', ic: 'award', l: 'الإنجازات', m: ['stories'] }, { h: '#/media', ic: 'image', l: 'مركز الصور', m: ['media'] }, { h: '#/calendar', ic: 'calendar', l: 'تقويم الشراكات', m: ['calendar'] }, { h: '#/map', ic: 'map', l: 'خريطة الشراكات', m: ['map'] }, { h: '#/tale', ic: 'play', l: 'حكاية الشراكة', m: ['tale'] }, { h: '#/gallery', ic: 'star', l: 'معرض الأثر', m: ['gallery'] }, { h: '#/process', ic: 'convert', l: 'مسار الشراكة', m: ['process'] }, can('manage.content') && { h: '#/content', ic: 'news', l: 'إدارة المحتوى', m: ['content'] }] },
+    { id: 'pt', t: 'الشراكات', ic: 'leaf', items: [{ h: '#/partnerships', ic: 'layers', l: 'سجل الشراكات', m: ['partnerships', 'partnership', 'pform'] }, can('view.reports') && { h: '#/reports', ic: 'file', l: 'التقارير', m: ['reports', 'reportsMk'] }, can('view.partners') && { h: '#/partners', ic: 'building', l: 'الجهات الشريكة', m: ['partners', 'partner'] }, { h: '#/stories', ic: 'award', l: 'الإنجازات', m: ['stories'] }, { h: '#/media', ic: 'image', l: 'مركز الصور', m: ['media'] }, { h: '#/calendar', ic: 'calendar', l: 'تقويم الشراكات', m: ['calendar'] }, { h: '#/map', ic: 'map', l: 'خريطة الشراكات', m: ['map'] }, { h: '#/strategy', ic: 'flag', l: 'الارتباط الاستراتيجي', m: ['strategy'] }, { h: '#/tale', ic: 'play', l: 'حكاية الشراكة', m: ['tale'] }, { h: '#/gallery', ic: 'star', l: 'معرض الأثر', m: ['gallery'] }, { h: '#/process', ic: 'convert', l: 'مسار الشراكة', m: ['process'] }, can('manage.content') && { h: '#/content', ic: 'news', l: 'إدارة المحتوى', m: ['content'] }] },
     { id: 'share', t: 'شارك', ic: 'msg', items: [{ h: '#/share', ic: 'send', l: 'شارك بمقترح', m: ['share', 'shareForm', 'shareDone'] }, (can('proposal.review') || dept) && { h: '#/proposals', ic: 'inbox', l: dept ? 'مقترحاتي' : 'المقترحات الواردة', m: ['proposals', 'proposal'], cnt: newCount }] },
     { id: 'adm', t: 'الإدارة', ic: 'lock', items: [can('manage.lists') && { h: '#/settings/lists', ic: 'list', l: 'القوائم', m: ['settings'], only: 'lists' }, (can('manage.lists') || can('manage.content')) && { h: '#/settings', ic: 'settings', l: 'الإعدادات', m: ['settings'], not: 'audit,lists' }, can('view.audit') && { h: '#/settings/audit', ic: 'history', l: 'سجل التغييرات', m: ['settings'], only: 'audit' }] },
   ].map((g) => ({ ...g, items: g.items.filter(Boolean).filter((it) => !App.share || shareNavOk(it)) })).filter((g) => g.items.length);
@@ -30855,6 +31057,7 @@ const ROUTES = [
   { re: /^\/tale$/, name: 'tale', fn: renderTale, full: true },
   { re: /^\/calendar$/, name: 'calendar', fn: renderCalendar },
   { re: /^\/map$/, name: 'map', fn: renderMap },
+  { re: /^\/strategy$/, name: 'strategy', fn: renderStrategy },
   { re: /^\/tasks$/, name: 'tasks', fn: renderTasks },
   { re: /^\/process$/, name: 'process', fn: renderProcess },
   { re: /^\/content$/, name: 'content', fn: renderContent },

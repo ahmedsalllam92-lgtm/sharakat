@@ -253,7 +253,7 @@ function mkSlidesOne(p) {
       ${!deps.length ? `<div class="tn-n d empty" style="left:${CX - 400}px;top:${CY}px"><i>${icon('building')}</i><b>لم تُحدَّد إدارات</b></div>` : ''}`]);
   }
   /* 6د. الارتباط بالأهداف الاستراتيجية */
-  const gl = (p.goalsLinked || []).map((g) => (goalCodes().find((x) => x.k === g) || {}).t || g).filter(Boolean);
+  const gl = pStrat(p).goals.map((g) => (goalCodes().find((x) => x.k === g) || {}).t || g).filter(Boolean);
   if (gl.length || p.strategicGoal || p.initiative) S.push(['pgoal', 'deep', 'الأهداف الاستراتيجية', `
     <h2 class="mx-h">${mkE(k('gl.h'), 'الارتباط بأهداف المؤسسة')}</h2>
     <div class="px-goals">${[...(p.strategicGoal ? [['الهدف الاستراتيجي', p.strategicGoal]] : []), ...(p.initiative ? [['المبادرة', p.initiative]] : []), ...gl.map((g) => ['هدف مرتبط', g])].slice(0, 6).map(([l, t], i) => `<div style="--i:${i}"><small>${esc(l)}</small><b>${esc(String(t).slice(0, 110))}</b></div>`).join('')}</div>`]);
