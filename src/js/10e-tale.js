@@ -66,7 +66,6 @@ function taleChapters(nums, signed = 0) {
 const TALE_KSA = [[42.78,16.35],[42.65,16.77],[42.35,17.08],[42.27,17.47],[41.75,17.83],[41.22,18.67],[40.94,19.49],[40.25,20.17],[39.8,20.34],[39.14,21.29],[39.02,21.99],[39.07,22.58],[38.49,23.69],[38.02,24.08],[37.48,24.29],[37.15,24.86],[37.21,25.08],[36.93,25.6],[36.64,25.83],[36.25,26.57],[35.64,27.38],[35.13,28.06],[34.63,28.06],[34.79,28.61],[34.83,28.96],[34.96,29.36],[36.07,29.2],[36.5,29.51],[36.74,29.87],[37.5,30.0],[37.67,30.34],[38.0,30.51],[37.0,31.51],[39.0,32.01],[39.2,32.16],[40.4,31.89],[41.89,31.19],[44.71,29.18],[46.57,29.1],[47.46,29.0],[47.71,28.53],[48.42,28.55],[48.81,27.69],[49.3,27.46],[49.47,27.11],[50.15,26.69],[50.21,26.28],[50.11,25.94],[50.24,25.61],[50.53,25.33],[50.66,25.0],[50.81,24.75],[51.11,24.56],[51.39,24.63],[51.58,24.25],[51.62,24.01],[52.0,23.0],[55.01,22.5],[55.21,22.71],[55.67,22.0],[55.0,20.0],[52.0,19.0],[49.12,18.62],[48.18,18.17],[47.47,17.12],[47.0,16.95],[46.75,17.28],[46.37,17.23],[45.4,17.33],[45.22,17.43],[44.06,17.41],[43.79,17.32],[43.38,17.58],[43.12,17.09],[43.22,16.67],[42.78,16.35]];
 const TALE_GREEN_DEF = [
   { fileId: 'asset:ksa-farasan-mangrove', cap: 'غابة القندل · جزر فرسان', credit: 'تصوير: وكالة الأنباء السعودية (واس) · CC BY-SA 4.0' },
-  { fileId: 'asset:ksa-jazan-mangrove', cap: 'أشجار المانجروف · سواحل جازان', credit: 'تصوير: وكالة الأنباء السعودية (واس) · CC BY-SA 4.0' },
 ];
 function taleGreens() {
   const L_ = (D.settings && D.settings.taleGreens) || [];
@@ -139,6 +138,14 @@ function renderTale(el) {
       <div class="tz-xcaps">${years.length ? `<div class="tz-cap top" data-x="years"><h2>عامًا بعد عام</h2><p>مذكرات التفاهم الموقّعة في كل عام.</p></div>` : ''}${sectors.length ? `<div class="tz-cap top" data-x="sectors"><h2>من كل القطاعات</h2><p>جهات حكومية وخاصة وغير ربحية، يجمعها هدفٌ واحد.</p></div>` : ''}</div>
       <div class="tz-count" id="tzCount"><b>0</b><span>${logos.length === 1 ? 'جهة شريكة' : 'جهة شريكة'}</span></div>
       <div class="tz-caps">${chs.map((c, i) => `<div class="tz-cap ${c.cls}" data-c="${i}" ${c.k ? `data-k="${c.k}"` : ''}>${c.eye ? `<small>${c.eye}</small>` : ''}${c.h ? `<h2>${c.h}</h2>` : ''}${c.s ? `<p>${c.s}</p>` : ''}</div>`).join('')}</div>
+      ${img('murooj-mangrove-seedlings') && img('ksa-farasan-mangrove') ? `<div class="tz-grow" id="tzGrow">
+        <div class="tz-gw-a"><img src="${img('murooj-mangrove-seedlings')}" alt=""></div>
+        <div class="tz-gw-sky"></div>
+        <div class="tz-gw-b"><img src="${img('ksa-farasan-mangrove')}" alt=""></div>
+        <div class="tz-gw-shade"></div>
+        <div class="tz-gw-cap c1"><small>من مشاريع مروج على سواحل المملكة</small><h2>شتلةٌ اليوم…</h2></div>
+        <div class="tz-gw-cap c2"><h2>…وغابةٌ غدًا</h2><p>نحو ٢٫٤ مليون شجرة مانجروف زرعتها مروج على سواحل المملكة.</p><small class="cr">غابة القندل في جزر فرسان · تصوير واس · CC BY-SA 4.0</small></div>
+      </div>` : ''}
       <div class="tz-cta" id="tzCta">${can('proposal.create') ? `<a class="btn gold lg" href="#/share">${icon('send')} شارك بمقترح شراكة</a>` : ''}<a class="btn lg" href="#/partnerships">${icon('layers')} سجل الشراكات</a><button class="btn lg" type="button" data-tzreplay>${icon('history')} من البداية</button></div>
       <div class="tz-vig"></div><div class="tz-grain"></div>
       <div class="tz-ui"><button type="button" class="tz-play" data-tzplay>${icon('play')}<span>تشغيل</span></button><div class="tz-prog"><i id="tzProg"></i></div>${can('manage.content') && !App.share ? `<button type="button" class="tz-fs tz-pics" data-tzpics title="اختيار صور «ثم تخضرّ الأرض»">${icon('image')}<span>صور العرض</span></button>` : ''}<button type="button" class="tz-fs" data-tzfs title="ملء الشاشة (F)">${icon('expand')}<span>ملء الشاشة</span></button></div>
@@ -154,11 +161,16 @@ function taleRun(el, { nums, chs, projects, mapMode, nPartners, years = [], sect
   const root = $('#tale', el), cv = $('#tzCv', el), ctx = cv.getContext('2d'), logoImg = $('#tzLogoImg', el);
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   /* المشاهد المضافة تُدرج قبل الكوكبة: الخط الزمني الأصلي (q) يتوقف عندها، والممتد (u) يستمر */
-  const XS = 0.880, L1 = years.length ? 0.08 : 0, L2 = sectors.length ? 0.08 : 0, XL = L1 + L2, TT = 1 + XL;
-  const ext = (a) => (a < XS ? a : a + XL);
-  const toQ = (u) => (u < XS ? u : u < XS + XL ? XS : u - XL);
+  const grow = $('#tzGrow', el);
+  const GS = 0.6915, LG = grow ? 0.13 : 0;
+  const XS0 = 0.880, L1 = years.length ? 0.08 : 0, L2 = sectors.length ? 0.08 : 0, XL = L1 + L2, TT = 1 + LG + XL;
+  const INS = [[GS, LG], [XS0, XL]].filter((x) => x[1] > 0);
+  const ext = (a) => a + INS.reduce((t, [at, len]) => t + (a >= at ? len : 0), 0);
+  const toQ = (u) => { let off = 0; for (const [at, len] of INS) { const st0 = at + off; if (u < st0) return u - off; if (u < st0 + len) return at; off += len; } return u - off; };
+  const XS = XS0 + LG; /* بداية مشهدي الأعوام والقطاعات على المحور الممتد */
   root.style.height = (1500 * TT).toFixed(0) + 'vh';
   const XW = { years: [XS + 0.012, XS + L1 - 0.008], sectors: [XS + L1 + 0.012, XS + XL - 0.008] };
+  const GW = [GS, GS + LG];
   const small = innerWidth < 760;
   const N = small ? 1500 : 2800;
   let W = 0, H = 0, DPR = 1, shapes = {}, ready = false, mapXY = () => [0, 0], spiral = [], halo = { cx: 0, cy: 0, R: 1 };
@@ -261,7 +273,7 @@ function taleRun(el, { nums, chs, projects, mapMode, nPartners, years = [], sect
     const st = 0.105 / Math.max(1, nums.length);
     nums.forEach((_, i) => { const a = 0.775 + i * st; k.push([a - 0.006, a + 0.014, 'num' + i]); });
     k.push([0.882, 0.912, 'orbit']);
-    const out = k.map(([a, b, n]) => [ext(a), ext(b), n]);
+    const out = k.map(([a, b, n]) => (LG && a < GS && b > GS ? [GS + LG, GS + LG + (b - GS) * 0.6, n] : [ext(a), ext(b), n]));
     if (L1) out.push([XS + 0.002, XS + 0.03, 'years']);
     if (L2) out.push([XS + L1 + 0.002, XS + L1 + 0.03, 'sectors']);
     return out.sort((a, b) => a[0] - b[0]);
@@ -357,6 +369,26 @@ function taleRun(el, { nums, chs, projects, mapMode, nPartners, years = [], sect
   const yrs = $('#tzYrs', el), scs = $('#tzScs', el), xcaps = $$('.tz-xcaps .tz-cap', el), yls = $$('.tz-yl', el), sls = $$('.tz-sl', el);
   /* النص يدخل من الأسفل ويخرج إلى الأعلى كأن الصفحة تنزل */
   const capMove = (c, v, a, b, p) => { c.style.opacity = v.toFixed(3); c.style.transform = `translateY(${((1 - v) * (p < (a + b) / 2 ? 56 : -56)).toFixed(1)}px)`; c.style.filter = v < 1 ? `blur(${((1 - v) * 6).toFixed(1)}px)` : ''; c.style.visibility = v > 0 ? 'visible' : 'hidden'; };
+  const gA = grow && $('.tz-gw-a img', grow), gB = grow && $('.tz-gw-b', grow), gBi = grow && $('.tz-gw-b img', grow), gSky = grow && $('.tz-gw-sky', grow), gC1 = grow && $('.c1', grow), gC2 = grow && $('.c2', grow), gAw = grow && $('.tz-gw-a', grow);
+  const layersG = (u) => {
+    if (!grow) return;
+    const on = u > GW[0] && u < GW[1]; grow.style.visibility = on ? 'visible' : 'hidden'; if (!on) return;
+    const s = (u - GW[0]) / LG, en = tlE(tlS(s, 0, 0.07)), ex = tlE(tlS(s, 0.93, 1));
+    grow.style.transform = `translateY(${((1 - en) * 100 - ex * 100).toFixed(2)}%)`;
+    /* الكاميرا ترتفع فوق الشتلات */
+    const k1 = tlE(tlS(s, 0.04, 0.44)), k2 = tlE(tlS(s, 0.4, 0.6));
+    gA.style.transform = `scale(${(1.3 - 0.2 * k1 - 0.06 * k2).toFixed(4)}) translateY(${(-7 + 11 * k1 + 30 * k2).toFixed(2)}%)`;
+    gA.style.filter = k2 ? `blur(${(k2 * 7).toFixed(1)}px) brightness(${(1 + k2 * 0.25).toFixed(2)})` : '';
+    gAw.style.opacity = (1 - tlS(s, 0.5, 0.62)).toFixed(3);
+    gSky.style.opacity = (Math.sin(tlS(s, 0.42, 0.66) * Math.PI) * 0.9).toFixed(3);
+    /* من الأعلى: الغابة تملأ المكان والكاميرا تواصل الارتفاع */
+    const k3 = tlE(tlS(s, 0.5, 0.68)), k4 = tlS(s, 0.5, 1);
+    gB.style.opacity = k3.toFixed(3); gB.style.filter = k3 < 1 ? `blur(${((1 - k3) * 10).toFixed(1)}px)` : '';
+    gBi.style.transform = `scale(${(1.75 - 0.68 * tlE(k4)).toFixed(4)}) rotate(${(3 - 3 * k4).toFixed(2)}deg)`;
+    const v1 = tlWin(s, 0.1, 0.42, 0.06), v2 = tlWin(s, 0.64, 0.95, 0.06);
+    gC1.style.opacity = v1.toFixed(3); gC1.style.transform = `translateY(${((1 - v1) * (s < 0.26 ? 40 : -40)).toFixed(1)}px)`;
+    gC2.style.opacity = v2.toFixed(3); gC2.style.transform = `translateY(${((1 - v2) * (s < 0.8 ? 40 : -40)).toFixed(1)}px)`;
+  };
   const layersX = (u) => {
     xcaps.forEach((c) => { const [a, b] = XW[c.dataset.x]; capMove(c, tlWin(u, a, b, 0.01), a, b, u); });
     if (yrs) { const [a, b] = XW.years, v = years.length ? tlWin(u, a, b, 0.01) : 0; capMove(yrs, v, a, b, u); yls.forEach((e, k) => e.classList.toggle('on', u > a + 0.004 + k * 0.003)); }
@@ -394,7 +426,7 @@ function taleRun(el, { nums, chs, projects, mapMode, nPartners, years = [], sect
     if (!ready) return;
     const u = getP() * TT, p = toQ(u); prog = p;
     const t = (now - t0) / 1000;
-    draw(u, reduce ? 0 : t); if (u !== last) { layers(p); layersX(u); } last = u;
+    draw(u, reduce ? 0 : t); if (u !== last) { layers(p); layersX(u); layersG(u); } last = u;
     if (!reduce || auto) raf = requestAnimationFrame(tick);
   };
   const kick = () => { if (!raf) raf = requestAnimationFrame(tick); };
@@ -416,7 +448,7 @@ function taleRun(el, { nums, chs, projects, mapMode, nPartners, years = [], sect
   };
   /* ↓ / ↑: انزل إلى المشهد التالي بحركة نزول ناعمة */
   const nextBtn = $('[data-tznext]', el);
-  const stops = () => [...chs.map((c) => (c.cls === 'open' ? 0 : ext(c.a + 0.014))), ...Object.keys(XW).filter((k) => (k === 'years' ? L1 : L2)).map((k) => XW[k][0] + 0.02), ext(0.93), ext(0.985)].map((u) => u / TT).sort((a, b) => a - b);
+  const stops = () => [...chs.map((c) => (c.cls === 'open' ? 0 : ext(c.a + 0.014))), ...Object.keys(XW).filter((k) => (k === 'years' ? L1 : L2)).map((k) => XW[k][0] + 0.02), ...(LG ? [GS + LG * 0.3, GS + LG * 0.8] : []), ext(0.93), ext(0.985)].map((u) => u / TT).sort((a, b) => a - b);
   let glide = 0;
   const goStop = (dir) => {
     stop(); cancelAnimationFrame(glide);
