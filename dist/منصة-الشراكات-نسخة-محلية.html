@@ -8177,7 +8177,7 @@ html.tz-cinema .page,html:has(.tale2) .page.full{transform:none!important;animat
 .cal-ty.off{opacity:.45;text-decoration:line-through}
 .cal-vw button{font-size:13px}
 .cal-panel{padding:0!important;overflow:hidden}
-.cal-wd{display:grid;grid-template-columns:repeat(7,1fr);background:var(--bg-2,#F3EFE4);border-bottom:1px solid var(--line)}
+.cal-wd{display:grid;grid-template-columns:repeat(7,1fr);background:var(--paper-2,#F3EFE4);border-bottom:1px solid var(--line)}
 .cal-wd span{padding:9px 10px;font-size:12.5px;font-weight:700;color:var(--muted)}
 .cal-days{display:grid;grid-template-columns:repeat(7,1fr)}
 .cal-d{min-height:118px;border-inline-start:1px solid var(--line);border-bottom:1px solid var(--line);padding:6px;display:flex;flex-direction:column;gap:4px;position:relative}
@@ -8209,7 +8209,19 @@ html.tz-cinema .page,html:has(.tale2) .page.full{transform:none!important;animat
 .cal-dl{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin:0 0 14px}.cal-dl dt{color:var(--muted);font-size:13px}.cal-dl dd{margin:0}
 .cal-add-to{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-top:12px;border-top:1px solid var(--line)}.cal-add-to span{font-size:13px;color:var(--muted)}
 @media (max-width:900px){.cal-kpis{grid-template-columns:repeat(2,1fr)}.cal-d{min-height:76px;padding:4px}.cal-ev span{display:none}.cal-ev{justify-content:center;padding:4px}.cal-dh small{display:none}.cal-types{margin-inline-start:0}}
-[data-theme="dark"] .cal-d.we{background:rgba(255,255,255,.02)}
+[data-theme="dark"] .cal-d.we{background:rgba(255,255,255,.018)}
+[data-theme="dark"] .cal-wd{background:rgba(255,255,255,.035)}
+[data-theme="dark"] .cal-wd span{color:var(--faint)}
+[data-theme="dark"] .cal-d{border-color:rgba(255,255,255,.06)}
+[data-theme="dark"] .cal-d.out{background:rgba(0,0,0,.18)}
+[data-theme="dark"] .cal-d.out .cal-dh{opacity:.45}
+[data-theme="dark"] .cal-d.today{background:rgba(156,199,178,.06);box-shadow:inset 0 0 0 1px rgba(156,199,178,.45)}
+[data-theme="dark"] .cal-d.today .cal-dh b{background:#9CC7B2;color:#0F1B20}
+[data-theme="dark"] .cal-ev{background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--ink-2,#D8E2DE)}
+[data-theme="dark"] .cal-ev:hover{background:color-mix(in srgb,var(--c) 28%,transparent);color:var(--ink)}
+[data-theme="dark"] .cal-ev i{box-shadow:0 0 6px var(--c)}
+[data-theme="dark"] .cal-ty{background:transparent;border-color:rgba(255,255,255,.1)}
+[data-theme="dark"] .cal-kpi::before{opacity:.75}
 @media print{.cal-types,.cal-vw,.cal-add,.ph-actions{display:none!important}}
 /* ===== خريطة الشراكات ===== */
 .mp-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px}
