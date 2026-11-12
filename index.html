@@ -19301,9 +19301,11 @@ function taleData() {
   const active = signed.filter((p) => ['active', 'soon'].includes(pStatus(p))).length;
   const pids = new Set(signed.map((p) => p.partnerId).filter(Boolean));
   const outputs = signed.reduce((t, p) => t + richItems(p.outputs).length, 0);
-  const nums = [[pids.size, 'جهة شريكة', 'من القطاعات الحكومية والخاصة وغير الربحية'], [active, 'شراكة سارية', 'تُتابَع مخرجاتها والتزاماتها'], [outputs, 'مخرجًا مستهدفًا', 'في الشراكات الموقّعة'], [publicStories().length, 'قصة أثر موثّقة', 'نتائج ميدانية منشورة مرتبطة بشراكاتها']].filter((x) => x[0] > 0);
   /* كل الجهات الشريكة الفعلية: ذات الشعار أولًا */
-  const logos = D.partners.filter((pr) => pids.has(pr.id)).sort((a, b) => !!b.logoFileId - !!a.logoFileId);
+  /* نفس تعريف «جهة شريكة» في الرئيسية (liveCounts): كل جهة لها شراكة غير مسودة، أو مسجلة دون شراكة وليست جهة مستهدفة */
+  const linked = new Set(visiblePartnerships({ includeDrafts: false }).map((p) => p.partnerId)), anyLinked = new Set(D.partnerships.map((p) => p.partnerId));
+  const logos = D.partners.filter((pr) => linked.has(pr.id) || (!anyLinked.has(pr.id) && !pr.target && (showDemo() || !pr.demo))).sort((a, b) => !!b.logoFileId - !!a.logoFileId);
+  const nums = [[logos.length, 'جهة شريكة', 'من القطاعات الحكومية والخاصة وغير الربحية'], [active, 'شراكة سارية', 'تُتابَع مخرجاتها والتزاماتها'], [outputs, 'مخرجًا مستهدفًا', 'في الشراكات الموقّعة'], [publicStories().length, 'قصة أثر موثّقة', 'نتائج ميدانية منشورة مرتبطة بشراكاتها']].filter((x) => x[0] > 0);
   const photos = [['border-guard-signing', 'المديرية العامة لحرس الحدود'], ['waqf-saitah-signing', 'وقف الأمير صيته بنت عبدالعزيز'], ['muhaidib-meet', 'مؤسسة عبدالقادر المهيدب الخيرية']].filter(([k]) => ASSET_IMG[k]);
   /* مشاريع مروج على الأرض، ومع كل مشروع عدد الشراكات المرتبطة به في المنصة (يظهر إن وُجد) */
   const txt = (p) => JSON.stringify([p.title, p.name, p.ptype, p.category, p.categories, p.domain, p.goals, p.outputs, p.scope, p.summary, partnerName(p)]);
