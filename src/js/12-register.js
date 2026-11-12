@@ -140,7 +140,7 @@ function rtRow(p, st) {
   const term = p.startDate || p.endDate ? `<div class="rt-term">${tp !== null ? `<span class="rt-bar" title="انقضى ${Math.round(tp * 100)}% من المدة"><i style="width:${Math.max(3, Math.round(tp * 100))}%"></i></span>` : ''}<div class="small">${fmtDate(p.startDate, 'short')} – ${fmtDate(p.endDate, 'short')}</div>${rem}</div>` : '<span class="faint">—</span>';
   return `<tr data-row="${p.id}" tabindex="0" class="st-${st} ${p.golden ? 'gold' : ''}" style="--c:${ST_VAR(st)}">
     <td class="rt-c-name"><div class="t-name">${plateHTML(pr, 44)}<div class="rt-nm"><b>${esc(name)} ${demoTag(p)}${p.golden ? `<span class="rt-gold" title="شراكة ذهبية">${STAR_SVG}</span>` : ''}</b>
-      <span class="rt-meta"><span class="code">${esc(p.code || '')}</span>${sub ? `<span class="rt-sub">${esc(sub)}</span>` : ''}</span>
+      <span class="rt-meta"><span class="code">${esc(p.code || '')}</span>${stratMiniHTML(p)}${sub ? `<span class="rt-sub">${esc(sub)}</span>` : ''}</span>
       ${(p.categories || []).length ? `<span class="rt-cats">${p.categories.slice(0, 3).map((c) => `<em>${esc(c)}</em>`).join('')}${p.categories.length > 3 ? `<em>+${p.categories.length - 3}</em>` : ''}</span>` : ''}</div></div></td>
     <td><div class="rt-cls"><b>${esc(p.classification || '—')}</b>${pSector(p) ? `<span>${esc(pSector(p))}${p.ptype ? ` · ${esc(p.ptype)}` : ''}</span>` : p.ptype ? `<span>${esc(p.ptype)}</span>` : ''}</div></td>
     <td>${statusChip(p)}</td>
@@ -170,7 +170,7 @@ function pcardHTML(p) {
   const owners = p.owners || [];
   return `<article class="pc st-${st} ${strat ? 'strat' : ''} ${p.golden ? 'gold' : ''}" style="--c:${ST_VAR(st)}">
     <div class="pc-media">${p.golden ? `<span class="pc-gold" title="شراكة ذهبية">${STAR_SVG}<b>شراكة ذهبية</b></span>` : ''}${coverHTML(p.id + (pr ? pr.name : ''), p.coverFileId, { W: 640, H: 300, levels: 10, cols: 40, tone: toneFor(pr) })}<span class="pc-shade" aria-hidden="true"></span>
-      <div class="pc-top">${statusChip(p)}${p.ptype ? `<span class="pc-type">${strat ? icon('star') : ''}${esc(p.ptype)}</span>` : ''}</div>
+      <div class="pc-top">${statusChip(p)}${stratMiniHTML(p)}${p.ptype ? `<span class="pc-type">${strat ? icon('star') : ''}${esc(p.ptype)}</span>` : ''}</div>
       ${goal ? `<p class="pc-goal">${esc(goal)}</p>` : ''}
     </div>
     <div class="pc-ring" ${tp !== null ? `title="انقضى ${Math.round(pct * 100)}% من مدة الشراكة"` : ''}>

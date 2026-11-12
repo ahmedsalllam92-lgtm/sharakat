@@ -8535,6 +8535,54 @@ html.printing-bp.bp-dark,html.printing-bp.bp-dark body{background:#0E1613!import
 .sg-pgi b{font-size:14px;line-height:1.6}.sg-pgi ul{margin:6px 0 0;padding-inline-start:18px;font-size:13px;color:var(--ink-2)}
 @media (max-width:900px){.sg-kpis{grid-template-columns:1fr 1fr}.sg-goals{grid-template-columns:1fr}.sg-di{grid-template-columns:1fr}.sg-ps{max-width:50%}}
 @media print{.sg-vw,.ph-actions{display:none!important}.sg-g{break-inside:avoid}}
+/* ===== الارتباط الاستراتيجي: الشارة وقائمة التحقق ===== */
+.sg-mini{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 7px 0 4px;border-radius:999px;border:1px solid var(--line);background:var(--paper,#fff);font:inherit;font-size:10.5px;font-weight:800;color:var(--muted);cursor:pointer;direction:ltr;vertical-align:middle;line-height:1;transition:.15s;flex:none}
+.sg-mini svg{width:15px;height:15px}.sg-mini .t{fill:none;stroke:var(--line-2,#CBD8D3);stroke-width:2.6}.sg-mini .v{fill:none;stroke:var(--faint,#9AA9A3);stroke-width:2.6;stroke-linecap:round}
+.sg-mini.ok{color:var(--petrol-3,#2F7A5E);border-color:color-mix(in srgb,var(--petrol-3,#2F7A5E) 40%,var(--line))}.sg-mini.ok .v{stroke:var(--petrol-3,#2F7A5E)}
+.sg-mini.no{color:#B5543C}.sg-mini.no .v{stroke:#B5543C}
+.sg-mini.auto{border-style:dashed}
+.sg-mini > .ic{width:12px;height:12px}
+.sg-mini:hover{border-color:var(--petrol-3);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.rt-meta .sg-mini{margin-inline-start:4px}
+.pc-top .sg-mini{background:rgba(255,255,255,.92)}
+.sg-pop{position:fixed;z-index:9500;background:var(--paper,#fff);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.18);padding:14px 16px;animation:sgPop .18s ease-out}
+@keyframes sgPop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.sg-pop-h{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}.sg-pop-h>div{flex:1;min-width:0}.sg-pop-h small{display:block;font-size:11px;color:var(--muted);line-height:1.4}.sg-pop-h b{display:block;font-size:14px;line-height:1.5}
+.sg-x{border:0;background:none;color:var(--muted);cursor:pointer;padding:2px;border-radius:6px;display:grid}.sg-x .ic{width:16px;height:16px}.sg-x:hover{background:var(--paper-2)}
+.sg-pop-st{display:flex;align-items:center;gap:10px;font-size:12px;margin-bottom:8px}
+.sg-pop-st b{font-size:13px}.sg-pop-st.ok span:last-child{color:var(--petrol-3)}.sg-pop-st.no span:last-child{color:#B5543C}
+.sg-pop-bar{position:relative;flex:1;height:6px;border-radius:3px;background:var(--paper-3,#EEF3F1)}.sg-pop-bar i{display:block;height:100%;border-radius:3px;background:var(--petrol-3,#2F7A5E);transition:width .3s}.sg-pop-st.no .sg-pop-bar i{background:#B5543C}
+.sg-pop-bar em{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);opacity:.35;border-radius:1px}
+.sg-ck{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.sg-ck button,.sg-ck li>span{display:flex;align-items:flex-start;gap:9px;width:100%;text-align:start;border:1px solid var(--line);background:var(--paper,#fff);border-radius:10px;padding:8px 10px;font:inherit;font-size:12.5px;line-height:1.5;color:var(--ink);cursor:pointer;transition:.15s}
+.sg-ck li>span{cursor:default}
+.sg-ck i{flex:none;width:17px;height:17px;border-radius:5px;border:1.5px solid var(--line-2,#CBD8D3);display:grid;place-items:center;margin-top:1px;color:transparent;transition:.15s}.sg-ck i .ic{width:12px;height:12px}
+.sg-ck .on{background:color-mix(in srgb,var(--petrol-3,#2F7A5E) 7%,var(--paper,#fff));border-color:color-mix(in srgb,var(--petrol-3) 30%,var(--line))}
+.sg-ck .on i{background:var(--petrol-3,#2F7A5E);border-color:var(--petrol-3,#2F7A5E);color:#fff}
+.sg-ck .on > span{text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--petrol-3,#2F7A5E) 70%,transparent);text-decoration-thickness:1.5px;color:var(--muted)}
+.sg-ck button:hover:not(:disabled){border-color:var(--petrol-3)}.sg-ck button:disabled{cursor:default}
+.sg-pop-sel{display:flex;flex-direction:column;gap:4px;margin-top:10px;font-size:11.5px;color:var(--muted)}.sg-pop-sel select{font-size:12.5px}
+.sg-pop-f{display:flex;align-items:center;gap:10px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line);flex-wrap:wrap}
+.sg-pop-f .linkbtn{display:inline-flex;align-items:center;gap:4px;font-size:12px}.sg-pop-f .linkbtn .ic{width:13px;height:13px}
+.sg-src{font-size:11px;font-weight:700;border-radius:999px;padding:2px 9px;background:var(--paper-2,#F3EFE4);color:var(--muted);margin-inline-end:auto}
+.sg-src.auto{background:color-mix(in srgb,#B88A3B 14%,transparent);color:#8A5E10}.sg-src.manual{background:color-mix(in srgb,var(--petrol-3,#2F7A5E) 12%,transparent);color:var(--petrol-3,#2F7A5E)}
+.sg-p.auto{border-style:dashed}
+.sg-unp{display:inline-flex;align-items:center;gap:4px}
+.sg-badge{font-style:normal;font-size:10.5px;background:#B88A3B;color:#fff;border-radius:999px;padding:0 6px;margin-inline-start:4px}
+.sg-code.sm{min-width:34px;height:22px;font-size:11px;border-radius:7px;margin-inline-end:8px}
+.sg-rv td{text-align:start}.sg-rv-t{font-size:12.5px;max-width:420px}
+.sg-rv th{text-align:start;direction:rtl}
+.sg-crit{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sg-crit header{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}.sg-crit header h3{flex:1;margin:3px 0 0;font-size:14px;line-height:1.55}
+.sg-cl{margin:4px 0 0;padding-inline-start:20px;font-size:12.5px;color:var(--ink-2);line-height:1.7}
+.sg-ci{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.sg-ci-h{display:flex;align-items:center;gap:8px}.sg-ci-h b{flex:1;font-size:13px}.sg-ci-h em{font-style:normal;font-size:11px;font-weight:700;color:var(--gold-ink,#8A5E10);background:var(--sand,#F5EDDB);border-radius:6px;padding:0 6px}
+.sg-sec{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--paper-2,#F7F4EC)}
+.sg-sec-h{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}.sg-sec-h>div{flex:1}.sg-sec-h small{display:block;font-size:11.5px;color:var(--muted)}.sg-sec-h b{font-size:15px;line-height:1.5}
+@media (max-width:900px){.sg-crit{grid-template-columns:1fr}}
+.sg-ck button > span,.sg-ck li > span > span{flex:1;text-align:start}
+.sg-rv-t .sg-code{margin-inline-end:0;margin-left:8px}
+.sg-pop .sg-ck button,.sg-ck button{justify-content:flex-start!important;text-align:right!important}.sg-ck button>span{text-align:right!important;display:block}
 </style>
 </head>
 <body>
@@ -21383,7 +21431,7 @@ function rtRow(p, st) {
   const term = p.startDate || p.endDate ? `<div class="rt-term">${tp !== null ? `<span class="rt-bar" title="انقضى ${Math.round(tp * 100)}% من المدة"><i style="width:${Math.max(3, Math.round(tp * 100))}%"></i></span>` : ''}<div class="small">${fmtDate(p.startDate, 'short')} – ${fmtDate(p.endDate, 'short')}</div>${rem}</div>` : '<span class="faint">—</span>';
   return `<tr data-row="${p.id}" tabindex="0" class="st-${st} ${p.golden ? 'gold' : ''}" style="--c:${ST_VAR(st)}">
     <td class="rt-c-name"><div class="t-name">${plateHTML(pr, 44)}<div class="rt-nm"><b>${esc(name)} ${demoTag(p)}${p.golden ? `<span class="rt-gold" title="شراكة ذهبية">${STAR_SVG}</span>` : ''}</b>
-      <span class="rt-meta"><span class="code">${esc(p.code || '')}</span>${sub ? `<span class="rt-sub">${esc(sub)}</span>` : ''}</span>
+      <span class="rt-meta"><span class="code">${esc(p.code || '')}</span>${stratMiniHTML(p)}${sub ? `<span class="rt-sub">${esc(sub)}</span>` : ''}</span>
       ${(p.categories || []).length ? `<span class="rt-cats">${p.categories.slice(0, 3).map((c) => `<em>${esc(c)}</em>`).join('')}${p.categories.length > 3 ? `<em>+${p.categories.length - 3}</em>` : ''}</span>` : ''}</div></div></td>
     <td><div class="rt-cls"><b>${esc(p.classification || '—')}</b>${pSector(p) ? `<span>${esc(pSector(p))}${p.ptype ? ` · ${esc(p.ptype)}` : ''}</span>` : p.ptype ? `<span>${esc(p.ptype)}</span>` : ''}</div></td>
     <td>${statusChip(p)}</td>
@@ -21413,7 +21461,7 @@ function pcardHTML(p) {
   const owners = p.owners || [];
   return `<article class="pc st-${st} ${strat ? 'strat' : ''} ${p.golden ? 'gold' : ''}" style="--c:${ST_VAR(st)}">
     <div class="pc-media">${p.golden ? `<span class="pc-gold" title="شراكة ذهبية">${STAR_SVG}<b>شراكة ذهبية</b></span>` : ''}${coverHTML(p.id + (pr ? pr.name : ''), p.coverFileId, { W: 640, H: 300, levels: 10, cols: 40, tone: toneFor(pr) })}<span class="pc-shade" aria-hidden="true"></span>
-      <div class="pc-top">${statusChip(p)}${p.ptype ? `<span class="pc-type">${strat ? icon('star') : ''}${esc(p.ptype)}</span>` : ''}</div>
+      <div class="pc-top">${statusChip(p)}${stratMiniHTML(p)}${p.ptype ? `<span class="pc-type">${strat ? icon('star') : ''}${esc(p.ptype)}</span>` : ''}</div>
       ${goal ? `<p class="pc-goal">${esc(goal)}</p>` : ''}
     </div>
     <div class="pc-ring" ${tp !== null ? `title="انقضى ${Math.round(pct * 100)}% من مدة الشراكة"` : ''}>
@@ -21499,7 +21547,7 @@ function renderPartnership(el, r) {
         ${kv('تفعيل الشراكة', esc(p.activation))}
         ${kv('التقاطع مع الإدارات', (p.departments || []).length ? `<div class="tagline">${p.departments.map((d) => `<span class="chip plain">${esc(d)}</span>`).join('')}</div>` : '', true)}
       </dl></section>
-    ${stratSectionHTML(p, canEdit)}
+    ${stratSectionHTML(p)}
     ${internal && can('edit.partnership') && !App.share ? portalSectionHTML(p) : ''}
     ${internal ? `<section class="dsec" id="files" data-tour="detail-files"><h2>الملفات والصور <span class="src">تقارير الشراكة من ملف الحصر</span></h2>
       <p class="small muted" style="margin:-6px 0 16px">${canEdit ? 'ارفع الملفات مباشرة في التصنيف المناسب أو اسحبها إليه. تُحفظ في هذا المتصفح، ولا تظهر المستندات في الواجهة التعريفية؛ تظهر صور الشراكة فقط إذا كانت الشراكة منشورة.' : 'ملفات الشراكة وصورها.'}</p>
@@ -21555,7 +21603,6 @@ function renderPartnership(el, r) {
   portalBind(el, p);
   el.onclick = async (e) => {
     const gs = e.target.closest('[data-gstar]'); if (gs) { e.preventDefault(); return toggleGolden(p, gs); }
-    if (e.target.closest('[data-sgedit]')) return stratLinkDlg(p, () => rerenderKeep());
     const lt = e.target.closest('[data-logtg]'); if (lt) { const sec = lt.closest('.dlog'); const on = sec.classList.toggle('open'); lt.setAttribute('aria-expanded', on); return; }
     const fx = e.target.closest('[data-anchor-to]');
     if (fx) { e.preventDefault(); const t = $('#' + fx.dataset.anchorTo, el); if (t) window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 124, behavior: 'smooth' }); return; }
@@ -30599,34 +30646,188 @@ function asTourStart() {
 }
 function asTourStop() { if (AS.tour) clearTimeout(AS.tour.tm); AS.tour = null; const b = $('#asTour'); if (b) b.remove(); }
 
+/* —— 29c2-stratcrit.js —— */
+/* =====================================================================
+   معايير الربط الاستراتيجي: أربعة عناصر تحقق لكل هدف ولكل مبادرة.
+   تُعدّ الشراكة تابعة للهدف أو المبادرة إذا حققت 75% على الأقل (3 من 4).
+   كل عنصر: [النص، تعبير البحث في نصوص الشراكة، أو دالة على الشراكة]
+   تُعدَّل النصوص من صفحة «الارتباط الاستراتيجي ← معايير الربط» (D.settings.stratCrit)
+   ===================================================================== */
+const STRAT_PASS = 0.75;
+const secIs = (s) => (p) => { const pr = partnerById(p.partnerId); return !!pr && pr.sector === s; };
+const STRAT_CRIT_DEF = {
+  SO1: [['تتضمن برامج أو حملات توعية موجّهة للمجتمع', /توعي|حملات|تثقيف|الوعي/], ['تتضمن مشاركة مجتمعية أو عملًا تطوعيًا', /تطوع|المشاركة المجتمعية|المجتمع المحلي|المجتمعات المحلية|مشاركة المجتمع/], ['تتضمن بناء قدرات أو تدريبًا', /تدريب|بناء القدرات|تأهيل|ورش/], ['لها أثر اجتماعي أو اقتصادي قابل للقياس', /قابل للقياس|أثر اجتماعي|اقتصادي|جودة الحياة|فرص عمل/]],
+  SO2: [['تتضمن مشاريع بيئية ميدانية', /تشجير|زراعة|ميداني|نثر البذور|استصلاح|مشاريع بيئية/], ['تستهدف الغطاء النباتي أو النظم البيئية أو الموارد الطبيعية', /الغطاء النباتي|النظم البيئية|الأنظمة البيئية|الموائل|المسطحات الخضراء|المساحات الخضراء|المياه|التربة/], ['ترتبط بمواقع أو نطاق جغرافي محدد', /مواقع|محمية|المحمية|المنافذ|الطرق|المدن|نطاق|المنطقة|المباني|البادية/], ['لها مخرجات بيئية قابلة للقياس', /مساحات|المسطحات|أشجار|هكتار|كميات|قابل للقياس|مؤشر/]],
+  SO3: [['يقدّم الشريك موارد: تمويلًا أو رعاية أو دعمًا لوجستيًا أو مواقع', /تمويل|رعاي|دعم لوجستي|الدعم اللوجستي|تهيئة|توفير|إسناد|تصاريح/], ['تحدد أدوارًا والتزامات واضحة للطرفين', /الطرف الأول|الطرف الثاني|ضابط اتصال|آلية تنسيق|التزام/], ['تتضمن خطة عمل أو تنفيذًا مشتركًا', /خطة عمل|خطة تنفيذية|برنامج عمل|تنفيذ المبادرات المشتركة|مشاريع مشتركة|المشروع/], ['يمكن متابعتها وقياس نتائجها', /متابعة|مؤشرات|تقارير|قياس/]],
+  SO4: [['تتضمن بحوثًا أو دراسات', /بحوث|أبحاث|دراسات|دراسة/], ['تتضمن تبادل معرفة أو بيانات أو خبرات', /تبادل|نقل المعرفة|البيانات|المعلومات|الخبرات/], ['تتضمن ابتكارًا أو حلولًا تقنية', /ابتكار|مبتكر|تقني|رقمي|حلول/], ['تنتج منتجًا معرفيًا أو استشاريًا', /استشار|تقارير|أدلة|نشر|كتب|أوراق|خرائط/]],
+  EO: [['تدعم الحوكمة أو التحول المؤسسي', /حوكمة|تحول|مؤسسي|الامتثال/], ['تدعم الاستدامة المالية', /تمويل|إيرادات|الاستدامة المالية|رعاي|منح/], ['تطوّر القدرات الداخلية أو التقنية', /رقمي|منصة|أنظمة|منسوبي|الكوادر|رأس المال البشري/], ['تدعم الاعتماد أو الاتصال المؤسسي', /اعتماد|انتساب|إعلام|الظهور|اتصال مؤسسي|الهوية/]],
+  'SO1.I1': [['تُشرك جهات غير ربحية أو أفرادًا من المجتمع', /غير الربحي|غير ربحي|جمعي|المجتمع|أفراد/], ['تتضمن تطوعًا أو مشاركة ميدانية', /تطوع|مشاركة|فعاليات/], ['تحدد فئات مستهدفة من المجتمع', /المستهدفين|الشباب|الطلاب|المستفيدين|الفئات|قيادات/], ['لها آلية لقياس المشاركة', /المتطوعين|المشاركين|مؤشر|قياس|قابل للقياس/]],
+  'SO1.I2': [['تتضمن برامج تدريب أو تأهيل', /تدريب|تأهيل|برامج تدريبية/], ['تستهدف القطاع غير الربحي أو العاملين والمتطوعين فيه', /غير الربحي|الجمعيات|المتطوعين|الكوادر|العاملين/], ['تتضمن محتوى أو حقائب تدريبية', /حقائب|محتوى|أدلة|مناهج|معسكرات/], ['لها أثر قابل للقياس على القدرات', /شهادات|مسارات|كفاءة|قياس|مهارات/]],
+  'SO1.I3': [['تتضمن حملات توعوية أو إعلامية', /حملات|توعوي|إعلامي/], ['تتضمن محتوى توعويًا أو قنوات نشر', /محتوى|منصات التواصل|وسائل الإعلام|نشر|تغطيات/], ['تستهدف فئات من الجمهور', /المجتمع|الجمهور|المستهدفين|المجتمعي/], ['تتضمن فعاليات أو أنشطة مشاركة', /فعاليات|أنشطة|مبادرات|تطوع/]],
+  'SO1.I4': [['تتضمن أثرًا اقتصاديًا', /فرص عمل|اقتصادي|تمويل|رواد الأعمال|المنشآت|الاستثمار/], ['تتضمن أثرًا اجتماعيًا', /اجتماعي|جودة الحياة|المجتمعات المحلية|المجتمع/], ['تحدد مؤشرات لقياس الأثر', /قياس|مؤشرات|قابل للقياس/], ['تستهدف مستفيدين محددين', /رواد الأعمال|المستفيدين|المنشآت|الشباب/]],
+  'SO2.I1': [['تتضمن تشجيرًا أو زراعة', /تشجير|زراعة|غرس|نثر البذور|التشجير/], ['تتضمن تأهيل أراضٍ أو مكافحة تصحر أو زيادة الغطاء النباتي', /تأهيل|استصلاح|تصحر|متدهورة|الغطاء النباتي|المساحات الخضراء|المسطحات الخضراء/], ['تحدد مواقع التنفيذ', /مواقع|منطقة|محمية|المحمية|المنافذ|الطرق|المدن|المباني|المملكة/], ['لها مخرجات كمية', /عدد|مساحات|المسطحات|هكتار|أشجار|كميات|زيادة/]],
+  'SO2.I2': [['تستهدف أنواعًا نباتية محلية أو فطرية', /المحلية|البرية|الفطرية|الأنواع/], ['تتضمن بذورًا أو مشاتل', /بذور|مشاتل|إكثار/], ['تتضمن حماية موائل أو محميات', /محمية|محميات|الموائل|النظم البيئية|الأنظمة البيئية/], ['تتضمن تنوعًا أحيائيًا أو رصدًا', /التنوع الأحيائي|التنوع البيولوجي|رصد|مسح|البحوث الميدانية/]],
+  'SO2.I3': [['تتناول الكربون أو الانبعاثات', /كربون|انبعاثات/], ['تتضمن قياس البصمة أو التحقق', /البصمة|التحقق|قياس/], ['تتضمن مشاريع امتصاص كربون', /تشجير|المانجروف|الحلول القائمة على الطبيعة/], ['ترتبط بشهادات أو أرصدة أو سوق', /شهادات|أرصدة|سوق/]],
+  'SO2.I4': [['تتناول التنوع الأحيائي', /التنوع الأحيائي|التنوع البيولوجي/], ['تتضمن رصدًا أو بيانات أو خرائط', /رصد|مسح|بيانات|خرائط/], ['تستهدف نظمًا بيئية أو موائل', /النظم البيئية|الأنظمة البيئية|الموائل|المانجروف/], ['ترتبط بسوق أو تمويل أو استثمار', /سوق|تمويل|استثمار|أرصدة/]],
+  'SO2.I5': [['تتناول النفايات أو إعادة التدوير', /نفايات|تدوير|فرز/], ['تتبنى مبادئ الاقتصاد الدائري أو كفاءة الموارد', /الاقتصاد الدائري|كفاءة استخدام الموارد|الهدر/], ['تتضمن مشروعات أو حلولًا تطبيقية', /مشروعات|حلول|مبادرات|دراسة واستكشاف/], ['تتضمن مشاركة مجتمعية أو قياسًا للكميات', /المجتمعية|قياس|كميات|التطوعية/]],
+  'SO2.I6': [['تتناول المياه أو السقيا', /السقيا|مائي|المائية|الموارد المائية|المياه المعالجة/], ['تتضمن ريًا أو معالجة أو إعادة استخدام', /\sالري|\sري\s|معالجة المياه|مياه الوضوء|إعادة استخدام|تعقيم/], ['ترتبط بالتشجير أو الغطاء النباتي', /تشجير|الغطاء النباتي|زراعة/], ['تحدد مشاريع أو مواقع للتنفيذ', /مشاريع|مواقع|البادية|المحميات/]],
+  'SO3.I1': [['الشريك جهة حكومية', secIs('حكومي')], ['تمكّن الوصول أو التصاريح أو المواقع أو الإسناد', /تصاريح|مواقع|تسهيل|موافقات|إسناد|تهيئة/], ['ترتبط بمستهدفات وطنية', /المستهدفات الوطنية|رؤية|السعودية الخضراء|الوطنية/], ['لها آلية تنسيق ومتابعة', /تنسيق|ضابط اتصال|لجنة|متابعة/]],
+  'SO3.I2': [['الشريك من القطاع الخاص', secIs('خاص')], ['يقدّم دعمًا أو رعاية أو تمويلًا', /رعاي|تمويل|دعم|المسؤولية الاجتماعية/], ['تتضمن خطة عمل مشتركة', /خطة عمل|خطة|تنفيذ المبادرات المشتركة|مشاريع مشتركة/], ['تتضمن ظهورًا أو حملات مشتركة', /حملات|إعلامي|الظهور/]],
+  'SO3.I3': [['الشريك جهة غير ربحية', secIs('غير ربحي')], ['تتضمن مبادرات أو برامج مشتركة', /مبادرات|برامج/], ['تمكّن القطاع غير الربحي', /تمكين|القطاع غير الربحي|الجمعيات/], ['تتضمن تبادل خبرات', /تبادل|الخبرات/]],
+  'SO3.I4': [['تحدد مؤشرات أداء', /مؤشرات|قياس/], ['تتضمن تقارير دورية', /تقارير|متابعة/], ['تتناول القيمة أو العائد', /القيمة|العائد/], ['تتضمن تقييمًا', /تقييم/]],
+  'SO4.I1': [['تتضمن بحوثًا أو دراسات', /بحوث|أبحاث|دراسات/], ['تطبيقية تدعم القرار أو التخطيط', /اتخاذ القرار|تطبيقية|التخطيط|الأولوية/], ['تتضمن بيانات أو معلومات', /البيانات|المعلومات|خرائط|الإحصائية/], ['تنتج مخرجًا معرفيًا منشورًا', /تقارير|أوراق|نشر|كتب|دراسات/]],
+  'SO4.I2': [['تتضمن ورشًا أو ندوات أو دورات', /ورش|ندوات|مؤتمرات|دورات/], ['تتضمن تبادل معرفة أو خبرات', /تبادل|نقل المعرفة|الخبرات/], ['تمتد عبر أكثر من قطاع', /القطاعين|العام والخاص|القطاعات|القطاع/], ['تتضمن محتوى تثقيفيًا أو أكاديميًا', /محتوى|تثقيف|أكاديمي|التعليم/]],
+  'SO4.I3': [['تتضمن استشارات', /استشار/], ['تعتمد خبرة فنية متخصصة', /استشارات فنية|خبرة فنية|متخصصة/], ['تقدّم خدمة استشارية لجهة مستفيدة', /الخدمات الاستشارية|تقديم الاستشارات|خدمات استشارية/], ['لها مخرج محدد', /تقارير|دراسات|أطر/]],
+  'SO4.I4': [['تتضمن ابتكارًا', /ابتكار|مبتكر/], ['تعتمد تقنية أو حلولًا رقمية', /تقني|رقمي|طائرات|منصة|تعقيم/], ['تتضمن مشاريع تجريبية أو تطبيقًا', /تجريبي|تطبيق|قابلة للتطبيق|مشاريع/], ['ترتبط بريادة أو سوق أو تمويل', /رواد|السوق|تمويل|الاستثمار/]],
+  'EO.I1': [['تتناول الحوكمة أو الامتثال', /حوكمة|سياسات|إجراءات|امتثال/], ['تدعم التحول المؤسسي', /مؤسسي|تحول/], ['تتبنى ممارسات الاستدامة', /استدامة|ESG/], ['تعتمد معايير أو تقارير', /تقارير|معايير/]],
+  'EO.I2': [['تتضمن اعتمادًا أو شهادات', /اعتماد|شهادات|ترخيص/], ['تتضمن انتسابًا أو عضوية', /انتساب|عضوية/], ['تعتمد معايير جودة', /معايير|جودة/], ['ذات طابع رسمي', /رسمي|رسمية/]],
+  'EO.I3': [['تتضمن حلولًا رقمية أو منصات', /رقمي|منصة|تقني/], ['تتناول البيانات أو الأنظمة', /بيانات|أنظمة/], ['تتضمن تطويرًا أو تشغيلًا', /تطوير|تشغيل/], ['تقدّم خدمات إلكترونية', /إلكتروني|الكتروني/]],
+  'EO.I4': [['تستهدف منسوبي المؤسسة أو الكوادر', /منسوبي|الكوادر|الموظفين/], ['تتضمن تدريبًا أو تأهيلًا', /تدريب|تأهيل/], ['تطوّر مهارات أو قيادات', /مهارات|قيادات|القيادة/], ['تمنح مسارات أو شهادات', /مسارات|شهادات/]],
+  'EO.I5': [['تتناول ممارسات إدارة المشاريع', /إدارة المشاريع|ممارسات/], ['تتضمن تخطيطًا', /تخطيط|جدول|خطة/], ['تتضمن متابعة أو رقابة', /متابعة|رقابة/], ['تعتمد معايير', /معايير/]],
+  'EO.I6': [['تتضمن عملًا إعلاميًا', /إعلام|إعلامي/], ['تتضمن محتوى أو منصات تواصل', /محتوى|منصات التواصل/], ['تعزز الظهور أو الهوية', /الظهور|تغطيات|الهوية/], ['تتضمن حملات', /حملات/]],
+  'EO.I7': [['تتضمن تمويلًا أو إيرادات', /تمويل|إيرادات|تمويلية/], ['تتضمن رعاية أو منحًا', /رعاي|منح/], ['تتضمن استثمارًا أو عوائد', /استثمار|عوائد/], ['تؤسس علاقة مالية مستدامة', /اتفاقية|مستدام|منتجات تمويلية/]],
+};
+/* مقترحات أولية للشراكات القائمة (بحسب قراءة نصوص كل مذكرة): الرمز ← [الهدف/المبادرة، العناصر المتحققة] */
+const STRAT_SEED = {
+  'PT-2026-001': ['SO2.I1', '1111'],
+  'PT-2026-002': ['SO2.I5', '1011'],
+  'PT-2026-003': ['SO3.I1', '1101'],
+  'PT-2026-014': ['SO3.I1', '1011'],
+  'PT-2026-015': ['SO2.I1', '1111'],
+  'PT-2023-016': ['SO3.I1', '1111'],
+  'PT-2024-017': ['SO2.I2', '1110'],
+  'PT-2024-018': ['SO2.I2', '1011'],
+  'PT-2024-019': ['SO1.I4', '1101'],
+  'PT-2025-020': ['SO4.I2', '1101'],
+  'PT-2024-021': ['SO1.I3', '1111'],
+  'PT-2024-022': ['SO2.I1', '1111'],
+  'PT-2024-023': ['SO1.I3', '1111'],
+  'PT-2024-024': ['SO3.I2', '1111'],
+  'PT-2024-025': ['SO1.I3', '1110'],
+  'PT-2025-026': ['SO3.I2', '1111'],
+  'PT-2025-027': ['SO4.I1', '1111'],
+  'PT-2025-028': ['SO4.I4', '1110'],
+  'PT-2025-029': ['SO2.I1', '1111'],
+  'PT-2025-030': ['SO2.I1', '1111'],
+  'PT-2025-031': ['SO1.I3', '1111'],
+  'PT-2025-032': ['SO4.I2', '1110'],
+  'PT-2026-033': ['SO2.I1', '1111'],
+  'PT-2026-034': ['SO4.I4', '1111'],
+  'PT-2026-035': ['SO4.I1', '1111'],
+  'PT-2026-036': ['SO2.I1', '1111'],
+  'PT-2026-037': ['SO4.I2', '1101'],
+  'PT-2026-038': ['SO3.I2', '1111'],
+  'PT-2026-039': ['SO1', '1110'],
+  'PT-2026-040': ['SO2.I5', '1111'],
+  'PT-2026-041': ['SO1.I3', '1111'],
+  'PT-2026-042': ['SO2.I5', '1111'],
+  'PT-2026-043': ['SO1.I2', '1111'],
+  'PT-2026-044': ['SO2.I6', '1111'],
+  'PT-2026-045': ['SO4.I4', '1110'],
+  'PT-2026-046': ['SO4.I1', '1111'],
+  'PT-2026-047': ['SO4.I1', '1111'],
+  'PT-2026-048': ['SO4.I1', '1111'],
+  'PT-2026-049': ['SO1.I3', '1111'],
+  'PT-2026-050': ['SO2.I2', '1011'],
+  'PT-2026-051': ['SO4.I1', '1111'],
+  'PT-2026-052': ['SO4.I1', '1111'],
+  'PT-2026-053': ['SO4.I1', '1111'],
+  'PT-2026-054': ['SO4.I1', '1111'],
+  'PT-2026-055': ['SO1.I3', '1111'],
+  'PT-2026-056': ['SO1.I1', '1111'],
+  'PT-2026-057': ['SO4.I1', '1111'],
+  'PT-2026-058': ['SO4.I2', '1111'],
+  'PT-2026-059': ['SO1.I2', '1111'],
+  'PT-2026-060': ['SO1.I1', '1101'],
+  'PT-2026-061': ['SO2.I3', '1110'],
+  'PT-2026-062': ['SO4.I1', '1110'],
+  'PT-2026-063': ['SO4.I1', '1110'],
+  'PT-2026-064': ['SO4.I1', '1110'],
+  'PT-2026-065': ['SO4.I1', '1110'],
+  'PT-2026-066': ['SO2.I1', '1110']
+};
+/* نص الشراكة الذي تُفحص عليه المعايير */
+function stratText(p) {
+  const pr = partnerById(p.partnerId) || {};
+  return [p.title, partnerName(p), pr.domain, p.ptype, (p.categories || []).join(' '), p.showcaseGoal, p.cooperationAreas, p.outputs, p.expectedImpact, p.scope, p.summary].filter(Boolean).map((x) => (typeof x === 'string' ? x : JSON.stringify(x))).join(' ');
+}
+/* بنود قائمة هدف أو مبادرة: النص من الإعدادات إن عُدّل، والفحص الآلي من الافتراضي */
+function stratItems(key) {
+  const def = STRAT_CRIT_DEF[key] || [], cus = ((D.settings && D.settings.stratCrit) || {})[key];
+  if (cus && cus.length) return cus.map((t, i) => ({ t, test: def[i] && def[i][0] === t ? def[i][1] : null }));
+  return def.map(([t, test]) => ({ t, test }));
+}
+function stratAutoChecks(p, key, txt) {
+  txt = txt || stratText(p);
+  return stratItems(key).map((it) => (typeof it.test === 'function' ? it.test(p) : it.test instanceof RegExp ? it.test.test(txt) : false));
+}
+const stratPct = (checks) => (checks && checks.length ? checks.filter(Boolean).length / checks.length : 0);
+/* المفتاح ← { الهدف، المبادرة، الاسم } */
+function stratTarget(key) {
+  const [g, i] = String(key || '').split('.');
+  const goal = stratGoals().find((x) => x.k === g); if (!goal) return null;
+  const init = i ? goal.inits.find((x) => x.c === key) : null;
+  return { key, goal, init, label: init ? init.t : goal.t, kind: init ? 'مبادرة' : 'هدف' };
+}
+/* أفضل هدف أو مبادرة للشراكة من نصوصها: المبادرة أدق من الهدف، والتعادل يُحسم بعدد الكلمات المطابقة */
+function stratSuggest(p) {
+  const txt = stratText(p); let best = null;
+  stratGoals().forEach((g) => [...g.inits.map((i) => i.c), g.k].forEach((key) => {
+    const ch = stratAutoChecks(p, key, txt), pc = stratPct(ch);
+    const hits = stratItems(key).reduce((t, it) => t + (it.test instanceof RegExp ? (txt.match(new RegExp(it.test.source, 'g')) || []).length : it.test && it.test(p) ? 3 : 0), 0);
+    const sc = pc * 100 + Math.min(hits, 40) * 0.5 + (key.includes('.') ? 2 : 0) - (key.startsWith('EO') ? 6 : 0) - (/^SO3\.I4$/.test(key) ? 6 : 0);
+    if (!best || sc > best.sc) best = { key, checks: ch, sc };
+  }));
+  return best ? { target: best.key, checks: best.checks, src: 'auto' } : null;
+}
+/* تقييم الشراكة الحالي: المعتمد إن وُجد، وإلا المقترح الآلي */
+function stratAssessOf(p) {
+  if (p.stratAssess && stratTarget(p.stratAssess.target)) return p.stratAssess;
+  const sd = STRAT_SEED[p.code];
+  if (sd && stratTarget(sd[0]) && stratItems(sd[0]).length === sd[1].length) return { target: sd[0], checks: sd[1].split('').map((c) => c === '1'), src: 'auto' };
+  if (!p._sgSug || p._sgSug.v !== (p.updatedAt || '') + '|' + JSON.stringify((D.settings && D.settings.stratCrit) || {}).length) {
+    const s = stratSuggest(p);
+    Object.defineProperty(p, '_sgSug', { value: { v: (p.updatedAt || '') + '|' + JSON.stringify((D.settings && D.settings.stratCrit) || {}).length, s }, configurable: true, enumerable: false, writable: true });
+  }
+  return p._sgSug.s;
+}
+
 /* —— 29d-strategy.js —— */
 /* =====================================================================
-   الارتباط الاستراتيجي: كيف تخدم الشراكات أهداف المؤسسة ومبادراتها
-   المصدر بالترتيب: ربط يدوي من إدارة الشراكات (stratLinks) إن وُجد، وإلا
-   نموذج المواءمة الاستراتيجية (goalsLinked) + الهدف والمبادرة في المقترح الأصلي.
+   الارتباط الاستراتيجي: كيف تخدم الشراكات أهداف المؤسسة ومبادراتها.
+   لكل شراكة هدف أو مبادرة واحدة مع قائمة تحقق (29c2-stratcrit.js)؛ تُعدّ تابعة
+   لها إذا حققت 75% على الأقل. المقترح الآلي يُبنى من نصوص الشراكة ويظهر إلى أن
+   تعتمده إدارة الشراكات أو تعدّله. مصادر قديمة (نموذج المواءمة/المقترح) تُحترم.
    ===================================================================== */
 if (typeof AUDIT_LABELS === 'object') AUDIT_LABELS['partnership.strategy'] = 'الارتباط الاستراتيجي';
 
 const stratGoals = () => goalCodes().map((g) => ({ k: g.k, t: String(g.t).replace(/^[A-Z]{1,3}\d?\s*[:：]\s*/, ''), full: g.t, inits: goalInits(g.t) }));
-/* المبادرة النصية ← رمز هدفها */
 function stratInitGoal(txt) {
   const n = normAr(txt || ''); if (!n) return '';
   for (const g of stratGoals()) if (g.inits.some((i) => normAr(i.t) === n)) return g.k;
   return '';
 }
+const STRAT_SRC = { manual: 'معتمد من إدارة الشراكات', auto: 'مقترح آلي — بانتظار المراجعة', form: 'نموذج المواءمة الاستراتيجية', proposal: 'المقترح الأصلي' };
+
 function pStrat(p) {
-  if (p.stratLinks) return { goals: [...(p.stratLinks.goals || [])], inits: [...(p.stratLinks.inits || [])], src: 'manual' };
-  const prop = p.proposalId ? D.proposals.find((x) => x.id === p.proposalId) : null;
-  const G = new Set(), I = new Set(); let src = '';
-  [p, prop].filter(Boolean).forEach((r) => {
-    (r.goalsLinked || []).forEach((k) => { G.add(k); src = src || 'form'; });
-    if (r.strategicGoal) { G.add(goalCode(r.strategicGoal)); src = src || 'proposal'; }
-    if (r.initiative) { I.add(r.initiative); const g = stratInitGoal(r.initiative); if (g) G.add(g); }
-  });
-  const valid = new Set(stratGoals().map((g) => g.k));
-  return { goals: [...G].filter((k) => valid.has(k)), inits: [...I], src };
+  /* 1) تقييم بقائمة التحقق (معتمد أو مقترح) */
+  const legacy = !p.stratAssess && (() => {
+    const prop = p.proposalId ? D.proposals.find((x) => x.id === p.proposalId) : null;
+    const G = new Set(), I = new Set(); let src = '';
+    [p, prop].filter(Boolean).forEach((r) => {
+      (r.goalsLinked || []).forEach((k) => { G.add(k); src = src || 'form'; });
+      if (r.strategicGoal) { G.add(goalCode(r.strategicGoal)); src = src || 'proposal'; }
+      if (r.initiative) { I.add(r.initiative); const g = stratInitGoal(r.initiative); if (g) G.add(g); }
+    });
+    if (p.stratLinks) { (p.stratLinks.goals || []).forEach((k) => G.add(k)); (p.stratLinks.inits || []).forEach((t) => I.add(t)); src = 'manual'; }
+    return G.size ? { goals: [...G], inits: [...I], src } : null;
+  })();
+  if (legacy) { const valid = new Set(stratGoals().map((g) => g.k)); return { ...legacy, goals: legacy.goals.filter((k) => valid.has(k)), linked: true, legacy: true }; }
+  const a = stratAssessOf(p), T = a && stratTarget(a.target);
+  if (!T) return { goals: [], inits: [], src: '', linked: false };
+  const pct = stratPct(a.checks), linked = pct >= STRAT_PASS;
+  return { goals: linked ? [T.goal.k] : [], inits: linked && T.init ? [T.init.t] : [], src: a.src || 'manual', target: a.target, T, checks: a.checks, pct, linked };
 }
-const STRAT_SRC = { manual: 'ربط إدارة الشراكات', form: 'نموذج المواءمة الاستراتيجية', proposal: 'المقترح الأصلي' };
 
 /* ملخص المحفظة */
 function stratSummary(list) {
@@ -30639,15 +30840,106 @@ function stratSummary(list) {
     return { ...g, ps: ps.map((r) => r.p), inits, noInit };
   });
   const linked = rows.filter((r) => r.s.goals.length).map((r) => r.p), unlinked = rows.filter((r) => !r.s.goals.length).map((r) => r.p);
+  const pending = rows.filter((r) => r.s.src === 'auto').map((r) => r.p);
   const initsAll = goals.flatMap((g) => g.inits), initsOn = initsAll.filter((i) => i.ps.length).length;
-  return { goals, linked, unlinked, total: list.length, goalsOn: goals.filter((g) => g.ps.length).length, initsAll: initsAll.length, initsOn };
+  return { goals, linked, unlinked, pending, total: list.length, goalsOn: goals.filter((g) => g.ps.length).length, initsAll: initsAll.length, initsOn };
 }
 
-const stratChip = (p) => { const pr = partnerById(p.partnerId); return `<a class="sg-p" href="#/partnerships/${p.id}" title="${esc(partnerName(p))}">${plateHTML(pr, 28)}<span>${esc(partnerName(p))}</span></a>`; };
+/* الشارة الصغيرة: رمز الهدف/المبادرة وحلقة نسبة التحقق */
+function stratMiniHTML(p) {
+  const s = pStrat(p);
+  if (s.legacy) return `<button type="button" class="sg-mini ok" data-sgpop="${p.id}" title="الارتباط الاستراتيجي: ${esc(s.goals.join('، '))} (${STRAT_SRC[s.src] || ''})">${icon('flag')}<b>${esc(s.goals[0] || '')}</b></button>`;
+  if (!s.T) return '';
+  const C = 2 * Math.PI * 7, code = s.T.init ? s.T.init.c.replace('.I', '·') : s.T.goal.k;
+  return `<button type="button" class="sg-mini ${s.linked ? 'ok' : 'no'} ${s.src === 'auto' ? 'auto' : ''}" data-sgpop="${p.id}" title="${esc(`${s.T.kind}: ${s.T.label} — تحقق ${s.checks.filter(Boolean).length} من ${s.checks.length}${s.src === 'auto' ? ' (مقترح آلي)' : ''}`)}"><svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7" class="t"/><circle cx="9" cy="9" r="7" class="v" stroke-dasharray="${(s.pct * C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 9 9)"/></svg><b>${esc(code)}</b></button>`;
+}
+
+/* بطاقة قائمة التحقق المنبثقة */
+function stratPop(p, anchor, onChange) {
+  $('#sgPop') && $('#sgPop').remove();
+  const canEdit = can('edit.partnership') && !App.share;
+  const el = document.createElement('div'); el.id = 'sgPop'; el.className = 'sg-pop'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'الارتباط الاستراتيجي');
+  document.body.appendChild(el);
+  const place = () => {
+    const r = anchor.getBoundingClientRect(), w = Math.min(380, innerWidth - 24); el.style.width = w + 'px';
+    let left = r.right - w; left = Math.max(12, Math.min(innerWidth - w - 12, left));
+    let top = r.bottom + 8; if (top + el.offsetHeight > innerHeight - 12) top = Math.max(12, r.top - el.offsetHeight - 8);
+    el.style.left = left + 'px'; el.style.top = top + 'px';
+  };
+  const save = async (a, msg) => {
+    p.stratAssess = { target: a.target, checks: a.checks.slice(), src: 'manual', by: Session.userName(), at: nowISO() };
+    await Repo.save('partnerships', p);
+    const T = stratTarget(a.target);
+    await Repo.log('partnership.strategy', 'partnership', p.id, p.code, `${T ? T.label : a.target} — ${a.checks.filter(Boolean).length}/${a.checks.length}`);
+    if (msg) toast(msg);
+    if (onChange) onChange();
+  };
+  const draw = () => {
+    const s = pStrat(p);
+    if (s.legacy) {
+      el.innerHTML = `<header class="sg-pop-h"><b>الارتباط الاستراتيجي</b><button type="button" class="sg-x" aria-label="إغلاق">${icon('x')}</button></header>
+        <p class="small">${s.goals.map((k) => `<span class="sg-code">${esc(k)}</span>`).join(' ')} <span class="muted">من ${esc(STRAT_SRC[s.src] || '')}</span></p>
+        ${canEdit ? `<button type="button" class="btn sm" data-sgconv>${icon('check')} التقييم بقائمة التحقق</button>` : ''}`;
+      return place();
+    }
+    const a = stratAssessOf(p); const T = stratTarget(a.target), items = stratItems(a.target), n = a.checks.filter(Boolean).length, pct = stratPct(a.checks), ok = pct >= STRAT_PASS;
+    el.innerHTML = `<header class="sg-pop-h"><span class="sg-code">${esc(T.goal.k)}</span><div><small>${T.kind}${T.init ? ` · ${esc(T.goal.t)}` : ''}</small><b>${esc(T.label)}</b></div><button type="button" class="sg-x" aria-label="إغلاق">${icon('x')}</button></header>
+      <div class="sg-pop-st ${ok ? 'ok' : 'no'}"><span class="sg-pop-bar"><i style="width:${Math.round(pct * 100)}%"></i><em style="inset-inline-start:${STRAT_PASS * 100}%"></em></span><b>${n}/${items.length}</b><span>${ok ? 'تُحتسب تابعة' : 'دون الحد (75%)'}</span></div>
+      <ul class="sg-ck">${items.map((it, i) => `<li><button type="button" class="${a.checks[i] ? 'on' : ''}" data-sgck="${i}" ${canEdit ? '' : 'disabled'} aria-pressed="${!!a.checks[i]}"><i>${icon('check')}</i><span>${esc(it.t)}</span></button></li>`).join('')}</ul>
+      ${canEdit ? `<label class="sg-pop-sel"><span>الهدف أو المبادرة</span><select class="in" data-sgsel>${stratGoals().map((g) => `<optgroup label="${esc(g.k)} — ${esc(g.t.slice(0, 60))}"><option value="${g.k}" ${a.target === g.k ? 'selected' : ''}>${esc(g.k)} · الهدف كاملًا</option>${g.inits.map((i) => `<option value="${i.c}" ${a.target === i.c ? 'selected' : ''}>${esc(i.c.split('.')[1])} · ${esc(i.t)}</option>`).join('')}</optgroup>`).join('')}</select></label>` : ''}
+      <footer class="sg-pop-f"><span class="sg-src ${a.src}">${esc(STRAT_SRC[a.src] || '')}</span>${canEdit && a.src === 'auto' ? `<button type="button" class="btn sm primary" data-sgok>${icon('check')} اعتماد</button>` : ''}${canEdit && a.src !== 'auto' ? `<button type="button" class="linkbtn" data-sgreset>المقترح الآلي</button>` : ''}<a class="linkbtn" href="#/strategy">${icon('flag')} المحفظة</a></footer>`;
+    place();
+  };
+  draw();
+  el.addEventListener('click', async (e) => {
+    if (e.target.closest('.sg-x')) return close();
+    if (e.target.closest('[data-sgconv]')) { const s = stratSuggest(p); p.stratLinks = null; p.goalsLinked = []; await save(s, 'حُوّل الارتباط إلى قائمة التحقق'); return draw(); }
+    const ck = e.target.closest('[data-sgck]');
+    if (ck) {
+      const a0 = stratAssessOf(p), a = { target: a0.target, checks: a0.checks.slice() }, i = +ck.dataset.sgck;
+      a.checks[i] = !a.checks[i];
+      if (stratPct(a.checks) < STRAT_PASS && stratPct(a0.checks) >= STRAT_PASS) {
+        /* خرجت من الهدف/المبادرة: تنتقل إلى أقرب هدف أو مبادرة تحقق الحد إن وُجدت */
+        const alt = stratSuggestExcept(p, a.target);
+        if (alt) { const from = stratTarget(a.target).label; await save(alt, `لم تعد تحقق 75% من «${from}» — نُقلت إلى «${stratTarget(alt.target).label}»`); return draw(); }
+        await save(a, 'لم تعد الشراكة تحقق 75% — أصبحت غير مرتبطة'); return draw();
+      }
+      await save(a); return draw();
+    }
+    if (e.target.closest('[data-sgok]')) { const a = stratAssessOf(p); await save(a, 'اعتُمد الارتباط الاستراتيجي'); return draw(); }
+    if (e.target.closest('[data-sgreset]')) { p.stratAssess = null; await Repo.save('partnerships', p); delete p._sgSug; toast('أُعيد المقترح الآلي'); if (onChange) onChange(); return draw(); }
+  });
+  el.addEventListener('change', async (e) => {
+    const sel = e.target.closest('[data-sgsel]'); if (!sel) return;
+    await save({ target: sel.value, checks: stratAutoChecks(p, sel.value) }); draw();
+  });
+  const away = (e) => { if (!el.contains(e.target) && !anchor.contains(e.target)) close(); };
+  const esc_ = (e) => { if (e.key === 'Escape') close(); };
+  function close() { el.remove(); document.removeEventListener('mousedown', away, true); document.removeEventListener('keydown', esc_); }
+  setTimeout(() => { document.addEventListener('mousedown', away, true); document.addEventListener('keydown', esc_); }, 0);
+}
+function stratSuggestExcept(p, key) {
+  const txt = stratText(p); let best = null;
+  stratGoals().forEach((g) => [...g.inits.map((i) => i.c), g.k].forEach((k) => {
+    if (k === key) return; const ch = stratAutoChecks(p, k, txt), pc = stratPct(ch); if (pc < STRAT_PASS) return;
+    const sc = pc * 100 + (k.includes('.') ? 2 : 0) + (k.split('.')[0] === String(key).split('.')[0] ? 3 : 0) - (k.startsWith('EO') ? 6 : 0);
+    if (!best || sc > best.sc) best = { target: k, checks: ch, sc };
+  }));
+  return best;
+}
+/* أي شارة في أي صفحة تفتح البطاقة */
+document.addEventListener('click', (e) => {
+  const b = e.target.closest && e.target.closest('[data-sgpop]'); if (!b) return;
+  e.preventDefault(); e.stopPropagation();
+  const p = D.partnerships.find((x) => x.id === b.dataset.sgpop); if (!p) return;
+  stratPop(p, b, () => { const nb = $(`[data-sgpop="${p.id}"]`); if (nb) nb.outerHTML = stratMiniHTML(p); if (App.route && App.route.name === 'strategy') route(); });
+}, true);
+
+const stratChip = (p) => { const pr = partnerById(p.partnerId), s = pStrat(p); return `<a class="sg-p ${s.src === 'auto' ? 'auto' : ''}" href="#/partnerships/${p.id}" title="${esc(partnerName(p))}${s.src === 'auto' ? ' — مقترح آلي' : ''}">${plateHTML(pr, 28)}<span>${esc(partnerName(p))}</span></a>`; };
 
 function renderStrategy(el) {
   const st = App.strat = App.strat || { view: 'map' };
-  const canEdit = can('edit.partnership') && !App.share;
+  const canEdit = can('edit.partnership') && !App.share, canLists = can('manage.lists') && !App.share;
   const base = () => visiblePartnerships().filter((p) => !p.isDraft && p.stage !== 'cancel');
   const draw = () => {
     const list = base(), S = stratSummary(list), pct = S.total ? Math.round(S.linked.length / S.total * 100) : 0;
@@ -30657,71 +30949,69 @@ function renderStrategy(el) {
         <header><span class="sg-code">${esc(g.k)}</span><h3>${esc(g.t)}</h3><div class="sg-n"><b>${g.ps.length}</b><small>${g.ps.length === 1 ? 'شراكة' : 'شراكات'}</small></div></header>
         <div class="sg-bar"><i style="width:${(g.ps.length / maxG * 100).toFixed(1)}%"></i></div>
         ${g.inits.length ? `<ul class="sg-inits">${g.inits.map((i) => `<li class="${i.ps.length ? '' : 'gap'}"><span class="sg-it"><em>${esc(i.c.split('.')[1] || '')}</em>${esc(i.t)}</span><span class="sg-ps">${i.ps.length ? i.ps.slice(0, 5).map(stratChip).join('') + (i.ps.length > 5 ? `<span class="sg-more">+${i.ps.length - 5}</span>` : '') : '<span class="sg-gap">فجوة: لا توجد شراكة</span>'}</span></li>`).join('')}</ul>` : ''}
-        ${g.noInit.length ? `<div class="sg-noinit"><small>مرتبطة بالهدف دون تحديد مبادرة</small><div class="sg-ps">${g.noInit.map(stratChip).join('')}</div></div>` : ''}
+        ${g.noInit.length ? `<div class="sg-noinit"><small>مرتبطة بالهدف كاملًا دون مبادرة بعينها</small><div class="sg-ps">${g.noInit.map(stratChip).join('')}</div></div>` : ''}
       </section>`).join('')}</div>
-      <section class="panel sg-un"><h2>${icon('flag')} شراكات بلا ارتباط استراتيجي <span class="muted small">${S.unlinked.length}</span></h2>
-        ${S.unlinked.length ? `<div class="sg-ps wrap">${S.unlinked.map((p) => canEdit ? `<button type="button" class="sg-p" data-sglink="${p.id}" title="ربط بالأهداف">${plateHTML(partnerById(p.partnerId), 28)}<span>${esc(partnerName(p))}</span>${icon('plus')}</button>` : stratChip(p)).join('')}</div>` : '<p class="muted small">كل الشراكات مرتبطة بهدف واحد على الأقل.</p>'}</section>`;
-    const G = stratGoals();
-    const rows = list.map((p) => ({ p, s: pStrat(p) })).sort((a, b) => (a.s.goals.length ? 1 : 0) - (b.s.goals.length ? 1 : 0) || partnerName(a.p).localeCompare(partnerName(b.p), 'ar'));
-    const matrix = `<div class="panel sg-mx-w"><p class="small muted" style="margin:0 0 12px">اضغط على الخانة لربط الشراكة بالهدف أو إلغاء الربط؛ يُحفظ فورًا. لتحديد المبادرات اضغط «تفصيل».</p><div class="sg-mx-s"><table class="sg-mx"><thead><tr><th>الشراكة</th>${G.map((g) => `<th title="${esc(g.full)}">${esc(g.k)}</th>`).join('')}<th></th></tr></thead><tbody>
-      ${rows.map(({ p, s }) => `<tr><td><span class="sg-mx-p">${plateHTML(partnerById(p.partnerId), 28)}<a href="#/partnerships/${p.id}">${esc(partnerName(p))}</a></span></td>${G.map((g) => `<td><button type="button" class="sg-cell ${s.goals.includes(g.k) ? 'on' : ''}" data-sgcell="${p.id}|${g.k}" ${canEdit ? '' : 'disabled'} aria-pressed="${s.goals.includes(g.k)}" title="${esc(g.full)}">${icon('check')}</button></td>`).join('')}<td>${canEdit ? `<button type="button" class="linkbtn" data-sglink="${p.id}">تفصيل</button>` : ''}</td></tr>`).join('')}</tbody></table></div></div>`;
-    el.innerHTML = `<div class="ph"><div><h1>الارتباط الاستراتيجي</h1><p>كيف تخدم الشراكات أهداف المؤسسة الاستراتيجية ومبادراتها، وأين الفجوات التي تحتاج شراكات جديدة.</p></div>
-      <div class="ph-actions">${canEdit ? `<div class="seg sg-vw"><button type="button" data-sgv="map" class="${st.view === 'map' ? 'on' : ''}">${icon('flag')} الخريطة</button><button type="button" data-sgv="mx" class="${st.view === 'mx' ? 'on' : ''}">${icon('grid')} الربط السريع</button></div>` : ''}<button class="btn" type="button" onclick="window.print()">${icon('print')} طباعة</button></div></div>
-      <div class="sg-kpis">${kpi(pct + '%', 'من الشراكات مرتبطة بالأهداف', `${S.linked.length} من ${S.total}`, 'pri')}${kpi(`${S.goalsOn}/${S.goals.length}`, 'أهداف تخدمها شراكات', S.goals.length - S.goalsOn ? `${S.goals.length - S.goalsOn} بلا شراكات` : 'كل الأهداف مغطاة')}${kpi(`${S.initsOn}/${S.initsAll}`, 'مبادرات تخدمها شراكات', S.initsAll - S.initsOn ? `${S.initsAll - S.initsOn} فجوة` : '')}${kpi(S.unlinked.length, 'شراكة بلا ارتباط', S.unlinked.length ? 'تحتاج ربطًا' : '', S.unlinked.length ? 'warn' : '')}</div>
-      ${st.view === 'mx' && canEdit ? matrix : mapView}`;
+      <section class="panel sg-un"><h2>${icon('flag')} شراكات لا تحقق 75% من أي هدف أو مبادرة <span class="muted small">${S.unlinked.length}</span></h2>
+        ${S.unlinked.length ? `<div class="sg-ps wrap">${S.unlinked.map((p) => `<span class="sg-unp">${stratChip(p)}${stratMiniHTML(p)}</span>`).join('')}</div>` : '<p class="muted small">كل الشراكات تحقق الحد الأدنى لهدف أو مبادرة.</p>'}</section>`;
+    const rows = list.map((p) => ({ p, s: pStrat(p) })).sort((a, b) => (a.s.src === 'auto' ? 0 : 1) - (b.s.src === 'auto' ? 0 : 1) || (a.s.linked ? 1 : 0) - (b.s.linked ? 1 : 0) || partnerName(a.p).localeCompare(partnerName(b.p), 'ar'));
+    const review = `<div class="panel sg-mx-w"><div class="row" style="justify-content:space-between;margin:0 0 12px;gap:10px;flex-wrap:wrap"><p class="small muted" style="margin:0">لكل شراكة هدف أو مبادرة واحدة. اضغط الشارة لفتح قائمة التحقق: علّم أو ألغِ العناصر، أو غيّر الهدف. تحت 75% تنتقل الشراكة تلقائيًا إلى أقرب هدف أو مبادرة تحققه.</p>${canEdit && S.pending.length ? `<button type="button" class="btn sm primary" data-sgall>${icon('check')} اعتماد كل المقترحات (${S.pending.length})</button>` : ''}</div>
+      <div class="sg-mx-s"><table class="sg-mx sg-rv"><thead><tr><th>الشراكة</th><th>الهدف أو المبادرة</th><th>التحقق</th><th>الحالة</th></tr></thead><tbody>
+      ${rows.map(({ p, s }) => `<tr><td><span class="sg-mx-p">${plateHTML(partnerById(p.partnerId), 28)}<a href="#/partnerships/${p.id}">${esc(partnerName(p))}</a></span></td>
+        <td class="sg-rv-t">${s.T ? `<span class="sg-code sm">${esc(s.T.goal.k)}</span>${esc(s.T.label)}` : s.legacy ? s.goals.map((k) => `<span class="sg-code sm">${esc(k)}</span>`).join(' ') : '—'}</td>
+        <td>${stratMiniHTML(p)}</td>
+        <td><span class="sg-src ${s.src}">${s.src === 'auto' ? 'مقترح آلي' : s.legacy ? esc(STRAT_SRC[s.src] || '') : 'معتمد'}</span>${s.T && !s.linked ? ' <span class="sg-gap">دون 75%</span>' : ''}</td></tr>`).join('')}</tbody></table></div></div>`;
+    const crit = `<div class="sg-crit">${stratGoals().map((g) => `<section class="sg-g"><header><span class="sg-code">${esc(g.k)}</span><h3>${esc(g.t)}</h3>${canLists ? `<button type="button" class="icon-btn" data-sgedit="${g.k}" title="تعديل البنود">${icon('edit')}</button>` : ''}</header>
+        <ol class="sg-cl">${stratItems(g.k).map((it) => `<li>${esc(it.t)}</li>`).join('')}</ol>
+        ${g.inits.map((i) => `<div class="sg-ci"><div class="sg-ci-h"><em>${esc(i.c.split('.')[1])}</em><b>${esc(i.t)}</b>${canLists ? `<button type="button" class="icon-btn sm" data-sgedit="${i.c}" title="تعديل البنود">${icon('edit')}</button>` : ''}</div><ol class="sg-cl">${stratItems(i.c).map((it) => `<li>${esc(it.t)}</li>`).join('')}</ol></div>`).join('')}</section>`).join('')}</div>`;
+    el.innerHTML = `<div class="ph"><div><h1>الارتباط الاستراتيجي</h1><p>كيف تخدم الشراكات أهداف المؤسسة ومبادراتها. لكل هدف ومبادرة قائمة تحقق من أربعة عناصر؛ تُعدّ الشراكة تابعة إذا حققت 75% منها على الأقل.</p></div>
+      <div class="ph-actions"><div class="seg sg-vw"><button type="button" data-sgv="map" class="${st.view === 'map' ? 'on' : ''}">${icon('flag')} الخريطة</button><button type="button" data-sgv="rv" class="${st.view === 'rv' ? 'on' : ''}">${icon('check')} مراجعة الربط${S.pending.length ? ` <em class="sg-badge">${S.pending.length}</em>` : ''}</button><button type="button" data-sgv="crit" class="${st.view === 'crit' ? 'on' : ''}">${icon('list')} معايير الربط</button></div><button class="btn" type="button" onclick="window.print()">${icon('print')} طباعة</button></div></div>
+      <div class="sg-kpis">${kpi(pct + '%', 'من الشراكات تحقق 75% لهدف أو مبادرة', `${S.linked.length} من ${S.total}`, 'pri')}${kpi(`${S.goalsOn}/${S.goals.length}`, 'أهداف تخدمها شراكات', S.goals.length - S.goalsOn ? `${S.goals.length - S.goalsOn} بلا شراكات` : 'كل الأهداف مغطاة')}${kpi(`${S.initsOn}/${S.initsAll}`, 'مبادرات تخدمها شراكات', S.initsAll - S.initsOn ? `${S.initsAll - S.initsOn} فجوة` : '')}${kpi(S.pending.length, 'مقترح آلي بانتظار الاعتماد', S.pending.length ? 'من «مراجعة الربط»' : 'كل الارتباطات معتمدة', S.pending.length ? 'warn' : '')}</div>
+      ${st.view === 'rv' ? review : st.view === 'crit' ? crit : mapView}`;
     hydrateFiles(el);
   };
   draw();
   el.onclick = async (e) => {
     const v = e.target.closest('[data-sgv]'); if (v) { st.view = v.dataset.sgv; return draw(); }
-    const c = e.target.closest('[data-sgcell]');
-    if (c && canEdit) {
-      const [pid, k] = c.dataset.sgcell.split('|'), p = D.partnerships.find((x) => x.id === pid); if (!p) return;
-      const s = pStrat(p), on = s.goals.includes(k);
-      const goals = on ? s.goals.filter((x) => x !== k) : [...s.goals, k];
-      const inits = on ? s.inits.filter((x) => stratInitGoal(x) !== k) : s.inits;
-      p.stratLinks = { goals, inits, by: Session.userName(), at: nowISO() };
-      c.classList.toggle('on', !on); c.setAttribute('aria-pressed', !on);
-      await Repo.save('partnerships', p); await Repo.log('partnership.strategy', 'partnership', p.id, p.code, `${on ? 'إلغاء الربط بـ' : 'ربط بـ'}${k}`);
-      return;
+    if (e.target.closest('[data-sgall]')) {
+      const L_ = base().filter((p) => pStrat(p).src === 'auto'); if (!L_.length) return;
+      if (!(await confirmDlg(`اعتماد ${L_.length} ارتباطًا مقترحًا آليًا كما هي؟ يمكن تعديل أي منها لاحقًا.`))) return;
+      for (const p of L_) { const a = stratAssessOf(p); p.stratAssess = { target: a.target, checks: a.checks.slice(), src: 'manual', by: Session.userName(), at: nowISO() }; await Repo.save('partnerships', p); }
+      await Repo.log('partnership.strategy', 'settings', 'strategy', 'الارتباط الاستراتيجي', `اعتماد ${L_.length} مقترحًا آليًا`);
+      toast(`اعتُمد ${L_.length} ارتباطًا`); return draw();
     }
-    const l = e.target.closest('[data-sglink]'); if (l) { const p = D.partnerships.find((x) => x.id === l.dataset.sglink); if (p) stratLinkDlg(p, draw); }
+    const ed = e.target.closest('[data-sgedit]'); if (ed) stratCritDlg(ed.dataset.sgedit, draw);
   };
 }
 
-/* نافذة ربط شراكة بالأهداف ومبادراتها */
-function stratLinkDlg(p, done) {
-  const s = pStrat(p), G = stratGoals();
-  const on = (t) => s.inits.some((x) => normAr(x) === normAr(t));
+/* تعديل بنود قائمة تحقق هدف أو مبادرة */
+function stratCritDlg(key, done) {
+  const T = stratTarget(key), cur = stratItems(key).map((x) => x.t);
   const m = Modal.open({
-    title: `الارتباط الاستراتيجي — ${partnerName(p)}`, size: 'lg',
-    body: `<p class="small muted" style="margin:0 0 12px">اختر الأهداف التي تخدمها الشراكة، ثم المبادرات تحت كل هدف إن وُجدت.${s.src && s.src !== 'manual' ? ` الاختيار الحالي مأخوذ من ${STRAT_SRC[s.src]}.` : ''}</p>
-      <div class="sg-dlg">${G.map((g) => `<div class="sg-dg ${s.goals.includes(g.k) ? 'on' : ''}"><label class="sg-dgh"><input type="checkbox" data-g="${g.k}" ${s.goals.includes(g.k) ? 'checked' : ''}><span class="sg-code">${esc(g.k)}</span><b>${esc(g.t)}</b></label>
-        ${g.inits.length ? `<div class="sg-di">${g.inits.map((i) => `<label><input type="checkbox" data-i="${esc(i.t)}" data-ig="${g.k}" ${on(i.t) ? 'checked' : ''}><span>${esc(i.t)}</span></label>`).join('')}</div>` : ''}</div>`).join('')}</div>`,
-    foot: `<button class="btn" data-x>إلغاء</button><button class="btn primary" data-save>حفظ الربط</button>`,
-  });
-  m.el.addEventListener('change', (e) => {
-    const i = e.target.closest('[data-i]'); if (i && i.checked) { const g = $(`[data-g="${i.dataset.ig}"]`, m.el); g.checked = true; }
-    const g = e.target.closest('[data-g]'); if (g && !g.checked) $$(`[data-ig="${g.dataset.g}"]`, m.el).forEach((x) => { x.checked = false; });
-    $$('.sg-dg', m.el).forEach((d) => d.classList.toggle('on', $('[data-g]', d).checked));
+    title: `معايير الربط — ${T ? T.label : key}`,
+    body: `<p class="small muted" style="margin:0 0 10px">أربعة عناصر يُفضَّل؛ تُعدّ الشراكة تابعة إذا حققت 75% منها. العناصر المعدّلة لا تُعلَّم آليًا في المقترحات؛ تُعلَّم يدويًا.</p>${[0, 1, 2, 3].map((i) => `<input class="in" data-ci="${i}" value="${esc(cur[i] || '')}" placeholder="العنصر ${i + 1}" style="margin-bottom:8px">`).join('')}`,
+    foot: `<button class="btn" data-x>إلغاء</button><button class="btn" data-def>الافتراضي</button><button class="btn primary" data-save>حفظ</button>`,
   });
   m.el.addEventListener('click', async (e) => {
     if (e.target.closest('[data-x]')) return m.close();
-    if (!e.target.closest('[data-save]')) return;
-    const goals = $$('[data-g]:checked', m.el).map((x) => x.dataset.g), inits = $$('[data-i]:checked', m.el).map((x) => x.dataset.i);
-    p.stratLinks = { goals, inits, by: Session.userName(), at: nowISO() };
-    await Repo.save('partnerships', p); await Repo.log('partnership.strategy', 'partnership', p.id, p.code, goals.length ? goals.join('، ') : 'بلا ارتباط');
-    m.close(); toast('حُفظ الارتباط الاستراتيجي'); if (done) done();
+    const def = e.target.closest('[data-def]'), sv = e.target.closest('[data-save]'); if (!def && !sv) return;
+    D.settings.stratCrit = D.settings.stratCrit || {};
+    if (def) delete D.settings.stratCrit[key];
+    else { const v = $$('[data-ci]', m.el).map((x) => x.value.trim()).filter(Boolean); if (v.length < 2) return toast('أدخل عنصرين على الأقل.', 'err'); D.settings.stratCrit[key] = v; }
+    await Repo.saveSettings(); await Repo.log('partnership.strategy', 'settings', 'strategy', 'معايير الربط', T ? T.label : key);
+    m.close(); toast('حُفظت المعايير'); if (done) done();
   });
 }
 
 /* قسم صفحة الشراكة */
-function stratSectionHTML(p, canEdit) {
-  const s = pStrat(p), G = stratGoals().filter((g) => s.goals.includes(g.k));
-  return `<section class="dsec" id="strat"><h2>الارتباط الاستراتيجي ${s.src ? `<span class="src">${STRAT_SRC[s.src]}</span>` : ''}</h2>
-    ${G.length ? `<div class="sg-pg">${G.map((g) => { const its = g.inits.filter((i) => s.inits.some((x) => normAr(x) === normAr(i.t))); return `<div class="sg-pgi"><span class="sg-code">${esc(g.k)}</span><div><b>${esc(g.t)}</b>${its.length ? `<ul>${its.map((i) => `<li>${esc(i.t)}</li>`).join('')}</ul>` : ''}</div></div>`; }).join('')}</div>`
-      : `<p class="muted small">لم تُربط الشراكة بأهداف المؤسسة الاستراتيجية بعد.</p>`}
-    <div class="row" style="gap:8px;margin-top:12px">${canEdit ? `<button type="button" class="btn sm" data-sgedit>${icon('edit')} ${G.length ? 'تعديل الربط' : 'ربط بالأهداف'}</button>` : ''}<a class="btn sm ghost" href="#/strategy">${icon('flag')} الارتباط الاستراتيجي للمحفظة</a></div></section>`;
+function stratSectionHTML(p) {
+  const s = pStrat(p);
+  if (s.legacy) return `<section class="dsec" id="strat"><h2>الارتباط الاستراتيجي <span class="src">${esc(STRAT_SRC[s.src] || '')}</span></h2><div class="row" style="gap:8px;align-items:center">${s.goals.map((k) => `<span class="sg-code">${esc(k)}</span>`).join('')}${stratMiniHTML(p)}</div></section>`;
+  if (!s.T) return '';
+  const items = stratItems(s.target);
+  return `<section class="dsec" id="strat"><h2>الارتباط الاستراتيجي <span class="src">${esc(STRAT_SRC[s.src] || '')}</span></h2>
+    <div class="sg-sec"><div class="sg-sec-h"><span class="sg-code">${esc(s.T.goal.k)}</span><div><small>${s.T.kind}${s.T.init ? ` ضمن هدف: ${esc(s.T.goal.t)}` : ''}</small><b>${esc(s.T.label)}</b></div>${stratMiniHTML(p)}</div>
+      <ul class="sg-ck ro">${items.map((it, i) => `<li><span class="${s.checks[i] ? 'on' : ''}"><i>${icon('check')}</i><span>${esc(it.t)}</span></span></li>`).join('')}</ul>
+      <p class="xs muted" style="margin:8px 0 0">${s.linked ? `تحقق ${s.checks.filter(Boolean).length} من ${items.length} — تُحتسب تابعة لهذا ${s.T.kind}.` : `تحقق ${s.checks.filter(Boolean).length} من ${items.length} فقط — دون الحد (75%)، فلا تُحتسب تابعة.`} اضغط الشارة للتعديل.</p></div></section>`;
 }
 
 /* —— 30-palette.js —— */

@@ -57,7 +57,7 @@ function renderPartnership(el, r) {
         ${kv('تفعيل الشراكة', esc(p.activation))}
         ${kv('التقاطع مع الإدارات', (p.departments || []).length ? `<div class="tagline">${p.departments.map((d) => `<span class="chip plain">${esc(d)}</span>`).join('')}</div>` : '', true)}
       </dl></section>
-    ${stratSectionHTML(p, canEdit)}
+    ${stratSectionHTML(p)}
     ${internal && can('edit.partnership') && !App.share ? portalSectionHTML(p) : ''}
     ${internal ? `<section class="dsec" id="files" data-tour="detail-files"><h2>الملفات والصور <span class="src">تقارير الشراكة من ملف الحصر</span></h2>
       <p class="small muted" style="margin:-6px 0 16px">${canEdit ? 'ارفع الملفات مباشرة في التصنيف المناسب أو اسحبها إليه. تُحفظ في هذا المتصفح، ولا تظهر المستندات في الواجهة التعريفية؛ تظهر صور الشراكة فقط إذا كانت الشراكة منشورة.' : 'ملفات الشراكة وصورها.'}</p>
@@ -113,7 +113,6 @@ function renderPartnership(el, r) {
   portalBind(el, p);
   el.onclick = async (e) => {
     const gs = e.target.closest('[data-gstar]'); if (gs) { e.preventDefault(); return toggleGolden(p, gs); }
-    if (e.target.closest('[data-sgedit]')) return stratLinkDlg(p, () => rerenderKeep());
     const lt = e.target.closest('[data-logtg]'); if (lt) { const sec = lt.closest('.dlog'); const on = sec.classList.toggle('open'); lt.setAttribute('aria-expanded', on); return; }
     const fx = e.target.closest('[data-anchor-to]');
     if (fx) { e.preventDefault(); const t = $('#' + fx.dataset.anchorTo, el); if (t) window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 124, behavior: 'smooth' }); return; }
