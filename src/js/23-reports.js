@@ -592,7 +592,7 @@ function renderReports(el, r) {
     $('#rpDDm', el).innerHTML = `<div class="rp-ddh"><button class="linkbtn" data-rsall type="button">تحديد الكل</button><button class="linkbtn" data-rsnone type="button">إلغاء الكل</button></div>` + ['التقرير', 'الشراكة'].map((g) => `<div class="rp-ddg">${g === 'التقرير' ? 'على مستوى التقرير' : 'لكل شراكة'}</div>${avail.filter((s) => s.g === g).map((s) => `<label class="rp-ddo"><input type="checkbox" data-rsec="${s.k}" ${RPT.sections.includes(s.k) ? 'checked' : ''}><span>${esc(s.l)}</span></label>`).join('')}`).join('');
   };
   const drawPicks = () => {
-    $('#rxPresets', el).innerHTML = `<a class="rx-kind mk mk-entry" href="#/reports/marketing"><span class="rk-art" aria-hidden="true">${MK_RINGS}<b>${nf(liveCounts().partners)}</b></span><span class="rk-b"><b>${icon('play')}التقرير التسويقي</b><span class="rk-d">عرض سينمائي متحرك يحكي قصة الشراكات وأثرها بالصور والأرقام، لكل الشراكات أو لشراكة واحدة.</span><small class="rk-n">للشركاء والجمهور والمناسبات · عرض بملء الشاشة وتنزيل فيديو</small></span><span class="rk-go">افتح ${icon('chevL')}</span></a>`
+    $('#rxPresets', el).innerHTML = `<a class="rx-kind mk mk-entry" href="#/reports/marketing"><span class="rk-art" aria-hidden="true">${MK_RINGS}<b>${nf(liveCounts().partners)}</b></span><span class="rk-b"><b>${icon('play')}العرض المرئي</b><span class="rk-d">عرض سينمائي متحرك يحكي قصة الشراكات وأثرها بالصور والأرقام، لكل الشراكات أو لشراكة واحدة.</span><small class="rk-n">للشركاء والجمهور والمناسبات · عرض بملء الشاشة وتنزيل فيديو</small></span><span class="rk-go">افتح ${icon('chevL')}</span></a>`
       + RPT_PRESETS.map((pr) => { const on = rptPresetOn(pr), n = (pr.secs || RPT_SECTIONS.map((s) => s.k)).length; return `<button type="button" class="rx-kind ${pr.k} ${on ? 'on' : ''}" data-rpreset="${pr.k}"><span class="rk-art a-${pr.k}" aria-hidden="true"><i></i><i></i><i></i></span><span class="rk-b"><b>${icon(pr.ic)}${esc(pr.t)}</b><span class="rk-d">${esc(pr.d)}</span><small class="rk-n">${esc(pr.who)} · ${esc(pr.use)} · ${n} مكونات</small></span>${on ? `<span class="rx-on">${icon('check')}</span>` : ''}</button>`; }).join('');
     const all = base();
     $('#rxQuick', el).innerHTML = RPT_QUICK.map(([k, l, f]) => { const ids = all.filter(f).map((p) => p.id); const on = ids.length && ids.length === RPT.ids.length && ids.every((id) => RPT.ids.includes(id)); return `<button type="button" class="rx-q ${on ? 'on' : ''}" data-rquick="${k}" ${ids.length ? '' : 'disabled'}><b>${ids.length}</b><span>${esc(l)}</span></button>`; }).join('') + `<span class="rx-q-note">${RPT.ids.length ? `محدد الآن: <b>${RPT.ids.length}</b>` : 'لم تُحدَّد شراكات بعد'}</span>`;
@@ -769,7 +769,7 @@ function openReportShow(start = 0, nodes) {
   ov.addEventListener('click', (e) => {
     const a = e.target.closest('[data-a]'), th = e.target.closest('[data-j]');
     if (th) { show(+th.dataset.j); const tb = $('.rshow-thumbs', ov); tb.hidden = true; ov.classList.remove('with-thumbs'); return; }
-    if (a) { const t = a.dataset.a; if (t === 'prev') show(i - 1); else if (t === 'next') show(i + 1); else if (t === 'exit') close(); else if (t === 'thumbs') { const tb = $('.rshow-thumbs', ov); tb.hidden = !tb.hidden; ov.classList.toggle('with-thumbs', !tb.hidden); show(i); } else if (t === 'fs') { if (!document.fullscreenElement) ov.requestFullscreen && ov.requestFullscreen().catch(() => {}); else document.exitFullscreen().catch(() => {}); } else if (t === 'play') { if (timer) stop(); else { a.innerHTML = icon('pause'); timer = setInterval(() => { if (i >= N - 1) stop(); else show(i + 1); }, 6000); } } return; }
+    if (a) { const t = a.dataset.a; if (t === 'prev') show(i - 1); else if (t === 'next') show(i + 1); else if (t === 'exit') close(); else if (t === 'thumbs') { const tb = $('.rshow-thumbs', ov); tb.hidden = !tb.hidden; ov.classList.toggle('with-thumbs', !tb.hidden); show(i); } else if (t === 'fs') { if (!document.fullscreenElement) ov.requestFullscreen && ov.requestFullscreen().catch(() => {}); else document.exitFullscreen().catch(() => {}); } else if (t === 'play') { if (timer) stop(); else { a.innerHTML = icon('pause'); timer = setInterval(() => { if (i >= N - 1) stop(); else show(i + 1); }, slides.some((x) => x.querySelector('.rs2.mk')) ? 3400 : 4500); } } return; }
     if (e.target.closest('.rshow-stage')) show(e.clientX < innerWidth / 2 ? i + 1 : i - 1);
   });
   /* أدوات العرض تختفي بعد ثوانٍ من السكون وتعود بتحريك الماوس أو بأي مفتاح؛ لا تختفي والمؤشر فوقها */
@@ -777,7 +777,7 @@ function openReportShow(start = 0, nodes) {
   ['mousemove', 'pointerdown', 'touchstart', 'wheel'].forEach((ev) => ov.addEventListener(ev, wake, { passive: true }));
   document.addEventListener('keydown', keys, true); window.addEventListener('resize', fit); document.addEventListener('fullscreenchange', fsch);
   fit(); show(i); wake();
-  /* التقرير التسويقي: مقدمة سينمائية، وميلان خفيف للشريحة مع حركة الفأرة */
+  /* العرض المرئي: مقدمة سينمائية، وميلان خفيف للشريحة مع حركة الفأرة */
   const isMk = !!(src[0] && src[0].classList.contains('mk'));
   if (isMk) {
     ov.classList.add('rshow-mk');

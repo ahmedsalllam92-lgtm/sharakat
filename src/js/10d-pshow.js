@@ -26,7 +26,7 @@ function pshowSlide(p) {
       ${goal ? `<p class="ps-goal">${esc(goal.slice(0, 220))}</p>` : ''}
       ${facts.length ? `<dl class="ps-facts">${facts.map(([v, u, l]) => `<div><dd><b>${esc(String(v))}</b>${u ? `<small>${esc(u)}</small>` : ''}</dd><dt>${l}</dt></div>`).join('')}</dl>` : ''}
       ${coop.length ? `<ul class="ps-coop">${coop.map((c) => `<li>${esc(trimP(c.t || c.x).slice(0, 110))}</li>`).join('')}</ul>` : ''}
-      <div class="ps-acts"><a class="btn gold" href="#/partnerships/${p.id}" data-psclose>${icon('layers')} فتح الشراكة</a>${can('view.reports') ? `<a class="btn ghost" href="#/reports/marketing?p=${p.id}" data-psclose>${icon('star')} تقرير تسويقي</a>` : ''}</div>
+      <div class="ps-acts"><a class="btn gold" href="#/partnerships/${p.id}" data-psclose>${icon('layers')} فتح الشراكة</a>${can('view.reports') ? `<a class="btn ghost" href="#/reports/marketing?p=${p.id}" data-psclose>${icon('star')} العرض المرئي</a>` : ''}</div>
     </article>`;
 }
 function openPShow(list, title, start = 0) {

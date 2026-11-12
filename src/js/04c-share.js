@@ -11,7 +11,7 @@ const SHARE_SECTIONS = [
   { k: 'dashboard', l: 'لوحة الأداء', m: ['dashboard'], on: true },
   { k: 'partnerships', l: 'سجل الشراكات وصفحات الشراكات', m: ['partnerships', 'partnership'], on: true },
   { k: 'partners', l: 'الجهات الشريكة', m: ['partners', 'partner'], on: true },
-  { k: 'reports', l: 'التقارير والتقرير التسويقي', m: ['reports', 'reportsMk'], on: true },
+  { k: 'reports', l: 'التقارير والعرض المرئي', m: ['reports', 'reportsMk'], on: true },
   { k: 'stories', l: 'الإنجازات', m: ['stories'], on: true },
   { k: 'gallery', l: 'معرض الأثر', m: ['gallery'], on: true },
   { k: 'map', l: 'خريطة الشراكات', m: ['map'], on: true },

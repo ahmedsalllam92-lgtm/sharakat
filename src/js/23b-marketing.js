@@ -1,5 +1,5 @@
 /* =====================================================================
-   التقرير التسويقي «أثرٌ يُروى»
+   العرض المرئي «أثرٌ يُروى»
    مجلة أثر في شرائح 16:9 تُبنى من البيانات لحظة العرض: الأعمال والإنجازات والأثر والقيمة
    تُروى كقصة لها بداية وذروة ودعوة. كل شريحة بلا بيانات كافية تُحذف تلقائيًا.
    العناوين قابلة للتعديل مباشرة قبل العرض، ويُعرض بملء الشاشة أو يُطبع PDF.
@@ -155,7 +155,7 @@ const mkCardsHead = (h, count, noun, page, pages, sub) => `<div class="px-co2-he
 if (!MK.cover) { try { MK.cover = localStorage.getItem('shk_mk_cover') || 'formal'; } catch (_) { MK.cover = 'formal'; } }
 const mkIconFor = (t, full) => (MK_ICONS.find(([re]) => re.test(t)) || MK_ICONS.find(([re]) => re.test(full || '')) || [, 'link'])[1];
 
-/* تقرير تسويقي لشراكة واحدة: كل شريحة تُبنى من بيانات الشراكة نفسها، وتُحذف إن لم تتوفر بياناتها */
+/* العرض المرئي لشراكة واحدة: كل شريحة تُبنى من بيانات الشراكة نفسها، وتُحذف إن لم تتوفر بياناتها */
 function mkSlidesOne(p) {
   const org = D.settings.org, pr = partnerById(p.partnerId) || null, name = partnerName(p), P = pProfile(p), st = pStatus(p);
   const k = (s) => 'p.' + p.id + '.' + s; // مفاتيح تعديل النصوص خاصة بكل شراكة
@@ -511,15 +511,15 @@ function renderMarketingReport(el, r) {
   const draw = () => {
     const S = mkSlides();
     el.innerHTML = `<section class="mk-head">
-        <div class="mk-head-t">${retLinkHTML('#/reports', 'استوديو التقارير')}<span class="rx-eye"><i></i>التقرير التسويقي</span><h1>${mkOne() ? esc(partnerName(mkOne())) : 'التقرير التسويقي'}</h1>
-          <p>${mkOne() ? `تقرير تسويقي لهذه الشراكة في ${S.length} شرائح مبنية من بياناتها` : `أعمال الشراكات وإنجازاتها وأثرها في ${S.length} شرائح مبنية من البيانات`} لحظة العرض. اضغط أي عنوان لتعديله قبل العرض.</p></div>
+        <div class="mk-head-t">${retLinkHTML('#/reports', 'استوديو التقارير')}<span class="rx-eye"><i></i>العرض المرئي</span><h1>${mkOne() ? esc(partnerName(mkOne())) : 'العرض المرئي'}</h1>
+          <p>${mkOne() ? `العرض المرئي لهذه الشراكة في ${S.length} شرائح مبنية من بياناتها` : `أعمال الشراكات وإنجازاتها وأثرها في ${S.length} شرائح مبنية من البيانات`} لحظة العرض. اضغط أي عنوان لتعديله قبل العرض.</p></div>
         <div class="mk-head-a"><button class="btn gold lg" type="button" data-mkshow ${S.length ? '' : 'disabled'}>${icon('play')} عرض بملء الشاشة</button><button class="btn lg" type="button" data-mkpdf ${S.length ? '' : 'disabled'}>${icon('print')} PDF</button><button class="btn lg" type="button" data-mkvideo ${S.length ? '' : 'disabled'} title="يُسجَّل العرض الحالي بالبيانات الحالية ويُنزَّل ملف فيديو">${icon('play')} فيديو</button></div>
       </section>
       <div class="mk-scope" role="tablist" aria-label="نطاق التقرير">
         <div class="mk-mode"><button type="button" class="${MK.scope !== 'one' ? 'on' : ''}" data-mkmode="all">${icon('layers')} كل الشراكات</button><button type="button" class="${MK.scope === 'one' ? 'on' : ''}" data-mkmode="one">${icon('file')} شراكة واحدة</button></div>
         ${MK.scope === 'one' ? `<select class="in mk-pick" id="mkPick" aria-label="اختر الشراكة"><option value="">اختر الشراكة…</option>${mkPool().sort((a, b) => partnerName(a).localeCompare(partnerName(b), 'ar')).map((p) => `<option value="${p.id}" ${p.id === MK.pid ? 'selected' : ''}>${esc(partnerName(p))}${p.title && partnerById(p.partnerId) && p.title !== partnerById(p.partnerId).name ? ' — ' + esc(p.title) : ''} (${esc(p.code || '')})</option>`).join('')}</select>`
         : MK_SCOPES.map(([k, l, f]) => { const n = mkPool().filter(f).length; return `<button type="button" class="${MK.scope === k ? 'on' : ''}" data-mkscope="${k}" ${n ? '' : 'disabled'}>${esc(l)}<b>${n}</b></button>`; }).join('')}${MK.scope !== 'one' ? `<div class="mk-mode mk-cover" title="شكل غلاف التقرير"><button type="button" class="${MK.cover !== 'tree' ? 'on' : ''}" data-mkcover="formal">غلاف 1</button><button type="button" class="${MK.cover === 'tree' ? 'on' : ''}" data-mkcover="tree">غلاف 2</button></div>` : ''}<span class="sp"></span>${mkOne() && (mkOne().attachments || []).some((a2) => !isImg(a2)) ? `<label class="mk-tog" title="عند الإخفاء تبقى الصور فقط، ولا تُطبع المستندات"><span class="switch"><input type="checkbox" data-mkdocs ${MK.docs === false ? '' : 'checked'}><i></i></span>المستندات في التقرير والطباعة</label>` : ''}<button type="button" class="linkbtn" data-mkreset>${icon('history')} استعادة النصوص الأصلية</button></div>
-      <div class="mk-deck" id="mkDeck">${S.length ? S.map((s, i) => `<div class="mk-fr" data-i="${i}">${s}</div>`).join('') : `<div class="panel">${MK.scope === 'one' ? emptyHTML({ ic: 'file', title: 'اختر الشراكة', text: 'اختر من القائمة أعلاه الشراكة التي تريد تقريرها التسويقي.' }) : emptyHTML({ ic: 'file', title: 'لا توجد شراكات في هذا النطاق', text: 'اختر نطاقًا آخر.' })}</div>`}</div>`;
+      <div class="mk-deck" id="mkDeck">${S.length ? S.map((s, i) => `<div class="mk-fr" data-i="${i}">${s}</div>`).join('') : `<div class="panel">${MK.scope === 'one' ? emptyHTML({ ic: 'file', title: 'اختر الشراكة', text: 'اختر من القائمة أعلاه الشراكة التي تريد عرضها المرئي.' }) : emptyHTML({ ic: 'file', title: 'لا توجد شراكات في هذا النطاق', text: 'اختر نطاقًا آخر.' })}</div>`}</div>`;
     hydrateFiles(el);
     fit();
     mkFitText(el); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => mkFitText(el));
@@ -541,7 +541,7 @@ function renderMarketingReport(el, r) {
     const cv = e.target.closest('[data-mkcover]'); if (cv) { MK.cover = cv.dataset.mkcover; try { localStorage.setItem('shk_mk_cover', MK.cover); } catch (_) { /* */ } return draw(); }
     if (e.target.closest('[data-mkvideo]')) return mkVideo($$('#mkDeck .rs2', el));
     if (e.target.closest('[data-mkpdf]')) {
-      const one = mkOne(), title = 'التقرير-التسويقي-' + (one ? partnerName(one).replace(/\s+/g, '-') + '-' : '') + isoDate(today());
+      const one = mkOne(), title = 'العرض-المرئي-' + (one ? partnerName(one).replace(/\s+/g, '-') + '-' : '') + isoDate(today());
       const withDocs = one && MK.docs !== false && (one.attachments || []).some((a2) => a2.fileId && !isImg(a2));
       if (!withDocs) { prepareReportPrint($$('#mkDeck .rs2', el), title); setTimeout(() => window.print(), 300); return; }
       const b = e.target.closest('[data-mkpdf]'); b.disabled = true; const old = b.innerHTML;
@@ -552,4 +552,4 @@ function renderMarketingReport(el, r) {
   });
 }
 
-window.addEventListener('beforeprint', () => { if (App.route && App.route.name === 'reportsMk' && !document.documentElement.classList.contains('printing-report')) { const n = $$('#mkDeck .rs2'); if (n.length) prepareReportPrint(n, 'التقرير-التسويقي-' + isoDate(today())); } });
+window.addEventListener('beforeprint', () => { if (App.route && App.route.name === 'reportsMk' && !document.documentElement.classList.contains('printing-report')) { const n = $$('#mkDeck .rs2'); if (n.length) prepareReportPrint(n, 'العرض-المرئي-' + isoDate(today())); } });

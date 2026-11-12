@@ -30,8 +30,8 @@ function renderPartnership(el, r) {
   <div class="dbar"><div class="dbar-in"><nav class="dbar-nav" aria-label="أقسام الشراكة">${secs.map(([id, l], i) => `<a href="#${id}" data-anchor="${id}" class="${i === 0 ? 'on' : ''}">${l}</a>`).join('')}</nav>
     <div class="dbar-acts">
     <button class="icon-btn da-btn" data-print title="طباعة صفحة الشراكة" aria-label="طباعة">${icon('print')}</button>
-    <button class="btn sm da-lbl" data-dossier data-tour="detail-dossier" title="ملف واحد يجمع التفاصيل والنماذج والصور والمستندات">${icon('file')}<span>الملف الشامل</span></button>
-    ${can('view.reports') ? `<a class="btn sm ghost da-lbl" href="#/reports?ids=${p.id}" data-ret="${esc(pr ? pr.name : p.title)}" data-tour="detail-report" title="تقرير الشراكة">${icon('chart')}<span>تقرير</span></a><a class="btn sm ghost da-lbl" href="#/reports/marketing?p=${p.id}" data-ret="${esc(pr ? pr.name : p.title)}" title="تقرير تسويقي لهذه الشراكة">${icon('star')}<span>تسويقي</span></a>` : ''}
+    <button class="btn sm da-lbl" data-dossier data-tour="detail-dossier" title="الملف الشامل: ملف واحد يجمع التفاصيل والنماذج والصور والمستندات" aria-label="الملف الشامل">${icon('file')}<span>الملف الشامل</span></button>
+    ${can('view.reports') ? `<a class="btn sm ghost da-lbl" href="#/reports?ids=${p.id}" data-ret="${esc(pr ? pr.name : p.title)}" data-tour="detail-report" title="تقرير الشراكة" aria-label="تقرير الشراكة">${icon('chart')}<span>تقرير</span></a><a class="btn sm ghost da-lbl" href="#/reports/marketing?p=${p.id}" data-ret="${esc(pr ? pr.name : p.title)}" title="العرض المرئي لهذه الشراكة: شرائح متحركة بصورها وأرقامها" aria-label="العرض المرئي">${icon('play')}<span>العرض المرئي</span></a>` : ''}
     ${canEdit ? `<a class="icon-btn da-btn primary" href="#/partnerships/${p.id}/edit" title="تعديل" aria-label="تعديل">${icon('edit')}</a>` : ''}
     ${can('delete.partnership') ? `<button class="icon-btn da-btn danger" data-del title="حذف" aria-label="حذف">${icon('trash')}</button>` : ''}
     <button class="icon-btn da-btn" data-asidet title="إخفاء أو إظهار الشريط الجانبي" aria-label="الشريط الجانبي">${icon('sidebar')}</button></div></div></div>
@@ -85,7 +85,7 @@ function renderPartnership(el, r) {
         ${kv('أُنشئ', `${fmtDT(p.createdAt)} — ${esc(p.createdBy || '')}`)}${kv('آخر تحديث', `${fmtDT(p.updatedAt)} — ${esc(p.updatedBy || '')}`)}
         ${p.source ? kv('المصدر', esc(p.source)) : ''}</dl>
       ${p.importRaw ? `<details class="raw" style="margin-top:16px"><summary>${icon('table')} البيانات كما وردت في ملف الحصر (الصف ${p.seq})</summary><table>${p.importRaw.map((c) => `<tr><td>${esc(c.h)}</td><td>${esc(c.v) || '<span class="faint">—</span>'}</td></tr>`).join('')}</table></details>` : ''}</section>` : ''}
-    ${internal ? `<section class="dsec" id="log"><h2>سجل التغييرات</h2>${logs.length ? `<ul class="history">${logs.map((l) => `<li><div>${esc(AUDIT_LABELS[l.action] || l.action)}${l.details ? ` — <span class="muted">${esc(l.details)}</span>` : ''}</div><div class="w">${fmtDT(l.at)} — ${esc(l.user)}</div></li>`).join('')}</ul>` : '<p class="muted small">لا توجد تغييرات مسجلة على هذا السجل منذ إنشائه.</p>'}</section>` : ''}
+    ${internal ? `<section class="dsec dlog" id="log"><button type="button" class="dlog-h" data-logtg aria-expanded="false"><h2>سجل التغييرات</h2><span class="dlog-n">${logs.length || ''}</span>${icon('chevD')}</button><div class="dlog-b">${logs.length ? `<ul class="history">${logs.map((l) => `<li><div>${esc(AUDIT_LABELS[l.action] || l.action)}${l.details ? ` — <span class="muted">${esc(l.details)}</span>` : ''}</div><div class="w">${fmtDT(l.at)} — ${esc(l.user)}</div></li>`).join('')}</ul>` : '<p class="muted small">لا توجد تغييرات مسجلة على هذا السجل منذ إنشائه.</p>'}</div></section>` : ''}
   </div>
   <aside class="dside">
     <div class="side-card"><h3>فترة الشراكة</h3>
@@ -112,6 +112,7 @@ function renderPartnership(el, r) {
   portalBind(el, p);
   el.onclick = async (e) => {
     const gs = e.target.closest('[data-gstar]'); if (gs) { e.preventDefault(); return toggleGolden(p, gs); }
+    const lt = e.target.closest('[data-logtg]'); if (lt) { const sec = lt.closest('.dlog'); const on = sec.classList.toggle('open'); lt.setAttribute('aria-expanded', on); return; }
     const fx = e.target.closest('[data-anchor-to]');
     if (fx) { e.preventDefault(); const t = $('#' + fx.dataset.anchorTo, el); if (t) window.scrollTo({ top: t.getBoundingClientRect().top + scrollY - 124, behavior: 'smooth' }); return; }
     const an = e.target.closest('[data-anchor]');

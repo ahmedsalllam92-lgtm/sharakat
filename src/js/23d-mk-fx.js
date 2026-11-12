@@ -1,5 +1,5 @@
 /* =====================================================================
-   التقرير التسويقي — طبقة المؤثرات الحية
+   العرض المرئي — طبقة المؤثرات الحية
    لوحة رسم خلف محتوى كل شريحة تتحرك طوال ظهورها، بمؤثر يناسب موضوعها:
    حبوب لقاح ذهبية تصعد في الغلاف، ومذنّبات ضوء تنطلق من المؤسسة إلى كل شريك،
    ونقطة مضيئة تجري على منحنى النمو، وشرارات عند الأرقام والتشابك في الختام…
@@ -169,7 +169,7 @@ async function mkVideo(nodes) {
   rec.onstop = () => {
     const ext = /mp4/.test(rec.mimeType || mime) ? 'mp4' : 'webm';
     const one = typeof mkOne === 'function' && mkOne();
-    download(`التقرير-التسويقي-${one ? partnerName(one).replace(/\s+/g, '-') + '-' : ''}${isoDate(today())}.${ext}`, new Blob(chunks, { type: rec.mimeType || 'video/webm' }));
+    download(`العرض-المرئي-${one ? partnerName(one).replace(/\s+/g, '-') + '-' : ''}${isoDate(today())}.${ext}`, new Blob(chunks, { type: rec.mimeType || 'video/webm' }));
     toast('نُزّل فيديو التقرير');
     const ov = document.getElementById('rptShow'); if (ov) ov.querySelector('[data-a="exit"]') && ov.querySelector('[data-a="exit"]').click();
   };
