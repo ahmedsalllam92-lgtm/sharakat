@@ -173,7 +173,7 @@ function renderHomeBoard(el) {
         <dl class="bc-stats">${[[c.active, 'شراكة سارية'], [c.partners, 'جهة شريكة'], [outputs, 'مخرجًا مستهدفًا'], [publicStories().length, 'قصة أثر']].filter(([v]) => +v > 0).map(([v, l], k) => `<div style="--k:${k}"><dd><b class="cu" data-v="${v}">${v}</b></dd><dt>${l}</dt></div>`).join('')}</dl>
         <div class="bo-cta">${can('proposal.create') ? `<a class="btn gold lg" href="#/share">${icon('send')} شارك بمقترح شراكة</a>` : ''}${can('view.reports') ? `<a class="btn lg" href="#/reports">${icon('file')} التقارير</a>` : ''}</div></div>
     </section>
-    <footer class="bo-foot"><span>${esc(o.name)} — ${esc(o.dept)}</span><span>${showDemo() ? 'تتضمن الصفحة بيانات تجريبية مميزة بوسم «تجريبي» ولا تمثل شراكات فعلية.' : 'المحتوى مصدره سجلات المنصة المنشورة.'}</span></footer>
+    <footer class="bo-foot"><span>${esc(o.name)} — ${esc(o.dept)}</span><span>${showDemo() ? 'تتضمن الصفحة بيانات تجريبية مميزة بوسم «تجريبي» ولا تمثل شراكات فعلية.' : ''}</span></footer>
   </div>`;
   hydrateFiles(el);
   runCountUps(el);

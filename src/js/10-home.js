@@ -54,7 +54,7 @@ function renderHome(el) {
   }).join('');
   const o = D.settings.org;
   el.innerHTML = `<div class="home">${html}
-    <footer class="hfoot"><span>${esc(o.name)} — ${esc(o.dept)}</span><span>${showDemo() ? 'تتضمن الصفحة بيانات تجريبية مميزة بوسم «تجريبي» ولا تمثل شراكات فعلية.' : 'المحتوى مصدره سجلات المنصة المنشورة.'}</span></footer></div>`;
+    <footer class="hfoot"><span>${esc(o.name)} — ${esc(o.dept)}</span><span>${showDemo() ? 'تتضمن الصفحة بيانات تجريبية مميزة بوسم «تجريبي» ولا تمثل شراكات فعلية.' : ''}</span></footer></div>`;
   hydrateFiles(el);
   initHeroFX($('[data-hfx]', el), [[14, 34], [30, 58], [8, 62], [40, 30]]);
   initHeroRot(el);

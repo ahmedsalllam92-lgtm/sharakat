@@ -164,7 +164,8 @@
 .bo-medal circle.rot{fill:none;stroke:var(--gold);stroke-width:3;stroke-dasharray:1.5 6.2;animation:boSpin 40s linear infinite;transform-origin:60px 60px}
 .bo-medal b{position:relative;font-family:var(--display);font-size:34px;color:#fff;line-height:1;margin-top:10px}
 .bo-medal span{position:relative;font-size:11px;color:var(--bo-gold-l);margin-top:-28px}
-:root[data-theme="dark"] .bo-medal circle{fill:#0F4433}
+:root[data-theme="dark"] .bo-medal circle{fill:var(--paper-3,#22303A)}
+:root[data-theme="dark"] .bo-medal b{color:var(--ink,#ECEAE3)}
 @keyframes boFloat{50%{transform:translateY(-8px)}}
 @keyframes boSpin{to{transform:rotate(-360deg)}}
 .bo-figs-g{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);background:var(--paper)}
