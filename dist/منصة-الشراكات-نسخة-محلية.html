@@ -8442,6 +8442,8 @@ html.printing-bp.bp-dark,html.printing-bp.bp-dark body{background:#0E1613!import
   .mp-map,.mp-side{break-inside:avoid}
 }
 @media print{html.printing-form #formPrint>.fdoc{zoom:.93}html.printing-form #formPrint .fdoc .sig,html.printing-form #formPrint .fdoc [class*="sign"]{break-inside:avoid}}
+/* مؤشر الاتصال: يختفي في الحالة الطبيعية ويظهر فقط عند انقطاع الاتصال */
+.cloud-st[data-cloud="ok"],.cloud-st[data-cloud="sync"],.cloud-st[data-cloud="idle"]{display:none!important}
 </style>
 </head>
 <body>
