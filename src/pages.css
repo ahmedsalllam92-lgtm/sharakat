@@ -4955,3 +4955,11 @@ html.printing-bp.bp-dark,html.printing-bp.bp-dark body{background:#0E1613!import
 @media (max-width:760px){.reg-vw{margin-inline-start:0}}
 .reg-tools #regF .fbtn > .ic{display:none}.reg-tools #regF .fbtn{padding:0 10px}
 .reg-tools #regF{overflow:visible!important;flex-wrap:wrap!important}
+/* قائمة التحقق داخل نموذج المواءمة */
+.sgf-l{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted);margin-bottom:10px}
+.sgf .sg-ck{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sg-lock{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);background:var(--paper-2,#F3EFE4);border-radius:8px;padding:6px 10px;margin:10px 0 0}.sg-lock .ic{width:13px;height:13px}
+.sg-mini.lock{border-color:var(--petrol-3,#2F7A5E);background:color-mix(in srgb,var(--petrol-3,#2F7A5E) 10%,var(--paper,#fff))}
+.sg-src.strategy{background:var(--petrol,#0F4433);color:#fff}
+@media (max-width:760px){.sgf .sg-ck{grid-template-columns:1fr}}
+.sgf-l{align-items:flex-start;text-align:start}.sg-lock .linkbtn{font-size:11.5px;padding:0}

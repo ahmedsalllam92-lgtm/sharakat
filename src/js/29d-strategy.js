@@ -12,11 +12,12 @@ function stratInitGoal(txt) {
   for (const g of stratGoals()) if (g.inits.some((i) => normAr(i.t) === n)) return g.k;
   return '';
 }
-const STRAT_SRC = { manual: 'معتمد من إدارة الشراكات', auto: 'مقترح آلي — بانتظار المراجعة', form: 'نموذج المواءمة الاستراتيجية', proposal: 'المقترح الأصلي' };
+const STRAT_SRC = { strategy: 'حدّدته الإدارة العامة للاستراتيجية (نموذج المواءمة)', manual: 'معتمد من إدارة الشراكات', auto: 'مقترح آلي — بانتظار المراجعة', form: 'نموذج المواءمة الاستراتيجية', proposal: 'المقترح الأصلي' };
 
 function pStrat(p) {
   /* 1) تقييم بقائمة التحقق (معتمد أو مقترح) */
-  const legacy = !p.stratAssess && (() => {
+  const propS = p.proposalId && D.proposals.find((x) => x.id === p.proposalId);
+  const legacy = !p.stratAssess && !(propS && propS.stratAssess) && (() => {
     const prop = p.proposalId ? D.proposals.find((x) => x.id === p.proposalId) : null;
     const G = new Set(), I = new Set(); let src = '';
     [p, prop].filter(Boolean).forEach((r) => {
@@ -56,13 +57,14 @@ function stratMiniHTML(p) {
   if (s.legacy) return `<button type="button" class="sg-mini ok" data-sgpop="${p.id}" title="الارتباط الاستراتيجي: ${esc(s.goals.join('، '))} (${STRAT_SRC[s.src] || ''})">${icon('flag')}<b>${esc(s.goals[0] || '')}</b></button>`;
   if (!s.T) return '';
   const C = 2 * Math.PI * 7, code = s.T.init ? s.T.init.c.replace('.I', '·') : s.T.goal.k;
-  return `<button type="button" class="sg-mini ${s.linked ? 'ok' : 'no'} ${s.src === 'auto' ? 'auto' : ''}" data-sgpop="${p.id}" title="${esc(`${s.T.kind}: ${s.T.label} — تحقق ${s.checks.filter(Boolean).length} من ${s.checks.length}${s.src === 'auto' ? ' (مقترح آلي)' : ''}`)}"><svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7" class="t"/><circle cx="9" cy="9" r="7" class="v" stroke-dasharray="${(s.pct * C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 9 9)"/></svg><b>${esc(code)}</b></button>`;
+  return `<button type="button" class="sg-mini ${s.linked ? 'ok' : 'no'} ${s.src === 'auto' ? 'auto' : ''} ${s.src === 'strategy' ? 'lock' : ''}" data-sgpop="${p.id}" title="${esc(`${s.T.kind}: ${s.T.label} — تحقق ${s.checks.filter(Boolean).length} من ${s.checks.length}${s.src === 'auto' ? ' (مقترح آلي)' : ''}`)}"><svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7" class="t"/><circle cx="9" cy="9" r="7" class="v" stroke-dasharray="${(s.pct * C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 9 9)"/></svg><b>${esc(code)}</b></button>`;
 }
 
 /* بطاقة قائمة التحقق المنبثقة */
 function stratPop(p, anchor, onChange) {
   $('#sgPop') && $('#sgPop').remove();
-  const canEdit = can('edit.partnership') && !App.share;
+  const canEdit0 = can('edit.partnership') && !App.share;
+  let canEdit = canEdit0;
   const el = document.createElement('div'); el.id = 'sgPop'; el.className = 'sg-pop'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'الارتباط الاستراتيجي');
   document.body.appendChild(el);
   const place = () => {
@@ -87,17 +89,18 @@ function stratPop(p, anchor, onChange) {
         ${canEdit ? `<button type="button" class="btn sm" data-sgconv>${icon('check')} التقييم بقائمة التحقق</button>` : ''}`;
       return place();
     }
-    const a = stratAssessOf(p); const T = stratTarget(a.target), items = stratItems(a.target), n = a.checks.filter(Boolean).length, pct = stratPct(a.checks), ok = pct >= STRAT_PASS;
+    const a = stratAssessOf(p); canEdit = canEdit0 && a.src !== 'strategy'; const T = stratTarget(a.target), items = stratItems(a.target), n = a.checks.filter(Boolean).length, pct = stratPct(a.checks), ok = pct >= STRAT_PASS;
     el.innerHTML = `<header class="sg-pop-h"><span class="sg-code">${esc(T.goal.k)}</span><div><small>${T.kind}${T.init ? ` · ${esc(T.goal.t)}` : ''}</small><b>${esc(T.label)}</b></div><button type="button" class="sg-x" aria-label="إغلاق">${icon('x')}</button></header>
       <div class="sg-pop-st ${ok ? 'ok' : 'no'}"><span class="sg-pop-bar"><i style="width:${Math.round(pct * 100)}%"></i><em style="inset-inline-start:${STRAT_PASS * 100}%"></em></span><b>${n}/${items.length}</b><span>${ok ? 'تُحتسب تابعة' : 'دون الحد (75%)'}</span></div>
       <ul class="sg-ck">${items.map((it, i) => `<li><button type="button" class="${a.checks[i] ? 'on' : ''}" data-sgck="${i}" ${canEdit ? '' : 'disabled'} aria-pressed="${!!a.checks[i]}"><i>${icon('check')}</i><span>${esc(it.t)}</span></button></li>`).join('')}</ul>
       ${canEdit ? `<label class="sg-pop-sel"><span>الهدف أو المبادرة</span><select class="in" data-sgsel>${stratGoals().map((g) => `<optgroup label="${esc(g.k)} — ${esc(g.t.slice(0, 60))}"><option value="${g.k}" ${a.target === g.k ? 'selected' : ''}>${esc(g.k)} · الهدف كاملًا</option>${g.inits.map((i) => `<option value="${i.c}" ${a.target === i.c ? 'selected' : ''}>${esc(i.c.split('.')[1])} · ${esc(i.t)}</option>`).join('')}</optgroup>`).join('')}</select></label>` : ''}
-      <footer class="sg-pop-f"><span class="sg-src ${a.src}">${esc(STRAT_SRC[a.src] || '')}</span>${canEdit && a.src === 'auto' ? `<button type="button" class="btn sm primary" data-sgok>${icon('check')} اعتماد</button>` : ''}${canEdit && a.src !== 'auto' ? `<button type="button" class="linkbtn" data-sgreset>المقترح الآلي</button>` : ''}<a class="linkbtn" href="#/strategy">${icon('flag')} المحفظة</a></footer>`;
+      ${a.src === 'strategy' ? `<p class="sg-lock">${icon('lock')} حُدِّد في نموذج المواءمة الاستراتيجية، ويُعدَّل من النموذج نفسه.${canEdit0 && typeof openForm === 'function' ? ` <button type="button" class="linkbtn" data-sgform>فتح النموذج</button>` : ''}</p>` : ''}<footer class="sg-pop-f"><span class="sg-src ${a.src}">${esc(STRAT_SRC[a.src] || '')}</span>${canEdit && a.src === 'auto' ? `<button type="button" class="btn sm primary" data-sgok>${icon('check')} اعتماد</button>` : ''}${canEdit && a.src !== 'auto' ? `<button type="button" class="linkbtn" data-sgreset>المقترح الآلي</button>` : ''}<a class="linkbtn" href="#/strategy">${icon('flag')} المحفظة</a></footer>`;
     place();
   };
   draw();
   el.addEventListener('click', async (e) => {
     if (e.target.closest('.sg-x')) return close();
+    if (e.target.closest('[data-sgform]')) { close(); return openForm('partnership', p, 'alignment', { onDone: () => { if (onChange) onChange(); } }); }
     if (e.target.closest('[data-sgconv]')) { const s = stratSuggest(p); p.stratLinks = null; p.goalsLinked = []; await save(s, 'حُوّل الارتباط إلى قائمة التحقق'); return draw(); }
     const ck = e.target.closest('[data-sgck]');
     if (ck) {
@@ -164,7 +167,7 @@ function renderStrategy(el) {
       ${rows.map(({ p, s }) => `<tr><td><span class="sg-mx-p">${plateHTML(partnerById(p.partnerId), 28)}<a href="#/partnerships/${p.id}">${esc(partnerName(p))}</a></span></td>
         <td class="sg-rv-t">${s.T ? `<span class="sg-code sm">${esc(s.T.goal.k)}</span>${esc(s.T.label)}` : s.legacy ? s.goals.map((k) => `<span class="sg-code sm">${esc(k)}</span>`).join(' ') : '—'}</td>
         <td>${stratMiniHTML(p)}</td>
-        <td><span class="sg-src ${s.src}">${s.src === 'auto' ? 'مقترح آلي' : s.legacy ? esc(STRAT_SRC[s.src] || '') : 'معتمد'}</span>${s.T && !s.linked ? ' <span class="sg-gap">دون 75%</span>' : ''}</td></tr>`).join('')}</tbody></table></div></div>`;
+        <td><span class="sg-src ${s.src}">${s.src === 'auto' ? 'مقترح آلي' : s.src === 'strategy' ? 'الاستراتيجية' : s.legacy ? esc(STRAT_SRC[s.src] || '') : 'معتمد'}</span>${s.T && !s.linked ? ' <span class="sg-gap">دون 75%</span>' : ''}</td></tr>`).join('')}</tbody></table></div></div>`;
     const crit = `<div class="sg-crit">${stratGoals().map((g) => `<section class="sg-g"><header><span class="sg-code">${esc(g.k)}</span><h3>${esc(g.t)}</h3>${canLists ? `<button type="button" class="icon-btn" data-sgedit="${g.k}" title="تعديل البنود">${icon('edit')}</button>` : ''}</header>
         <ol class="sg-cl">${stratItems(g.k).map((it) => `<li>${esc(it.t)}</li>`).join('')}</ol>
         ${g.inits.map((i) => `<div class="sg-ci"><div class="sg-ci-h"><em>${esc(i.c.split('.')[1])}</em><b>${esc(i.t)}</b>${canLists ? `<button type="button" class="icon-btn sm" data-sgedit="${i.c}" title="تعديل البنود">${icon('edit')}</button>` : ''}</div><ol class="sg-cl">${stratItems(i.c).map((it) => `<li>${esc(it.t)}</li>`).join('')}</ol></div>`).join('')}</section>`).join('')}</div>`;

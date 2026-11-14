@@ -557,7 +557,7 @@ function renderReports(el, r) {
   const base = () => visiblePartnerships({ includeDrafts: can('view.drafts') });
   if (q.all) RPT.ids = applyFilters(base(), RPT.f).map((p) => p.id);
   el.innerHTML = `<section class="rx-hero">
-      <div class="rx-hero-t">${App.ret ? retLinkHTML() : ''}<span class="rx-eye"><i></i>التقارير</span><h1>استوديو التقارير</h1>
+      <div class="rx-hero-t">${App.ret ? retLinkHTML() : ''}<span class="rx-eye"><i></i>التقارير</span><h1>مركز التقارير</h1>
         <p>اختر نوع التقرير وحدد الشراكات، وعدّل النصوص على الشرائح مباشرة، ثم اعرضه بملء الشاشة أو نزّله PowerPoint وPDF. الأرقام تُقرأ من السجلات لحظة العرض.</p></div>
       <div class="rx-fan" aria-hidden="true"><span class="f1"><b></b><i></i><i></i><i></i></span><span class="f2"><b></b><em></em><i></i><i></i></span><span class="f3"><strong>”</strong><i></i><i></i><i></i></span></div>
     </section>
@@ -806,5 +806,5 @@ function openReportShow(start = 0, nodes) {
   if (ov.requestFullscreen) ov.requestFullscreen().catch(() => {});
 }
 
-/* القوائم المنسدلة في استوديو التقارير تُغلق عند الضغط في أي مكان خارجها، حتى خارج الصفحة (الشريط العلوي مثلًا) */
+/* القوائم المنسدلة في مركز التقارير تُغلق عند الضغط في أي مكان خارجها، حتى خارج الصفحة (الشريط العلوي مثلًا) */
 document.addEventListener('mousedown', (e) => { ['rpDD', 'rpPD'].forEach((id) => { const d = document.getElementById(id); if (d && d.classList.contains('open') && !d.contains(e.target)) d.classList.remove('open'); }); });

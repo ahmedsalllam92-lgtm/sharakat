@@ -511,7 +511,7 @@ function renderMarketingReport(el, r) {
   const draw = () => {
     const S = mkSlides();
     el.innerHTML = `<section class="mk-head">
-        <div class="mk-head-t">${retLinkHTML('#/reports', 'استوديو التقارير')}<span class="rx-eye"><i></i>العرض المرئي</span><h1>${mkOne() ? esc(partnerName(mkOne())) : 'العرض المرئي'}</h1>
+        <div class="mk-head-t">${retLinkHTML('#/reports', 'مركز التقارير')}<span class="rx-eye"><i></i>العرض المرئي</span><h1>${mkOne() ? esc(partnerName(mkOne())) : 'العرض المرئي'}</h1>
           <p>${mkOne() ? `العرض المرئي لهذه الشراكة في ${S.length} شرائح مبنية من بياناتها` : `أعمال الشراكات وإنجازاتها وأثرها في ${S.length} شرائح مبنية من البيانات`} لحظة العرض. اضغط أي عنوان لتعديله قبل العرض.</p></div>
         <div class="mk-head-a"><button class="btn gold lg" type="button" data-mkshow ${S.length ? '' : 'disabled'}>${icon('play')} عرض بملء الشاشة</button><button class="btn lg" type="button" data-mkpdf ${S.length ? '' : 'disabled'}>${icon('print')} PDF</button><button class="btn lg" type="button" data-mkvideo ${S.length ? '' : 'disabled'} title="يُسجَّل العرض الحالي بالبيانات الحالية ويُنزَّل ملف فيديو">${icon('play')} فيديو</button></div>
       </section>

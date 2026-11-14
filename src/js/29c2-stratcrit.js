@@ -134,6 +134,8 @@ function stratSuggest(p) {
 /* تقييم الشراكة الحالي: المعتمد إن وُجد، وإلا المقترح الآلي */
 function stratAssessOf(p) {
   if (p.stratAssess && stratTarget(p.stratAssess.target)) return p.stratAssess;
+  const prop0 = p.proposalId && D.proposals.find((x) => x.id === p.proposalId);
+  if (prop0 && prop0.stratAssess && stratTarget(prop0.stratAssess.target)) return prop0.stratAssess;
   const sd = STRAT_SEED[p.code];
   if (sd && stratTarget(sd[0]) && stratItems(sd[0]).length === sd[1].length) return { target: sd[0], checks: sd[1].split('').map((c) => c === '1'), src: 'auto' };
   if (!p._sgSug || p._sgSug.v !== (p.updatedAt || '') + '|' + JSON.stringify((D.settings && D.settings.stratCrit) || {}).length) {

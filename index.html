@@ -8600,6 +8600,14 @@ html.printing-bp.bp-dark,html.printing-bp.bp-dark body{background:#0E1613!import
 @media (max-width:760px){.reg-vw{margin-inline-start:0}}
 .reg-tools #regF .fbtn > .ic{display:none}.reg-tools #regF .fbtn{padding:0 10px}
 .reg-tools #regF{overflow:visible!important;flex-wrap:wrap!important}
+/* قائمة التحقق داخل نموذج المواءمة */
+.sgf-l{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted);margin-bottom:10px}
+.sgf .sg-ck{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sg-lock{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);background:var(--paper-2,#F3EFE4);border-radius:8px;padding:6px 10px;margin:10px 0 0}.sg-lock .ic{width:13px;height:13px}
+.sg-mini.lock{border-color:var(--petrol-3,#2F7A5E);background:color-mix(in srgb,var(--petrol-3,#2F7A5E) 10%,var(--paper,#fff))}
+.sg-src.strategy{background:var(--petrol,#0F4433);color:#fff}
+@media (max-width:760px){.sgf .sg-ck{grid-template-columns:1fr}}
+.sgf-l{align-items:flex-start;text-align:start}.sg-lock .linkbtn{font-size:11.5px;padding:0}
 </style>
 </head>
 <body>
@@ -25837,7 +25845,7 @@ function renderReports(el, r) {
   const base = () => visiblePartnerships({ includeDrafts: can('view.drafts') });
   if (q.all) RPT.ids = applyFilters(base(), RPT.f).map((p) => p.id);
   el.innerHTML = `<section class="rx-hero">
-      <div class="rx-hero-t">${App.ret ? retLinkHTML() : ''}<span class="rx-eye"><i></i>التقارير</span><h1>استوديو التقارير</h1>
+      <div class="rx-hero-t">${App.ret ? retLinkHTML() : ''}<span class="rx-eye"><i></i>التقارير</span><h1>مركز التقارير</h1>
         <p>اختر نوع التقرير وحدد الشراكات، وعدّل النصوص على الشرائح مباشرة، ثم اعرضه بملء الشاشة أو نزّله PowerPoint وPDF. الأرقام تُقرأ من السجلات لحظة العرض.</p></div>
       <div class="rx-fan" aria-hidden="true"><span class="f1"><b></b><i></i><i></i><i></i></span><span class="f2"><b></b><em></em><i></i><i></i></span><span class="f3"><strong>”</strong><i></i><i></i><i></i></span></div>
     </section>
@@ -26086,7 +26094,7 @@ function openReportShow(start = 0, nodes) {
   if (ov.requestFullscreen) ov.requestFullscreen().catch(() => {});
 }
 
-/* القوائم المنسدلة في استوديو التقارير تُغلق عند الضغط في أي مكان خارجها، حتى خارج الصفحة (الشريط العلوي مثلًا) */
+/* القوائم المنسدلة في مركز التقارير تُغلق عند الضغط في أي مكان خارجها، حتى خارج الصفحة (الشريط العلوي مثلًا) */
 document.addEventListener('mousedown', (e) => { ['rpDD', 'rpPD'].forEach((id) => { const d = document.getElementById(id); if (d && d.classList.contains('open') && !d.contains(e.target)) d.classList.remove('open'); }); });
 
 /* —— 23b-marketing.js —— */
@@ -26603,7 +26611,7 @@ function renderMarketingReport(el, r) {
   const draw = () => {
     const S = mkSlides();
     el.innerHTML = `<section class="mk-head">
-        <div class="mk-head-t">${retLinkHTML('#/reports', 'استوديو التقارير')}<span class="rx-eye"><i></i>العرض المرئي</span><h1>${mkOne() ? esc(partnerName(mkOne())) : 'العرض المرئي'}</h1>
+        <div class="mk-head-t">${retLinkHTML('#/reports', 'مركز التقارير')}<span class="rx-eye"><i></i>العرض المرئي</span><h1>${mkOne() ? esc(partnerName(mkOne())) : 'العرض المرئي'}</h1>
           <p>${mkOne() ? `العرض المرئي لهذه الشراكة في ${S.length} شرائح مبنية من بياناتها` : `أعمال الشراكات وإنجازاتها وأثرها في ${S.length} شرائح مبنية من البيانات`} لحظة العرض. اضغط أي عنوان لتعديله قبل العرض.</p></div>
         <div class="mk-head-a"><button class="btn gold lg" type="button" data-mkshow ${S.length ? '' : 'disabled'}>${icon('play')} عرض بملء الشاشة</button><button class="btn lg" type="button" data-mkpdf ${S.length ? '' : 'disabled'}>${icon('print')} PDF</button><button class="btn lg" type="button" data-mkvideo ${S.length ? '' : 'disabled'} title="يُسجَّل العرض الحالي بالبيانات الحالية ويُنزَّل ملف فيديو">${icon('play')} فيديو</button></div>
       </section>
@@ -28504,7 +28512,7 @@ const FORMS = {
   },
   alignment: {
     no: 'ALN', title: 'نموذج مواءمة مذكرات التفاهم مع الأهداف الاستراتيجية للمؤسسة', short: 'نموذج المواءمة الاستراتيجية', step: 'strategy', ic: 'chart',
-    sections: (R) => [
+    sections: (R, rec) => [
       { t: 'معلومات أساسية', fields: [
         { k: 'partner', l: 'اسم الجهة الشريكة', type: 'text', def: R.name, req: true },
         { k: 'sector', l: 'نوع الجهة (القطاع)', type: 'chips', list: 'formSectors', opts: L('formSectors'), def: R.sector, req: true },
@@ -28513,6 +28521,7 @@ const FORMS = {
         { k: 'purpose', l: 'الغرض العام من المذكرة', type: 'textarea', def: R.purpose, req: true },
       ] },
       { t: 'المواءمة مع الأهداف الاستراتيجية', legend: true, fields: [{ k: 'clauses', type: 'clauses', def: R.coop, req: true }] },
+      { t: 'الهدف أو المبادرة الأساسية', note: 'تُحدِّد الإدارة العامة للاستراتيجية هدفًا أو مبادرة واحدة تتبعها الشراكة، وتعلّم عناصر قائمة التحقق المتحققة. تُعدّ الشراكة تابعة إذا حققت 75% على الأقل، ويُعتمد هذا الربط في المنظومة بإتمام النموذج.', fields: [{ k: 'strat', type: 'stratcheck', req: true, def: () => { try { const a = rec && stratAssessOf(rec); return a ? { target: a.target, checks: a.checks.slice() } : null; } catch (_) { return null; } } }] },
       { t: 'رأي الإدارة الاستراتيجية', fields: [
         { k: 'result', l: 'نتيجة المواءمة', type: 'chips', opts: ['متوائمة', 'متوائمة بملاحظات', 'غير متوائمة'], req: true },
         { k: 'notes', l: 'ملاحظات', type: 'textarea' },
@@ -28520,7 +28529,7 @@ const FORMS = {
         { k: 'date', l: 'التاريخ', type: 'date', def: isoDate(today()), req: true },
       ] },
     ],
-    out: (rec, d) => { rec.goalsLinked = [...new Set((d.clauses || []).flatMap((c) => c.goals || []))].filter((g) => g !== 'N/A'); },
+    out: (rec, d) => { rec.goalsLinked = [...new Set((d.clauses || []).flatMap((c) => c.goals || []))].filter((g) => g !== 'N/A'); if (d.strat && d.strat.target) { rec.stratAssess = { target: d.strat.target, checks: (d.strat.checks || []).slice(), src: 'strategy', by: d.by || Session.userName(), at: nowISO() }; delete rec._sgSug; } },
     score: (d) => { const c = d.clauses || []; const g = new Set(c.flatMap((x) => x.goals || []).filter((x) => x !== 'N/A')); return c.length ? `${c.length} بنود مرتبطة بـ${g.size} ${g.size === 1 ? 'هدف' : 'أهداف'}` : ''; },
   },
   letter: {
@@ -28685,6 +28694,10 @@ function fFieldHTML(f, v, ro) {
       ${f.items.map((it, i) => { const c = (v || {})[i] || {}; return `<tr data-row="${i}"><td class="c">${i + 1}</td><td>${esc(it)}</td>${f.weights ? `<td class="c"><span class="ff-w">${f.weights[i]}%</span></td>` : ''}${f.opts.map(([k]) => `<td class="c"><button type="button" class="ff-tick ${c.v === k ? 'on ' + k : ''}" data-tick="${k}" ${dis} aria-label="${esc(it)}">${c.v === k ? icon(k === 'ok' || k === 'yes' ? 'check' : k === 'part' ? 'alert' : 'x') : ''}</button></td>`).join('')}<td><input class="in sm" data-note value="${esc(c.n || '')}" ${dis}></td></tr>`; }).join('')}</tbody></table>${f.weights ? '<div class="ff-iev" id="ffIev"></div>' : ''}</div>`;
     case 'scores': return `<div class="field ff full" data-fk="${f.k}"><table class="ff-tbl ff-sc"><thead><tr><th>المعيار</th><th>الوزن</th><th>التقييم</th><th>ملاحظات</th></tr></thead><tbody>
       ${f.items.map((c) => { const x = (v || {})[c.k] || {}; return `<tr data-row="${c.k}"><td><b>${esc(c.l)}</b><small>${esc(c.d)}</small></td><td class="c">${c.w}%</td><td class="c"><div class="ff-stars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" class="ff-st ${+x.v >= n ? 'on' : ''}" data-score="${n}" ${dis} aria-label="${n}">${n}</button>`).join('')}</div></td><td><input class="in sm" data-note value="${esc(x.n || '')}" ${dis}></td></tr>`; }).join('')}</tbody></table><div class="ff-total" id="ffTotal"></div></div>`;
+    case 'stratcheck': {
+      const a = v && v.target && stratTarget(v.target) ? v : { target: stratGoals()[0].k, checks: [] };
+      return `<div class="field ff full sgf" data-fk="${f.k}"><label class="sgf-l"><span>الهدف أو المبادرة</span><select class="in" data-sgfsel ${dis}>${stratGoals().map((g) => `<optgroup label="${esc(g.k)} — ${esc(g.t.slice(0, 70))}"><option value="${g.k}" ${a.target === g.k ? 'selected' : ''}>${esc(g.k)} · الهدف كاملًا</option>${g.inits.map((i) => `<option value="${i.c}" ${a.target === i.c ? 'selected' : ''}>${esc(i.c.split('.')[1])} · ${esc(i.t)}</option>`).join('')}</optgroup>`).join('')}</select></label><div class="sgf-b">${stratFormBody(a.target, a.checks, dis)}</div></div>`;
+    }
     case 'clauses': {
       const G = [...goalCodes(), { k: 'N/A', t: 'لا ينطبق: البند لا يرتبط بهدف استراتيجي' }];
       const rows = (v && v.length ? v : [{ text: '', goals: [] }]);
@@ -28695,6 +28708,11 @@ function fFieldHTML(f, v, ro) {
     default: return `<div class="field ff" data-fk="${f.k}">${lab}<input class="in" id="${id}" value="${esc(v || '')}" ${dis}>${hint}</div>`;
   }
 }
+function stratFormBody(target, checks, dis = '') {
+  const items = stratItems(target), n = items.filter((_, i) => checks[i]).length, pct = items.length ? n / items.length : 0, ok = pct >= STRAT_PASS;
+  return `<div class="sg-pop-st ${ok ? 'ok' : 'no'}"><span class="sg-pop-bar"><i style="width:${Math.round(pct * 100)}%"></i><em style="inset-inline-start:${STRAT_PASS * 100}%"></em></span><b>${n}/${items.length}</b><span>${ok ? 'تُحتسب تابعة' : 'دون الحد (75%)'}</span></div>
+    <ul class="sg-ck">${items.map((it, i) => `<li><button type="button" class="${checks[i] ? 'on' : ''}" data-sgfck="${i}" ${dis} aria-pressed="${!!checks[i]}"><i>${icon('check')}</i><span>${esc(it.t)}</span></button></li>`).join('')}</ul>`;
+}
 function fReadField(box, f) {
   const w = box.querySelector(`[data-fk="${f.k}"]`); if (!w) return undefined;
   switch (f.type) {
@@ -28702,6 +28720,7 @@ function fReadField(box, f) {
     case 'multi': return $$('.ff-chip.on', w).map((b) => b.dataset.chip);
     case 'checklist': { const o = {}; $$('tr[data-row]', w).forEach((tr) => { const t = tr.querySelector('.ff-tick.on'); o[tr.dataset.row] = { v: t ? t.dataset.tick : '', n: tr.querySelector('[data-note]').value.trim() }; }); return o; }
     case 'scores': { const o = {}; $$('tr[data-row]', w).forEach((tr) => { const on = $$('.ff-st.on', tr).length; o[tr.dataset.row] = { v: on || '', n: tr.querySelector('[data-note]').value.trim() }; }); return o; }
+    case 'stratcheck': { const sel = w.querySelector('[data-sgfsel]'); return { target: sel ? sel.value : '', checks: $$('[data-sgfck]', w).map((b) => b.classList.contains('on')) }; }
     case 'clauses': return $$('tr[data-row]', w).map((tr) => ({ text: tr.querySelector('[data-cltext]').value.trim(), goals: $$('.ff-chip.on', tr).map((b) => b.dataset.goal), note: tr.querySelector('[data-note]').value.trim() })).filter((r) => r.text);
     case 'sign': return '';
     case 'select': { const i = w.querySelector('select'); return i ? i.value : ''; }
@@ -28713,6 +28732,7 @@ function fMissing(f, v) {
   if (f.type === 'checklist') return f.items.some((_, i) => !(v[i] && v[i].v));
   if (f.type === 'scores') return f.items.some((c) => !(v[c.k] && v[c.k].v));
   if (f.type === 'clauses') return !v.length || v.some((r) => !r.goals.length);
+  if (f.type === 'stratcheck') return !v || !v.target;
   if (f.type === 'multi') return !v.length;
   return !v;
 }
@@ -28735,6 +28755,7 @@ function openForm(kind, rec, key, { onDone, ro = false, evalIdx = null } = {}) {
       : `<button class="btn primary" data-ffsave="done" type="button">${icon('check')} ${done ? 'حفظ التعديلات' : 'إتمام النموذج'}</button><button class="btn" data-ffsave="draft" type="button">حفظ كمسودة</button>${store ? `<button class="btn ghost" data-ffprint type="button">${icon('print')} معاينة الطباعة</button>` : ''}<button class="btn ghost" data-mclose type="button">إلغاء</button>`,
   });
   const box = m.el;
+  box.addEventListener('change', (e) => { const sel = e.target.closest('[data-sgfsel]'); if (!sel) return; const w = sel.closest('.sgf'); $('.sgf-b', w).innerHTML = stratFormBody(sel.value, stratAutoChecks(rec, sel.value)); });
   const total = () => { const t = $('#ffTotal', box); if (!t) return; const d = {}; secs.forEach((s) => s.fields.forEach((f) => { d[f.k] = fReadField(box, f); })); const sc = evalScore(d); t.innerHTML = sc === null ? '<span class="faint">تظهر الدرجة الموزونة بعد تقييم كل المعايير</span>' : `<b class="${evalTone(sc)}">${sc}%</b><span>${evalGrade(sc)}</span>`; };
   total();
   /* التقييم المبدئي: الدرجة من الأوزان، والنتيجة تلقائية ما لم تُحدَّد يدويًا */
@@ -28782,6 +28803,7 @@ function openForm(kind, rec, key, { onDone, ro = false, evalIdx = null } = {}) {
     }
     const tk = e.target.closest('.ff-tick'); if (tk) { const tr = tk.closest('tr'); const was = tk.classList.contains('on'); $$('.ff-tick', tr).forEach((b) => { b.className = 'ff-tick'; b.innerHTML = ''; }); if (!was) { tk.classList.add('on', tk.dataset.tick); tk.innerHTML = icon(tk.dataset.tick === 'ok' ? 'check' : 'x'); } ievUpd(); return; }
     const st = e.target.closest('.ff-st'); if (st) { const n = +st.dataset.score; $$('.ff-st', st.parentElement).forEach((b) => b.classList.toggle('on', +b.dataset.score <= n)); total(); return; }
+    const sgk = e.target.closest('[data-sgfck]'); if (sgk) { sgk.classList.toggle('on'); const w = sgk.closest('.sgf'); const ch = $$('[data-sgfck]', w).map((b) => b.classList.contains('on')); $('.sgf-b', w).innerHTML = stratFormBody($('[data-sgfsel]', w).value, ch); return; }
     if (e.target.closest('[data-cladd]')) { const tb = box.querySelector('.ff-cl tbody'); const tr = tb.querySelector('tr').cloneNode(true); tr.querySelector('textarea').value = ''; tr.querySelector('[data-note]').value = ''; $$('.ff-chip', tr).forEach((b) => b.classList.remove('on')); tb.appendChild(tr); $$('tr', tb).forEach((r, i) => { r.dataset.row = i; }); tr.querySelector('textarea').focus(); return; }
     const rm = e.target.closest('[data-clrm]'); if (rm) { const tb = rm.closest('tbody'); if ($$('tr', tb).length > 1) rm.closest('tr').remove(); return; }
     if (e.target.closest('[data-ffprint]')) return printForm(kind, rec, key, evalIdx);
@@ -28914,6 +28936,7 @@ function formDocHTML(kind, rec, key, evalIdx = null, forWord = false) {
     if (numbered.length) h += `<table class="fd-tbl"><thead><tr><th class="c">م</th><th>البند</th><th>الوصف</th></tr></thead><tbody>${numbered.map((f) => `<tr><td class="c">${f.n}</td><td class="lb">${esc(f.l)}</td><td>${esc(val(f) || '—').replace(/\n/g, '<br>')}</td></tr>`).join('')}</tbody></table>`;
     s.fields.filter((f) => f.type === 'checklist').forEach((f) => { const v = val(f) || {}; h += `<table class="fd-tbl"><thead><tr><th class="c">م</th><th>عنصر المراجعة</th>${f.opts.map(([, l]) => `<th class="c">${l}</th>`).join('')}<th>الملاحظات</th></tr></thead><tbody>${f.items.map((it, i) => `<tr><td class="c">${i + 1}</td><td>${esc(it)}</td>${f.opts.map(([k]) => `<td class="c tick">${(v[i] || {}).v === k ? '✓' : ''}</td>`).join('')}<td>${esc((v[i] || {}).n || '')}</td></tr>`).join('')}</tbody></table>`; });
     s.fields.filter((f) => f.type === 'scores').forEach((f) => { const v = val(f) || {}; const sc = evalScore(d); h += `<table class="fd-tbl"><thead><tr><th>المعيار</th><th class="c">الوزن</th><th class="c">التقييم (من 5)</th><th>ملاحظات</th></tr></thead><tbody>${f.items.map((c) => `<tr><td class="lb">${esc(c.l)}</td><td class="c">${c.w}%</td><td class="c"><b>${(v[c.k] || {}).v || '—'}</b></td><td>${esc((v[c.k] || {}).n || '')}</td></tr>`).join('')}<tr class="tot"><td>الدرجة الموزونة</td><td></td><td class="c"><b>${sc === null ? '—' : sc + '%'}</b></td><td>${sc === null ? '' : evalGrade(sc)}</td></tr></tbody></table>`; });
+    s.fields.filter((f) => f.type === 'stratcheck').forEach((f) => { const v = val(f) || {}; const T = v.target && stratTarget(v.target); if (!T) return; const items = stratItems(v.target), ch = v.checks || [], n = items.filter((_, i) => ch[i]).length; h += `<table class="fd-tbl"><thead><tr><th>${T.kind}</th><th colspan="2">${esc(T.goal.k)} — ${esc(T.label)}</th></tr></thead><tbody>${items.map((it, i) => `<tr><td class="c">${i + 1}</td><td>${esc(it.t)}</td><td class="c"><b>${ch[i] ? '✓ متحقق' : '—'}</b></td></tr>`).join('')}<tr><td></td><td class="lb">النتيجة</td><td class="c"><b>${n}/${items.length} — ${n / (items.length || 1) >= STRAT_PASS ? 'تُحتسب تابعة' : 'دون الحد (75%)'}</b></td></tr></tbody></table>`; });
     s.fields.filter((f) => f.type === 'clauses').forEach((f) => { const v = val(f) || []; h += `<table class="fd-tbl"><thead><tr><th>البند</th><th class="c">الهدف الاستراتيجي المرتبط</th><th>ملاحظات</th></tr></thead><tbody>${v.map((r) => `<tr><td>${esc(r.text).replace(/\n/g, '<br>')}</td><td class="c"><b>${(r.goals || []).map(esc).join('، ')}</b></td><td>${esc(r.note || '')}</td></tr>`).join('')}</tbody></table>`; });
     if (s.legend) h += `<div class="fd-legend">${goalCodes().map((g) => `<p><b>${esc(g.k)}:</b> ${esc(g.t.replace(/^[A-Z]{1,3}\d?\s*[:：]\s*/, ''))}</p>`).join('')}</div>`;
     return h + '</section>';
@@ -30799,6 +30822,8 @@ function stratSuggest(p) {
 /* تقييم الشراكة الحالي: المعتمد إن وُجد، وإلا المقترح الآلي */
 function stratAssessOf(p) {
   if (p.stratAssess && stratTarget(p.stratAssess.target)) return p.stratAssess;
+  const prop0 = p.proposalId && D.proposals.find((x) => x.id === p.proposalId);
+  if (prop0 && prop0.stratAssess && stratTarget(prop0.stratAssess.target)) return prop0.stratAssess;
   const sd = STRAT_SEED[p.code];
   if (sd && stratTarget(sd[0]) && stratItems(sd[0]).length === sd[1].length) return { target: sd[0], checks: sd[1].split('').map((c) => c === '1'), src: 'auto' };
   if (!p._sgSug || p._sgSug.v !== (p.updatedAt || '') + '|' + JSON.stringify((D.settings && D.settings.stratCrit) || {}).length) {
@@ -30823,11 +30848,12 @@ function stratInitGoal(txt) {
   for (const g of stratGoals()) if (g.inits.some((i) => normAr(i.t) === n)) return g.k;
   return '';
 }
-const STRAT_SRC = { manual: 'معتمد من إدارة الشراكات', auto: 'مقترح آلي — بانتظار المراجعة', form: 'نموذج المواءمة الاستراتيجية', proposal: 'المقترح الأصلي' };
+const STRAT_SRC = { strategy: 'حدّدته الإدارة العامة للاستراتيجية (نموذج المواءمة)', manual: 'معتمد من إدارة الشراكات', auto: 'مقترح آلي — بانتظار المراجعة', form: 'نموذج المواءمة الاستراتيجية', proposal: 'المقترح الأصلي' };
 
 function pStrat(p) {
   /* 1) تقييم بقائمة التحقق (معتمد أو مقترح) */
-  const legacy = !p.stratAssess && (() => {
+  const propS = p.proposalId && D.proposals.find((x) => x.id === p.proposalId);
+  const legacy = !p.stratAssess && !(propS && propS.stratAssess) && (() => {
     const prop = p.proposalId ? D.proposals.find((x) => x.id === p.proposalId) : null;
     const G = new Set(), I = new Set(); let src = '';
     [p, prop].filter(Boolean).forEach((r) => {
@@ -30867,13 +30893,14 @@ function stratMiniHTML(p) {
   if (s.legacy) return `<button type="button" class="sg-mini ok" data-sgpop="${p.id}" title="الارتباط الاستراتيجي: ${esc(s.goals.join('، '))} (${STRAT_SRC[s.src] || ''})">${icon('flag')}<b>${esc(s.goals[0] || '')}</b></button>`;
   if (!s.T) return '';
   const C = 2 * Math.PI * 7, code = s.T.init ? s.T.init.c.replace('.I', '·') : s.T.goal.k;
-  return `<button type="button" class="sg-mini ${s.linked ? 'ok' : 'no'} ${s.src === 'auto' ? 'auto' : ''}" data-sgpop="${p.id}" title="${esc(`${s.T.kind}: ${s.T.label} — تحقق ${s.checks.filter(Boolean).length} من ${s.checks.length}${s.src === 'auto' ? ' (مقترح آلي)' : ''}`)}"><svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7" class="t"/><circle cx="9" cy="9" r="7" class="v" stroke-dasharray="${(s.pct * C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 9 9)"/></svg><b>${esc(code)}</b></button>`;
+  return `<button type="button" class="sg-mini ${s.linked ? 'ok' : 'no'} ${s.src === 'auto' ? 'auto' : ''} ${s.src === 'strategy' ? 'lock' : ''}" data-sgpop="${p.id}" title="${esc(`${s.T.kind}: ${s.T.label} — تحقق ${s.checks.filter(Boolean).length} من ${s.checks.length}${s.src === 'auto' ? ' (مقترح آلي)' : ''}`)}"><svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="7" class="t"/><circle cx="9" cy="9" r="7" class="v" stroke-dasharray="${(s.pct * C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 9 9)"/></svg><b>${esc(code)}</b></button>`;
 }
 
 /* بطاقة قائمة التحقق المنبثقة */
 function stratPop(p, anchor, onChange) {
   $('#sgPop') && $('#sgPop').remove();
-  const canEdit = can('edit.partnership') && !App.share;
+  const canEdit0 = can('edit.partnership') && !App.share;
+  let canEdit = canEdit0;
   const el = document.createElement('div'); el.id = 'sgPop'; el.className = 'sg-pop'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'الارتباط الاستراتيجي');
   document.body.appendChild(el);
   const place = () => {
@@ -30898,17 +30925,18 @@ function stratPop(p, anchor, onChange) {
         ${canEdit ? `<button type="button" class="btn sm" data-sgconv>${icon('check')} التقييم بقائمة التحقق</button>` : ''}`;
       return place();
     }
-    const a = stratAssessOf(p); const T = stratTarget(a.target), items = stratItems(a.target), n = a.checks.filter(Boolean).length, pct = stratPct(a.checks), ok = pct >= STRAT_PASS;
+    const a = stratAssessOf(p); canEdit = canEdit0 && a.src !== 'strategy'; const T = stratTarget(a.target), items = stratItems(a.target), n = a.checks.filter(Boolean).length, pct = stratPct(a.checks), ok = pct >= STRAT_PASS;
     el.innerHTML = `<header class="sg-pop-h"><span class="sg-code">${esc(T.goal.k)}</span><div><small>${T.kind}${T.init ? ` · ${esc(T.goal.t)}` : ''}</small><b>${esc(T.label)}</b></div><button type="button" class="sg-x" aria-label="إغلاق">${icon('x')}</button></header>
       <div class="sg-pop-st ${ok ? 'ok' : 'no'}"><span class="sg-pop-bar"><i style="width:${Math.round(pct * 100)}%"></i><em style="inset-inline-start:${STRAT_PASS * 100}%"></em></span><b>${n}/${items.length}</b><span>${ok ? 'تُحتسب تابعة' : 'دون الحد (75%)'}</span></div>
       <ul class="sg-ck">${items.map((it, i) => `<li><button type="button" class="${a.checks[i] ? 'on' : ''}" data-sgck="${i}" ${canEdit ? '' : 'disabled'} aria-pressed="${!!a.checks[i]}"><i>${icon('check')}</i><span>${esc(it.t)}</span></button></li>`).join('')}</ul>
       ${canEdit ? `<label class="sg-pop-sel"><span>الهدف أو المبادرة</span><select class="in" data-sgsel>${stratGoals().map((g) => `<optgroup label="${esc(g.k)} — ${esc(g.t.slice(0, 60))}"><option value="${g.k}" ${a.target === g.k ? 'selected' : ''}>${esc(g.k)} · الهدف كاملًا</option>${g.inits.map((i) => `<option value="${i.c}" ${a.target === i.c ? 'selected' : ''}>${esc(i.c.split('.')[1])} · ${esc(i.t)}</option>`).join('')}</optgroup>`).join('')}</select></label>` : ''}
-      <footer class="sg-pop-f"><span class="sg-src ${a.src}">${esc(STRAT_SRC[a.src] || '')}</span>${canEdit && a.src === 'auto' ? `<button type="button" class="btn sm primary" data-sgok>${icon('check')} اعتماد</button>` : ''}${canEdit && a.src !== 'auto' ? `<button type="button" class="linkbtn" data-sgreset>المقترح الآلي</button>` : ''}<a class="linkbtn" href="#/strategy">${icon('flag')} المحفظة</a></footer>`;
+      ${a.src === 'strategy' ? `<p class="sg-lock">${icon('lock')} حُدِّد في نموذج المواءمة الاستراتيجية، ويُعدَّل من النموذج نفسه.${canEdit0 && typeof openForm === 'function' ? ` <button type="button" class="linkbtn" data-sgform>فتح النموذج</button>` : ''}</p>` : ''}<footer class="sg-pop-f"><span class="sg-src ${a.src}">${esc(STRAT_SRC[a.src] || '')}</span>${canEdit && a.src === 'auto' ? `<button type="button" class="btn sm primary" data-sgok>${icon('check')} اعتماد</button>` : ''}${canEdit && a.src !== 'auto' ? `<button type="button" class="linkbtn" data-sgreset>المقترح الآلي</button>` : ''}<a class="linkbtn" href="#/strategy">${icon('flag')} المحفظة</a></footer>`;
     place();
   };
   draw();
   el.addEventListener('click', async (e) => {
     if (e.target.closest('.sg-x')) return close();
+    if (e.target.closest('[data-sgform]')) { close(); return openForm('partnership', p, 'alignment', { onDone: () => { if (onChange) onChange(); } }); }
     if (e.target.closest('[data-sgconv]')) { const s = stratSuggest(p); p.stratLinks = null; p.goalsLinked = []; await save(s, 'حُوّل الارتباط إلى قائمة التحقق'); return draw(); }
     const ck = e.target.closest('[data-sgck]');
     if (ck) {
@@ -30975,7 +31003,7 @@ function renderStrategy(el) {
       ${rows.map(({ p, s }) => `<tr><td><span class="sg-mx-p">${plateHTML(partnerById(p.partnerId), 28)}<a href="#/partnerships/${p.id}">${esc(partnerName(p))}</a></span></td>
         <td class="sg-rv-t">${s.T ? `<span class="sg-code sm">${esc(s.T.goal.k)}</span>${esc(s.T.label)}` : s.legacy ? s.goals.map((k) => `<span class="sg-code sm">${esc(k)}</span>`).join(' ') : '—'}</td>
         <td>${stratMiniHTML(p)}</td>
-        <td><span class="sg-src ${s.src}">${s.src === 'auto' ? 'مقترح آلي' : s.legacy ? esc(STRAT_SRC[s.src] || '') : 'معتمد'}</span>${s.T && !s.linked ? ' <span class="sg-gap">دون 75%</span>' : ''}</td></tr>`).join('')}</tbody></table></div></div>`;
+        <td><span class="sg-src ${s.src}">${s.src === 'auto' ? 'مقترح آلي' : s.src === 'strategy' ? 'الاستراتيجية' : s.legacy ? esc(STRAT_SRC[s.src] || '') : 'معتمد'}</span>${s.T && !s.linked ? ' <span class="sg-gap">دون 75%</span>' : ''}</td></tr>`).join('')}</tbody></table></div></div>`;
     const crit = `<div class="sg-crit">${stratGoals().map((g) => `<section class="sg-g"><header><span class="sg-code">${esc(g.k)}</span><h3>${esc(g.t)}</h3>${canLists ? `<button type="button" class="icon-btn" data-sgedit="${g.k}" title="تعديل البنود">${icon('edit')}</button>` : ''}</header>
         <ol class="sg-cl">${stratItems(g.k).map((it) => `<li>${esc(it.t)}</li>`).join('')}</ol>
         ${g.inits.map((i) => `<div class="sg-ci"><div class="sg-ci-h"><em>${esc(i.c.split('.')[1])}</em><b>${esc(i.t)}</b>${canLists ? `<button type="button" class="icon-btn sm" data-sgedit="${i.c}" title="تعديل البنود">${icon('edit')}</button>` : ''}</div><ol class="sg-cl">${stratItems(i.c).map((it) => `<li>${esc(it.t)}</li>`).join('')}</ol></div>`).join('')}</section>`).join('')}</div>`;

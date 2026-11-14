@@ -85,7 +85,7 @@ const FORMS = {
   },
   alignment: {
     no: 'ALN', title: 'نموذج مواءمة مذكرات التفاهم مع الأهداف الاستراتيجية للمؤسسة', short: 'نموذج المواءمة الاستراتيجية', step: 'strategy', ic: 'chart',
-    sections: (R) => [
+    sections: (R, rec) => [
       { t: 'معلومات أساسية', fields: [
         { k: 'partner', l: 'اسم الجهة الشريكة', type: 'text', def: R.name, req: true },
         { k: 'sector', l: 'نوع الجهة (القطاع)', type: 'chips', list: 'formSectors', opts: L('formSectors'), def: R.sector, req: true },
@@ -94,6 +94,7 @@ const FORMS = {
         { k: 'purpose', l: 'الغرض العام من المذكرة', type: 'textarea', def: R.purpose, req: true },
       ] },
       { t: 'المواءمة مع الأهداف الاستراتيجية', legend: true, fields: [{ k: 'clauses', type: 'clauses', def: R.coop, req: true }] },
+      { t: 'الهدف أو المبادرة الأساسية', note: 'تُحدِّد الإدارة العامة للاستراتيجية هدفًا أو مبادرة واحدة تتبعها الشراكة، وتعلّم عناصر قائمة التحقق المتحققة. تُعدّ الشراكة تابعة إذا حققت 75% على الأقل، ويُعتمد هذا الربط في المنظومة بإتمام النموذج.', fields: [{ k: 'strat', type: 'stratcheck', req: true, def: () => { try { const a = rec && stratAssessOf(rec); return a ? { target: a.target, checks: a.checks.slice() } : null; } catch (_) { return null; } } }] },
       { t: 'رأي الإدارة الاستراتيجية', fields: [
         { k: 'result', l: 'نتيجة المواءمة', type: 'chips', opts: ['متوائمة', 'متوائمة بملاحظات', 'غير متوائمة'], req: true },
         { k: 'notes', l: 'ملاحظات', type: 'textarea' },
@@ -101,7 +102,7 @@ const FORMS = {
         { k: 'date', l: 'التاريخ', type: 'date', def: isoDate(today()), req: true },
       ] },
     ],
-    out: (rec, d) => { rec.goalsLinked = [...new Set((d.clauses || []).flatMap((c) => c.goals || []))].filter((g) => g !== 'N/A'); },
+    out: (rec, d) => { rec.goalsLinked = [...new Set((d.clauses || []).flatMap((c) => c.goals || []))].filter((g) => g !== 'N/A'); if (d.strat && d.strat.target) { rec.stratAssess = { target: d.strat.target, checks: (d.strat.checks || []).slice(), src: 'strategy', by: d.by || Session.userName(), at: nowISO() }; delete rec._sgSug; } },
     score: (d) => { const c = d.clauses || []; const g = new Set(c.flatMap((x) => x.goals || []).filter((x) => x !== 'N/A')); return c.length ? `${c.length} بنود مرتبطة بـ${g.size} ${g.size === 1 ? 'هدف' : 'أهداف'}` : ''; },
   },
   letter: {
@@ -266,6 +267,10 @@ function fFieldHTML(f, v, ro) {
       ${f.items.map((it, i) => { const c = (v || {})[i] || {}; return `<tr data-row="${i}"><td class="c">${i + 1}</td><td>${esc(it)}</td>${f.weights ? `<td class="c"><span class="ff-w">${f.weights[i]}%</span></td>` : ''}${f.opts.map(([k]) => `<td class="c"><button type="button" class="ff-tick ${c.v === k ? 'on ' + k : ''}" data-tick="${k}" ${dis} aria-label="${esc(it)}">${c.v === k ? icon(k === 'ok' || k === 'yes' ? 'check' : k === 'part' ? 'alert' : 'x') : ''}</button></td>`).join('')}<td><input class="in sm" data-note value="${esc(c.n || '')}" ${dis}></td></tr>`; }).join('')}</tbody></table>${f.weights ? '<div class="ff-iev" id="ffIev"></div>' : ''}</div>`;
     case 'scores': return `<div class="field ff full" data-fk="${f.k}"><table class="ff-tbl ff-sc"><thead><tr><th>المعيار</th><th>الوزن</th><th>التقييم</th><th>ملاحظات</th></tr></thead><tbody>
       ${f.items.map((c) => { const x = (v || {})[c.k] || {}; return `<tr data-row="${c.k}"><td><b>${esc(c.l)}</b><small>${esc(c.d)}</small></td><td class="c">${c.w}%</td><td class="c"><div class="ff-stars">${[1, 2, 3, 4, 5].map((n) => `<button type="button" class="ff-st ${+x.v >= n ? 'on' : ''}" data-score="${n}" ${dis} aria-label="${n}">${n}</button>`).join('')}</div></td><td><input class="in sm" data-note value="${esc(x.n || '')}" ${dis}></td></tr>`; }).join('')}</tbody></table><div class="ff-total" id="ffTotal"></div></div>`;
+    case 'stratcheck': {
+      const a = v && v.target && stratTarget(v.target) ? v : { target: stratGoals()[0].k, checks: [] };
+      return `<div class="field ff full sgf" data-fk="${f.k}"><label class="sgf-l"><span>الهدف أو المبادرة</span><select class="in" data-sgfsel ${dis}>${stratGoals().map((g) => `<optgroup label="${esc(g.k)} — ${esc(g.t.slice(0, 70))}"><option value="${g.k}" ${a.target === g.k ? 'selected' : ''}>${esc(g.k)} · الهدف كاملًا</option>${g.inits.map((i) => `<option value="${i.c}" ${a.target === i.c ? 'selected' : ''}>${esc(i.c.split('.')[1])} · ${esc(i.t)}</option>`).join('')}</optgroup>`).join('')}</select></label><div class="sgf-b">${stratFormBody(a.target, a.checks, dis)}</div></div>`;
+    }
     case 'clauses': {
       const G = [...goalCodes(), { k: 'N/A', t: 'لا ينطبق: البند لا يرتبط بهدف استراتيجي' }];
       const rows = (v && v.length ? v : [{ text: '', goals: [] }]);
@@ -276,6 +281,11 @@ function fFieldHTML(f, v, ro) {
     default: return `<div class="field ff" data-fk="${f.k}">${lab}<input class="in" id="${id}" value="${esc(v || '')}" ${dis}>${hint}</div>`;
   }
 }
+function stratFormBody(target, checks, dis = '') {
+  const items = stratItems(target), n = items.filter((_, i) => checks[i]).length, pct = items.length ? n / items.length : 0, ok = pct >= STRAT_PASS;
+  return `<div class="sg-pop-st ${ok ? 'ok' : 'no'}"><span class="sg-pop-bar"><i style="width:${Math.round(pct * 100)}%"></i><em style="inset-inline-start:${STRAT_PASS * 100}%"></em></span><b>${n}/${items.length}</b><span>${ok ? 'تُحتسب تابعة' : 'دون الحد (75%)'}</span></div>
+    <ul class="sg-ck">${items.map((it, i) => `<li><button type="button" class="${checks[i] ? 'on' : ''}" data-sgfck="${i}" ${dis} aria-pressed="${!!checks[i]}"><i>${icon('check')}</i><span>${esc(it.t)}</span></button></li>`).join('')}</ul>`;
+}
 function fReadField(box, f) {
   const w = box.querySelector(`[data-fk="${f.k}"]`); if (!w) return undefined;
   switch (f.type) {
@@ -283,6 +293,7 @@ function fReadField(box, f) {
     case 'multi': return $$('.ff-chip.on', w).map((b) => b.dataset.chip);
     case 'checklist': { const o = {}; $$('tr[data-row]', w).forEach((tr) => { const t = tr.querySelector('.ff-tick.on'); o[tr.dataset.row] = { v: t ? t.dataset.tick : '', n: tr.querySelector('[data-note]').value.trim() }; }); return o; }
     case 'scores': { const o = {}; $$('tr[data-row]', w).forEach((tr) => { const on = $$('.ff-st.on', tr).length; o[tr.dataset.row] = { v: on || '', n: tr.querySelector('[data-note]').value.trim() }; }); return o; }
+    case 'stratcheck': { const sel = w.querySelector('[data-sgfsel]'); return { target: sel ? sel.value : '', checks: $$('[data-sgfck]', w).map((b) => b.classList.contains('on')) }; }
     case 'clauses': return $$('tr[data-row]', w).map((tr) => ({ text: tr.querySelector('[data-cltext]').value.trim(), goals: $$('.ff-chip.on', tr).map((b) => b.dataset.goal), note: tr.querySelector('[data-note]').value.trim() })).filter((r) => r.text);
     case 'sign': return '';
     case 'select': { const i = w.querySelector('select'); return i ? i.value : ''; }
@@ -294,6 +305,7 @@ function fMissing(f, v) {
   if (f.type === 'checklist') return f.items.some((_, i) => !(v[i] && v[i].v));
   if (f.type === 'scores') return f.items.some((c) => !(v[c.k] && v[c.k].v));
   if (f.type === 'clauses') return !v.length || v.some((r) => !r.goals.length);
+  if (f.type === 'stratcheck') return !v || !v.target;
   if (f.type === 'multi') return !v.length;
   return !v;
 }
@@ -316,6 +328,7 @@ function openForm(kind, rec, key, { onDone, ro = false, evalIdx = null } = {}) {
       : `<button class="btn primary" data-ffsave="done" type="button">${icon('check')} ${done ? 'حفظ التعديلات' : 'إتمام النموذج'}</button><button class="btn" data-ffsave="draft" type="button">حفظ كمسودة</button>${store ? `<button class="btn ghost" data-ffprint type="button">${icon('print')} معاينة الطباعة</button>` : ''}<button class="btn ghost" data-mclose type="button">إلغاء</button>`,
   });
   const box = m.el;
+  box.addEventListener('change', (e) => { const sel = e.target.closest('[data-sgfsel]'); if (!sel) return; const w = sel.closest('.sgf'); $('.sgf-b', w).innerHTML = stratFormBody(sel.value, stratAutoChecks(rec, sel.value)); });
   const total = () => { const t = $('#ffTotal', box); if (!t) return; const d = {}; secs.forEach((s) => s.fields.forEach((f) => { d[f.k] = fReadField(box, f); })); const sc = evalScore(d); t.innerHTML = sc === null ? '<span class="faint">تظهر الدرجة الموزونة بعد تقييم كل المعايير</span>' : `<b class="${evalTone(sc)}">${sc}%</b><span>${evalGrade(sc)}</span>`; };
   total();
   /* التقييم المبدئي: الدرجة من الأوزان، والنتيجة تلقائية ما لم تُحدَّد يدويًا */
@@ -363,6 +376,7 @@ function openForm(kind, rec, key, { onDone, ro = false, evalIdx = null } = {}) {
     }
     const tk = e.target.closest('.ff-tick'); if (tk) { const tr = tk.closest('tr'); const was = tk.classList.contains('on'); $$('.ff-tick', tr).forEach((b) => { b.className = 'ff-tick'; b.innerHTML = ''; }); if (!was) { tk.classList.add('on', tk.dataset.tick); tk.innerHTML = icon(tk.dataset.tick === 'ok' ? 'check' : 'x'); } ievUpd(); return; }
     const st = e.target.closest('.ff-st'); if (st) { const n = +st.dataset.score; $$('.ff-st', st.parentElement).forEach((b) => b.classList.toggle('on', +b.dataset.score <= n)); total(); return; }
+    const sgk = e.target.closest('[data-sgfck]'); if (sgk) { sgk.classList.toggle('on'); const w = sgk.closest('.sgf'); const ch = $$('[data-sgfck]', w).map((b) => b.classList.contains('on')); $('.sgf-b', w).innerHTML = stratFormBody($('[data-sgfsel]', w).value, ch); return; }
     if (e.target.closest('[data-cladd]')) { const tb = box.querySelector('.ff-cl tbody'); const tr = tb.querySelector('tr').cloneNode(true); tr.querySelector('textarea').value = ''; tr.querySelector('[data-note]').value = ''; $$('.ff-chip', tr).forEach((b) => b.classList.remove('on')); tb.appendChild(tr); $$('tr', tb).forEach((r, i) => { r.dataset.row = i; }); tr.querySelector('textarea').focus(); return; }
     const rm = e.target.closest('[data-clrm]'); if (rm) { const tb = rm.closest('tbody'); if ($$('tr', tb).length > 1) rm.closest('tr').remove(); return; }
     if (e.target.closest('[data-ffprint]')) return printForm(kind, rec, key, evalIdx);
@@ -495,6 +509,7 @@ function formDocHTML(kind, rec, key, evalIdx = null, forWord = false) {
     if (numbered.length) h += `<table class="fd-tbl"><thead><tr><th class="c">م</th><th>البند</th><th>الوصف</th></tr></thead><tbody>${numbered.map((f) => `<tr><td class="c">${f.n}</td><td class="lb">${esc(f.l)}</td><td>${esc(val(f) || '—').replace(/\n/g, '<br>')}</td></tr>`).join('')}</tbody></table>`;
     s.fields.filter((f) => f.type === 'checklist').forEach((f) => { const v = val(f) || {}; h += `<table class="fd-tbl"><thead><tr><th class="c">م</th><th>عنصر المراجعة</th>${f.opts.map(([, l]) => `<th class="c">${l}</th>`).join('')}<th>الملاحظات</th></tr></thead><tbody>${f.items.map((it, i) => `<tr><td class="c">${i + 1}</td><td>${esc(it)}</td>${f.opts.map(([k]) => `<td class="c tick">${(v[i] || {}).v === k ? '✓' : ''}</td>`).join('')}<td>${esc((v[i] || {}).n || '')}</td></tr>`).join('')}</tbody></table>`; });
     s.fields.filter((f) => f.type === 'scores').forEach((f) => { const v = val(f) || {}; const sc = evalScore(d); h += `<table class="fd-tbl"><thead><tr><th>المعيار</th><th class="c">الوزن</th><th class="c">التقييم (من 5)</th><th>ملاحظات</th></tr></thead><tbody>${f.items.map((c) => `<tr><td class="lb">${esc(c.l)}</td><td class="c">${c.w}%</td><td class="c"><b>${(v[c.k] || {}).v || '—'}</b></td><td>${esc((v[c.k] || {}).n || '')}</td></tr>`).join('')}<tr class="tot"><td>الدرجة الموزونة</td><td></td><td class="c"><b>${sc === null ? '—' : sc + '%'}</b></td><td>${sc === null ? '' : evalGrade(sc)}</td></tr></tbody></table>`; });
+    s.fields.filter((f) => f.type === 'stratcheck').forEach((f) => { const v = val(f) || {}; const T = v.target && stratTarget(v.target); if (!T) return; const items = stratItems(v.target), ch = v.checks || [], n = items.filter((_, i) => ch[i]).length; h += `<table class="fd-tbl"><thead><tr><th>${T.kind}</th><th colspan="2">${esc(T.goal.k)} — ${esc(T.label)}</th></tr></thead><tbody>${items.map((it, i) => `<tr><td class="c">${i + 1}</td><td>${esc(it.t)}</td><td class="c"><b>${ch[i] ? '✓ متحقق' : '—'}</b></td></tr>`).join('')}<tr><td></td><td class="lb">النتيجة</td><td class="c"><b>${n}/${items.length} — ${n / (items.length || 1) >= STRAT_PASS ? 'تُحتسب تابعة' : 'دون الحد (75%)'}</b></td></tr></tbody></table>`; });
     s.fields.filter((f) => f.type === 'clauses').forEach((f) => { const v = val(f) || []; h += `<table class="fd-tbl"><thead><tr><th>البند</th><th class="c">الهدف الاستراتيجي المرتبط</th><th>ملاحظات</th></tr></thead><tbody>${v.map((r) => `<tr><td>${esc(r.text).replace(/\n/g, '<br>')}</td><td class="c"><b>${(r.goals || []).map(esc).join('، ')}</b></td><td>${esc(r.note || '')}</td></tr>`).join('')}</tbody></table>`; });
     if (s.legend) h += `<div class="fd-legend">${goalCodes().map((g) => `<p><b>${esc(g.k)}:</b> ${esc(g.t.replace(/^[A-Z]{1,3}\d?\s*[:：]\s*/, ''))}</p>`).join('')}</div>`;
     return h + '</section>';
