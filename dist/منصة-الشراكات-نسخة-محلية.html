@@ -8583,6 +8583,13 @@ html.printing-bp.bp-dark,html.printing-bp.bp-dark body{background:#0E1613!import
 .sg-ck button > span,.sg-ck li > span > span{flex:1;text-align:start}
 .sg-rv-t .sg-code{margin-inline-end:0;margin-left:8px}
 .sg-pop .sg-ck button,.sg-ck button{justify-content:flex-start!important;text-align:right!important}.sg-ck button>span{text-align:right!important;display:block}
+/* سجل الشراكات: البحث والفلاتر في سطر واحد */
+.reg-tools{flex-wrap:nowrap!important}
+.reg-tools .searchbox{flex:0 0 180px;max-width:180px}
+.reg-tools #regF{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;gap:5px!important;padding-block:2px}
+.reg-tools #regF::-webkit-scrollbar{display:none}
+.reg-tools #regF .fbtn{flex:none;min-height:34px;padding:0 9px;gap:4px;font-size:12px;white-space:nowrap}
+@media (max-width:760px){.reg-tools{flex-wrap:wrap!important}.reg-tools .searchbox{flex:1 1 100%;max-width:none}}
 </style>
 </head>
 <body>
@@ -17094,7 +17101,7 @@ const FILTER_DIMS = {
   department: { label: 'الإدارة', get: (p) => (p.departments && p.departments.length ? p.departments : ['غير محدد']), order: () => [...L('departments'), 'غير محدد'] },
   owner: { label: 'المسؤول', get: (p) => (p.owners && p.owners.length ? p.owners : ['غير محدد']), order: () => [...L('team'), 'غير محدد'] },
   activation: { label: 'التفعيل', get: (p) => [p.activation || 'غير محدد'], order: () => [...L('activation'), 'غير محدد'] },
-  ptype: { label: 'تصنيف الشراكة (استراتيجي/خدمات)', get: (p) => [p.ptype || 'غير محدد'], order: () => [...L('partnerTypes'), 'غير محدد'] },
+  ptype: { label: 'التصنيف', get: (p) => [p.ptype || 'غير محدد'], order: () => [...L('partnerTypes'), 'غير محدد'] },
   domain: { label: 'مجال الجهة', get: (p) => [(partnerById(p.partnerId) || {}).domain || 'غير محدد'], order: () => [...L('domains'), 'غير محدد'] },
   year: { label: 'سنة البدء', get: (p) => [p.startDate ? p.startDate.slice(0, 4) : 'بلا تاريخ'], order: (vals) => [...vals].sort() },
 };

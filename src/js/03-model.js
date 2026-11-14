@@ -196,7 +196,7 @@ const FILTER_DIMS = {
   department: { label: 'الإدارة', get: (p) => (p.departments && p.departments.length ? p.departments : ['غير محدد']), order: () => [...L('departments'), 'غير محدد'] },
   owner: { label: 'المسؤول', get: (p) => (p.owners && p.owners.length ? p.owners : ['غير محدد']), order: () => [...L('team'), 'غير محدد'] },
   activation: { label: 'التفعيل', get: (p) => [p.activation || 'غير محدد'], order: () => [...L('activation'), 'غير محدد'] },
-  ptype: { label: 'تصنيف الشراكة (استراتيجي/خدمات)', get: (p) => [p.ptype || 'غير محدد'], order: () => [...L('partnerTypes'), 'غير محدد'] },
+  ptype: { label: 'التصنيف', get: (p) => [p.ptype || 'غير محدد'], order: () => [...L('partnerTypes'), 'غير محدد'] },
   domain: { label: 'مجال الجهة', get: (p) => [(partnerById(p.partnerId) || {}).domain || 'غير محدد'], order: () => [...L('domains'), 'غير محدد'] },
   year: { label: 'سنة البدء', get: (p) => [p.startDate ? p.startDate.slice(0, 4) : 'بلا تاريخ'], order: (vals) => [...vals].sort() },
 };
