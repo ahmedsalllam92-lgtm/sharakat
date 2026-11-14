@@ -23,10 +23,9 @@ function renderRegister(el, r) {
     <div class="reg-tools" data-tour="reg-tools">
       <div class="searchbox">${icon('search')}<input id="regQ" type="search" placeholder="بحث في السجل…" value="${esc(st.q)}" aria-label="بحث في السجل"></div>
       <div class="fbar" id="regF"></div>
+      <div class="reg-vw"><select id="regSort" class="in reg-sort" title="ترتيب" aria-label="ترتيب">${Object.entries(SORTS).map(([k, s]) => `<option value="${k}" ${k === App.ui.regSort ? 'selected' : ''}>${s.label}</option>`).join('')}</select><div class="seg" role="tablist" aria-label="طريقة العرض">${VIEWS.map(([k, ic, l]) => `<button data-view="${k}" class="${App.ui[vkey] === k ? 'on' : ''}" title="${l}" aria-label="${l}">${icon(ic)}</button>`).join('')}</div></div>
     </div>
-    <div class="reg-meta"><div class="row wrap"><span id="regCount"></span><div class="activef" id="regSpecial"></div></div>
-      <div class="row"><label class="small muted" for="regSort">ترتيب</label><select id="regSort" class="in" style="width:auto;min-height:36px;padding-top:4px;padding-bottom:4px">${Object.entries(SORTS).map(([k, s]) => `<option value="${k}" ${k === App.ui.regSort ? 'selected' : ''}>${s.label}</option>`).join('')}</select>
-        <div class="seg" role="tablist" aria-label="طريقة العرض">${VIEWS.map(([k, ic, l]) => `<button data-view="${k}" class="${App.ui[vkey] === k ? 'on' : ''}" title="${l}">${icon(ic)}<span>${l}</span></button>`).join('')}</div></div></div>
+    <div class="reg-meta"><div class="row wrap"><span id="regCount"></span><div class="activef" id="regSpecial"></div></div></div>
     <div id="regBody"></div>`;
   const base = () => visiblePartnerships();
   const special = (list) => list.filter((p) => (!st.missing || (st.missing === '1' ? missingFields(p).length : missingFields(p).includes(st.missing))) && (!st.importnote || pendingImportNotes(p).length) && (!st.partner || p.partnerId === st.partner) && matchQ(searchText(p), st.q));

@@ -4945,3 +4945,12 @@ html.printing-bp.bp-dark,html.printing-bp.bp-dark body{background:#0E1613!import
 .reg-tools #regF::-webkit-scrollbar{display:none}
 .reg-tools #regF .fbtn{flex:none;min-height:34px;padding:0 9px;gap:4px;font-size:12px;white-space:nowrap}
 @media (max-width:760px){.reg-tools{flex-wrap:wrap!important}.reg-tools .searchbox{flex:1 1 100%;max-width:none}}
+/* الترتيب وطريقة العرض في سطر الفلاتر */
+.reg-vw{display:flex;align-items:center;gap:6px;flex:none;margin-inline-start:auto}
+.reg-vw .reg-sort{width:auto;max-width:118px;min-height:34px;height:34px;padding:0 26px 0 8px;font-size:12px}
+.reg-vw .seg button{padding:0 9px;min-height:34px;height:34px}
+.reg-vw .seg button .ic{width:16px;height:16px}
+.reg-tools .searchbox{flex:0 0 160px;max-width:160px}
+.reg-meta:has(.row:only-child) .row{min-height:0}
+@media (max-width:760px){.reg-vw{margin-inline-start:0}}
+.reg-tools #regF .fbtn > .ic{display:none}.reg-tools #regF .fbtn{padding:0 10px}

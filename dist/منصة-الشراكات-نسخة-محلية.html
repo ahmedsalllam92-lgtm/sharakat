@@ -8590,6 +8590,15 @@ html.printing-bp.bp-dark,html.printing-bp.bp-dark body{background:#0E1613!import
 .reg-tools #regF::-webkit-scrollbar{display:none}
 .reg-tools #regF .fbtn{flex:none;min-height:34px;padding:0 9px;gap:4px;font-size:12px;white-space:nowrap}
 @media (max-width:760px){.reg-tools{flex-wrap:wrap!important}.reg-tools .searchbox{flex:1 1 100%;max-width:none}}
+/* الترتيب وطريقة العرض في سطر الفلاتر */
+.reg-vw{display:flex;align-items:center;gap:6px;flex:none;margin-inline-start:auto}
+.reg-vw .reg-sort{width:auto;max-width:118px;min-height:34px;height:34px;padding:0 26px 0 8px;font-size:12px}
+.reg-vw .seg button{padding:0 9px;min-height:34px;height:34px}
+.reg-vw .seg button .ic{width:16px;height:16px}
+.reg-tools .searchbox{flex:0 0 160px;max-width:160px}
+.reg-meta:has(.row:only-child) .row{min-height:0}
+@media (max-width:760px){.reg-vw{margin-inline-start:0}}
+.reg-tools #regF .fbtn > .ic{display:none}.reg-tools #regF .fbtn{padding:0 10px}
 </style>
 </head>
 <body>
@@ -21321,10 +21330,9 @@ function renderRegister(el, r) {
     <div class="reg-tools" data-tour="reg-tools">
       <div class="searchbox">${icon('search')}<input id="regQ" type="search" placeholder="بحث في السجل…" value="${esc(st.q)}" aria-label="بحث في السجل"></div>
       <div class="fbar" id="regF"></div>
+      <div class="reg-vw"><select id="regSort" class="in reg-sort" title="ترتيب" aria-label="ترتيب">${Object.entries(SORTS).map(([k, s]) => `<option value="${k}" ${k === App.ui.regSort ? 'selected' : ''}>${s.label}</option>`).join('')}</select><div class="seg" role="tablist" aria-label="طريقة العرض">${VIEWS.map(([k, ic, l]) => `<button data-view="${k}" class="${App.ui[vkey] === k ? 'on' : ''}" title="${l}" aria-label="${l}">${icon(ic)}</button>`).join('')}</div></div>
     </div>
-    <div class="reg-meta"><div class="row wrap"><span id="regCount"></span><div class="activef" id="regSpecial"></div></div>
-      <div class="row"><label class="small muted" for="regSort">ترتيب</label><select id="regSort" class="in" style="width:auto;min-height:36px;padding-top:4px;padding-bottom:4px">${Object.entries(SORTS).map(([k, s]) => `<option value="${k}" ${k === App.ui.regSort ? 'selected' : ''}>${s.label}</option>`).join('')}</select>
-        <div class="seg" role="tablist" aria-label="طريقة العرض">${VIEWS.map(([k, ic, l]) => `<button data-view="${k}" class="${App.ui[vkey] === k ? 'on' : ''}" title="${l}">${icon(ic)}<span>${l}</span></button>`).join('')}</div></div></div>
+    <div class="reg-meta"><div class="row wrap"><span id="regCount"></span><div class="activef" id="regSpecial"></div></div></div>
     <div id="regBody"></div>`;
   const base = () => visiblePartnerships();
   const special = (list) => list.filter((p) => (!st.missing || (st.missing === '1' ? missingFields(p).length : missingFields(p).includes(st.missing))) && (!st.importnote || pendingImportNotes(p).length) && (!st.partner || p.partnerId === st.partner) && matchQ(searchText(p), st.q));
