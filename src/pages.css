@@ -4954,3 +4954,4 @@ html.printing-bp.bp-dark,html.printing-bp.bp-dark body{background:#0E1613!import
 .reg-meta:has(.row:only-child) .row{min-height:0}
 @media (max-width:760px){.reg-vw{margin-inline-start:0}}
 .reg-tools #regF .fbtn > .ic{display:none}.reg-tools #regF .fbtn{padding:0 10px}
+.reg-tools #regF{overflow:visible!important;flex-wrap:wrap!important}
